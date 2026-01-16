@@ -10,7 +10,7 @@ import { useState, useEffect } from 'react';
 const navigation = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
   { name: 'Connections', href: '/connections', icon: Database },
-  { name: 'AI Queries', href: '/queries', icon: MessageSquare },
+  { name: 'AI Chat', href: '/chat', icon: MessageSquare },
   { name: 'Pricing', href: '/pricing', icon: CreditCard },
   { name: 'Settings', href: '/settings', icon: Settings },
   { name: 'Profile', href: '/profile', icon: User },

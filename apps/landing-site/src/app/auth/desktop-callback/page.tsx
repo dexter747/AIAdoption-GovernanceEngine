@@ -12,9 +12,8 @@ export default function DesktopCallbackPage() {
 
   useEffect(() => {
     if (status === 'authenticated' && session?.user && !redirected) {
-      const callback = searchParams.get('callback') || 'ainexus://auth/callback';
+      setRedirected(true);
       
-      // Create a secure token (in production, use a proper JWT)
       const token = btoa(JSON.stringify({
         id: session.user.id || session.user.email,
         email: session.user.email,
@@ -28,14 +27,45 @@ export default function DesktopCallbackPage() {
         image: session.user.image,
       }));
 
-      // Redirect to desktop app with auth data
-      const redirectUrl = `${callback}?token=${token}&user=${user}`;
+      // Try HTTP callback first (more reliable in development)
+      const httpCallbackUrl = `http://localhost:42069/auth/callback?token=${token}&user=${user}`;
+      const deepLinkUrl = `ainexus://auth/callback?token=${token}&user=${user}`;
       
-      setRedirected(true);
+      console.log('🔗 Trying HTTP callback:', httpCallbackUrl);
+      console.log('🔗 Fallback deep link:', deepLinkUrl);
       
       // Small delay to show success message
       setTimeout(() => {
-        window.location.href = redirectUrl;
+        // Method 1: Try HTTP callback (most reliable in dev)
+        fetch(httpCallbackUrl, { mode: 'no-cors' })
+          .then(() => {
+            console.log('✅ HTTP callback succeeded');
+          })
+          .catch((err) => {
+            console.log('⚠️ HTTP callback failed, trying deep link:', err);
+            
+            // Fallback to deep link methods
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = deepLinkUrl;
+            document.body.appendChild(iframe);
+            
+            setTimeout(() => {
+              window.location.href = deepLinkUrl;
+            }, 100);
+            
+            setTimeout(() => {
+              const link = document.createElement('a');
+              link.href = deepLinkUrl;
+              link.click();
+            }, 200);
+            
+            setTimeout(() => {
+              if (iframe.parentNode) {
+                document.body.removeChild(iframe);
+              }
+            }, 2000);
+          });
       }, 1500);
     }
   }, [status, session, searchParams, redirected]);
@@ -80,13 +110,41 @@ export default function DesktopCallbackPage() {
           You've been authenticated as <strong className="text-black dark:text-white">{session?.user?.name}</strong>. 
           Redirecting you back to the AI Nexus app...
         </p>
-        <div className="flex items-center justify-center gap-2 text-sm text-gray-400">
+        <div className="flex items-center justify-center gap-2 text-sm text-gray-400 mb-6">
           <Loader2 className="w-4 h-4 animate-spin" />
           Opening desktop app...
         </div>
-        <p className="text-xs text-gray-400 mt-4">
-          Not redirecting? <button onClick={() => window.location.href = 'ainexus://auth/callback'} className="text-blue-500 hover:underline">Click here</button>
-        </p>
+        
+        {/* Manual redirect buttons */}
+        <div className="space-y-3">
+          <button 
+            onClick={() => {
+              const token = btoa(JSON.stringify({
+                id: session?.user?.id || session?.user?.email,
+                email: session?.user?.email,
+                timestamp: Date.now(),
+              }));
+              const user = encodeURIComponent(JSON.stringify({
+                id: session?.user?.id || session?.user?.email,
+                email: session?.user?.email,
+                name: session?.user?.name,
+                image: session?.user?.image,
+              }));
+              const httpCallbackUrl = `http://localhost:42069/auth/callback?token=${token}&user=${user}`;
+              console.log('Manual HTTP callback:', httpCallbackUrl);
+              fetch(httpCallbackUrl, { mode: 'no-cors' })
+                .then(() => console.log('✅ Manual HTTP callback succeeded'))
+                .catch(err => console.error('❌ Manual HTTP callback failed:', err));
+            }}
+            className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
+          >
+            Open Desktop App Manually (HTTP)
+          </button>
+          
+          <p className="text-xs text-gray-400">
+            If the app doesn't open automatically, click the button above or check if the desktop app is running.
+          </p>
+        </div>
       </div>
     </div>
   );

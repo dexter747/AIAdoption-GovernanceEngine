@@ -52,4 +52,53 @@ contextBridge.exposeInMainWorld('electron', {
     checkUpdates: () => ipcRenderer.invoke('system:check-updates'),
     openExternal: (url: string) => ipcRenderer.invoke('system:open-external', url),
   },
-});
+
+  // MCP Connection API
+  mcp: {
+    addConnection: (config: any) => ipcRenderer.invoke('mcp:add-connection', config),
+    enableConnection: (id: string) => ipcRenderer.invoke('mcp:enable-connection', id),
+    disableConnection: (id: string) => ipcRenderer.invoke('mcp:disable-connection', id),
+    testConnection: (id: string) => ipcRenderer.invoke('mcp:test-connection', id),
+    getAllConnections: () => ipcRenderer.invoke('mcp:get-all-connections'),
+    getConnection: (id: string) => ipcRenderer.invoke('mcp:get-connection', id),
+    updateConnection: (id: string, updates: any) => ipcRenderer.invoke('mcp:update-connection', id, updates),
+    deleteConnection: (id: string) => ipcRenderer.invoke('mcp:delete-connection', id),
+    getAvailableServers: () => ipcRenderer.invoke('mcp:get-available-servers'),
+    checkDocker: () => ipcRenderer.invoke('mcp:check-docker'),
+  },
+
+  // Chat History API
+  chat: {
+    createConversation: (data: any) => ipcRenderer.invoke('chat:create-conversation', data),
+    addMessage: (conversationId: string, message: any) => ipcRenderer.invoke('chat:add-message', conversationId, message),
+    getConversation: (id: string) => ipcRenderer.invoke('chat:get-conversation', id),
+    getAllConversations: (options?: any) => ipcRenderer.invoke('chat:get-all-conversations', options),
+    updateConversation: (id: string, updates: any) => ipcRenderer.invoke('chat:update-conversation', id, updates),
+    deleteConversation: (id: string) => ipcRenderer.invoke('chat:delete-conversation', id),
+    clearConversation: (id: string) => ipcRenderer.invoke('chat:clear-conversation', id),
+    searchConversations: (query: string) => ipcRenderer.invoke('chat:search-conversations', query),
+    getStats: () => ipcRenderer.invoke('chat:get-stats'),
+    exportConversation: (id: string) => ipcRenderer.invoke('chat:export-conversation', id),
+    importConversation: (json: string) => ipcRenderer.invoke('chat:import-conversation', json),
+    togglePin: (id: string) => ipcRenderer.invoke('chat:toggle-pin', id),
+    toggleArchive: (id: string) => ipcRenderer.invoke('chat:toggle-archive', id),
+    getRecent: (limit?: number) => ipcRenderer.invoke('chat:get-recent', limit),
+    cleanupOld: (daysOld?: number) => ipcRenderer.invoke('chat:cleanup-old', daysOld),
+  },
+
+  // Express API
+  express: {
+    checkHealth: () => ipcRenderer.invoke('express:check-health'),
+    getProviders: () => ipcRenderer.invoke('express:get-providers'),
+    queryAI: (request: any) => ipcRenderer.invoke('express:query-ai', request),
+    validateLicense: (licenseKey: string, deviceId: string, deviceInfo?: any) => 
+      ipcRenderer.invoke('express:validate-license', licenseKey, deviceId, deviceInfo),
+    getUserApiKeys: (userId: string) => ipcRenderer.invoke('express:get-user-api-keys', userId),
+    addUserApiKey: (userId: string, provider: string, apiKey: string, keyName?: string) => 
+      ipcRenderer.invoke('express:add-user-api-key', userId, provider, apiKey, keyName),
+    getUsage: (userId: string, options?: any) => ipcRenderer.invoke('express:get-usage', userId, options),
+    logUsage: (data: any) => ipcRenderer.invoke('express:log-usage', data),
+    getSubscription: (userId: string) => ipcRenderer.invoke('express:get-subscription', userId),
+    setAuth: (userId: string, licenseKey: string) => ipcRenderer.invoke('express:set-auth', userId, licenseKey),
+    updateConfig: (config: any) => ipcRenderer.invoke('express:update-config', config),
+  },

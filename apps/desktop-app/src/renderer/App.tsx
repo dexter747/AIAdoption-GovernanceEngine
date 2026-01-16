@@ -4,7 +4,9 @@ import Sidebar from './components/Sidebar';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import ConnectionsPage from './pages/ConnectionsPage';
+import ConnectionsPageEnhanced from './pages/ConnectionsPageEnhanced';
 import QueriesPage from './pages/QueriesPage';
+import ChatPage from './pages/ChatPage';
 import PricingPage from './pages/PricingPage';
 import SettingsPage from './pages/SettingsPage';
 import ProfilePage from './pages/ProfilePage';
@@ -76,8 +78,16 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <AppLayout>
-              <ConnectionsPage />
+              <ConnectionsPageEnhanced />
             </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/chat"
+        element={
+          <ProtectedRoute>
+            <ChatPage />
           </ProtectedRoute>
         }
       />
