@@ -1,34 +1,84 @@
 'use client';
 
-import { useState } from 'react';
-import { Search, Filter, MoreHorizontal, UserPlus, Mail, Ban, Trash2 } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import { Search, UserPlus, Mail, Ban, Trash2, RefreshCw } from 'lucide-react';
 
-// Mock users data - would come from API
-const usersData = [
-  { id: 1, name: 'John Smith', email: 'john@example.com', plan: 'Pro', status: 'Active', joined: 'Jan 15, 2024', lastActive: '2 hours ago' },
-  { id: 2, name: 'Sarah Johnson', email: 'sarah@example.com', plan: 'Enterprise', status: 'Active', joined: 'Jan 12, 2024', lastActive: '5 hours ago' },
-  { id: 3, name: 'Mike Wilson', email: 'mike@example.com', plan: 'Free', status: 'Pending', joined: 'Jan 10, 2024', lastActive: '1 day ago' },
-  { id: 4, name: 'Emily Davis', email: 'emily@example.com', plan: 'Pro', status: 'Active', joined: 'Jan 8, 2024', lastActive: '2 days ago' },
-  { id: 5, name: 'David Brown', email: 'david@example.com', plan: 'Free', status: 'Inactive', joined: 'Jan 5, 2024', lastActive: '5 days ago' },
-  { id: 6, name: 'Lisa Anderson', email: 'lisa@example.com', plan: 'Enterprise', status: 'Active', joined: 'Jan 3, 2024', lastActive: '1 hour ago' },
-  { id: 7, name: 'James Taylor', email: 'james@example.com', plan: 'Pro', status: 'Active', joined: 'Dec 28, 2023', lastActive: '3 hours ago' },
-  { id: 8, name: 'Jennifer Martinez', email: 'jennifer@example.com', plan: 'Free', status: 'Pending', joined: 'Dec 25, 2023', lastActive: '2 days ago' },
-  { id: 9, name: 'Robert Garcia', email: 'robert@example.com', plan: 'Pro', status: 'Active', joined: 'Dec 20, 2023', lastActive: '6 hours ago' },
-  { id: 10, name: 'Maria Rodriguez', email: 'maria@example.com', plan: 'Enterprise', status: 'Active', joined: 'Dec 15, 2023', lastActive: '1 day ago' },
-];
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  plan: string;
+  status: string;
+  joined: string;
+  lastActive: string;
+}
+
+interface UsersResponse {
+  users: User[];
+  total: number;
+  page: number;
+  limit: number;
+}
 
 export default function UsersPage() {
+  const [users, setUsers] = useState<User[]>([]);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterPlan, setFilterPlan] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
+  const [page, setPage] = useState(1);
+  const [stats, setStats] = useState({ active: 0, pending: 0, inactive: 0 });
 
-  const filteredUsers = usersData.filter(user => {
-    const matchesSearch = user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          user.email.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesPlan = filterPlan === 'all' || user.plan === filterPlan;
-    const matchesStatus = filterStatus === 'all' || user.status === filterStatus;
-    return matchesSearch && matchesPlan && matchesStatus;
-  });
+  const fetchUsers = useCallback(async () => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams();
+      params.append('page', page.toString());
+      params.append('limit', '10');
+      if (searchQuery) params.append('search', searchQuery);
+      if (filterPlan !== 'all') params.append('plan', filterPlan);
+      if (filterStatus !== 'all') params.append('status', filterStatus);
+
+      const res = await fetch(`/api/users?${params.toString()}`);
+      const data: UsersResponse = await res.json();
+      setUsers(data.users || []);
+      setTotal(data.total || 0);
+
+      // Calculate stats from all users (fetch without filters for stats)
+      const statsRes = await fetch('/api/users?limit=1000');
+      const statsData: UsersResponse = await statsRes.json();
+      const allUsers = statsData.users || [];
+      setStats({
+        active: allUsers.filter(u => u.status === 'Active').length,
+        pending: allUsers.filter(u => u.status === 'Pending').length,
+        inactive: allUsers.filter(u => u.status === 'Inactive').length,
+      });
+    } catch (err) {
+      console.error('Failed to fetch users:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [page, searchQuery, filterPlan, filterStatus]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [searchQuery, filterPlan, filterStatus]);
+
+  if (loading && users.length === 0) {
+    return (
+      <div className="p-8 flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <RefreshCw className="w-8 h-8 text-blue-500 animate-spin mx-auto mb-4" />
+          <p className="text-gray-500">Loading users...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-8">
@@ -38,10 +88,19 @@ export default function UsersPage() {
           <h1 className="text-2xl font-bold text-black dark:text-white">Users</h1>
           <p className="text-gray-500 mt-1">Manage all registered users</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-          <UserPlus className="w-4 h-4" />
-          Add User
-        </button>
+        <div className="flex gap-3">
+          <button
+            onClick={fetchUsers}
+            className="flex items-center gap-2 px-4 py-2 text-sm text-gray-500 hover:text-black dark:hover:text-white border border-gray-200 dark:border-gray-800 rounded-lg"
+          >
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+            Refresh
+          </button>
+          <button className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+            <UserPlus className="w-4 h-4" />
+            Add User
+          </button>
+        </div>
       </div>
 
       {/* Filters */}
@@ -81,19 +140,19 @@ export default function UsersPage() {
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-4">
-          <p className="text-2xl font-bold text-black dark:text-white">{usersData.length}</p>
+          <p className="text-2xl font-bold text-black dark:text-white">{total}</p>
           <p className="text-sm text-gray-500">Total Users</p>
         </div>
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-4">
-          <p className="text-2xl font-bold text-green-500">{usersData.filter(u => u.status === 'Active').length}</p>
+          <p className="text-2xl font-bold text-green-500">{stats.active}</p>
           <p className="text-sm text-gray-500">Active</p>
         </div>
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-4">
-          <p className="text-2xl font-bold text-yellow-500">{usersData.filter(u => u.status === 'Pending').length}</p>
+          <p className="text-2xl font-bold text-yellow-500">{stats.pending}</p>
           <p className="text-sm text-gray-500">Pending</p>
         </div>
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-4">
-          <p className="text-2xl font-bold text-gray-500">{usersData.filter(u => u.status === 'Inactive').length}</p>
+          <p className="text-2xl font-bold text-gray-500">{stats.inactive}</p>
           <p className="text-sm text-gray-500">Inactive</p>
         </div>
       </div>
@@ -113,58 +172,66 @@ export default function UsersPage() {
               </tr>
             </thead>
             <tbody>
-              {filteredUsers.map((user) => (
-                <tr key={user.id} className="border-b border-gray-100 dark:border-gray-900 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-900/50">
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
-                        <span className="text-white text-sm font-medium">{user.name.charAt(0)}</span>
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-black dark:text-white">{user.name}</p>
-                        <p className="text-xs text-gray-500">{user.email}</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                      user.plan === 'Enterprise' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400' :
-                      user.plan === 'Pro' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' :
-                      'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400'
-                    }`}>
-                      {user.plan}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                      user.status === 'Active' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
-                      user.status === 'Pending' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' :
-                      'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400'
-                    }`}>
-                      {user.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-sm text-gray-500">{user.joined}</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-sm text-gray-500">{user.lastActive}</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center justify-end gap-2">
-                      <button className="p-1.5 text-gray-400 hover:text-blue-500 transition-colors" title="Send Email">
-                        <Mail className="w-4 h-4" />
-                      </button>
-                      <button className="p-1.5 text-gray-400 hover:text-yellow-500 transition-colors" title="Suspend">
-                        <Ban className="w-4 h-4" />
-                      </button>
-                      <button className="p-1.5 text-gray-400 hover:text-red-500 transition-colors" title="Delete">
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
+              {users.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
+                    No users found
                   </td>
                 </tr>
-              ))}
+              ) : (
+                users.map((user) => (
+                  <tr key={user.id} className="border-b border-gray-100 dark:border-gray-900 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-900/50">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                          <span className="text-white text-sm font-medium">{user.name.charAt(0).toUpperCase()}</span>
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-black dark:text-white">{user.name}</p>
+                          <p className="text-xs text-gray-500">{user.email}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                        user.plan === 'Enterprise' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400' :
+                        user.plan === 'Pro' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' :
+                        'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400'
+                      }`}>
+                        {user.plan}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                        user.status === 'Active' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
+                        user.status === 'Pending' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' :
+                        'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400'
+                      }`}>
+                        {user.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="text-sm text-gray-500">{user.joined}</span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="text-sm text-gray-500">{user.lastActive}</span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center justify-end gap-2">
+                        <button className="p-1.5 text-gray-400 hover:text-blue-500 transition-colors" title="Send Email">
+                          <Mail className="w-4 h-4" />
+                        </button>
+                        <button className="p-1.5 text-gray-400 hover:text-yellow-500 transition-colors" title="Suspend">
+                          <Ban className="w-4 h-4" />
+                        </button>
+                        <button className="p-1.5 text-gray-400 hover:text-red-500 transition-colors" title="Delete">
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
@@ -172,13 +239,21 @@ export default function UsersPage() {
         {/* Pagination */}
         <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-800 flex items-center justify-between">
           <p className="text-sm text-gray-500">
-            Showing <span className="font-medium text-black dark:text-white">{filteredUsers.length}</span> of <span className="font-medium text-black dark:text-white">{usersData.length}</span> users
+            Showing <span className="font-medium text-black dark:text-white">{users.length}</span> of <span className="font-medium text-black dark:text-white">{total}</span> users
           </p>
           <div className="flex gap-2">
-            <button className="px-3 py-1.5 text-sm font-medium text-gray-500 hover:text-black dark:hover:text-white border border-gray-200 dark:border-gray-800 rounded-lg transition-colors">
+            <button 
+              onClick={() => setPage(p => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="px-3 py-1.5 text-sm font-medium text-gray-500 hover:text-black dark:hover:text-white border border-gray-200 dark:border-gray-800 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               Previous
             </button>
-            <button className="px-3 py-1.5 text-sm font-medium text-gray-500 hover:text-black dark:hover:text-white border border-gray-200 dark:border-gray-800 rounded-lg transition-colors">
+            <button 
+              onClick={() => setPage(p => p + 1)}
+              disabled={users.length < 10}
+              className="px-3 py-1.5 text-sm font-medium text-gray-500 hover:text-black dark:hover:text-white border border-gray-200 dark:border-gray-800 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               Next
             </button>
           </div>

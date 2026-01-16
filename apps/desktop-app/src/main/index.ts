@@ -96,6 +96,16 @@ if (!gotTheLock) {
     const url = commandLine.find(arg => arg.startsWith(`${PROTOCOL}://`));
     if (url) handleDeepLink(url);
   });
+
+  // Handle initial launch with deep link on Windows
+  if (process.platform === 'win32') {
+    const deepLinkArg = process.argv.find(arg => arg.startsWith(`${PROTOCOL}://`));
+    if (deepLinkArg) {
+      app.whenReady().then(() => {
+        setTimeout(() => handleDeepLink(deepLinkArg), 500);
+      });
+    }
+  }
 }
 
 function handleDeepLink(url: string) {
@@ -140,7 +150,9 @@ app.on('window-all-closed', () => {
 ipcMain.handle('auth:check', async () => getStoredAuth());
 
 ipcMain.handle('auth:login', async () => {
-  const loginUrl = 'http://localhost:3000/login?desktop=true&callback=ainexus://auth/callback';
+  // Use environment variable or fallback to localhost for development
+  const baseUrl = process.env.LANDING_SITE_URL || 'http://localhost:3000';
+  const loginUrl = `${baseUrl}/login?desktop=true&callback=ainexus://auth/callback`;
   await shell.openExternal(loginUrl);
   return { opened: true };
 });

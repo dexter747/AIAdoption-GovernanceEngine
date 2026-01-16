@@ -1,51 +1,94 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Search, DollarSign, CheckCircle, Clock, XCircle, RefreshCw } from 'lucide-react';
 
-// Mock payments data - would come from API
-const paymentsData = [
-  { id: 1, user: 'Sarah Johnson', email: 'sarah@example.com', amount: 99.00, plan: 'Enterprise', status: 'Completed', method: 'Credit Card', date: 'Jan 18, 2024 14:32' },
-  { id: 2, user: 'John Smith', email: 'john@example.com', amount: 29.00, plan: 'Pro', status: 'Completed', method: 'PayPal', date: 'Jan 18, 2024 11:15' },
-  { id: 3, user: 'Emily Davis', email: 'emily@example.com', amount: 29.00, plan: 'Pro', status: 'Pending', method: 'Credit Card', date: 'Jan 17, 2024 09:45' },
-  { id: 4, user: 'Lisa Anderson', email: 'lisa@example.com', amount: 99.00, plan: 'Enterprise', status: 'Completed', method: 'Credit Card', date: 'Jan 16, 2024 16:30' },
-  { id: 5, user: 'James Taylor', email: 'james@example.com', amount: 29.00, plan: 'Pro', status: 'Failed', method: 'Credit Card', date: 'Jan 16, 2024 14:00' },
-  { id: 6, user: 'Robert Garcia', email: 'robert@example.com', amount: 29.00, plan: 'Pro', status: 'Completed', method: 'PayPal', date: 'Jan 15, 2024 11:45' },
-  { id: 7, user: 'Maria Rodriguez', email: 'maria@example.com', amount: 99.00, plan: 'Enterprise', status: 'Completed', method: 'Credit Card', date: 'Jan 14, 2024 15:20' },
-  { id: 8, user: 'David Brown', email: 'david@example.com', amount: 29.00, plan: 'Pro', status: 'Refunded', method: 'Credit Card', date: 'Jan 14, 2024 10:10' },
-];
+interface Payment {
+  id: string;
+  user: string;
+  email: string;
+  amount: number;
+  plan: string;
+  status: string;
+  method: string;
+  date: string;
+}
+
+interface PaymentsResponse {
+  payments: Payment[];
+  total: number;
+  summary: {
+    totalRevenue: number;
+    pendingAmount: number;
+    refundedAmount: number;
+  };
+}
 
 export default function PaymentsPage() {
+  const [payments, setPayments] = useState<Payment[]>([]);
+  const [total, setTotal] = useState(0);
+  const [summary, setSummary] = useState({ totalRevenue: 0, pendingAmount: 0, refundedAmount: 0 });
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterPlan, setFilterPlan] = useState('all');
+  const [page, setPage] = useState(1);
 
-  const filteredPayments = paymentsData.filter(payment => {
-    const matchesSearch = payment.user.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          payment.email.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = filterStatus === 'all' || payment.status === filterStatus;
-    const matchesPlan = filterPlan === 'all' || payment.plan === filterPlan;
-    return matchesSearch && matchesStatus && matchesPlan;
-  });
+  const fetchPayments = useCallback(async () => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams();
+      params.append('page', page.toString());
+      params.append('limit', '10');
+      if (searchQuery) params.append('search', searchQuery);
+      if (filterStatus !== 'all') params.append('status', filterStatus);
+      if (filterPlan !== 'all') params.append('plan', filterPlan);
 
-  const totalRevenue = paymentsData.filter(p => p.status === 'Completed').reduce((sum, p) => sum + p.amount, 0);
-  const pendingAmount = paymentsData.filter(p => p.status === 'Pending').reduce((sum, p) => sum + p.amount, 0);
-  const refundedAmount = paymentsData.filter(p => p.status === 'Refunded').reduce((sum, p) => sum + p.amount, 0);
+      const res = await fetch(`/api/payments?${params.toString()}`);
+      const data: PaymentsResponse = await res.json();
+      setPayments(data.payments || []);
+      setTotal(data.total || 0);
+      setSummary(data.summary || { totalRevenue: 0, pendingAmount: 0, refundedAmount: 0 });
+    } catch (err) {
+      console.error('Failed to fetch payments:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [page, searchQuery, filterStatus, filterPlan]);
+
+  useEffect(() => {
+    fetchPayments();
+  }, [fetchPayments]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [searchQuery, filterStatus, filterPlan]);
 
   const statusIcon = (status: string) => {
-    switch (status) {
-      case 'Completed':
+    switch (status.toLowerCase()) {
+      case 'completed':
         return <CheckCircle className="w-4 h-4 text-green-500" />;
-      case 'Pending':
+      case 'pending':
         return <Clock className="w-4 h-4 text-yellow-500" />;
-      case 'Failed':
+      case 'failed':
         return <XCircle className="w-4 h-4 text-red-500" />;
-      case 'Refunded':
+      case 'refunded':
         return <RefreshCw className="w-4 h-4 text-gray-500" />;
       default:
         return null;
     }
   };
+
+  if (loading && payments.length === 0) {
+    return (
+      <div className="p-8 flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <RefreshCw className="w-8 h-8 text-blue-500 animate-spin mx-auto mb-4" />
+          <p className="text-gray-500">Loading payments...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-8">
@@ -55,6 +98,13 @@ export default function PaymentsPage() {
           <h1 className="text-2xl font-bold text-black dark:text-white">Payments</h1>
           <p className="text-gray-500 mt-1">Manage all payment transactions</p>
         </div>
+        <button
+          onClick={fetchPayments}
+          className="flex items-center gap-2 px-4 py-2 text-sm text-gray-500 hover:text-black dark:hover:text-white border border-gray-200 dark:border-gray-800 rounded-lg"
+        >
+          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+          Refresh
+        </button>
       </div>
 
       {/* Filters */}
@@ -96,25 +146,25 @@ export default function PaymentsPage() {
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-4">
           <div className="flex items-center gap-2">
             <DollarSign className="w-5 h-5 text-green-500" />
-            <p className="text-2xl font-bold text-green-500">${totalRevenue.toFixed(2)}</p>
+            <p className="text-2xl font-bold text-green-500">${summary.totalRevenue.toFixed(2)}</p>
           </div>
           <p className="text-sm text-gray-500">Total Revenue</p>
         </div>
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-4">
-          <p className="text-2xl font-bold text-black dark:text-white">{paymentsData.length}</p>
+          <p className="text-2xl font-bold text-black dark:text-white">{total}</p>
           <p className="text-sm text-gray-500">Total Transactions</p>
         </div>
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-4">
           <div className="flex items-center gap-2">
             <Clock className="w-5 h-5 text-yellow-500" />
-            <p className="text-2xl font-bold text-yellow-500">${pendingAmount.toFixed(2)}</p>
+            <p className="text-2xl font-bold text-yellow-500">${summary.pendingAmount.toFixed(2)}</p>
           </div>
           <p className="text-sm text-gray-500">Pending</p>
         </div>
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-4">
           <div className="flex items-center gap-2">
             <RefreshCw className="w-5 h-5 text-gray-500" />
-            <p className="text-2xl font-bold text-gray-500">${refundedAmount.toFixed(2)}</p>
+            <p className="text-2xl font-bold text-gray-500">${summary.refundedAmount.toFixed(2)}</p>
           </div>
           <p className="text-sm text-gray-500">Refunded</p>
         </div>
@@ -135,49 +185,57 @@ export default function PaymentsPage() {
               </tr>
             </thead>
             <tbody>
-              {filteredPayments.map((payment) => (
-                <tr key={payment.id} className="border-b border-gray-100 dark:border-gray-900 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-900/50">
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
-                        <span className="text-white text-sm font-medium">{payment.user.charAt(0)}</span>
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-black dark:text-white">{payment.user}</p>
-                        <p className="text-xs text-gray-500">{payment.email}</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-sm font-semibold text-black dark:text-white">${payment.amount.toFixed(2)}</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                      payment.plan === 'Enterprise' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400' :
-                      'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
-                    }`}>
-                      {payment.plan}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-sm text-gray-500">{payment.method}</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className={`inline-flex items-center gap-1.5 px-2 py-1 text-xs font-medium rounded-full ${
-                      payment.status === 'Completed' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
-                      payment.status === 'Pending' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' :
-                      payment.status === 'Failed' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' :
-                      'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400'
-                    }`}>
-                      {statusIcon(payment.status)}
-                      {payment.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-sm text-gray-500">{payment.date}</span>
+              {payments.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
+                    No payments found
                   </td>
                 </tr>
-              ))}
+              ) : (
+                payments.map((payment) => (
+                  <tr key={payment.id} className="border-b border-gray-100 dark:border-gray-900 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-900/50">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                          <span className="text-white text-sm font-medium">{payment.user.charAt(0).toUpperCase()}</span>
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-black dark:text-white">{payment.user}</p>
+                          <p className="text-xs text-gray-500">{payment.email}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="text-sm font-semibold text-black dark:text-white">${payment.amount.toFixed(2)}</span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                        payment.plan === 'Enterprise' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400' :
+                        'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                      }`}>
+                        {payment.plan}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="text-sm text-gray-500">{payment.method}</span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex items-center gap-1.5 px-2 py-1 text-xs font-medium rounded-full ${
+                        payment.status.toLowerCase() === 'completed' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
+                        payment.status.toLowerCase() === 'pending' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' :
+                        payment.status.toLowerCase() === 'failed' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' :
+                        'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400'
+                      }`}>
+                        {statusIcon(payment.status)}
+                        {payment.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="text-sm text-gray-500">{payment.date}</span>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
@@ -185,13 +243,21 @@ export default function PaymentsPage() {
         {/* Pagination */}
         <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-800 flex items-center justify-between">
           <p className="text-sm text-gray-500">
-            Showing <span className="font-medium text-black dark:text-white">{filteredPayments.length}</span> of <span className="font-medium text-black dark:text-white">{paymentsData.length}</span> payments
+            Showing <span className="font-medium text-black dark:text-white">{payments.length}</span> of <span className="font-medium text-black dark:text-white">{total}</span> payments
           </p>
           <div className="flex gap-2">
-            <button className="px-3 py-1.5 text-sm font-medium text-gray-500 hover:text-black dark:hover:text-white border border-gray-200 dark:border-gray-800 rounded-lg transition-colors">
+            <button 
+              onClick={() => setPage(p => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="px-3 py-1.5 text-sm font-medium text-gray-500 hover:text-black dark:hover:text-white border border-gray-200 dark:border-gray-800 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               Previous
             </button>
-            <button className="px-3 py-1.5 text-sm font-medium text-gray-500 hover:text-black dark:hover:text-white border border-gray-200 dark:border-gray-800 rounded-lg transition-colors">
+            <button 
+              onClick={() => setPage(p => p + 1)}
+              disabled={payments.length < 10}
+              className="px-3 py-1.5 text-sm font-medium text-gray-500 hover:text-black dark:hover:text-white border border-gray-200 dark:border-gray-800 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               Next
             </button>
           </div>

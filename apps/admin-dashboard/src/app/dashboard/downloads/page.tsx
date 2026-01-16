@@ -1,29 +1,34 @@
 'use client';
 
-import { useState } from 'react';
-import { Search, Download, Monitor, Apple, Terminal } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import { Search, Download, Monitor, Apple, Terminal, RefreshCw } from 'lucide-react';
 
-// Mock downloads data - would come from API
-const downloadsData = [
-  { id: 1, user: 'John Smith', email: 'john@example.com', version: 'v2.4.1', platform: 'Windows', date: 'Jan 18, 2024 14:32' },
-  { id: 2, user: 'Sarah Johnson', email: 'sarah@example.com', version: 'v2.4.1', platform: 'macOS', date: 'Jan 18, 2024 11:15' },
-  { id: 3, user: 'Mike Wilson', email: 'mike@example.com', version: 'v2.4.0', platform: 'Linux', date: 'Jan 17, 2024 09:45' },
-  { id: 4, user: 'Emily Davis', email: 'emily@example.com', version: 'v2.4.1', platform: 'Windows', date: 'Jan 17, 2024 08:20' },
-  { id: 5, user: 'David Brown', email: 'david@example.com', version: 'v2.3.5', platform: 'macOS', date: 'Jan 16, 2024 16:30' },
-  { id: 6, user: 'Lisa Anderson', email: 'lisa@example.com', version: 'v2.4.1', platform: 'Windows', date: 'Jan 16, 2024 14:00' },
-  { id: 7, user: 'James Taylor', email: 'james@example.com', version: 'v2.4.1', platform: 'Linux', date: 'Jan 15, 2024 11:45' },
-  { id: 8, user: 'Jennifer Martinez', email: 'jennifer@example.com', version: 'v2.4.0', platform: 'Windows', date: 'Jan 15, 2024 09:30' },
-  { id: 9, user: 'Robert Garcia', email: 'robert@example.com', version: 'v2.4.1', platform: 'macOS', date: 'Jan 14, 2024 15:20' },
-  { id: 10, user: 'Maria Rodriguez', email: 'maria@example.com', version: 'v2.4.1', platform: 'Windows', date: 'Jan 14, 2024 10:10' },
-];
+interface DownloadItem {
+  id: string;
+  user: string;
+  email: string;
+  version: string;
+  platform: string;
+  date: string;
+}
+
+interface DownloadsResponse {
+  downloads: DownloadItem[];
+  total: number;
+  platforms: {
+    windows: number;
+    macos: number;
+    linux: number;
+  };
+}
 
 const platformIcon = (platform: string) => {
-  switch (platform) {
-    case 'Windows':
+  switch (platform.toLowerCase()) {
+    case 'windows':
       return <Monitor className="w-4 h-4" />;
-    case 'macOS':
+    case 'macos':
       return <Apple className="w-4 h-4" />;
-    case 'Linux':
+    case 'linux':
       return <Terminal className="w-4 h-4" />;
     default:
       return <Download className="w-4 h-4" />;
@@ -31,19 +36,60 @@ const platformIcon = (platform: string) => {
 };
 
 export default function DownloadsPage() {
+  const [downloads, setDownloads] = useState<DownloadItem[]>([]);
+  const [total, setTotal] = useState(0);
+  const [platforms, setPlatforms] = useState({ windows: 0, macos: 0, linux: 0 });
+  const [versions, setVersions] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterPlatform, setFilterPlatform] = useState('all');
   const [filterVersion, setFilterVersion] = useState('all');
+  const [page, setPage] = useState(1);
 
-  const filteredDownloads = downloadsData.filter(download => {
-    const matchesSearch = download.user.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          download.email.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesPlatform = filterPlatform === 'all' || download.platform === filterPlatform;
-    const matchesVersion = filterVersion === 'all' || download.version === filterVersion;
-    return matchesSearch && matchesPlatform && matchesVersion;
-  });
+  const fetchDownloads = useCallback(async () => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams();
+      params.append('page', page.toString());
+      params.append('limit', '10');
+      if (searchQuery) params.append('search', searchQuery);
+      if (filterPlatform !== 'all') params.append('platform', filterPlatform);
+      if (filterVersion !== 'all') params.append('version', filterVersion);
 
-  const versions = [...new Set(downloadsData.map(d => d.version))];
+      const res = await fetch(`/api/downloads?${params.toString()}`);
+      const data: DownloadsResponse = await res.json();
+      setDownloads(data.downloads || []);
+      setTotal(data.total || 0);
+      setPlatforms(data.platforms || { windows: 0, macos: 0, linux: 0 });
+
+      // Get unique versions
+      const uniqueVersions = [...new Set((data.downloads || []).map((d: DownloadItem) => d.version))];
+      setVersions(uniqueVersions);
+    } catch (err) {
+      console.error('Failed to fetch downloads:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [page, searchQuery, filterPlatform, filterVersion]);
+
+  useEffect(() => {
+    fetchDownloads();
+  }, [fetchDownloads]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [searchQuery, filterPlatform, filterVersion]);
+
+  if (loading && downloads.length === 0) {
+    return (
+      <div className="p-8 flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <RefreshCw className="w-8 h-8 text-blue-500 animate-spin mx-auto mb-4" />
+          <p className="text-gray-500">Loading downloads...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-8">
@@ -53,6 +99,13 @@ export default function DownloadsPage() {
           <h1 className="text-2xl font-bold text-black dark:text-white">Downloads</h1>
           <p className="text-gray-500 mt-1">Track all software downloads</p>
         </div>
+        <button
+          onClick={fetchDownloads}
+          className="flex items-center gap-2 px-4 py-2 text-sm text-gray-500 hover:text-black dark:hover:text-white border border-gray-200 dark:border-gray-800 rounded-lg"
+        >
+          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+          Refresh
+        </button>
       </div>
 
       {/* Filters */}
@@ -92,27 +145,27 @@ export default function DownloadsPage() {
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-4">
-          <p className="text-2xl font-bold text-black dark:text-white">{downloadsData.length}</p>
+          <p className="text-2xl font-bold text-black dark:text-white">{total}</p>
           <p className="text-sm text-gray-500">Total Downloads</p>
         </div>
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-4">
           <div className="flex items-center gap-2">
             <Monitor className="w-5 h-5 text-blue-500" />
-            <p className="text-2xl font-bold text-blue-500">{downloadsData.filter(d => d.platform === 'Windows').length}</p>
+            <p className="text-2xl font-bold text-blue-500">{platforms.windows}</p>
           </div>
           <p className="text-sm text-gray-500">Windows</p>
         </div>
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-4">
           <div className="flex items-center gap-2">
             <Apple className="w-5 h-5 text-gray-500" />
-            <p className="text-2xl font-bold text-gray-700 dark:text-gray-300">{downloadsData.filter(d => d.platform === 'macOS').length}</p>
+            <p className="text-2xl font-bold text-gray-700 dark:text-gray-300">{platforms.macos}</p>
           </div>
           <p className="text-sm text-gray-500">macOS</p>
         </div>
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-4">
           <div className="flex items-center gap-2">
             <Terminal className="w-5 h-5 text-orange-500" />
-            <p className="text-2xl font-bold text-orange-500">{downloadsData.filter(d => d.platform === 'Linux').length}</p>
+            <p className="text-2xl font-bold text-orange-500">{platforms.linux}</p>
           </div>
           <p className="text-sm text-gray-500">Linux</p>
         </div>
@@ -131,39 +184,47 @@ export default function DownloadsPage() {
               </tr>
             </thead>
             <tbody>
-              {filteredDownloads.map((download) => (
-                <tr key={download.id} className="border-b border-gray-100 dark:border-gray-900 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-900/50">
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
-                        <span className="text-white text-sm font-medium">{download.user.charAt(0)}</span>
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-black dark:text-white">{download.user}</p>
-                        <p className="text-xs text-gray-500">{download.email}</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
-                      {download.version}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className={`inline-flex items-center gap-1.5 px-2 py-1 text-xs font-medium rounded-full ${
-                      download.platform === 'Windows' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' :
-                      download.platform === 'macOS' ? 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400' :
-                      'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400'
-                    }`}>
-                      {platformIcon(download.platform)}
-                      {download.platform}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-sm text-gray-500">{download.date}</span>
+              {downloads.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="px-6 py-12 text-center text-gray-500">
+                    No downloads found
                   </td>
                 </tr>
-              ))}
+              ) : (
+                downloads.map((download) => (
+                  <tr key={download.id} className="border-b border-gray-100 dark:border-gray-900 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-900/50">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                          <span className="text-white text-sm font-medium">{download.user.charAt(0).toUpperCase()}</span>
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-black dark:text-white">{download.user}</p>
+                          <p className="text-xs text-gray-500">{download.email}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+                        {download.version}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex items-center gap-1.5 px-2 py-1 text-xs font-medium rounded-full ${
+                        download.platform.toLowerCase() === 'windows' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' :
+                        download.platform.toLowerCase() === 'macos' ? 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400' :
+                        'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400'
+                      }`}>
+                        {platformIcon(download.platform)}
+                        {download.platform}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="text-sm text-gray-500">{download.date}</span>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
@@ -171,13 +232,21 @@ export default function DownloadsPage() {
         {/* Pagination */}
         <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-800 flex items-center justify-between">
           <p className="text-sm text-gray-500">
-            Showing <span className="font-medium text-black dark:text-white">{filteredDownloads.length}</span> of <span className="font-medium text-black dark:text-white">{downloadsData.length}</span> downloads
+            Showing <span className="font-medium text-black dark:text-white">{downloads.length}</span> of <span className="font-medium text-black dark:text-white">{total}</span> downloads
           </p>
           <div className="flex gap-2">
-            <button className="px-3 py-1.5 text-sm font-medium text-gray-500 hover:text-black dark:hover:text-white border border-gray-200 dark:border-gray-800 rounded-lg transition-colors">
+            <button 
+              onClick={() => setPage(p => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="px-3 py-1.5 text-sm font-medium text-gray-500 hover:text-black dark:hover:text-white border border-gray-200 dark:border-gray-800 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               Previous
             </button>
-            <button className="px-3 py-1.5 text-sm font-medium text-gray-500 hover:text-black dark:hover:text-white border border-gray-200 dark:border-gray-800 rounded-lg transition-colors">
+            <button 
+              onClick={() => setPage(p => p + 1)}
+              disabled={downloads.length < 10}
+              className="px-3 py-1.5 text-sm font-medium text-gray-500 hover:text-black dark:hover:text-white border border-gray-200 dark:border-gray-800 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               Next
             </button>
           </div>
