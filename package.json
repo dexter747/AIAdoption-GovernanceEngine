@@ -1,0 +1,35 @@
+{
+  "name": "ai-nexus-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AI Adoption & Governance Engine - Desktop App + Cloud Backend",
+  "scripts": {
+    "dev": "pnpm --parallel --stream --filter '!cloud-backend' run dev",
+    "dev:landing": "pnpm --filter landing-site dev",
+    "dev:admin": "pnpm --filter admin-dashboard dev",
+    "dev:desktop": "pnpm --filter desktop-app dev",
+    "dev:api": "pnpm --filter cloud-backend dev",
+    "dev:express": "node apps/express-api/server.js",
+    "build": "pnpm --recursive run build",
+    "build:landing": "pnpm --filter landing-site build",
+    "build:admin": "pnpm --filter admin-dashboard build",
+    "build:desktop": "pnpm --filter desktop-app build",
+    "build:backend": "pnpm --filter cloud-backend build",
+    "lint": "pnpm --recursive run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "type-check": "pnpm --recursive run type-check",
+    "test": "pnpm --recursive run test",
+    "clean": "pnpm --recursive run clean && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "prettier": "^3.2.4",
+    "turbo": "^1.11.3",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@8.15.1"
+}

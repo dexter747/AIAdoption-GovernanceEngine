@@ -1,0 +1,117 @@
+{
+  "name": "desktop-app",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./electron.js",
+  "description": "AI Nexus Desktop Application - Electron + React + TypeScript",
+  "author": "AI Nexus Team",
+  "scripts": {
+    "dev": "concurrently \"pnpm run dev:renderer\" \"pnpm run dev:electron\"",
+    "dev:renderer": "vite",
+    "dev:electron": "wait-on http://localhost:5173 && cross-env NODE_ENV=development electron .",
+    "dev:main": "tsx watch src/main/index.ts",
+    "build": "pnpm run build:renderer && pnpm run build:main",
+    "build:renderer": "vite build",
+    "build:main": "tsc -p tsconfig.main.json",
+    "build:all": "pnpm run build && electron-builder",
+    "build:mac": "pnpm run build && electron-builder --mac",
+    "build:win": "pnpm run build && electron-builder --win",
+    "build:linux": "pnpm run build && electron-builder --linux",
+    "lint": "eslint . --ext .ts,.tsx",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist build"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.14.0",
+    "@azure/openai": "^1.0.0-beta.11",
+    "@google/generative-ai": "^0.2.1",
+    "@mistralai/mistralai": "^0.1.3",
+    "@sap/hana-client": "^2.19.21",
+    "axios": "^1.6.5",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
+    "cohere-ai": "^7.7.5",
+    "electron-store": "^8.1.0",
+    "electron-updater": "^6.1.7",
+    "groq-sdk": "^0.3.0",
+    "jsforce": "^2.0.0-beta.29",
+    "lucide-react": "^0.309.0",
+    "mongodb": "^6.3.0",
+    "mysql2": "^3.7.1",
+    "ollama": "^0.4.2",
+    "openai": "^4.24.1",
+    "oracledb": "^6.3.0",
+    "pg": "^8.11.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.49.3",
+    "react-router-dom": "^6.21.3",
+    "recharts": "^2.10.4",
+    "sql.js": "^1.10.3",
+    "tailwind-merge": "^2.2.0",
+    "tedious": "^16.7.1",
+    "zustand": "^4.4.7"
+  },
+  "optionalDependencies": {
+    "better-sqlite3": "^11.10.0"
+  },
+  "devDependencies": {
+    "@shared/types": "workspace:*",
+    "@types/pg": "^8.10.9",
+    "@types/react": "^18.2.48",
+    "@types/react-dom": "^18.2.18",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.17",
+    "concurrently": "^8.2.2",
+    "cross-env": "^10.1.0",
+    "electron": "^28.1.3",
+    "electron-builder": "^24.13.3",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "postcss": "^8.4.33",
+    "tailwindcss": "^3.4.1",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.11",
+    "vite-plugin-electron": "^0.28.2",
+    "wait-on": "^9.0.3"
+  },
+  "build": {
+    "appId": "com.ainexus.desktop",
+    "productName": "AI Nexus",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "mac": {
+      "category": "public.app-category.developer-tools",
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "icon": "build/icon.icns"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "msi"
+      ],
+      "icon": "build/icon.ico"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb",
+        "rpm"
+      ],
+      "category": "Development",
+      "icon": "build/icon.png"
+    }
+  }
+}

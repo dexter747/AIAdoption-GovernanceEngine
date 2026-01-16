@@ -1,0 +1,119 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String         @id @default(uuid())
+  email             String         @unique
+  name              String?
+  password_hash     String?
+  oauth_provider    String?
+  oauth_id          String?
+  email_verified    Boolean        @default(false)
+  created_at        DateTime       @default(now())
+  updated_at        DateTime       @updatedAt
+  
+  licenses          License[]
+  subscriptions     Subscription[]
+  payments          Payment[]
+  devices           Device[]
+  
+  @@index([email])
+  @@index([oauth_provider, oauth_id])
+}
+
+model License {
+  id                String         @id @default(uuid())
+  user_id           String
+  license_key       String         @unique
+  plan_type         String
+  status            String
+  max_devices       Int            @default(1)
+  issued_at         DateTime       @default(now())
+  expires_at        DateTime?
+  last_validated_at DateTime?
+  metadata          Json           @default("{}")
+  
+  user              User           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  subscription      Subscription?
+  devices           Device[]
+  
+  @@index([user_id])
+  @@index([license_key])
+  @@index([status])
+}
+
+model Device {
+  id                String         @id @default(uuid())
+  user_id           String
+  license_id        String
+  device_name       String
+  device_id         String         @unique
+  os_type           String
+  os_version        String?
+  app_version       String?
+  last_active_at    DateTime       @default(now())
+  activated_at      DateTime       @default(now())
+  
+  user              User           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  license           License        @relation(fields: [license_id], references: [id], onDelete: Cascade)
+  
+  @@index([user_id])
+  @@index([license_id])
+  @@index([device_id])
+}
+
+model Subscription {
+  id                        String    @id @default(uuid())
+  user_id                   String
+  license_id                String    @unique
+  payment_provider          String
+  provider_subscription_id  String?
+  provider_customer_id      String?
+  plan_type                 String
+  billing_period            String
+  status                    String
+  current_period_start      DateTime?
+  current_period_end        DateTime?
+  cancel_at_period_end      Boolean   @default(false)
+  cancelled_at              DateTime?
+  trial_start               DateTime?
+  trial_end                 DateTime?
+  created_at                DateTime  @default(now())
+  updated_at                DateTime  @updatedAt
+  
+  user                      User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  license                   License   @relation(fields: [license_id], references: [id], onDelete: Cascade)
+  payments                  Payment[]
+  
+  @@index([user_id])
+  @@index([payment_provider, provider_subscription_id])
+}
+
+model Payment {
+  id                  String        @id @default(uuid())
+  user_id             String
+  subscription_id     String?
+  payment_provider    String
+  provider_payment_id String?
+  amount              Decimal       @db.Decimal(10, 2)
+  currency            String        @default("USD")
+  status              String
+  payment_method      String?
+  failure_reason      String?
+  metadata            Json          @default("{}")
+  paid_at             DateTime?
+  created_at          DateTime      @default(now())
+  
+  user                User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  subscription        Subscription? @relation(fields: [subscription_id], references: [id])
+  
+  @@index([user_id])
+  @@index([subscription_id])
+  @@index([status])
+}
