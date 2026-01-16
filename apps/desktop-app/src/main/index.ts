@@ -57,7 +57,7 @@ function createWindow() {
   });
 
   if (process.env.NODE_ENV === 'development') {
-    const devPort = process.env.VITE_DEV_PORT || '5173';
+    const devPort = process.env.VITE_DEV_PORT || '5199';
     mainWindow.loadURL(`http://localhost:${devPort}`);
     mainWindow.webContents.openDevTools();
   } else {

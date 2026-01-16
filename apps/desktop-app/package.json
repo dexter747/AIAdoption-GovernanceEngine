@@ -7,8 +7,8 @@
   "author": "AI Nexus Team",
   "scripts": {
     "dev": "concurrently \"pnpm run dev:renderer\" \"pnpm run dev:electron\"",
-    "dev:renderer": "vite",
-    "dev:electron": "wait-on http://localhost:5173 && cross-env NODE_ENV=development electron .",
+    "dev:renderer": "vite --port 5199",
+    "dev:electron": "wait-on http://localhost:5199 && cross-env NODE_ENV=development VITE_DEV_PORT=5199 electron .",
     "dev:main": "tsx watch src/main/index.ts",
     "build": "pnpm run build:renderer && pnpm run build:main",
     "build:renderer": "vite build",
