@@ -1,10 +1,11 @@
+// Load environment variables FIRST - before any other imports
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 import jwt from 'jsonwebtoken';
-
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5500;
@@ -12,10 +13,16 @@ const PORT = process.env.PORT || 5500;
 // =============================================================================
 // SUPABASE CLIENT SETUP
 // =============================================================================
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY // Use service key for backend operations
-);
+let supabase = null;
+if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY) {
+  supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_KEY // Use service key for backend operations
+  );
+  console.log('✅ Supabase client initialized');
+} else {
+  console.warn('⚠️  Supabase credentials not found - some features will be disabled');
+}
 
 // =============================================================================
 // MIDDLEWARE

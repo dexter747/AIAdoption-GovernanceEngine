@@ -102,3 +102,4 @@ contextBridge.exposeInMainWorld('electron', {
     setAuth: (userId: string, licenseKey: string) => ipcRenderer.invoke('express:set-auth', userId, licenseKey),
     updateConfig: (config: any) => ipcRenderer.invoke('express:update-config', config),
   },
+});

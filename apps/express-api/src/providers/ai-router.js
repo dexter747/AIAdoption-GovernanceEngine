@@ -70,10 +70,14 @@ if (providers.groq.enabled) {
   clients.groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 }
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY
-);
+// Supabase client for usage tracking (optional)
+let supabase = null;
+if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY) {
+  supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_KEY
+  );
+}
 
 // =============================================================================
 // MAIN ROUTING FUNCTION
