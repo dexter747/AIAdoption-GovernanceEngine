@@ -11,6 +11,11 @@ import SettingsPage from './pages/SettingsPage';
 import ProfilePage from './pages/ProfilePage';
 import APIKeysPage from './pages/APIKeysPage';
 import DatabaseConnectionsPage from './pages/DatabaseConnectionsPage';
+import ModernChatPage from './pages/ModernChatPage';
+import SubscriptionPage from './pages/SubscriptionPage';
+import ConnectionsDashboard from './pages/ConnectionsDashboard';
+import ProfileSettingsPage from './pages/ProfileSettingsPage';
+import APIKeysPageNew from './pages/APIKeysPage';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
@@ -88,7 +93,25 @@ function AppRoutes() {
         path="/chat"
         element={
           <ProtectedRoute>
+            <ModernChatPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/chat-old"
+        element={
+          <ProtectedRoute>
             <ChatPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/connections-dashboard"
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <ConnectionsDashboard />
+            </AppLayout>
           </ProtectedRoute>
         }
       />
@@ -98,6 +121,16 @@ function AppRoutes() {
           <ProtectedRoute>
             <AppLayout>
               <QueriesPage />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/subscription"
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <SubscriptionPage />
             </AppLayout>
           </ProtectedRoute>
         }
@@ -148,6 +181,16 @@ function AppRoutes() {
           <ProtectedRoute>
             <AppLayout>
               <ProfilePage />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile-settings"
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <ProfileSettingsPage />
             </AppLayout>
           </ProtectedRoute>
         }

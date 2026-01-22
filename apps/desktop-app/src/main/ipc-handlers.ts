@@ -398,3 +398,344 @@ ipcMain.handle('express:set-auth-token', async (_event, token) => {
 ipcMain.handle('express:update-config', async (_event, config) => {
   return expressClient.updateConfig(config);
 });
+
+// =====================================
+// Modern UI Handlers - For new frontend pages
+// =====================================
+
+// User connections (combines MCP + Database connections)
+ipcMain.handle('user:get-connections', async () => {
+  try {
+    const mcpConnections = await mcpConnectionManager.getAllConnections();
+    const dbConnections = await expressClient.getUserConnections();
+    
+    // Merge and format for UI
+    const allConnections = [
+      ...mcpConnections.map((conn: any) => ({
+        id: conn.id,
+        name: conn.name,
+        type: conn.type || 'unknown',
+        host: conn.config?.host,
+        port: conn.config?.port,
+        database: conn.config?.database,
+        status: conn.enabled ? 'connected' : 'disconnected',
+        lastConnected: conn.lastUsed,
+        createdAt: conn.createdAt,
+        encrypted: true,
+      })),
+      ...(dbConnections || []).map((conn: any) => ({
+        id: conn.id,
+        name: conn.name,
+        type: conn.connectionType,
+        host: conn.config?.host,
+        port: conn.config?.port,
+        database: conn.config?.database,
+        status: conn.status || 'disconnected',
+        lastConnected: conn.lastConnected,
+        createdAt: conn.createdAt,
+        encrypted: conn.config?.encrypted || false,
+      })),
+    ];
+    
+    return allConnections;
+  } catch (error) {
+    console.error('Failed to get user connections:', error);
+    return [];
+  }
+});
+
+ipcMain.handle('connection:test-by-id', async (_event, connectionId) => {
+  try {
+    // Try MCP connection first
+    const mcpConn = await mcpConnectionManager.getConnection(connectionId);
+    if (mcpConn) {
+      const result = await mcpConnectionManager.testConnection(connectionId);
+      return { success: result.success, message: result.message };
+    }
+    
+    // Try database connection
+    const dbResult = await expressClient.testUserConnection(connectionId);
+    return dbResult;
+  } catch (error: any) {
+    return { success: false, message: error.message };
+  }
+});
+
+ipcMain.handle('connection:delete', async (_event, connectionId) => {
+  try {
+    // Try both managers
+    await mcpConnectionManager.deleteConnection(connectionId);
+    await expressClient.deleteUserConnection(connectionId);
+    return { success: true };
+  } catch (error: any) {
+    throw new Error(`Failed to delete connection: ${error.message}`);
+  }
+});
+
+// Chat sessions
+ipcMain.handle('chat:get-sessions', async () => {
+  try {
+    const conversations = await chatHistoryManager.getAllConversations({ limit: 50 });
+    return conversations.map((conv: any) => ({
+      id: conv.id,
+      title: conv.title || 'New Chat',
+      messages: conv.messages || [],
+      createdAt: conv.createdAt,
+      updatedAt: conv.lastMessageAt,
+      model: conv.metadata?.model,
+    }));
+  } catch (error) {
+    console.error('Failed to get chat sessions:', error);
+    return [];
+  }
+});
+
+ipcMain.handle('ai:chat', async (_event, params) => {
+  try {
+    const { messages, model, stream } = params;
+    
+    // Use AI router for chat
+    const response = await aiRouter.query(messages[messages.length - 1].content, {
+      model,
+      conversationHistory: messages.slice(0, -1),
+      stream: stream || false,
+    });
+    
+    return response;
+  } catch (error: any) {
+    throw new Error(`Chat failed: ${error.message}`);
+  }
+});
+
+ipcMain.handle('mcp:query', async (_event, params) => {
+  try {
+    const { connectionId, query, model } = params;
+    
+    // Execute query via MCP
+    const result = await mcpClient.query(connectionId, query);
+    
+    // Optionally enhance with AI if model specified
+    if (model && result.rows) {
+      const aiResponse = await aiRouter.query(
+        `Analyze this database query result:\nQuery: ${query}\nResults: ${JSON.stringify(result.rows, null, 2)}`,
+        { model }
+      );
+      return {
+        ...result,
+        aiAnalysis: aiResponse.text,
+      };
+    }
+    
+    return result;
+  } catch (error: any) {
+    throw new Error(`MCP query failed: ${error.message}`);
+  }
+});
+
+ipcMain.handle('chat:save-session', async (_event, session) => {
+  try {
+    if (session.id) {
+      // Update existing
+      await chatHistoryManager.updateConversation(session.id, {
+        title: session.title,
+        messages: session.messages,
+      });
+      return { success: true, id: session.id };
+    } else {
+      // Create new
+      const conv = await chatHistoryManager.createConversation({
+        title: session.title || 'New Chat',
+        messages: session.messages,
+        metadata: { model: session.model },
+      });
+      return { success: true, id: conv.id };
+    }
+  } catch (error: any) {
+    throw new Error(`Failed to save chat session: ${error.message}`);
+  }
+});
+
+// Subscription & payments
+ipcMain.handle('subscription:get', async () => {
+  try {
+    const userId = await settingsManager.get('userId');
+    if (!userId) {
+      return {
+        plan: 'trial',
+        status: 'active',
+        features: ['Basic features', '100 queries/month'],
+        billingPeriod: { start: new Date(), end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) },
+      };
+    }
+    
+    const subscription = await expressClient.getSubscription(userId);
+    return subscription || {
+      plan: 'trial',
+      status: 'active',
+      features: [],
+      billingPeriod: { start: new Date(), end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) },
+    };
+  } catch (error) {
+    console.error('Failed to get subscription:', error);
+    return null;
+  }
+});
+
+ipcMain.handle('payments:get-history', async () => {
+  try {
+    const userId = await settingsManager.get('userId');
+    if (!userId) return [];
+    
+    const usage = await expressClient.getUsage(userId, { includePayments: true });
+    return usage?.payments || [];
+  } catch (error) {
+    console.error('Failed to get payment history:', error);
+    return [];
+  }
+});
+
+ipcMain.handle('payments:create-checkout', async (_event, params) => {
+  try {
+    // TODO: Integrate with Dodo Payments
+    // For now, open external checkout page
+    const checkoutUrl = `https://checkout.ainexus.com?plan=${params.plan}`;
+    shell.openExternal(checkoutUrl);
+    return { success: true, url: checkoutUrl };
+  } catch (error: any) {
+    throw new Error(`Failed to create checkout: ${error.message}`);
+  }
+});
+
+ipcMain.handle('subscription:cancel', async () => {
+  try {
+    const userId = await settingsManager.get('userId');
+    if (!userId) throw new Error('User not authenticated');
+    
+    // TODO: Implement cancel subscription via API
+    console.log('Cancelling subscription for user:', userId);
+    return { success: true };
+  } catch (error: any) {
+    throw new Error(`Failed to cancel subscription: ${error.message}`);
+  }
+});
+
+ipcMain.handle('subscription:reactivate', async () => {
+  try {
+    const userId = await settingsManager.get('userId');
+    if (!userId) throw new Error('User not authenticated');
+    
+    // TODO: Implement reactivate subscription via API
+    console.log('Reactivating subscription for user:', userId);
+    return { success: true };
+  } catch (error: any) {
+    throw new Error(`Failed to reactivate subscription: ${error.message}`);
+  }
+});
+
+// User profile & preferences
+ipcMain.handle('user:get-profile', async () => {
+  try {
+    const profile = await settingsManager.get('userProfile');
+    return profile || {
+      id: 'user-1',
+      email: 'user@example.com',
+      name: 'Demo User',
+      role: 'user',
+      createdAt: new Date(),
+    };
+  } catch (error) {
+    console.error('Failed to get user profile:', error);
+    return null;
+  }
+});
+
+ipcMain.handle('user:get-preferences', async () => {
+  try {
+    const preferences = await settingsManager.get('userPreferences');
+    return preferences || {
+      theme: 'system',
+      language: 'en',
+      notifications: { email: true, desktop: true, newFeatures: true },
+      defaultModel: 'gpt-4o-mini',
+      autoSave: true,
+    };
+  } catch (error) {
+    console.error('Failed to get preferences:', error);
+    return null;
+  }
+});
+
+ipcMain.handle('user:update-profile', async (_event, profile) => {
+  try {
+    await settingsManager.set('userProfile', profile);
+    return { success: true };
+  } catch (error: any) {
+    throw new Error(`Failed to update profile: ${error.message}`);
+  }
+});
+
+ipcMain.handle('user:update-preferences', async (_event, preferences) => {
+  try {
+    await settingsManager.set('userPreferences', preferences);
+    return { success: true };
+  } catch (error: any) {
+    throw new Error(`Failed to update preferences: ${error.message}`);
+  }
+});
+
+ipcMain.handle('user:upload-avatar', async (_event, formData) => {
+  try {
+    // TODO: Implement avatar upload
+    // For now, return mock URL
+    const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.name || 'User')}`;
+    return { url: avatarUrl };
+  } catch (error: any) {
+    throw new Error(`Failed to upload avatar: ${error.message}`);
+  }
+});
+
+// API Keys management
+ipcMain.handle('api-keys:get-all', async () => {
+  try {
+    const apiKeys = await expressClient.getUserApiKeys();
+    return apiKeys || [];
+  } catch (error) {
+    console.error('Failed to get API keys:', error);
+    return [];
+  }
+});
+
+ipcMain.handle('api-keys:add', async (_event, key) => {
+  try {
+    const result = await expressClient.addUserApiKey(
+      key.provider,
+      key.keyValue,
+      key.keyName
+    );
+    return result;
+  } catch (error: any) {
+    throw new Error(`Failed to add API key: ${error.message}`);
+  }
+});
+
+ipcMain.handle('api-keys:update', async (_event, key) => {
+  try {
+    await expressClient.updateUserApiKey(key.id, {
+      keyName: key.keyName,
+      apiKey: key.keyValue,
+      isActive: key.isActive,
+    });
+    return { success: true };
+  } catch (error: any) {
+    throw new Error(`Failed to update API key: ${error.message}`);
+  }
+});
+
+ipcMain.handle('api-keys:delete', async (_event, keyId) => {
+  try {
+    await expressClient.deleteUserApiKey(keyId);
+    return { success: true };
+  } catch (error: any) {
+    throw new Error(`Failed to delete API key: ${error.message}`);
+  }
+});

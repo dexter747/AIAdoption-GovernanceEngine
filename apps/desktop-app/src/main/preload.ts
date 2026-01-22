@@ -46,6 +46,31 @@ contextBridge.exposeInMainWorld('electron', {
     getAll: () => ipcRenderer.invoke('settings:get-all'),
   },
   
+  // New Modern UI APIs
+  getUserConnections: () => ipcRenderer.invoke('user:get-connections'),
+  testConnection: (connectionId: string) => ipcRenderer.invoke('connection:test-by-id', connectionId),
+  deleteConnection: (connectionId: string) => ipcRenderer.invoke('connection:delete', connectionId),
+  getAvailableModels: () => ipcRenderer.invoke('ai:get-models'),
+  getChatSessions: () => ipcRenderer.invoke('chat:get-sessions'),
+  chat: (params: { messages: any[]; model: string; stream?: boolean }) => ipcRenderer.invoke('ai:chat', params),
+  queryWithMCP: (params: { connectionId: string; query: string; model: string }) => ipcRenderer.invoke('mcp:query', params),
+  saveChatSession: (session: any) => ipcRenderer.invoke('chat:save-session', session),
+  getSubscription: () => ipcRenderer.invoke('subscription:get'),
+  getPaymentHistory: () => ipcRenderer.invoke('payments:get-history'),
+  createCheckout: (params: { plan: string }) => ipcRenderer.invoke('payments:create-checkout', params),
+  cancelSubscription: () => ipcRenderer.invoke('subscription:cancel'),
+  reactivateSubscription: () => ipcRenderer.invoke('subscription:reactivate'),
+  getUserProfile: () => ipcRenderer.invoke('user:get-profile'),
+  getUserPreferences: () => ipcRenderer.invoke('user:get-preferences'),
+  updateUserProfile: (profile: any) => ipcRenderer.invoke('user:update-profile', profile),
+  updateUserPreferences: (preferences: any) => ipcRenderer.invoke('user:update-preferences', preferences),
+  uploadAvatar: (formData: any) => ipcRenderer.invoke('user:upload-avatar', formData),
+  getAPIKeys: () => ipcRenderer.invoke('api-keys:get-all'),
+  addAPIKey: (key: any) => ipcRenderer.invoke('api-keys:add', key),
+  updateAPIKey: (key: any) => ipcRenderer.invoke('api-keys:update', key),
+  deleteAPIKey: (keyId: string) => ipcRenderer.invoke('api-keys:delete', keyId),
+  openExternal: (url: string) => ipcRenderer.invoke('system:open-external', url),
+
   // System API
   system: {
     getVersion: () => ipcRenderer.invoke('system:get-version'),

@@ -3,22 +3,22 @@ import { useAuth } from '../context/AuthContext';
 import { 
   LayoutDashboard, Database, MessageSquare, Settings, 
   CreditCard, User, LogOut, Sparkles, Sun, Moon, Monitor,
-  Key, Server
+  Key, Server, UserCircle
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
-  { name: 'Connections', href: '/connections', icon: Database },
+  { name: 'Connections', href: '/connections-dashboard', icon: Database },
   { name: 'AI Chat', href: '/chat', icon: MessageSquare },
-  { name: 'Pricing', href: '/pricing', icon: CreditCard },
+  { name: 'Subscription', href: '/subscription', icon: CreditCard },
 ];
 
 const settingsNavigation = [
-  { name: 'General', href: '/settings', icon: Settings },
+  { name: 'Profile', href: '/profile-settings', icon: UserCircle },
   { name: 'API Keys', href: '/settings/api-keys', icon: Key },
   { name: 'Databases', href: '/settings/databases', icon: Server },
-  { name: 'Profile', href: '/profile', icon: User },
+  { name: 'General', href: '/settings', icon: Settings },
 ];
 
 export default function Sidebar() {
