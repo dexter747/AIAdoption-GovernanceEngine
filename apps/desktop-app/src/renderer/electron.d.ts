@@ -159,8 +159,27 @@ interface ElectronAPI {
       valid: boolean;
       license?: any;
     }>>;
-    getUserApiKeys: (userId: string) => Promise<ExpressResponse<any[]>>;
-    addUserApiKey: (userId: string, provider: string, apiKey: string, name?: string) => Promise<ExpressResponse<any>>;
+    
+    // User API Keys (BYOK)
+    getProvidersList: () => Promise<any[]>;
+    getUserApiKeys: () => Promise<any[]>;
+    getUserApiKeyByProvider: (provider: string) => Promise<any>;
+    addUserApiKey: (provider: string, apiKey: string, keyName?: string, config?: any) => Promise<any>;
+    updateUserApiKey: (keyId: string, updates: any) => Promise<any>;
+    deleteUserApiKey: (keyId: string) => Promise<void>;
+    testUserApiKey: (keyId: string) => Promise<{ success: boolean; message?: string }>;
+    
+    // User Database Connections
+    getConnectionTypes: () => Promise<any[]>;
+    getUserConnections: () => Promise<any[]>;
+    getUserConnection: (connectionId: string) => Promise<any>;
+    addUserConnection: (name: string, connectionType: string, config: any, mcpServerType?: string) => Promise<any>;
+    updateUserConnection: (connectionId: string, updates: any) => Promise<any>;
+    deleteUserConnection: (connectionId: string) => Promise<void>;
+    testUserConnection: (connectionId: string) => Promise<{ success: boolean; message?: string; details?: any }>;
+    startMCPServer: (connectionId: string) => Promise<any>;
+    
+    // Usage & Subscriptions
     getUsage: (userId: string, options?: {
       startDate?: string;
       endDate?: string;
@@ -177,7 +196,10 @@ interface ElectronAPI {
       metadata?: any;
     }) => Promise<ExpressResponse<void>>;
     getSubscription: (userId: string) => Promise<ExpressResponse<any>>;
-    setAuth: (token: string) => Promise<void>;
+    
+    // Auth
+    setAuth: (userId: string, licenseKey: string, authToken?: string) => Promise<void>;
+    setAuthToken: (token: string) => Promise<void>;
     updateConfig: (config: { baseURL?: string }) => Promise<void>;
   };
 

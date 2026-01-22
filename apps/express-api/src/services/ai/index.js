@@ -1,6 +1,7 @@
 /**
  * AI Service - Provider abstraction layer
  * Routes requests to appropriate AI providers
+ * Supports BYOK (Bring Your Own Key) - users can provide their own API keys
  */
 
 import { config, getEnabledProviders } from '../../config/index.js';
@@ -15,6 +16,7 @@ import { DeepSeekProvider } from './providers/deepseek.js';
 import { OpenRouterProvider } from './providers/openrouter.js';
 import { ApiError } from '../../middleware/errorHandler.js';
 import { createLogger } from '../../utils/logger.js';
+import { getUserProviderKey } from '../../routes/user-api-keys.js';
 
 const logger = createLogger('ai-service');
 
@@ -85,44 +87,155 @@ const DEFAULT_MODELS = {
   openrouter: 'openai/gpt-4o',
 };
 
-// Provider instances (lazy loaded)
-let providers = {};
+// Provider instances (lazy loaded) - for platform keys
+let platformProviders = {};
+
+// User-specific provider instances cache (keyed by `${userId}-${providerName}`)
+let userProviders = {};
+
+/**
+ * Create provider config, preferring user's BYOK key if available
+ */
+async function getProviderConfig(providerName, userId = null) {
+  // Try to get user's own API key first (BYOK)
+  if (userId) {
+    try {
+      const userKey = await getUserProviderKey(userId, providerName);
+      if (userKey) {
+        logger.info({ provider: providerName, userId, byok: true }, 'Using user BYOK key');
+        return {
+          apiKey: userKey.apiKey,
+          orgId: userKey.metadata?.orgId,
+          isUserKey: true,
+        };
+      }
+    } catch (err) {
+      logger.warn({ provider: providerName, userId, error: err.message }, 'Failed to fetch user key, falling back to platform key');
+    }
+  }
+  
+  // Fall back to platform keys from .env
+  logger.debug({ provider: providerName, byok: false }, 'Using platform API key');
+  return {
+    ...config.ai[providerName],
+    isUserKey: false,
+  };
+}
 
 function getProvider(name) {
-  if (!providers[name]) {
+  if (!platformProviders[name]) {
     switch (name) {
       case 'openai':
-        providers[name] = new OpenAIProvider(config.ai.openai);
+        platformProviders[name] = new OpenAIProvider(config.ai.openai);
         break;
       case 'anthropic':
-        providers[name] = new AnthropicProvider(config.ai.anthropic);
+        platformProviders[name] = new AnthropicProvider(config.ai.anthropic);
         break;
       case 'google':
-        providers[name] = new GoogleProvider(config.ai.google);
+        platformProviders[name] = new GoogleProvider(config.ai.google);
         break;
       case 'groq':
-        providers[name] = new GroqProvider(config.ai.groq);
+        platformProviders[name] = new GroqProvider(config.ai.groq);
         break;
       case 'cohere':
-        providers[name] = new CohereProvider(config.ai.cohere);
+        platformProviders[name] = new CohereProvider(config.ai.cohere);
         break;
       case 'mistral':
-        providers[name] = new MistralProvider(config.ai.mistral);
+        platformProviders[name] = new MistralProvider(config.ai.mistral);
         break;
       case 'perplexity':
-        providers[name] = new PerplexityProvider(config.ai.perplexity);
+        platformProviders[name] = new PerplexityProvider(config.ai.perplexity);
         break;
       case 'deepseek':
-        providers[name] = new DeepSeekProvider(config.ai.deepseek);
+        platformProviders[name] = new DeepSeekProvider(config.ai.deepseek);
         break;
       case 'openrouter':
-        providers[name] = new OpenRouterProvider(config.ai.openrouter);
+        platformProviders[name] = new OpenRouterProvider(config.ai.openrouter);
         break;
       default:
         throw ApiError.badRequest(`Unknown provider: ${name}`);
     }
   }
-  return providers[name];
+  return platformProviders[name];
+}
+
+/**
+ * Get or create a provider instance for a specific user (BYOK support)
+ */
+async function getProviderForUser(providerName, userId = null) {
+  // If no user ID, use platform provider
+  if (!userId) {
+    return getProvider(providerName);
+  }
+  
+  const cacheKey = `${userId}-${providerName}`;
+  
+  // Check if we already have a cached provider for this user+provider combo
+  if (userProviders[cacheKey]) {
+    return userProviders[cacheKey];
+  }
+  
+  // Get config (prefers user's BYOK key)
+  const providerConfig = await getProviderConfig(providerName, userId);
+  
+  // If no user key found, use platform provider
+  if (!providerConfig.isUserKey) {
+    return getProvider(providerName);
+  }
+  
+  // Create new provider instance with user's key
+  let provider;
+  switch (providerName) {
+    case 'openai':
+      provider = new OpenAIProvider(providerConfig);
+      break;
+    case 'anthropic':
+      provider = new AnthropicProvider(providerConfig);
+      break;
+    case 'google':
+      provider = new GoogleProvider(providerConfig);
+      break;
+    case 'groq':
+      provider = new GroqProvider(providerConfig);
+      break;
+    case 'cohere':
+      provider = new CohereProvider(providerConfig);
+      break;
+    case 'mistral':
+      provider = new MistralProvider(providerConfig);
+      break;
+    case 'perplexity':
+      provider = new PerplexityProvider(providerConfig);
+      break;
+    case 'deepseek':
+      provider = new DeepSeekProvider(providerConfig);
+      break;
+    case 'openrouter':
+      provider = new OpenRouterProvider(providerConfig);
+      break;
+    default:
+      throw ApiError.badRequest(`Unknown provider: ${providerName}`);
+  }
+  
+  // Cache for future use (TTL: cleared on server restart or can add expiry)
+  userProviders[cacheKey] = provider;
+  
+  return provider;
+}
+
+/**
+ * Clear cached user provider (call when user updates their API key)
+ */
+export function clearUserProviderCache(userId, providerName = null) {
+  if (providerName) {
+    delete userProviders[`${userId}-${providerName}`];
+  } else {
+    // Clear all cached providers for this user
+    Object.keys(userProviders)
+      .filter(key => key.startsWith(`${userId}-`))
+      .forEach(key => delete userProviders[key]);
+  }
+  logger.info({ userId, providerName }, 'Cleared user provider cache');
 }
 
 function selectProvider(requestedProvider, model) {
@@ -173,13 +286,26 @@ function selectProvider(requestedProvider, model) {
 
 export const AIService = {
   /**
-   * Chat completion
+   * Chat completion with BYOK support
+   * @param {Object} options - Chat options
+   * @param {string} options.userId - User ID for BYOK (optional)
+   * @param {Array} options.messages - Chat messages
+   * @param {string} options.model - Model to use
+   * @param {string} options.provider - Provider to use
+   * @param {Array} options.tools - MCP tools available (optional)
+   * @param {number} options.temperature - Temperature (optional)
+   * @param {number} options.maxTokens - Max tokens (optional)
    */
   async chat(options) {
     const { provider: providerName, model } = selectProvider(options.provider, options.model);
-    const provider = getProvider(providerName);
+    const provider = await getProviderForUser(providerName, options.userId);
     
-    logger.info({ provider: providerName, model }, 'Routing chat request');
+    logger.info({ 
+      provider: providerName, 
+      model, 
+      userId: options.userId || 'platform',
+      hasTools: !!(options.tools && options.tools.length > 0)
+    }, 'Routing chat request');
     
     try {
       const response = await provider.chat({
@@ -187,12 +313,14 @@ export const AIService = {
         messages: options.messages,
         temperature: options.temperature,
         maxTokens: options.maxTokens,
+        tools: options.tools, // Pass MCP tools if provided
       });
       
       return {
         ...response,
         provider: providerName,
         model,
+        usingUserKey: provider.config?.isUserKey || false,
       };
     } catch (err) {
       logger.error({ provider: providerName, error: err.message }, 'Chat request failed');
@@ -201,19 +329,25 @@ export const AIService = {
   },
 
   /**
-   * Streaming chat completion
+   * Streaming chat completion with BYOK support
    */
   async *chatStream(options) {
     const { provider: providerName, model } = selectProvider(options.provider, options.model);
-    const provider = getProvider(providerName);
+    const provider = await getProviderForUser(providerName, options.userId);
     
-    logger.info({ provider: providerName, model, stream: true }, 'Routing chat stream request');
+    logger.info({ 
+      provider: providerName, 
+      model, 
+      stream: true,
+      userId: options.userId || 'platform'
+    }, 'Routing chat stream request');
     
     const stream = await provider.chatStream({
       model,
       messages: options.messages,
       temperature: options.temperature,
       maxTokens: options.maxTokens,
+      tools: options.tools,
     });
     
     for await (const chunk of stream) {

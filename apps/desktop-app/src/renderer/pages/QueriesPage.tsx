@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MessageSquare, Send, Database, Sparkles, Copy, Check, Clock } from 'lucide-react';
+import { Send, Database, Sparkles, Copy, Check, Clock } from 'lucide-react';
 
 export default function QueriesPage() {
   const [query, setQuery] = useState('');

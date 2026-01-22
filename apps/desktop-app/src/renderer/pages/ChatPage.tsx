@@ -6,7 +6,7 @@ interface Message {
   id: string;
   role: 'user' | 'assistant' | 'system';
   content: string;
-  timestamp: Date;
+  timestamp?: Date;
   tokens?: number;
   cost?: number;
 }
@@ -257,7 +257,8 @@ const ChatPage: React.FC = () => {
     return `$${cost.toFixed(4)}`;
   };
 
-  const formatTimestamp = (date: Date): string => {
+  const formatTimestamp = (date?: Date): string => {
+    if (!date) return '';
     return new Date(date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 

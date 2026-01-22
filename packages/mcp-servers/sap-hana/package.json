@@ -1,0 +1,17 @@
+{
+  "name": "@ai-nexus/mcp-server-sap-hana",
+  "version": "1.0.0",
+  "description": "Model Context Protocol server for SAP HANA",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": { "mcp-sap-hana": "./dist/index.js" },
+  "scripts": { "build": "tsc", "start": "node dist/index.js" },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "@sap/hana-client": "^2.19.21"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.6",
+    "typescript": "^5.3.3"
+  }
+}

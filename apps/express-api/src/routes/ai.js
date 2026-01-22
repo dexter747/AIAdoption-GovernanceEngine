@@ -34,17 +34,22 @@ const embeddingsRequestSchema = z.object({
 
 /**
  * POST /api/ai/chat
- * Chat completion endpoint
+ * Chat completion endpoint with BYOK support
  */
 router.post('/chat', optionalJwt, async (req, res, next) => {
   try {
     // Validate request
     const validated = chatRequestSchema.parse(req.body);
     
+    // Get user ID for BYOK (Bring Your Own Key)
+    const userId = req.user?.id || null;
+    
     logger.info({
       provider: validated.provider,
       model: validated.model,
       messageCount: validated.messages.length,
+      userId: userId || 'anonymous',
+      byok: !!userId,
     }, 'Chat request received');
 
     // Handle streaming
@@ -53,7 +58,10 @@ router.post('/chat', optionalJwt, async (req, res, next) => {
       res.setHeader('Cache-Control', 'no-cache');
       res.setHeader('Connection', 'keep-alive');
 
-      const stream = await AIService.chatStream(validated);
+      const stream = await AIService.chatStream({
+        ...validated,
+        userId, // Pass user ID for BYOK
+      });
       
       for await (const chunk of stream) {
         res.write(`data: ${JSON.stringify(chunk)}\n\n`);
@@ -66,13 +74,16 @@ router.post('/chat', optionalJwt, async (req, res, next) => {
 
     // Non-streaming response
     const startTime = Date.now();
-    const response = await AIService.chat(validated);
+    const response = await AIService.chat({
+      ...validated,
+      userId, // Pass user ID for BYOK
+    });
     const duration = Date.now() - startTime;
 
     // Track usage
-    if (req.user?.id) {
+    if (userId) {
       await UsageService.track({
-        userId: req.user.id,
+        userId,
         provider: response.provider,
         model: response.model,
         inputTokens: response.usage?.inputTokens || 0,
@@ -90,6 +101,7 @@ router.post('/chat', optionalJwt, async (req, res, next) => {
         message: response.message,
         usage: response.usage,
         duration,
+        usingUserKey: response.usingUserKey || false,
       },
     });
   } catch (err) {

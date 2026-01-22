@@ -139,19 +139,69 @@ CREATE INDEX IF NOT EXISTS idx_audit_log_created_at ON public.audit_log(created_
 -- ===========================================
 -- UPDATE LICENSE TABLE (add key_hash)
 -- ===========================================
-ALTER TABLE public.licenses ADD COLUMN IF NOT EXISTS key_hash TEXT;
-ALTER TABLE public.licenses ADD COLUMN IF NOT EXISTS tier TEXT DEFAULT 'pro';
-ALTER TABLE public.licenses ADD COLUMN IF NOT EXISTS max_machines INT DEFAULT 1;
-ALTER TABLE public.licenses ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT TRUE;
+DO $$ 
+BEGIN
+    -- Check if licenses table exists first
+    IF EXISTS (SELECT 1 FROM information_schema.tables 
+               WHERE table_schema = 'public' AND table_name = 'licenses') THEN
+        
+        -- Add columns if they don't exist
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
+                       WHERE table_schema = 'public' 
+                       AND table_name = 'licenses' 
+                       AND column_name = 'key_hash') THEN
+            ALTER TABLE public.licenses ADD COLUMN key_hash TEXT;
+        END IF;
 
--- Create index on key_hash
-CREATE INDEX IF NOT EXISTS idx_licenses_key_hash ON public.licenses(key_hash);
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
+                       WHERE table_schema = 'public' 
+                       AND table_name = 'licenses' 
+                       AND column_name = 'tier') THEN
+            ALTER TABLE public.licenses ADD COLUMN tier TEXT DEFAULT 'pro';
+        END IF;
+
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
+                       WHERE table_schema = 'public' 
+                       AND table_name = 'licenses' 
+                       AND column_name = 'max_machines') THEN
+            ALTER TABLE public.licenses ADD COLUMN max_machines INT DEFAULT 1;
+        END IF;
+
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
+                       WHERE table_schema = 'public' 
+                       AND table_name = 'licenses' 
+                       AND column_name = 'is_active') THEN
+            ALTER TABLE public.licenses ADD COLUMN is_active BOOLEAN DEFAULT TRUE;
+        END IF;
+        
+        -- Create index on key_hash (only if column exists)
+        IF EXISTS (SELECT 1 FROM information_schema.columns 
+                   WHERE table_schema = 'public' 
+                   AND table_name = 'licenses' 
+                   AND column_name = 'key_hash') THEN
+            CREATE INDEX IF NOT EXISTS idx_licenses_key_hash ON public.licenses(key_hash);
+        END IF;
+    END IF;
+END $$;
 
 -- ===========================================
 -- LICENSE ACTIVATIONS (rename from device_activations)
 -- ===========================================
 -- Keep existing device_activations table, add is_active column
-ALTER TABLE public.device_activations ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT TRUE;
+DO $$ 
+BEGIN
+    -- Check if device_activations table exists first
+    IF EXISTS (SELECT 1 FROM information_schema.tables 
+               WHERE table_schema = 'public' AND table_name = 'device_activations') THEN
+        
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
+                       WHERE table_schema = 'public' 
+                       AND table_name = 'device_activations' 
+                       AND column_name = 'is_active') THEN
+            ALTER TABLE public.device_activations ADD COLUMN is_active BOOLEAN DEFAULT TRUE;
+        END IF;
+    END IF;
+END $$;
 
 -- ===========================================
 -- HELPER FUNCTIONS

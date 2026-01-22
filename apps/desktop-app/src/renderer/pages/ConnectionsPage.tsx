@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Database, Plus, Settings, Trash2, Play, CheckCircle, XCircle } from 'lucide-react';
+import { Database, Plus, Settings, Trash2, Play } from 'lucide-react';
 
 const connections = [
   { 
@@ -33,6 +33,9 @@ const connections = [
 
 export default function ConnectionsPage() {
   const [showAddModal, setShowAddModal] = useState(false);
+  
+  // TODO: Implement add connection modal
+  console.debug('showAddModal state:', showAddModal);
 
   return (
     <div className="p-8">

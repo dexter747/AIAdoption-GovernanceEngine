@@ -114,7 +114,7 @@ export interface User {
 }
 
 // Payment Types
-export type PaymentProvider = 'dodo' | 'paypal' | 'razorpay';
+export type PaymentProvider = 'dodo';
 
 export interface Subscription {
   id: string;

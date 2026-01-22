@@ -25,9 +25,11 @@
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.3",
     "openai": "^4.70.1",
+    "pg": "^8.11.3",
     "pino": "^9.0.0",
     "pino-pretty": "^11.0.0",
     "uuid": "^9.0.0",
+    "ws": "^8.19.0",
     "zod": "3.23.8"
   },
   "devDependencies": {

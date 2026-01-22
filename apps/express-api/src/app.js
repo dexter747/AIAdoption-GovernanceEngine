@@ -17,6 +17,8 @@ import healthRoutes from './routes/health.js';
 import aiRoutes from './routes/ai.js';
 import licenseRoutes from './routes/licenses.js';
 import usageRoutes from './routes/usage.js';
+import userApiKeysRoutes from './routes/user-api-keys.js';
+import userConnectionsRoutes from './routes/user-connections.js';
 
 export function createApp() {
   const app = express();
@@ -88,6 +90,8 @@ export function createApp() {
   app.use('/api/ai', aiRoutes);
   app.use('/api/licenses', licenseRoutes);
   app.use('/api/usage', usageRoutes);
+  app.use('/api/user/api-keys', userApiKeysRoutes);
+  app.use('/api/user/connections', userConnectionsRoutes);
 
   // Legacy compatibility routes
   app.get('/api/status', (req, res) => {

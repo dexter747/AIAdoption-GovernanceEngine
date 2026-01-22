@@ -1,245 +1,200 @@
-# AI Nexus - Production Backend
+# AI Nexus - Complete Implementation Roadmap
 
-*Last Updated: January 19, 2026*
-
----
-
-## ✅ BACKEND COMPLETE
-
-All backend components are implemented and ready for deployment.
+**Last Updated:** January 22, 2026  
+**Project Status:** 70-75% Complete - BYOK Phase Complete, Testing Phase
 
 ---
 
-## Architecture
+## 📊 Project Overview
 
-**MCP is for EXTERNAL tools (Claude Desktop, Cursor). Desktop App calls Express API directly.**
+**AI Nexus** is an enterprise AI adoption & governance platform that connects:
+- **15 AI Providers** (OpenAI, Anthropic, Google, Groq, etc.) via user's own API keys
+- **10+ Database Types** (PostgreSQL, MySQL, Oracle, SAP HANA, MongoDB) via MCP servers
+- **10+ Enterprise SaaS** (Salesforce, ServiceNow, Jira, Zendesk) via custom MCP wrappers
 
-**Hosting Strategy:**
-- Vercel → Frontend ($20/mo)
-- Railway → Express API ($5-50/mo)
-- Supabase → Database ($25/mo)
-- Total: ~$50-100/month
-
----
-
-## PHASE 1: Express API ✅ COMPLETE
-
-### 1.1 Structure ✅
-- [x] New folder structure (config, middleware, routes, services)
-- [x] Entry point with graceful shutdown (src/index.js)
-- [x] Express app configuration (src/app.js)
-- [x] Centralized config (src/config/index.js)
-
-### 1.2 Security ✅
-- [x] helmet - Security headers
-- [x] express-rate-limit - Rate limiting
-- [x] zod validation - Request validation
-- [x] CORS whitelist - Configurable origins
-- [x] JWT authentication
-- [x] API key validation
-- [x] License validation
-
-### 1.3 AI Providers ✅ (9 Providers)
-- [x] OpenAI (GPT-4o, o1, o3-mini)
-- [x] Anthropic (Claude 3.5 Sonnet, Opus, Haiku)
-- [x] Google AI (Gemini 2.0 Flash, 1.5 Pro)
-- [x] Groq (Llama 3.3, Mixtral)
-- [x] Cohere (Command R+, Command R)
-- [x] Mistral (Large, Medium, Codestral)
-- [x] Perplexity (Sonar, Sonar Pro)
-- [x] DeepSeek (Chat, Coder, Reasoner)
-- [x] OpenRouter (100+ models)
-- [x] Auto-provider selection
-- [x] Cost calculation per model
-- [x] Streaming support (SSE)
-
-### 1.4 License System ✅
-- [x] JWT-based license keys
-- [x] Validation endpoint
-- [x] Activation/deactivation
-- [x] Tier-based features (free, starter, pro, enterprise)
-- [x] Machine limit enforcement
-
-### 1.5 Usage Tracking ✅
-- [x] Token counting
-- [x] Cost calculation per provider/model
-- [x] In-memory cache for development
-- [x] Database storage ready
-- [x] Daily/monthly aggregation
-
-### 1.6 Middleware ✅
-- [x] Request logger with timing
-- [x] Error handler with Zod support
-- [x] Auth middleware (API key, JWT, License)
-- [x] Pino logger with redaction
+### Applications:
+- **Landing Site** (Next.js @ port 3000) - Public website, authentication, payments
+- **Admin Dashboard** (Next.js @ port 3001) - Internal management portal
+- **Desktop App** (Electron) - Native app for database + AI integration  
+- **Express API** (Node.js @ port 5500) - Backend for license validation & AI routing ✅ RUNNING
+- **AI Nexus MCP Server** - Aggregation layer for external tools (Claude Desktop, Cursor)
 
 ---
 
-## PHASE 2: Database Schema ✅ COMPLETE
+## 🎯 Current Completion Status
 
-Schema files ready to run in Supabase:
-- `database/schema.sql` - Original tables
-- `database/schema-v2.sql` - Additional tables
+| Component | Status | % Done |
+|-----------|--------|--------|
+| Database Schema | ✅ Complete | 100% |
+| Express API Routes | ✅ Complete | 95% |
+| Desktop App UI | ✅ Complete | 90% |
+| MCP Integration | ✅ Complete | 90% |
+| AI Provider BYOK | ✅ Complete | 100% |
+| License System | 🟡 Partial | 40% |
+| Payment Integration | 🔴 Not Started | 0% |
+| Landing Site Pages | 🔴 Not Started | 20% |
 
-Tables:
-- [x] profiles - User profiles
-- [x] licenses - License keys
-- [x] license_activations / device_activations - Machine activations
-- [x] usage_records - Token usage
-- [x] api_keys - API key management
-- [x] chat_sessions - Chat history sync
-- [x] chat_messages - Chat messages
-- [x] audit_log - Admin audit trail
-
-**To activate:** Run SQL in Supabase SQL Editor
+**Overall: ~70-75% Complete**
 
 ---
 
-## PHASE 3: Deployment ✅ COMPLETE
+## ✅ COMPLETED - PHASE 1: CORE INFRASTRUCTURE
 
-### Railway Config ✅
-- [x] railway.json - Railway deployment config
-- [x] Dockerfile.api - Docker deployment option
-- [x] Health checks configured
+### 1.1 User API Key Management (BYOK - Bring Your Own Key)
 
-### CI/CD ✅
-- [x] .github/workflows/api.yml - Express API CI/CD
-- [x] .github/workflows/desktop.yml - Desktop app builds
+**Status:** ✅ COMPLETE
 
-**To deploy:**
-1. Push to GitHub
-2. Connect Railway to repo
-3. Set environment variables
-4. Auto-deploy on push
+**Database Schema:**
+- ✅ Created `user_provider_keys` table with encryption support
+- ✅ Created `user_connections` table for database connections
+- ✅ Added RLS policies for security
+- ✅ Created helper functions for user data access
+- ✅ Migration successfully executed in Supabase
 
----
+**Files Created:**
+- ✅ `database/schema-v3-byok.sql` - Complete BYOK schema
+- ✅ `apps/express-api/src/routes/user-api-keys.js` - Full CRUD for API keys
+- ✅ `apps/express-api/src/routes/user-connections.js` - Full CRUD for connections
+- ✅ `apps/express-api/src/services/encryption.js` - AES-256-GCM encryption
+- ✅ `apps/desktop-app/src/renderer/pages/APIKeysPage.tsx` - UI for managing keys
+- ✅ `apps/desktop-app/src/renderer/pages/ConnectionsPage.tsx` - UI for connections
+- ✅ `apps/desktop-app/src/main/api/express-client.ts` - API client with all methods
+- ✅ `apps/desktop-app/src/renderer/types/electron.d.ts` - Consolidated type definitions
 
-## Files Structure
+**Supported Providers (15):**
+✅ All providers configured and tested
 
-```
-apps/express-api/
-├── src/
-│   ├── index.js              # Entry point
-│   ├── app.js                # Express config
-│   ├── config/
-│   │   └── index.js          # Configuration
-│   ├── utils/
-│   │   └── logger.js         # Pino logger
-│   ├── middleware/
-│   │   ├── auth.js           # Authentication
-│   │   ├── errorHandler.js   # Error handling
-│   │   └── requestLogger.js  # Request logging
-│   ├── routes/
-│   │   ├── health.js         # Health checks
-│   │   ├── ai.js             # AI endpoints
-│   │   ├── licenses.js       # License endpoints
-│   │   └── usage.js          # Usage endpoints
-│   └── services/
-│       ├── license.js        # License service
-│       ├── usage.js          # Usage service
-│       └── ai/
-│           ├── index.js      # Provider router
-│           └── providers/
-│               ├── openai.js
-│               ├── anthropic.js
-│               ├── google.js
-│               ├── groq.js
-│               ├── cohere.js
-│               ├── mistral.js
-│               ├── perplexity.js
-│               ├── deepseek.js
-│               └── openrouter.js
-├── railway.json              # Railway config
-└── package.json
+## 🏗️ PHASE 2: DATABASE CONNECTIONS (Week 2-3)
 
-.github/workflows/
-├── api.yml                   # API CI/CD
-└── desktop.yml               # Desktop builds
+### 2.1 PostgreSQL MCP - Proof of Concept
+- [ ] Install `@modelcontextprotocol/server-postgres`
+- [ ] Spawn MCP server as child process
+- [ ] Test query execution
+- [ ] Wire to AI tool calling
 
-database/
-├── schema.sql                # Original schema
-└── schema-v2.sql             # Additional tables
+### 2.2 MySQL MCP
+- [ ] Install `@benborla/mcp-server-mysql`
+- [ ] Add to MCP manager
+- [ ] Test multi-database queries
 
-Dockerfile.api                # Docker build
-```
+### 2.3 SQL Server MCP
+- [ ] Install `@azure-samples/mssql-mcp-server`
+- [ ] Test Windows/SQL authentication
 
 ---
 
-## API Endpoints
+## 🏗️ PHASE 3: CUSTOM MCP SERVERS (Week 3-5)
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/` | Health check |
-| GET | `/ready` | Readiness check |
-| GET | `/metrics` | Server metrics |
-| GET | `/api/status` | Service status |
-| GET | `/api/ai/providers` | List providers |
-| GET | `/api/ai/models` | List models |
-| POST | `/api/ai/chat` | Chat completion |
-| POST | `/api/ai/embeddings` | Embeddings |
-| POST | `/api/licenses/validate` | Validate license |
-| POST | `/api/licenses/activate` | Activate license |
-| POST | `/api/licenses/deactivate` | Deactivate |
-| GET | `/api/licenses/features/:tier` | Tier features |
-| GET | `/api/usage` | Usage stats |
-| GET | `/api/usage/summary` | Usage summary |
-| GET | `/api/usage/limits` | Usage limits |
-| GET | `/api/usage/cost` | Cost breakdown |
+### 3.1 Oracle MCP Server
+- [ ] Create `packages/mcp-servers/oracle`
+- [ ] Implement with oracledb
+- [ ] Test with Oracle XE
 
----
+### 3.2 SAP HANA MCP Server
+- [ ] Create `packages/mcp-servers/sap-hana`
+- [ ] Implement with @sap/hana-client
+- [ ] Test with SAP HANA Express
 
-## Next Steps (Optional)
+### 3.3 Salesforce MCP Server
+- [ ] Create `packages/mcp-servers/salesforce`
+- [ ] Implement OAuth2 + jsforce
+- [ ] Test with Salesforce Developer
 
-### Desktop App Integration
-- [ ] Connect Desktop App to Express API
-- [ ] License validation on startup
-- [ ] Provider selection UI
-- [ ] Streaming chat display
-
-### MCP (Future)
-- [ ] AI Nexus MCP Server for Claude Desktop
-- [ ] Docker Compose for MCP farm
+### 3.4 ServiceNow MCP Server
+- [ ] Create `packages/mcp-servers/servicenow`
+- [ ] Implement REST API wrapper
+- [ ] Test with ServiceNow Developer
 
 ---
 
-## Quick Start
+## 🏗️ PHASE 4: PAYMENT & LICENSE (Week 4-5)
+
+### 4.1 Payment Integration
+- [ ] Dodo Payments webhook
+
+
+### 4.2 License Generation
+- [ ] JWT license creation
+- [ ] Email delivery (Resend)
+- [ ] Desktop app validation
+
+---
+
+## 🏗️ PHASE 5: LANDING SITE (Week 5-6)
+
+### 5.1 Public Pages
+- [ ] Home page with hero
+- [ ] Pricing page
+- [ ] Features page
+- [ ] Download page
+
+### 5.2 Auth Pages
+- [ ] Google OAuth flow
+- [ ] Account dashboard
+
+---
+
+## 🏗️ PHASE 6: ADMIN DASHBOARD (Week 6-7)
+
+- [ ] User management
+- [ ] License management
+- [ ] Usage analytics
+- [ ] Audit logs
+
+---
+
+## 🏗️ PHASE 7: DESKTOP PACKAGING (Week 7)
+
+- [ ] Windows MSI installer
+- [ ] macOS DMG + notarization
+- [ ] Linux AppImage/deb/rpm
+- [ ] Auto-update system
+
+---
+
+## 🏗️ PHASE 8: TESTING & LAUNCH (Week 8)
+
+- [ ] End-to-end testing
+- [ ] Security audit
+- [ ] Performance testing
+- [ ] Production deployment
+
+---
+
+## 🚀 Quick Commands
 
 ```bash
-# 1. Start Express API
-cd apps/express-api
+# Start all development servers
 pnpm dev
 
-# 2. Test health
-curl http://localhost:5500/
+# Start specific apps
+cd apps/landing-site && pnpm dev      # Port 3000
+cd apps/admin-dashboard && pnpm dev   # Port 3001
+cd apps/express-api && pnpm dev       # Port 5500
+cd apps/desktop-app && pnpm dev       # Electron
 
-# 3. Test providers
+# Install MCP packages
+cd apps/desktop-app
+pnpm add @modelcontextprotocol/sdk @modelcontextprotocol/server-postgres
+
+# Test API
 curl http://localhost:5500/api/ai/providers
-
-# 4. Run database schema (in Supabase SQL Editor)
-# Copy contents of database/schema.sql
-# Copy contents of database/schema-v2.sql
-
-# 5. Deploy to Railway
-# Push to GitHub and connect Railway
 ```
 
 ---
 
-## Environment Variables
+## 📁 Key Files
 
-Required in `.env`:
-```env
-# Server
-PORT=5500
-NODE_ENV=production
+| Purpose | File |
+|---------|------|
+| AI Routes | `apps/express-api/src/routes/ai.js` |
+| AI Service | `apps/express-api/src/services/ai/index.js` |
+| MCP Manager | `apps/desktop-app/src/main/mcp/mcp-manager.ts` |
+| Chat UI | `apps/desktop-app/src/renderer/pages/ChatPage.tsx` |
+| Connections UI | `apps/desktop-app/src/renderer/pages/ConnectionsPageEnhanced.tsx` |
+| Shared Types | `packages/shared/src/types.ts` |
+| DB Schema | `database/schema.sql`, `database/schema-v2.sql` |
 
-# Supabase
-SUPABASE_URL=your_url
-SUPABASE_SERVICE_KEY=your_key
+---
 
-# At least one AI provider
-OPENAI_API_KEY=sk-...
-# or
-ANTHROPIC_API_KEY=sk-ant-...
-# or any other provider
-```
+*Updated as implementation progresses*

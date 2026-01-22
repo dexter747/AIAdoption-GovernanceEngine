@@ -1,5 +1,6 @@
 /**
  * OpenAI Provider
+ * Supports chat completions, tool calling (for MCP), and embeddings
  */
 
 import OpenAI from 'openai';
@@ -18,18 +19,63 @@ export class OpenAIProvider {
       apiKey: config.apiKey,
       organization: config.orgId || undefined,
     });
+    
+    this.config = config;
   }
 
-  async chat({ model, messages, temperature, maxTokens }) {
+  /**
+   * Chat completion with optional tool/function calling for MCP
+   */
+  async chat({ model, messages, temperature, maxTokens, tools }) {
     try {
-      const response = await this.client.chat.completions.create({
+      const requestParams = {
         model,
         messages,
         temperature,
         max_tokens: maxTokens,
-      });
-
+      };
+      
+      // Add tools if provided (for MCP integration)
+      if (tools && tools.length > 0) {
+        requestParams.tools = tools.map(tool => ({
+          type: 'function',
+          function: {
+            name: tool.name,
+            description: tool.description,
+            parameters: tool.inputSchema || tool.parameters || { type: 'object', properties: {} },
+          },
+        }));
+        requestParams.tool_choice = 'auto';
+      }
+      
+      const response = await this.client.chat.completions.create(requestParams);
       const choice = response.choices[0];
+      
+      // Check if AI wants to call a tool
+      if (choice.finish_reason === 'tool_calls' && choice.message.tool_calls) {
+        return {
+          id: response.id,
+          message: {
+            role: choice.message.role,
+            content: choice.message.content,
+            tool_calls: choice.message.tool_calls.map(tc => ({
+              id: tc.id,
+              type: tc.type,
+              function: {
+                name: tc.function.name,
+                arguments: tc.function.arguments,
+              },
+            })),
+          },
+          finishReason: choice.finish_reason,
+          usage: {
+            inputTokens: response.usage?.prompt_tokens || 0,
+            outputTokens: response.usage?.completion_tokens || 0,
+            totalTokens: response.usage?.total_tokens || 0,
+          },
+          requiresToolExecution: true,
+        };
+      }
       
       return {
         id: response.id,
@@ -58,19 +104,41 @@ export class OpenAIProvider {
     }
   }
 
-  async *chatStream({ model, messages, temperature, maxTokens }) {
+  async *chatStream({ model, messages, temperature, maxTokens, tools }) {
     try {
-      const stream = await this.client.chat.completions.create({
+      const requestParams = {
         model,
         messages,
         temperature,
         max_tokens: maxTokens,
         stream: true,
-      });
+      };
+      
+      // Add tools if provided
+      if (tools && tools.length > 0) {
+        requestParams.tools = tools.map(tool => ({
+          type: 'function',
+          function: {
+            name: tool.name,
+            description: tool.description,
+            parameters: tool.inputSchema || tool.parameters || { type: 'object', properties: {} },
+          },
+        }));
+        requestParams.tool_choice = 'auto';
+      }
+      
+      const stream = await this.client.chat.completions.create(requestParams);
 
       for await (const chunk of stream) {
         const delta = chunk.choices[0]?.delta;
-        if (delta?.content) {
+        
+        // Handle tool calls in streaming
+        if (delta?.tool_calls) {
+          yield {
+            tool_calls: delta.tool_calls,
+            finishReason: chunk.choices[0]?.finish_reason,
+          };
+        } else if (delta?.content) {
           yield {
             content: delta.content,
             finishReason: chunk.choices[0]?.finish_reason,

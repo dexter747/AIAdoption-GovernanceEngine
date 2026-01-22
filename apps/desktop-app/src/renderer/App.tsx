@@ -3,13 +3,14 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import Sidebar from './components/Sidebar';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
-import ConnectionsPage from './pages/ConnectionsPage';
 import ConnectionsPageEnhanced from './pages/ConnectionsPageEnhanced';
 import QueriesPage from './pages/QueriesPage';
 import ChatPage from './pages/ChatPage';
 import PricingPage from './pages/PricingPage';
 import SettingsPage from './pages/SettingsPage';
 import ProfilePage from './pages/ProfilePage';
+import APIKeysPage from './pages/APIKeysPage';
+import DatabaseConnectionsPage from './pages/DatabaseConnectionsPage';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
@@ -117,6 +118,26 @@ function AppRoutes() {
           <ProtectedRoute>
             <AppLayout>
               <SettingsPage />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/settings/api-keys"
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <APIKeysPage />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/settings/databases"
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <DatabaseConnectionsPage />
             </AppLayout>
           </ProtectedRoute>
         }

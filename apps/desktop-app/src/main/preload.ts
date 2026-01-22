@@ -53,7 +53,7 @@ contextBridge.exposeInMainWorld('electron', {
     openExternal: (url: string) => ipcRenderer.invoke('system:open-external', url),
   },
 
-  // MCP Connection API
+  // MCP Connection API (Legacy manager)
   mcp: {
     addConnection: (config: any) => ipcRenderer.invoke('mcp:add-connection', config),
     enableConnection: (id: string) => ipcRenderer.invoke('mcp:enable-connection', id),
@@ -65,6 +65,22 @@ contextBridge.exposeInMainWorld('electron', {
     deleteConnection: (id: string) => ipcRenderer.invoke('mcp:delete-connection', id),
     getAvailableServers: () => ipcRenderer.invoke('mcp:get-available-servers'),
     checkDocker: () => ipcRenderer.invoke('mcp:check-docker'),
+    
+    // New MCP Client SDK methods
+    connect: (config: { id: string; type: string; connectionString: string; name: string }) => 
+      ipcRenderer.invoke('mcp:client-connect', config),
+    disconnect: (connectionId: string) => ipcRenderer.invoke('mcp:client-disconnect', connectionId),
+    query: (connectionId: string, sql: string) => ipcRenderer.invoke('mcp:query', connectionId, sql),
+    callTool: (connectionId: string, toolName: string, args: any) => 
+      ipcRenderer.invoke('mcp:call-tool', connectionId, toolName, args),
+    listTables: (connectionId: string) => ipcRenderer.invoke('mcp:list-tables', connectionId),
+    getTableSchema: (connectionId: string, tableName: string) => 
+      ipcRenderer.invoke('mcp:get-table-schema', connectionId, tableName),
+    getTools: (connectionId: string) => ipcRenderer.invoke('mcp:get-tools', connectionId),
+    getAllToolsForAI: () => ipcRenderer.invoke('mcp:get-all-tools-for-ai'),
+    getStatus: () => ipcRenderer.invoke('mcp:get-status'),
+    isConnected: (connectionId: string) => ipcRenderer.invoke('mcp:is-connected', connectionId),
+    disconnectAll: () => ipcRenderer.invoke('mcp:disconnect-all'),
   },
 
   // Chat History API
@@ -93,13 +109,36 @@ contextBridge.exposeInMainWorld('electron', {
     queryAI: (request: any) => ipcRenderer.invoke('express:query-ai', request),
     validateLicense: (licenseKey: string, deviceId: string, deviceInfo?: any) => 
       ipcRenderer.invoke('express:validate-license', licenseKey, deviceId, deviceInfo),
-    getUserApiKeys: (userId: string) => ipcRenderer.invoke('express:get-user-api-keys', userId),
-    addUserApiKey: (userId: string, provider: string, apiKey: string, keyName?: string) => 
-      ipcRenderer.invoke('express:add-user-api-key', userId, provider, apiKey, keyName),
+    
+    // User API Keys (BYOK)
+    getProvidersList: () => ipcRenderer.invoke('express:get-providers-list'),
+    getUserApiKeys: () => ipcRenderer.invoke('express:get-user-api-keys'),
+    getUserApiKeyByProvider: (provider: string) => ipcRenderer.invoke('express:get-user-api-key-by-provider', provider),
+    addUserApiKey: (provider: string, apiKey: string, keyName?: string, config?: any) => 
+      ipcRenderer.invoke('express:add-user-api-key', provider, apiKey, keyName, config),
+    updateUserApiKey: (keyId: string, updates: any) => ipcRenderer.invoke('express:update-user-api-key', keyId, updates),
+    deleteUserApiKey: (keyId: string) => ipcRenderer.invoke('express:delete-user-api-key', keyId),
+    testUserApiKey: (keyId: string) => ipcRenderer.invoke('express:test-user-api-key', keyId),
+    
+    // User Database Connections
+    getConnectionTypes: () => ipcRenderer.invoke('express:get-connection-types'),
+    getUserConnections: () => ipcRenderer.invoke('express:get-user-connections'),
+    getUserConnection: (connectionId: string) => ipcRenderer.invoke('express:get-user-connection', connectionId),
+    addUserConnection: (name: string, connectionType: string, config: any, mcpServerType?: string) => 
+      ipcRenderer.invoke('express:add-user-connection', name, connectionType, config, mcpServerType),
+    updateUserConnection: (connectionId: string, updates: any) => ipcRenderer.invoke('express:update-user-connection', connectionId, updates),
+    deleteUserConnection: (connectionId: string) => ipcRenderer.invoke('express:delete-user-connection', connectionId),
+    testUserConnection: (connectionId: string) => ipcRenderer.invoke('express:test-user-connection', connectionId),
+    startMCPServer: (connectionId: string) => ipcRenderer.invoke('express:start-mcp-server', connectionId),
+    
+    // Usage & Subscriptions
     getUsage: (userId: string, options?: any) => ipcRenderer.invoke('express:get-usage', userId, options),
     logUsage: (data: any) => ipcRenderer.invoke('express:log-usage', data),
     getSubscription: (userId: string) => ipcRenderer.invoke('express:get-subscription', userId),
-    setAuth: (userId: string, licenseKey: string) => ipcRenderer.invoke('express:set-auth', userId, licenseKey),
+    
+    // Auth
+    setAuth: (userId: string, licenseKey: string, authToken?: string) => ipcRenderer.invoke('express:set-auth', userId, licenseKey, authToken),
+    setAuthToken: (token: string) => ipcRenderer.invoke('express:set-auth-token', token),
     updateConfig: (config: any) => ipcRenderer.invoke('express:update-config', config),
   },
 });

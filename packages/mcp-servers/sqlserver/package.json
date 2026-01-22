@@ -1,0 +1,24 @@
+{
+  "name": "@ai-nexus/mcp-server-sqlserver",
+  "version": "1.0.0",
+  "description": "Model Context Protocol server for Microsoft SQL Server",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "mcp-sqlserver": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "tedious": "^16.7.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.6",
+    "@types/tedious": "^4.0.14",
+    "typescript": "^5.3.3"
+  }
+}

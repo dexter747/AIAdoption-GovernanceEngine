@@ -89,6 +89,11 @@ export const config = {
   logging: {
     level: process.env.LOG_LEVEL || 'info',
   },
+
+  // Encryption (for API keys storage)
+  encryption: {
+    key: process.env.ENCRYPTION_KEY || 'dev-encryption-key-change-in-production-32chars',
+  },
 };
 
 // Create Supabase client

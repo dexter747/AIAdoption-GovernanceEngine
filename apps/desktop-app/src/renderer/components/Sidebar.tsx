@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { 
   LayoutDashboard, Database, MessageSquare, Settings, 
   CreditCard, User, LogOut, Sparkles, Sun, Moon, Monitor,
-  ChevronDown
+  Key, Server
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
@@ -12,7 +12,12 @@ const navigation = [
   { name: 'Connections', href: '/connections', icon: Database },
   { name: 'AI Chat', href: '/chat', icon: MessageSquare },
   { name: 'Pricing', href: '/pricing', icon: CreditCard },
-  { name: 'Settings', href: '/settings', icon: Settings },
+];
+
+const settingsNavigation = [
+  { name: 'General', href: '/settings', icon: Settings },
+  { name: 'API Keys', href: '/settings/api-keys', icon: Key },
+  { name: 'Databases', href: '/settings/databases', icon: Server },
   { name: 'Profile', href: '/profile', icon: User },
 ];
 
@@ -60,7 +65,7 @@ export default function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-4 py-6">
+      <nav className="flex-1 px-4 py-6 overflow-y-auto">
         <ul className="space-y-1">
           {navigation.map((item) => {
             const isActive = location.pathname === item.href;
@@ -81,6 +86,31 @@ export default function Sidebar() {
             );
           })}
         </ul>
+
+        {/* Settings Section */}
+        <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-800">
+          <p className="px-3 mb-2 text-xs font-medium text-gray-400 uppercase tracking-wider">Settings</p>
+          <ul className="space-y-1">
+            {settingsNavigation.map((item) => {
+              const isActive = location.pathname === item.href;
+              return (
+                <li key={item.name}>
+                  <Link
+                    to={item.href}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                      isActive
+                        ? 'bg-blue-500 text-white'
+                        : 'text-gray-500 hover:text-black dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-900'
+                    }`}
+                  >
+                    <item.icon className="w-5 h-5" />
+                    {item.name}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       </nav>
 
       {/* Theme Toggle */}

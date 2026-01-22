@@ -4,6 +4,7 @@ import { AIRouter } from './ai/ai-router';
 import { LicenseManager } from './license/license-manager';
 import { SettingsManager } from './data/settings-manager';
 import { mcpConnectionManager } from './mcp/mcp-manager';
+import { mcpClient } from './mcp/mcp-client';
 import { chatHistoryManager } from './chat/chat-history-manager';
 import { expressClient } from './api/express-client';
 import { app, shell } from 'electron';
@@ -128,6 +129,105 @@ ipcMain.handle('mcp:check-docker', async () => {
 });
 
 // =============================================================================
+// MCP CLIENT HANDLERS (Real MCP SDK Implementation)
+// =============================================================================
+
+// Connect to database via MCP
+ipcMain.handle('mcp:client-connect', async (_event, config: {
+  id: string;
+  type: string;
+  connectionString: string;
+  name: string;
+}) => {
+  try {
+    const result = await mcpClient.connect(config as any);
+    return { 
+      success: true, 
+      tools: result.tools,
+      status: result.status 
+    };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+});
+
+// Disconnect MCP client
+ipcMain.handle('mcp:client-disconnect', async (_event, connectionId: string) => {
+  try {
+    await mcpClient.disconnect(connectionId);
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+});
+
+// Execute database query via MCP
+ipcMain.handle('mcp:query', async (_event, connectionId: string, sql: string) => {
+  try {
+    const result = await mcpClient.query(connectionId, sql);
+    return { success: true, data: result };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+});
+
+// Call any MCP tool
+ipcMain.handle('mcp:call-tool', async (_event, connectionId: string, toolName: string, args: any) => {
+  try {
+    const result = await mcpClient.callTool(connectionId, toolName, args);
+    return { success: true, data: result };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+});
+
+// List tables in database
+ipcMain.handle('mcp:list-tables', async (_event, connectionId: string) => {
+  try {
+    const result = await mcpClient.listTables(connectionId);
+    return { success: true, data: result };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+});
+
+// Get table schema
+ipcMain.handle('mcp:get-table-schema', async (_event, connectionId: string, tableName: string) => {
+  try {
+    const result = await mcpClient.getTableSchema(connectionId, tableName);
+    return { success: true, data: result };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+});
+
+// Get available tools for a connection
+ipcMain.handle('mcp:get-tools', async (_event, connectionId: string) => {
+  return mcpClient.getTools(connectionId);
+});
+
+// Get all tools for AI function calling
+ipcMain.handle('mcp:get-all-tools-for-ai', async () => {
+  return mcpClient.getAllToolsForAI();
+});
+
+// Get MCP connection status
+ipcMain.handle('mcp:get-status', async () => {
+  return mcpClient.getStatus();
+});
+
+// Check if connection is ready
+ipcMain.handle('mcp:is-connected', async (_event, connectionId: string) => {
+  return mcpClient.isConnected(connectionId);
+});
+
+// Disconnect all MCP connections
+ipcMain.handle('mcp:disconnect-all', async () => {
+  await mcpClient.disconnectAll();
+  return { success: true };
+});
+
+// =============================================================================
 // CHAT HISTORY HANDLERS
 // =============================================================================
 
@@ -211,14 +311,69 @@ ipcMain.handle('express:validate-license', async (_event, licenseKey, deviceId, 
   return await expressClient.validateLicense(licenseKey, deviceId, deviceInfo);
 });
 
-ipcMain.handle('express:get-user-api-keys', async (_event, userId) => {
-  return await expressClient.getUserApiKeys(userId);
+// User API Keys (BYOK)
+ipcMain.handle('express:get-providers-list', async () => {
+  return await expressClient.getProvidersList();
 });
 
-ipcMain.handle('express:add-user-api-key', async (_event, userId, provider, apiKey, keyName) => {
-  return await expressClient.addUserApiKey(userId, provider, apiKey, keyName);
+ipcMain.handle('express:get-user-api-keys', async () => {
+  return await expressClient.getUserApiKeys();
 });
 
+ipcMain.handle('express:get-user-api-key-by-provider', async (_event, provider) => {
+  return await expressClient.getUserApiKeyByProvider(provider);
+});
+
+ipcMain.handle('express:add-user-api-key', async (_event, provider, apiKey, keyName, config) => {
+  return await expressClient.addUserApiKey(provider, apiKey, keyName, config);
+});
+
+ipcMain.handle('express:update-user-api-key', async (_event, keyId, updates) => {
+  return await expressClient.updateUserApiKey(keyId, updates);
+});
+
+ipcMain.handle('express:delete-user-api-key', async (_event, keyId) => {
+  return await expressClient.deleteUserApiKey(keyId);
+});
+
+ipcMain.handle('express:test-user-api-key', async (_event, keyId) => {
+  return await expressClient.testUserApiKey(keyId);
+});
+
+// User Database Connections
+ipcMain.handle('express:get-connection-types', async () => {
+  return await expressClient.getConnectionTypes();
+});
+
+ipcMain.handle('express:get-user-connections', async () => {
+  return await expressClient.getUserConnections();
+});
+
+ipcMain.handle('express:get-user-connection', async (_event, connectionId) => {
+  return await expressClient.getUserConnection(connectionId);
+});
+
+ipcMain.handle('express:add-user-connection', async (_event, name, connectionType, config, mcpServerType) => {
+  return await expressClient.addUserConnection(name, connectionType, config, mcpServerType);
+});
+
+ipcMain.handle('express:update-user-connection', async (_event, connectionId, updates) => {
+  return await expressClient.updateUserConnection(connectionId, updates);
+});
+
+ipcMain.handle('express:delete-user-connection', async (_event, connectionId) => {
+  return await expressClient.deleteUserConnection(connectionId);
+});
+
+ipcMain.handle('express:test-user-connection', async (_event, connectionId) => {
+  return await expressClient.testUserConnection(connectionId);
+});
+
+ipcMain.handle('express:start-mcp-server', async (_event, connectionId) => {
+  return await expressClient.startMCPServer(connectionId);
+});
+
+// Usage & Subscriptions
 ipcMain.handle('express:get-usage', async (_event, userId, options) => {
   return await expressClient.getUsage(userId, options);
 });
@@ -231,8 +386,13 @@ ipcMain.handle('express:get-subscription', async (_event, userId) => {
   return await expressClient.getSubscription(userId);
 });
 
-ipcMain.handle('express:set-auth', async (_event, userId, licenseKey) => {
-  return expressClient.setAuth(userId, licenseKey);
+// Auth
+ipcMain.handle('express:set-auth', async (_event, userId, licenseKey, authToken) => {
+  return expressClient.setAuth(userId, licenseKey, authToken);
+});
+
+ipcMain.handle('express:set-auth-token', async (_event, token) => {
+  return expressClient.setAuthToken(token);
 });
 
 ipcMain.handle('express:update-config', async (_event, config) => {

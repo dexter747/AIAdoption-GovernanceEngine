@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface User {
   id: string;
@@ -94,44 +94,4 @@ export function useAuth() {
   return context;
 }
 
-// Type declaration for window.electron
-declare global {
-  interface Window {
-    electron?: {
-      auth: {
-        check: () => Promise<AuthData | null>;
-        login: () => Promise<{ opened: boolean }>;
-        logout: () => Promise<{ success: boolean }>;
-        getUser: () => Promise<User | null>;
-        onSuccess: (callback: (data: AuthData) => void) => void;
-        onError: (callback: (error: string) => void) => void;
-      };
-      connection: {
-        test: (config: any) => Promise<any>;
-        connect: (config: any) => Promise<any>;
-        disconnect: (id: string) => Promise<any>;
-        list: () => Promise<any[]>;
-      };
-      ai: {
-        query: (prompt: string, options: any) => Promise<any>;
-        getModels: () => Promise<any[]>;
-        getCost: () => Promise<any>;
-      };
-      license: {
-        validate: (key: string) => Promise<any>;
-        get: () => Promise<any>;
-        refresh: () => Promise<any>;
-      };
-      settings: {
-        get: (key: string) => Promise<any>;
-        set: (key: string, value: any) => Promise<any>;
-        getAll: () => Promise<any>;
-      };
-      system: {
-        getVersion: () => Promise<string>;
-        checkUpdates: () => Promise<any>;
-        openExternal: (url: string) => Promise<void>;
-      };
-    };
-  }
-}
+// Type declarations moved to types/electron.d.ts

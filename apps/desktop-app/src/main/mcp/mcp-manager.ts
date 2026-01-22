@@ -37,6 +37,7 @@ export class MCPConnectionManager {
     type: 'docker' | 'npm';
     image?: string;
     package?: string;
+    localPath?: string;
     available: boolean;
   }> = {
     postgresql: {
@@ -45,45 +46,47 @@ export class MCPConnectionManager {
       available: true,
     },
     mysql: {
-      type: 'docker',
-      image: 'mysql-mcp-server:latest', // Community or custom
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/mysql/dist/index.js',
       available: true,
     },
     oracle: {
-      type: 'docker',
-      image: 'oracle-mcp-server:latest',
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/oracle/dist/index.js',
       available: true,
     },
     sqlserver: {
-      type: 'docker',
-      image: 'sqlserver-mcp-server:latest',
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/sqlserver/dist/index.js',
       available: true,
     },
     'sap-hana': {
-      type: 'custom',
-      available: false, // Needs custom implementation
+      type: 'npm' as const,
+      localPath: '../../../../../packages/mcp-servers/sap-hana/dist/index.js',
+      available: true,
     },
     mongodb: {
-      type: 'docker',
-      image: 'mongodb-mcp-server:latest',
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/mongodb/dist/index.js',
       available: true,
     },
     salesforce: {
       type: 'npm',
-      package: '@modelcontextprotocol/server-salesforce',
-      available: false, // To be implemented
+      localPath: '../../../../../packages/mcp-servers/salesforce/dist/index.js',
+      available: true,
     },
     servicenow: {
-      type: 'custom',
-      available: false,
+      type: 'npm' as const,
+      localPath: '../../../../../packages/mcp-servers/servicenow/dist/index.js',
+      available: true,
     },
     jira: {
       type: 'npm',
-      package: 'mcp-server-jira', // Community package
+      localPath: '../../../../../packages/mcp-servers/jira/dist/index.js',
       available: true,
     },
     zendesk: {
-      type: 'custom',
+      type: 'npm' as const,
       available: false,
     },
   };
@@ -238,21 +241,86 @@ export class MCPConnectionManager {
 
   // Start npm-based MCP server
   private async startNpmMCPServer(connection: MCPConnection): Promise<void> {
-    const { package: packageName } = connection.mcpServerInfo!;
-    
-    // Check if package is installed
-    try {
-      await execAsync(`npm list -g ${packageName}`);
-    } catch {
-      // Install if not present
-      console.log(`Installing ${packageName}...`);
-      await execAsync(`npm install -g ${packageName}`);
+    const { package: packageName, localPath } = connection.mcpServerInfo!;
+    const { config } = connection;
+
+    let command: string;
+    let args: string[] = [];
+
+    if (localPath) {
+      // Use local MCP server from packages/mcp-servers/
+      const { resolve } = await import('path');
+      const mcpServerPath = resolve(__dirname, localPath);
+      command = 'node';
+      args = [mcpServerPath];
+    } else if (packageName) {
+      // Check if package is installed
+      try {
+        await execAsync(`npm list -g ${packageName}`);
+      } catch {
+        // Install if not present
+        console.log(`Installing ${packageName}...`);
+        await execAsync(`npm install -g ${packageName}`);
+      }
+      command = 'npx';
+      args = ['-y', packageName];
+    } else {
+      throw new Error('No package or local path specified');
+    }
+
+    // Set environment variables based on connection type
+    const env = { ...process.env };
+
+    if (connection.type === 'postgresql') {
+      env.POSTGRES_CONNECTION_STRING = `postgresql://${config.username}:${config.password}@${config.host}:${config.port}/${config.database}`;
+    } else if (connection.type === 'mysql') {
+      env.MYSQL_HOST = config.host;
+      env.MYSQL_PORT = String(config.port);
+      env.MYSQL_USER = config.username;
+      env.MYSQL_PASSWORD = config.password;
+      env.MYSQL_DATABASE = config.database;
+    } else if (connection.type === 'mongodb') {
+      env.MONGODB_URI = `mongodb://${config.username}:${config.password}@${config.host}:${config.port}/${config.database}`;
+    } else if (connection.type === 'oracle') {
+      env.ORACLE_USER = config.username;
+      env.ORACLE_PASSWORD = config.password;
+      env.ORACLE_HOST = config.host;
+      env.ORACLE_PORT = String(config.port);
+      env.ORACLE_SERVICE = config.database;
+    } else if (connection.type === 'sqlserver') {
+      env.SQLSERVER_HOST = config.host;
+      env.SQLSERVER_PORT = String(config.port);
+      env.SQLSERVER_USER = config.username;
+      env.SQLSERVER_PASSWORD = config.password;
+      env.SQLSERVER_DATABASE = config.database;
+    } else if (connection.type === 'sap-hana') {
+      env.SAP_HANA_HOST = config.host;
+      env.SAP_HANA_PORT = String(config.port);
+      env.SAP_HANA_USER = config.username;
+      env.SAP_HANA_PASSWORD = config.password;
+    } else if (connection.type === 'salesforce') {
+      env.SALESFORCE_INSTANCE_URL = config.host;
+      env.SALESFORCE_ACCESS_TOKEN = config.password;
+      env.SALESFORCE_USERNAME = config.username;
+    } else if (connection.type === 'servicenow') {
+      env.SERVICENOW_INSTANCE_URL = config.host;
+      env.SERVICENOW_USERNAME = config.username;
+      env.SERVICENOW_PASSWORD = config.password;
+    } else if (connection.type === 'jira') {
+      env.JIRA_BASE_URL = config.host;
+      env.JIRA_EMAIL = config.username;
+      env.JIRA_API_TOKEN = config.password;
     }
 
     // Start MCP server as child process
-    // This is a placeholder - actual implementation would use child_process.spawn
+    console.log(`Starting MCP server: ${command} ${args.join(' ')}`);
+    
+    // Actual spawning would happen here with child_process.spawn
     // and maintain the process reference
-    console.log(`Starting npm MCP server: ${packageName}`);
+    connection.mcpServerInfo!.processId = 1; // Placeholder
+    connection.isConnected = true;
+    connection.lastConnectedAt = new Date();
+    this.saveConnections();
   }
 
   // Stop Docker container

@@ -1,6 +1,6 @@
 /**
  * AI Nexus Express API - Entry Point
- * Production-ready backend server
+ * Production-ready backend server with WebSocket support
  */
 
 // Load environment variables FIRST
@@ -10,6 +10,7 @@ dotenv.config();
 import { createApp } from './app.js';
 import { logger } from './utils/logger.js';
 import { config } from './config/index.js';
+import { initializeWebSocket, getWebSocketStats } from './websocket/index.js';
 
 const app = createApp();
 
@@ -31,10 +32,14 @@ const gracefulShutdown = (signal) => {
 
 // Start server
 const server = app.listen(config.port, () => {
+  // Initialize WebSocket server
+  const wss = initializeWebSocket(server);
+  
   logger.info({
     port: config.port,
     env: config.env,
-    supabase: config.supabase.url ? 'connected' : 'not configured'
+    supabase: config.supabase.url ? 'connected' : 'not configured',
+    websocket: 'enabled'
   }, '🚀 AI Nexus API Server started');
   
   console.log(`
@@ -44,10 +49,12 @@ const server = app.listen(config.port, () => {
 ║  Port:        ${config.port}                                        ║
 ║  Environment: ${config.env.padEnd(41)}║
 ║  Supabase:    ${(config.supabase.url ? 'Connected' : 'Not configured').padEnd(41)}║
+║  WebSocket:   ws://localhost:${config.port}/ws/mcp                  ║
 ╠═══════════════════════════════════════════════════════════╣
 ║  Endpoints:                                               ║
 ║    Health:    http://localhost:${config.port}/health                ║
 ║    API:       http://localhost:${config.port}/api                   ║
+║    WebSocket: ws://localhost:${config.port}/ws/mcp                  ║
 ╚═══════════════════════════════════════════════════════════╝
   `);
 });

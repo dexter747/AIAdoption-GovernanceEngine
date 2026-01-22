@@ -72,10 +72,10 @@ export class AIRouter {
     return modelConfig?.provider as AIProvider || 'openai';
   }
 
-  private getProviderClient(provider: AIProvider) {
+  private getProviderClient(_provider: AIProvider) {
     // Stub - will be implemented with actual AI provider clients
     return {
-      complete: async (prompt: string, options: any) => {
+      complete: async (_prompt: string, _options: any) => {
         return {
           text: 'AI response placeholder',
           usage: {

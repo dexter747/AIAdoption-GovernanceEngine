@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Save, Key, Bell, Palette, Database, Shield } from 'lucide-react';
+import { Save, Key, Bell, Database, Shield } from 'lucide-react';
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('general');
