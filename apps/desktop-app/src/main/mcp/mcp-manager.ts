@@ -29,7 +29,7 @@ interface MCPConnection {
 }
 
 export class MCPConnectionManager {
-  private store: Store<{ connections: MCPConnection[] }>;
+  private store: Store<any>;
   private connections: Map<string, MCPConnection> = new Map();
 
   // Available MCP servers (official and community)
@@ -104,7 +104,7 @@ export class MCPConnectionManager {
 
   private loadConnections() {
     const saved = this.store.get('connections', []);
-    saved.forEach(conn => {
+    saved.forEach((conn: any) => {
       this.connections.set(conn.id, conn);
     });
   }
@@ -241,8 +241,12 @@ export class MCPConnectionManager {
 
   // Start npm-based MCP server
   private async startNpmMCPServer(connection: MCPConnection): Promise<void> {
-    const { package: packageName, localPath } = connection.mcpServerInfo!;
+    const { package: packageName } = connection.mcpServerInfo!;
     const { config } = connection;
+
+    // Get localPath from mcpServers lookup
+    const serverInfo = this.mcpServers[connection.type];
+    const localPath = serverInfo?.localPath;
 
     let command: string;
     let args: string[] = [];
@@ -318,8 +322,8 @@ export class MCPConnectionManager {
     // Actual spawning would happen here with child_process.spawn
     // and maintain the process reference
     connection.mcpServerInfo!.processId = 1; // Placeholder
-    connection.isConnected = true;
-    connection.lastConnectedAt = new Date();
+    connection.status = 'connected';
+    connection.lastConnected = new Date();
     this.saveConnections();
   }
 

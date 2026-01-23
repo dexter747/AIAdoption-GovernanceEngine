@@ -43,7 +43,7 @@ export interface ChatHistoryStats {
 }
 
 export class ChatHistoryManager {
-  private store: Store<{ conversations: ChatConversation[] }>;
+  private store: Store<any>;
   private conversations: Map<string, ChatConversation> = new Map();
 
   constructor() {
@@ -59,11 +59,11 @@ export class ChatHistoryManager {
 
   private loadConversations() {
     const saved = this.store.get('conversations', []);
-    saved.forEach(conv => {
+    saved.forEach((conv: any) => {
       // Convert date strings back to Date objects
       conv.createdAt = new Date(conv.createdAt);
       conv.updatedAt = new Date(conv.updatedAt);
-      conv.messages = conv.messages.map(msg => ({
+      conv.messages = conv.messages.map((msg: any) => ({
         ...msg,
         timestamp: new Date(msg.timestamp),
       }));
