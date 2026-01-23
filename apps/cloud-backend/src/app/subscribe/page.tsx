@@ -1,11 +1,22 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Check } from 'lucide-react';
 
-export default function SubscribePage() {
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+        <p className="text-gray-600">Loading subscription plans...</p>
+      </div>
+    </div>
+  );
+}
+
+function SubscribeContent() {
   const searchParams = useSearchParams();
   const defaultPlan = searchParams.get('plan') || 'professional';
   const [selectedPlan, setSelectedPlan] = useState(defaultPlan);
@@ -212,5 +223,13 @@ export default function SubscribePage() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function SubscribePage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <SubscribeContent />
+    </Suspense>
   );
 }

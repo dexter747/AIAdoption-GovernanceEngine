@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
 import { Sparkles, CheckCircle, Loader2 } from 'lucide-react';
 
-export default function DesktopCallbackPage() {
+function DesktopCallbackContent() {
   const { data: session, status } = useSession();
   const searchParams = useSearchParams();
   const [redirected, setRedirected] = useState(false);
@@ -147,5 +147,24 @@ export default function DesktopCallbackPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center">
+      <div className="text-center">
+        <Loader2 className="w-8 h-8 text-blue-500 animate-spin mx-auto mb-4" />
+        <p className="text-gray-500">Loading...</p>
+      </div>
+    </div>
+  );
+}
+
+export default function DesktopCallbackPage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <DesktopCallbackContent />
+    </Suspense>
   );
 }

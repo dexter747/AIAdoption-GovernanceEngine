@@ -9,6 +9,8 @@
     ],
     "jsx": "preserve",
     "rootDir": ".",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "plugins": [
       {
         "name": "next"

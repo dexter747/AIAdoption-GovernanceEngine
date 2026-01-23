@@ -11,7 +11,7 @@ import { createClient } from '@/lib/supabase/server';
  * GET /api/subscription
  * Get current subscription details
  */
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
  * DELETE /api/subscription
  * Cancel subscription at period end
  */
-export async function DELETE(request: NextRequest) {
+export async function DELETE(_request: NextRequest) {
   try {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+// import { prisma } from '@/lib/prisma'; // TODO: Re-enable when implementing database updates
 import crypto from 'crypto';
 
 export async function POST(request: Request) {
