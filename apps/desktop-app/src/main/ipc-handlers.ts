@@ -450,7 +450,7 @@ ipcMain.handle('connection:test-by-id', async (_event, connectionId) => {
     const mcpConn = await mcpConnectionManager.getConnection(connectionId);
     if (mcpConn) {
       const result = await mcpConnectionManager.testConnection(connectionId);
-      return { success: result.success, message: result.message };
+      return result;
     }
     
     // Try database connection

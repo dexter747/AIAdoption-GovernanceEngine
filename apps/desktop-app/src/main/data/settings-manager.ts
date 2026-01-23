@@ -1,5 +1,5 @@
-import path from 'path';
-import { app } from 'electron';
+// import path from 'path';
+// import { app } from 'electron';
 import Store from 'electron-store';
 
 export class SettingsManager {

@@ -3,7 +3,9 @@
   "compilerOptions": {
     "outDir": "./dist/main",
     "rootDir": "./src/main",
-    "lib": ["ES2022"]
+    "lib": ["ES2022"],
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
   },
   "include": ["src/main/**/*"],
   "exclude": ["node_modules", "dist"]
