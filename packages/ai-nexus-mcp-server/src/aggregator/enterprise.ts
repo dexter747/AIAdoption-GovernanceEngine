@@ -10,11 +10,12 @@ const logger = createLogger('enterprise-aggregator');
 interface EnterpriseSystem {
   id: string;
   name: string;
-  type: 'sap' | 'salesforce' | 'epic' | 'servicenow' | 'jira' | 'workday' | 'dynamics365' | 'netsuite';
+  type: 'sap' | 'salesforce' | 'epic' | 'servicenow' | 'jira' | 'workday' | 'dynamics365' | 'netsuite' | 'zendesk';
   mcpEndpoint: string;
   status: 'connected' | 'disconnected' | 'error';
   description: string;
-  category: 'erp' | 'crm' | 'ehr' | 'itsm' | 'hcm' | 'pm';
+  category: 'erp' | 'crm' | 'ehr' | 'itsm' | 'hcm' | 'pm' | 'support';
+  capabilities: string[];
 }
 
 // Registry of enterprise MCP servers
@@ -23,36 +24,57 @@ const ENTERPRISE_SERVERS: Record<string, Omit<EnterpriseSystem, 'id' | 'status'>
     name: 'SAP S/4HANA',
     type: 'sap',
     mcpEndpoint: process.env.SAP_MCP_URL ?? 'http://sap-s4hana-mcp:3000',
-    description: 'SAP S/4HANA ERP system',
-    category: 'erp'
+    description: 'SAP S/4HANA ERP system - Finance, Supply Chain, Manufacturing',
+    category: 'erp',
+    capabilities: ['bapi', 'rfc', 'odata', 'idocs', 'real-time-analytics']
   },
   'salesforce-main': {
     name: 'Salesforce',
     type: 'salesforce',
     mcpEndpoint: process.env.SALESFORCE_MCP_URL ?? 'http://salesforce-mcp:3000',
-    description: 'Salesforce CRM',
-    category: 'crm'
+    description: 'Salesforce CRM - Sales, Service, Marketing Cloud',
+    category: 'crm',
+    capabilities: ['soql', 'sosl', 'crud', 'bulk-api', 'reports', 'dashboards']
   },
   'epic-fhir': {
     name: 'Epic FHIR',
     type: 'epic',
     mcpEndpoint: process.env.EPIC_MCP_URL ?? 'http://epic-fhir-mcp:3000',
     description: 'Epic EHR via FHIR R4 (HIPAA Compliant)',
-    category: 'ehr'
+    category: 'ehr',
+    capabilities: ['patient', 'observations', 'medications', 'conditions', 'appointments']
   },
   'servicenow-itsm': {
     name: 'ServiceNow',
     type: 'servicenow',
     mcpEndpoint: process.env.SERVICENOW_MCP_URL ?? 'http://servicenow-mcp:3000',
-    description: 'ServiceNow ITSM',
-    category: 'itsm'
+    description: 'ServiceNow ITSM - Incidents, Changes, Problems, CMDB',
+    category: 'itsm',
+    capabilities: ['incidents', 'changes', 'problems', 'cmdb', 'workflows', 'service-catalog']
   },
   'jira-main': {
     name: 'Jira',
     type: 'jira',
     mcpEndpoint: process.env.JIRA_MCP_URL ?? 'http://jira-mcp:3000',
-    description: 'Atlassian Jira Project Management',
-    category: 'pm'
+    description: 'Atlassian Jira - Agile Project Management',
+    category: 'pm',
+    capabilities: ['jql', 'issues', 'projects', 'boards', 'sprints', 'workflows']
+  },
+  'workday-hcm': {
+    name: 'Workday HCM',
+    type: 'workday',
+    mcpEndpoint: process.env.WORKDAY_MCP_URL ?? 'http://workday-mcp:3000',
+    description: 'Workday Human Capital Management',
+    category: 'hcm',
+    capabilities: ['workers', 'organizations', 'compensation', 'recruiting', 'time-off']
+  },
+  'zendesk-support': {
+    name: 'Zendesk',
+    type: 'zendesk',
+    mcpEndpoint: process.env.ZENDESK_MCP_URL ?? 'http://zendesk-mcp:3000',
+    description: 'Zendesk Customer Support Platform',
+    category: 'support',
+    capabilities: ['tickets', 'users', 'organizations', 'triggers', 'macros', 'search']
   }
 };
 

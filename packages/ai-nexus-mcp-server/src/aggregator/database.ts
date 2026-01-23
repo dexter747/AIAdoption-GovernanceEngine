@@ -10,38 +10,74 @@ const logger = createLogger('database-aggregator');
 interface DatabaseConnection {
   id: string;
   name: string;
-  type: 'postgresql' | 'mysql' | 'mongodb' | 'sqlserver' | 'oracle' | 'redis' | 'sqlite' | 'elasticsearch';
+  type: 'postgresql' | 'mysql' | 'mongodb' | 'sqlserver' | 'oracle' | 'sap-hana' | 'redis' | 'sqlite' | 'elasticsearch' | 'mariadb';
   mcpEndpoint: string;
   status: 'connected' | 'disconnected' | 'error';
   description?: string;
+  capabilities?: string[];
 }
 
 // Registry of database MCP servers (configured via Docker Compose)
-const DATABASE_SERVERS: Record<string, { type: DatabaseConnection['type']; endpoint: string; description: string }> = {
+const DATABASE_SERVERS: Record<string, { type: DatabaseConnection['type']; endpoint: string; description: string; capabilities: string[] }> = {
   'postgres-main': {
     type: 'postgresql',
     endpoint: process.env.POSTGRES_MCP_URL ?? 'http://postgres-mcp:3000',
-    description: 'Main PostgreSQL database'
+    description: 'PostgreSQL - Advanced open-source relational database',
+    capabilities: ['query', 'schema', 'transactions', 'json', 'full-text-search']
   },
   'mysql-main': {
     type: 'mysql',
     endpoint: process.env.MYSQL_MCP_URL ?? 'http://mysql-mcp:3000',
-    description: 'Main MySQL database'
+    description: 'MySQL - Popular relational database',
+    capabilities: ['query', 'schema', 'transactions', 'stored-procedures']
+  },
+  'mariadb-main': {
+    type: 'mariadb',
+    endpoint: process.env.MARIADB_MCP_URL ?? 'http://mariadb-mcp:3000',
+    description: 'MariaDB - Enhanced MySQL fork',
+    capabilities: ['query', 'schema', 'transactions', 'galera-cluster']
   },
   'mongodb-main': {
     type: 'mongodb',
     endpoint: process.env.MONGODB_MCP_URL ?? 'http://mongodb-mcp:27017',
-    description: 'Main MongoDB database'
+    description: 'MongoDB - Document-oriented NoSQL database',
+    capabilities: ['query', 'aggregation', 'indexes', 'change-streams']
+  },
+  'sqlserver-main': {
+    type: 'sqlserver',
+    endpoint: process.env.SQLSERVER_MCP_URL ?? 'http://sqlserver-mcp:3000',
+    description: 'Microsoft SQL Server - Enterprise relational database',
+    capabilities: ['query', 'schema', 'transactions', 't-sql', 'stored-procedures']
+  },
+  'oracle-main': {
+    type: 'oracle',
+    endpoint: process.env.ORACLE_MCP_URL ?? 'http://oracle-mcp:3000',
+    description: 'Oracle Database - Enterprise-grade RDBMS',
+    capabilities: ['query', 'schema', 'plsql', 'explain-plan', 'partitioning']
+  },
+  'sap-hana-main': {
+    type: 'sap-hana',
+    endpoint: process.env.SAP_HANA_MCP_URL ?? 'http://sap-hana-mcp:3000',
+    description: 'SAP HANA - In-memory enterprise database',
+    capabilities: ['query', 'schema', 'calculation-views', 'real-time-analytics']
   },
   'redis-cache': {
     type: 'redis',
     endpoint: process.env.REDIS_MCP_URL ?? 'http://redis-mcp:3000',
-    description: 'Redis cache layer'
+    description: 'Redis - In-memory data structure store',
+    capabilities: ['get', 'set', 'hash', 'list', 'pub-sub', 'streams']
   },
   'sqlite-local': {
     type: 'sqlite',
     endpoint: process.env.SQLITE_MCP_URL ?? 'http://sqlite-mcp:3000',
-    description: 'Local SQLite database'
+    description: 'SQLite - Lightweight embedded database',
+    capabilities: ['query', 'schema', 'fts5']
+  },
+  'elasticsearch-main': {
+    type: 'elasticsearch',
+    endpoint: process.env.ELASTICSEARCH_MCP_URL ?? 'http://elasticsearch-mcp:9200',
+    description: 'Elasticsearch - Distributed search and analytics',
+    capabilities: ['search', 'aggregations', 'mappings', 'full-text']
   }
 };
 
