@@ -8,6 +8,7 @@
       "DOM.Iterable"
     ],
     "jsx": "preserve",
+    "rootDir": ".",
     "plugins": [
       {
         "name": "next"
