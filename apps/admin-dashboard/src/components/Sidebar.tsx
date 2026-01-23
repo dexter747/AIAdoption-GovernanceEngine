@@ -4,15 +4,16 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
   LayoutDashboard, Users, Download, CreditCard, Settings, 
-  LogOut, Sparkles, Sun, Moon, Monitor, ChevronDown
+  LogOut, Sparkles, Sun, Moon, Monitor, ChevronDown, BarChart3
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
   { name: 'Users', href: '/dashboard/users', icon: Users },
-  { name: 'Downloads', href: '/dashboard/downloads', icon: Download },
   { name: 'Payments', href: '/dashboard/payments', icon: CreditCard },
+  { name: 'Downloads', href: '/dashboard/downloads', icon: Download },
   { name: 'Settings', href: '/dashboard/settings', icon: Settings },
 ];
 
