@@ -213,7 +213,7 @@ export class EnterpriseAggregator {
         resourceType: 'Bundle',
         type: 'searchset',
         total: 0,
-        entry: [],
+        entry: [] as any[],
         message: 'Connect Epic FHIR MCP server to execute real queries. PHI will be redacted per HIPAA Safe Harbor.',
         mock: true
       }

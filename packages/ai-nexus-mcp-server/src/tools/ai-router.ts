@@ -444,7 +444,7 @@ export class AIRouter {
   private async queryGroq(model: string, prompt: string, systemPrompt?: string) {
     if (!this.groq) throw new Error('Groq client not initialized');
 
-    const messages: Groq.ChatCompletionMessageParam[] = [];
+    const messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }> = [];
     if (systemPrompt) {
       messages.push({ role: 'system', content: systemPrompt });
     }
@@ -502,13 +502,15 @@ export class AIRouter {
       models.map(model => this.query(prompt, model))
     );
 
-    return results.map((result, index) => ({
-      model: models[index],
-      ...(result.status === 'fulfilled' 
-        ? { success: true, ...result.value }
-        : { success: false, error: result.reason?.message ?? 'Unknown error' }
-      )
-    }));
+    return results.map((result, index) => {
+      const modelName = models[index];
+      if (result.status === 'fulfilled') {
+        const { model, ...rest } = result.value;
+        return { model: modelName, success: true, ...rest };
+      } else {
+        return { model: modelName, success: false, error: result.reason?.message ?? 'Unknown error' };
+      }
+    });
   }
 
   async healthCheck(): Promise<Record<string, unknown>> {
