@@ -508,7 +508,7 @@ ipcMain.handle('ai:chat', async (_event, params) => {
   }
 });
 
-ipcMain.handle('mcp:query', async (_event, params) => {
+ipcMain.handle('mcp:query-with-ai', async (_event, params) => {
   try {
     const { connectionId, query, model } = params;
     

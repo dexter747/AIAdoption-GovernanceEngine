@@ -61,7 +61,7 @@ contextBridge.exposeInMainWorld('electron', {
     getAvailableModels: () => ipcRenderer.invoke('ai:get-models'),
     getChatSessions: () => ipcRenderer.invoke('chat:get-sessions'),
     chat: (params: { messages: any[]; model: string; stream?: boolean }) => ipcRenderer.invoke('ai:chat', params),
-    queryWithMCP: (params: { connectionId: string; query: string; model: string }) => ipcRenderer.invoke('mcp:query', params),
+    queryWithMCP: (params: { connectionId: string; query: string; model: string }) => ipcRenderer.invoke('mcp:query-with-ai', params),
     saveChatSession: (session: any) => ipcRenderer.invoke('chat:save-session', session),
     getSubscription: () => ipcRenderer.invoke('subscription:get'),
     getPaymentHistory: () => ipcRenderer.invoke('payments:get-history'),
