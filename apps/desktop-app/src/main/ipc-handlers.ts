@@ -601,8 +601,11 @@ ipcMain.handle('payments:get-history', async () => {
 
 ipcMain.handle('payments:create-checkout', async (_event, params) => {
   try {
-    // Get the API URL from environment or use default production URL
-    const baseUrl = process.env.LANDING_SITE_URL || 'https://ainexus.com';
+    // In development, use local landing site; in production, use the production URL
+    const isDev = process.env.NODE_ENV !== 'production' || !app.isPackaged;
+    const baseUrl = isDev 
+      ? (process.env.LANDING_SITE_URL || 'http://localhost:3000')
+      : (process.env.LANDING_SITE_URL || 'https://ainexus.com');
     const checkoutUrl = `${baseUrl}/subscribe?plan=${params.plan}`;
     shell.openExternal(checkoutUrl);
     return { success: true, checkoutUrl };

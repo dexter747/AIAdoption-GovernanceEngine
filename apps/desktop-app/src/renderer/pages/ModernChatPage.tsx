@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { 
   Send, Loader2, Bot, User, Plus, Trash2, Copy, Check,
   MessageSquare, ChevronDown, PanelLeftClose, PanelLeft, Search,
-  Clock, Pencil, Lightbulb, Code, Briefcase, Sparkles
+  Clock, Pencil, Lightbulb, Code, Briefcase, Sparkles, Paperclip, X, FileText
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import ReactMarkdown from 'react-markdown';
@@ -37,61 +37,61 @@ interface ChatSession {
 // Comprehensive LLM models with SVG icons (Latest January 2026)
 const LLM_MODELS = [
   // OpenAI Models - Latest GPT-5 Series & Reasoning Models
-  { id: 'gpt-5.2', name: 'GPT-5.2', provider: 'OpenAI', icon: '/public/openai.svg', hasIcon: true },
-  { id: 'gpt-5.2-pro', name: 'GPT-5.2 Pro', provider: 'OpenAI', icon: '/public/openai.svg', hasIcon: true },
-  { id: 'gpt-5', name: 'GPT-5', provider: 'OpenAI', icon: '/public/openai.svg', hasIcon: true },
-  { id: 'gpt-5-mini', name: 'GPT-5 Mini', provider: 'OpenAI', icon: '/public/openai.svg', hasIcon: true },
-  { id: 'gpt-5-nano', name: 'GPT-5 Nano', provider: 'OpenAI', icon: '/public/openai.svg', hasIcon: true },
-  { id: 'gpt-4.1', name: 'GPT-4.1', provider: 'OpenAI', icon: '/public/openai.svg', hasIcon: true },
-  { id: 'gpt-4.1-mini', name: 'GPT-4.1 Mini', provider: 'OpenAI', icon: '/public/openai.svg', hasIcon: true },
-  { id: 'gpt-4o', name: 'GPT-4o', provider: 'OpenAI', icon: '/public/openai.svg', hasIcon: true },
-  { id: 'gpt-4o-mini', name: 'GPT-4o Mini', provider: 'OpenAI', icon: '/public/openai.svg', hasIcon: true },
-  { id: 'o4-mini', name: 'o4 Mini', provider: 'OpenAI', icon: '/public/openai.svg', hasIcon: true },
-  { id: 'o3', name: 'o3', provider: 'OpenAI', icon: '/public/openai.svg', hasIcon: true },
-  { id: 'o3-mini', name: 'o3 Mini', provider: 'OpenAI', icon: '/public/openai.svg', hasIcon: true },
-  { id: 'o1', name: 'o1', provider: 'OpenAI', icon: '/public/openai.svg', hasIcon: true },
-  { id: 'o1-mini', name: 'o1 Mini', provider: 'OpenAI', icon: '/public/openai.svg', hasIcon: true },
+  { id: 'gpt-5.2', name: 'GPT-5.2', provider: 'OpenAI', icon: '/openai.svg', hasIcon: true },
+  { id: 'gpt-5.2-pro', name: 'GPT-5.2 Pro', provider: 'OpenAI', icon: '/openai.svg', hasIcon: true },
+  { id: 'gpt-5', name: 'GPT-5', provider: 'OpenAI', icon: '/openai.svg', hasIcon: true },
+  { id: 'gpt-5-mini', name: 'GPT-5 Mini', provider: 'OpenAI', icon: '/openai.svg', hasIcon: true },
+  { id: 'gpt-5-nano', name: 'GPT-5 Nano', provider: 'OpenAI', icon: '/openai.svg', hasIcon: true },
+  { id: 'gpt-4.1', name: 'GPT-4.1', provider: 'OpenAI', icon: '/openai.svg', hasIcon: true },
+  { id: 'gpt-4.1-mini', name: 'GPT-4.1 Mini', provider: 'OpenAI', icon: '/openai.svg', hasIcon: true },
+  { id: 'gpt-4o', name: 'GPT-4o', provider: 'OpenAI', icon: '/openai.svg', hasIcon: true },
+  { id: 'gpt-4o-mini', name: 'GPT-4o Mini', provider: 'OpenAI', icon: '/openai.svg', hasIcon: true },
+  { id: 'o4-mini', name: 'o4 Mini', provider: 'OpenAI', icon: '/openai.svg', hasIcon: true },
+  { id: 'o3', name: 'o3', provider: 'OpenAI', icon: '/openai.svg', hasIcon: true },
+  { id: 'o3-mini', name: 'o3 Mini', provider: 'OpenAI', icon: '/openai.svg', hasIcon: true },
+  { id: 'o1', name: 'o1', provider: 'OpenAI', icon: '/openai.svg', hasIcon: true },
+  { id: 'o1-mini', name: 'o1 Mini', provider: 'OpenAI', icon: '/openai.svg', hasIcon: true },
   
   // Anthropic Models
-  { id: 'claude-3-7-sonnet-20250219', name: 'Claude 3.7 Sonnet', provider: 'Anthropic', icon: '/public/claude-ai.svg', hasIcon: true },
-  { id: 'claude-3-5-sonnet-20241022', name: 'Claude 3.5 Sonnet', provider: 'Anthropic', icon: '/public/claude-ai.svg', hasIcon: true },
-  { id: 'claude-3-5-haiku-20241022', name: 'Claude 3.5 Haiku', provider: 'Anthropic', icon: '/public/claude-ai.svg', hasIcon: true },
-  { id: 'claude-3-opus-20240229', name: 'Claude 3 Opus', provider: 'Anthropic', icon: '/public/claude-ai.svg', hasIcon: true },
+  { id: 'claude-3-7-sonnet-20250219', name: 'Claude 3.7 Sonnet', provider: 'Anthropic', icon: '/claude-ai.svg', hasIcon: true },
+  { id: 'claude-3-5-sonnet-20241022', name: 'Claude 3.5 Sonnet', provider: 'Anthropic', icon: '/claude-ai.svg', hasIcon: true },
+  { id: 'claude-3-5-haiku-20241022', name: 'Claude 3.5 Haiku', provider: 'Anthropic', icon: '/claude-ai.svg', hasIcon: true },
+  { id: 'claude-3-opus-20240229', name: 'Claude 3 Opus', provider: 'Anthropic', icon: '/claude-ai.svg', hasIcon: true },
   
   // Google Gemini Models
-  { id: 'gemini-2.0-flash-exp', name: 'Gemini 2.0 Flash', provider: 'Google', icon: '/public/gemini-color.svg', hasIcon: true },
-  { id: 'gemini-2.0-flash-thinking-exp-01-21', name: 'Gemini 2.0 Flash Thinking', provider: 'Google', icon: '/public/gemini-color.svg', hasIcon: true },
-  { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro', provider: 'Google', icon: '/public/gemini-color.svg', hasIcon: true },
-  { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash', provider: 'Google', icon: '/public/gemini-color.svg', hasIcon: true },
+  { id: 'gemini-2.0-flash-exp', name: 'Gemini 2.0 Flash', provider: 'Google', icon: '/gemini-color.svg', hasIcon: true },
+  { id: 'gemini-2.0-flash-thinking-exp-01-21', name: 'Gemini 2.0 Flash Thinking', provider: 'Google', icon: '/gemini-color.svg', hasIcon: true },
+  { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro', provider: 'Google', icon: '/gemini-color.svg', hasIcon: true },
+  { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash', provider: 'Google', icon: '/gemini-color.svg', hasIcon: true },
   
   // Meta Llama Models
-  { id: 'llama-3.3-70b-versatile', name: 'Llama 3.3 70B Versatile', provider: 'Meta', icon: '/public/meta.svg', hasIcon: true },
-  { id: 'llama-3.1-70b-versatile', name: 'Llama 3.1 70B Versatile', provider: 'Meta', icon: '/public/meta.svg', hasIcon: true },
-  { id: 'llama-3.1-8b-instant', name: 'Llama 3.1 8B Instant', provider: 'Meta', icon: '/public/meta.svg', hasIcon: true },
-  { id: 'llama-3.2-90b-vision-preview', name: 'Llama 3.2 90B Vision', provider: 'Meta', icon: '/public/meta.svg', hasIcon: true },
-  { id: 'llama-4-maverick-17b-128e-instruct', name: 'Llama 4 Maverick 17B', provider: 'Meta', icon: '/public/meta.svg', hasIcon: true },
-  { id: 'llama-4-scout-17b-16e-instruct', name: 'Llama 4 Scout 17B', provider: 'Meta', icon: '/public/meta.svg', hasIcon: true },
+  { id: 'llama-3.3-70b-versatile', name: 'Llama 3.3 70B Versatile', provider: 'Meta', icon: '/meta.svg', hasIcon: true, needsInvert: true },
+  { id: 'llama-3.1-70b-versatile', name: 'Llama 3.1 70B Versatile', provider: 'Meta', icon: '/meta.svg', hasIcon: true, needsInvert: true },
+  { id: 'llama-3.1-8b-instant', name: 'Llama 3.1 8B Instant', provider: 'Meta', icon: '/meta.svg', hasIcon: true, needsInvert: true },
+  { id: 'llama-3.2-90b-vision-preview', name: 'Llama 3.2 90B Vision', provider: 'Meta', icon: '/meta.svg', hasIcon: true, needsInvert: true },
+  { id: 'llama-4-maverick-17b-128e-instruct', name: 'Llama 4 Maverick 17B', provider: 'Meta', icon: '/meta.svg', hasIcon: true, needsInvert: true },
+  { id: 'llama-4-scout-17b-16e-instruct', name: 'Llama 4 Scout 17B', provider: 'Meta', icon: '/meta.svg', hasIcon: true, needsInvert: true },
   
   // xAI Grok Models
-  { id: 'grok-2-1212', name: 'Grok 2', provider: 'xAI', icon: '/public/grok.svg', hasIcon: true },
-  { id: 'grok-2-vision-1212', name: 'Grok 2 Vision', provider: 'xAI', icon: '/public/grok.svg', hasIcon: true },
-  { id: 'grok-beta', name: 'Grok Beta', provider: 'xAI', icon: '/public/grok.svg', hasIcon: true },
+  { id: 'grok-2-1212', name: 'Grok 2', provider: 'xAI', icon: '/grok.svg', hasIcon: true, needsInvert: true },
+  { id: 'grok-2-vision-1212', name: 'Grok 2 Vision', provider: 'xAI', icon: '/grok.svg', hasIcon: true, needsInvert: true },
+  { id: 'grok-beta', name: 'Grok Beta', provider: 'xAI', icon: '/grok.svg', hasIcon: true, needsInvert: true },
   
   // Groq-Specific Models (Fast Inference via LPU)
-  { id: 'openai/gpt-oss-120b', name: 'GPT-OSS 120B', provider: 'Groq', icon: '/public/groq.svg', hasIcon: true },
-  { id: 'openai/gpt-oss-20b', name: 'GPT-OSS 20B', provider: 'Groq', icon: '/public/groq.svg', hasIcon: true },
-  { id: 'groq/compound', name: 'Groq Compound', provider: 'Groq', icon: '/public/groq.svg', hasIcon: true },
-  { id: 'groq/compound-mini', name: 'Groq Compound Mini', provider: 'Groq', icon: '/public/groq.svg', hasIcon: true },
-  { id: 'mixtral-8x7b-32768', name: 'Mixtral 8x7B', provider: 'Groq', icon: '/public/groq.svg', hasIcon: true },
+  { id: 'openai/gpt-oss-120b', name: 'GPT-OSS 120B', provider: 'Groq', icon: '/groq.svg', hasIcon: true },
+  { id: 'openai/gpt-oss-20b', name: 'GPT-OSS 20B', provider: 'Groq', icon: '/groq.svg', hasIcon: true },
+  { id: 'groq/compound', name: 'Groq Compound', provider: 'Groq', icon: '/groq.svg', hasIcon: true },
+  { id: 'groq/compound-mini', name: 'Groq Compound Mini', provider: 'Groq', icon: '/groq.svg', hasIcon: true },
+  { id: 'mixtral-8x7b-32768', name: 'Mixtral 8x7B', provider: 'Groq', icon: '/groq.svg', hasIcon: true },
   
   // Mistral AI Models
-  { id: 'mistral-large-latest', name: 'Mistral Large', provider: 'Mistral', icon: '/public/mistral-rainbow.svg', hasIcon: true },
-  { id: 'mistral-medium-latest', name: 'Mistral Medium', provider: 'Mistral', icon: '/public/mistral-rainbow.svg', hasIcon: true },
-  { id: 'mistral-small-latest', name: 'Mistral Small', provider: 'Mistral', icon: '/public/mistral-rainbow.svg', hasIcon: true },
+  { id: 'mistral-large-latest', name: 'Mistral Large', provider: 'Mistral', icon: '/mistral-rainbow.svg', hasIcon: true },
+  { id: 'mistral-medium-latest', name: 'Mistral Medium', provider: 'Mistral', icon: '/mistral-rainbow.svg', hasIcon: true },
+  { id: 'mistral-small-latest', name: 'Mistral Small', provider: 'Mistral', icon: '/mistral-rainbow.svg', hasIcon: true },
   
   // DeepSeek Models
-  { id: 'deepseek-chat', name: 'DeepSeek Chat', provider: 'DeepSeek', icon: '/public/deepseek-color.svg', hasIcon: true },
-  { id: 'deepseek-reasoner', name: 'DeepSeek Reasoner', provider: 'DeepSeek', icon: '/public/deepseek-color.svg', hasIcon: true },
+  { id: 'deepseek-chat', name: 'DeepSeek Chat', provider: 'DeepSeek', icon: '/deepseek-color.svg', hasIcon: true },
+  { id: 'deepseek-reasoner', name: 'DeepSeek Reasoner', provider: 'DeepSeek', icon: '/deepseek-color.svg', hasIcon: true },
   
   // Additional Groq Models
   { id: 'qwen/qwen3-32b', name: 'Qwen3 32B', provider: 'Alibaba', logo: '🔷', hasIcon: false },
@@ -121,10 +121,12 @@ export default function ModernChatPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showModelDropdown, setShowModelDropdown] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [attachedFiles, setAttachedFiles] = useState<{ name: string; content: string; type: string }[]>([]);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const modelDropdownRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Get time-based greeting
   const getGreeting = () => {
@@ -230,15 +232,62 @@ export default function ModernChatPage() {
     }
   }, [currentSession]);
 
+  // File attachment handlers
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    const newFiles: { name: string; content: string; type: string }[] = [];
+    
+    for (const file of Array.from(files)) {
+      if (file.size > 10 * 1024 * 1024) { // 10MB limit
+        alert(`File ${file.name} is too large. Maximum size is 10MB.`);
+        continue;
+      }
+
+      try {
+        const content = await file.text();
+        newFiles.push({
+          name: file.name,
+          content,
+          type: file.type || 'text/plain',
+        });
+      } catch (error) {
+        console.error(`Failed to read file ${file.name}:`, error);
+      }
+    }
+
+    setAttachedFiles(prev => [...prev, ...newFiles]);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const removeAttachedFile = (index: number) => {
+    setAttachedFiles(prev => prev.filter((_, i) => i !== index));
+  };
+
   const sendMessage = async () => {
-    if (!input.trim() || isLoading) return;
+    if ((!input.trim() && attachedFiles.length === 0) || isLoading) return;
+
+    // Build message content with file attachments
+    let messageContent = input.trim();
+    if (attachedFiles.length > 0) {
+      const fileContents = attachedFiles.map(f => 
+        `\n\n---\n📎 **File: ${f.name}**\n\`\`\`\n${f.content}\n\`\`\``
+      ).join('');
+      messageContent = messageContent + fileContents;
+    }
 
     const userMessage: Message = {
       id: `msg-${Date.now()}`,
       role: 'user',
-      content: input.trim(),
+      content: messageContent,
       timestamp: new Date(),
     };
+
+    // Clear attachments after sending
+    setAttachedFiles([]);
 
     let session = currentSession;
     if (!session) {
@@ -517,7 +566,35 @@ export default function ModernChatPage() {
 
               {/* Input Box */}
               <div className="w-full max-w-2xl mb-6">
+                {/* Attached Files Preview */}
+                {attachedFiles.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {attachedFiles.map((file, index) => (
+                      <div key={index} className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-3 py-1.5 rounded-lg text-sm">
+                        <FileText className="w-4 h-4" />
+                        <span className="truncate max-w-[150px]">{file.name}</span>
+                        <button 
+                          onClick={() => removeAttachedFile(index)}
+                          className="hover:text-blue-900 dark:hover:text-blue-100"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                
                 <div className="relative bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 focus-within:border-blue-500 transition-colors shadow-sm">
+                  {/* Hidden file input */}
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    multiple
+                    accept=".txt,.md,.json,.js,.ts,.jsx,.tsx,.py,.sql,.csv,.xml,.yaml,.yml,.html,.css,.sh,.env,.log"
+                    className="hidden"
+                    onChange={handleFileSelect}
+                  />
+                  
                   <textarea
                     ref={textareaRef}
                     value={input}
@@ -532,8 +609,12 @@ export default function ModernChatPage() {
                   {/* Bottom row inside input */}
                   <div className="flex items-center justify-between px-4 pb-3">
                     <div className="flex items-center gap-2">
-                      <button className="p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
-                        <Plus className="w-4 h-4" />
+                      <button 
+                        onClick={() => fileInputRef.current?.click()}
+                        title="Attach files"
+                        className="p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                      >
+                        <Paperclip className="w-4 h-4" />
                       </button>
                       <button className="p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
                         <Clock className="w-4 h-4" />
@@ -581,7 +662,14 @@ export default function ModernChatPage() {
                                     )}
                                   >
                                     {model.hasIcon ? (
-                                      <img src={model.icon} alt={model.name} className="w-5 h-5 flex-shrink-0" />
+                                      <img 
+                                        src={model.icon} 
+                                        alt={model.name} 
+                                        className={cn(
+                                          "w-5 h-5 flex-shrink-0",
+                                          (model as any).needsInvert && "dark:invert"
+                                        )} 
+                                      />
                                     ) : (
                                       <span className="text-base flex-shrink-0">{model.logo}</span>
                                     )}
@@ -795,9 +883,26 @@ export default function ModernChatPage() {
         {hasMessages && (
           <div className="border-t border-gray-200 dark:border-gray-800 p-4">
             <div className="max-w-3xl mx-auto">
+              {/* Attached Files Preview */}
+              {attachedFiles.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {attachedFiles.map((file, index) => (
+                    <div key={index} className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-3 py-1.5 rounded-lg text-sm">
+                      <FileText className="w-4 h-4" />
+                      <span className="truncate max-w-[150px]">{file.name}</span>
+                      <button 
+                        onClick={() => removeAttachedFile(index)}
+                        className="hover:text-blue-900 dark:hover:text-blue-100"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              
               <div className="relative bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 focus-within:border-blue-500 transition-colors shadow-sm">
                 <textarea
-                  ref={textareaRef}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
@@ -808,6 +913,14 @@ export default function ModernChatPage() {
                 />
                 
                 <div className="absolute right-3 bottom-3 flex items-center gap-2">
+                  {/* Attach file button */}
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    title="Attach files"
+                    className="p-1.5 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg transition-colors"
+                  >
+                    <Paperclip className="w-4 h-4" />
+                  </button>
                   {/* Model indicator */}
                   <span className="text-xs text-gray-500 dark:text-gray-400 mr-2">{selectedModelInfo.name}</span>
                   

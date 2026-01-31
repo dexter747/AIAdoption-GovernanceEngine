@@ -21,6 +21,7 @@ import ProfileSettingsPage from './pages/ProfileSettingsPage';
 import LicenseActivationPage from './pages/LicenseActivationPage';
 import LibraryPage from './pages/LibraryPage';
 import MyConnectionsPage from './pages/MyConnectionsPage';
+import { useState, useEffect } from 'react';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
@@ -44,9 +45,18 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 }
 
 function AppLayout({ children }: { children: React.ReactNode }) {
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    const saved = localStorage.getItem('sidebar-collapsed');
+    return saved === 'true';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('sidebar-collapsed', String(sidebarCollapsed));
+  }, [sidebarCollapsed]);
+
   return (
     <div className="flex min-h-screen bg-white dark:bg-black">
-      <Sidebar />
+      <Sidebar collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} />
       <main className="flex-1 overflow-auto">
         {children}
       </main>

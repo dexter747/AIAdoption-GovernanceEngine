@@ -383,24 +383,30 @@ app.post('/api/ai/query', async (req, res) => {
     } = req.body;
 
     // Validate required fields
-    if (!userId || !licenseId || !provider || !model || !messages) {
+    if (!provider || !model || !messages) {
       return res.status(400).json({
-        error: 'Missing required fields: userId, licenseId, provider, model, messages',
+        error: 'Missing required fields: provider, model, messages',
       });
     }
 
-    // Validate license
-    const { data: license } = await supabase
-      .from('licenses')
-      .select('status, plan, expires_at')
-      .eq('id', licenseId)
-      .eq('user_id', userId)
-      .single();
+    // In development mode or for local/trial users, skip license validation
+    const isDevelopment = process.env.NODE_ENV !== 'production';
+    const isLocalUser = !licenseId || licenseId === 'local' || licenseId === 'trial';
+    
+    if (!isDevelopment && !isLocalUser && supabase) {
+      // Validate license only in production with real license
+      const { data: license } = await supabase
+        .from('licenses')
+        .select('status, plan, expires_at')
+        .eq('id', licenseId)
+        .eq('user_id', userId)
+        .single();
 
-    if (!license || license.status !== 'active') {
-      return res.status(403).json({
-        error: 'Invalid or inactive license',
-      });
+      if (!license || license.status !== 'active') {
+        return res.status(403).json({
+          error: 'Invalid or inactive license',
+        });
+      }
     }
 
     // Check if provider is available
@@ -412,8 +418,8 @@ app.post('/api/ai/query', async (req, res) => {
 
     // Route the AI request
     const result = await routeAIRequest({
-      userId,
-      licenseId,
+      userId: userId || 'anonymous',
+      licenseId: licenseId || 'trial',
       provider,
       model,
       messages,

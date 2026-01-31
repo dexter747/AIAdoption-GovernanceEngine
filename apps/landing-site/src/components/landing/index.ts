@@ -1,0 +1,12 @@
+// Landing page components barrel export
+export { Navbar } from './Navbar';
+export { HeroSection } from './HeroSection';
+export { LogosSection } from './LogosSection';
+export { FeaturesSection } from './FeaturesSection';
+export { FeatureCard } from './FeatureCard';
+export { SectionHeader } from './SectionHeader';
+export { HowItWorksSection } from './HowItWorksSection';
+export { PricingSection } from './PricingSection';
+export { TestimonialsSection } from './TestimonialsSection';
+export { CTASection } from './CTASection';
+export { Footer } from './Footer';
