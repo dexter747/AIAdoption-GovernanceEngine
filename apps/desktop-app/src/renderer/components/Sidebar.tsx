@@ -1,9 +1,10 @@
 import { Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../hooks/useAuth';
+import { useLicense } from '../context/LicenseContext';
 import { 
   LayoutDashboard, Database, MessageSquare, Settings, 
   CreditCard, User, LogOut, Sparkles, Sun, Moon, Monitor,
-  Key, Server, UserCircle
+  Key, Server, UserCircle, Shield
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
@@ -16,6 +17,7 @@ const navigation = [
 
 const settingsNavigation = [
   { name: 'Profile', href: '/profile-settings', icon: UserCircle },
+  { name: 'License', href: '/license', icon: Shield },
   { name: 'API Keys', href: '/settings/api-keys', icon: Key },
   { name: 'Databases', href: '/settings/databases', icon: Server },
   { name: 'General', href: '/settings', icon: Settings },

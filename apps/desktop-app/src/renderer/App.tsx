@@ -1,5 +1,9 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import { AuthProvider } from './context/AuthContext';
+import { useAuth } from './hooks/useAuth';
+import { LicenseProvider } from './context/LicenseContext';
+import { ToastProvider } from './components/ui/toast';
+import { ErrorBoundary } from './components/ui/error-boundary';
 import Sidebar from './components/Sidebar';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
@@ -15,6 +19,7 @@ import ModernChatPage from './pages/ModernChatPage';
 import SubscriptionPage from './pages/SubscriptionPage';
 import ConnectionsDashboard from './pages/ConnectionsDashboard';
 import ProfileSettingsPage from './pages/ProfileSettingsPage';
+import LicenseActivationPage from './pages/LicenseActivationPage';
 import APIKeysPageNew from './pages/APIKeysPage';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -195,6 +200,16 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/license"
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <LicenseActivationPage />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
@@ -202,9 +217,15 @@ function AppRoutes() {
 
 function App() {
   return (
-    <AuthProvider>
-      <AppRoutes />
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <LicenseProvider>
+          <ToastProvider>
+            <AppRoutes />
+          </ToastProvider>
+        </LicenseProvider>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 

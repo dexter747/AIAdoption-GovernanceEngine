@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useState, useEffect, ReactNode } from 'react';
 
 interface User {
   id: string;
@@ -13,7 +13,7 @@ interface AuthData {
   expiresAt: number;
 }
 
-interface AuthContextType {
+export interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
@@ -21,7 +21,7 @@ interface AuthContextType {
   logout: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | null>(null);
+export const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -32,22 +32,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     checkAuth();
 
     // Listen for auth success from deep link callback
-    window.electron?.auth.onSuccess((data: AuthData) => {
+    const unsubSuccess = window.electron?.auth.onSuccess((data: AuthData) => {
+      console.log('Auth success received in renderer:', data.user.email);
       setUser(data.user);
       setIsLoading(false);
     });
 
-    window.electron?.auth.onError((error: string) => {
+    const unsubError = window.electron?.auth.onError((error: string) => {
       console.error('Auth error:', error);
       setIsLoading(false);
     });
+
+    return () => {
+      // Cleanup listeners if they return cleanup functions
+      if (typeof unsubSuccess === 'function') unsubSuccess();
+      if (typeof unsubError === 'function') unsubError();
+    };
   }, []);
 
   const checkAuth = async () => {
     try {
       const authData = await window.electron?.auth.check();
       if (authData?.user) {
+        console.log('Restored auth from storage:', authData.user.email);
         setUser(authData.user);
+      } else {
+        console.log('No stored auth found');
       }
     } catch (error) {
       console.error('Failed to check auth:', error);
@@ -85,13 +95,3 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     </AuthContext.Provider>
   );
 }
-
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-}
-
-// Type declarations moved to types/electron.d.ts

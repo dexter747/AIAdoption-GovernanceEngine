@@ -1,18 +1,36 @@
-# AI Nexus - Test Suite
+# AI Nexus - Comprehensive Test Suite
 
 ## Overview
 
-This directory contains comprehensive unit and integration tests for the AI Nexus platform.
+This directory contains comprehensive unit and integration tests for the AI Adoption & Governance Engine, covering all major components including Express API, Desktop App, Admin Dashboard, and Landing Site.
 
 ## Test Structure
 
 ```
 tests/
-├── unit.test.ts          # Unit tests for individual components
-├── integration.test.ts   # Integration tests for component interactions
-├── package.json          # Test dependencies
-├── jest.config.json      # Jest configuration
-└── tsconfig.json         # TypeScript configuration
+├── setup.ts                          # Global test setup and custom matchers
+├── jest.config.json                  # Jest configuration
+├── package.json                      # Test dependencies and scripts
+├── tsconfig.json                     # TypeScript configuration
+│
+├── express-api/                      # Express API tests
+│   ├── services.test.ts              # Encryption, license, validation tests
+│   ├── middleware.test.ts            # Security, auth, validation middleware
+│   └── routes.test.ts                # API endpoint tests
+│
+├── desktop-app/                      # Desktop app tests
+│   ├── contexts.test.tsx             # AuthContext, LicenseContext tests
+│   ├── hooks.test.ts                 # useAsync, useMutation, useFetch tests
+│   └── components.test.tsx           # UI component tests
+│
+├── admin-dashboard/                  # Admin dashboard tests
+│   └── licenses-api.test.ts          # License management API tests
+│
+├── landing-site/                     # Landing site tests
+│   └── payments-api.test.ts          # Payment/checkout API tests
+│
+└── integration/                      # Integration tests
+    └── flows.test.ts                 # End-to-end flow tests
 ```
 
 ## Running Tests
@@ -30,15 +48,25 @@ pnpm install
 pnpm test
 ```
 
-### Run Unit Tests Only
+### Run Specific Test Suites
 
 ```bash
+# Express API tests only
+pnpm test:express
+
+# Desktop app tests only
+pnpm test:desktop
+
+# Admin dashboard tests only
+pnpm test:admin
+
+# Landing site tests only
+pnpm test:landing
+
+# Unit tests only
 pnpm test:unit
-```
 
-### Run Integration Tests Only
-
-```bash
+# Integration tests only
 pnpm test:integration
 ```
 
@@ -54,209 +82,251 @@ pnpm test:watch
 pnpm test:coverage
 ```
 
+### CI Mode
+
+```bash
+pnpm test:ci
+```
+
 ## Test Categories
-
-### 1. MCP Server Tests
-
-**Unit Tests:**
-- Compilation checks for all 13 MCP servers
-- Package structure validation
-- TypeScript configuration validation
-- Source code structure verification
-- Tool definition validation
-
-**Integration Tests:**
-- Server startup and initialization
-- Tool invocation and response handling
-- Error handling
-- Database connection tests (when available)
-
-### 2. LLM Provider Tests
-
-**Unit Tests:**
-- Provider implementation validation
-- Class export verification
-- Method implementation checks
-- Provider registry validation
-- Default model configuration
-
-**Integration Tests:**
-- API availability checks
-- Provider routing tests
-- Model listing validation
-
-### 3. Payment Integration Tests
-
-**Unit Tests:**
-- Dodo Payments client validation
-- API endpoint existence checks
-- Database schema validation
-- Environment configuration validation
-
-**Integration Tests:**
-- Checkout flow tests
-- Webhook endpoint tests
-- Subscription management tests
-- End-to-end workflow validation
-
-### 4. Environment Configuration Tests
-
-**Unit Tests:**
-- PayPal/Razorpay removal verification
-- Dodo Payments configuration validation
-- Environment variable structure validation
-
-## Test Coverage
-
-The test suite covers:
-
-- ✅ All 13 MCP servers (MySQL, MongoDB, SQL Server, Oracle, SAP HANA, Salesforce, ServiceNow, Jira, Redis, Elasticsearch, Zendesk, Workday, MariaDB)
-- ✅ All 9 LLM providers (OpenAI, Anthropic, Google, Groq, Cohere, Mistral, Perplexity, DeepSeek, OpenRouter)
-- ✅ Complete payment infrastructure (Dodo Payments)
-- ✅ Database schema validation
-- ✅ API endpoint availability
-- ✅ Environment configuration
-
-## Expected Results
 
 ### Unit Tests
 
-All unit tests should pass without requiring external services:
+Located in `*/services.test.ts`, `*/middleware.test.ts`, `*/contexts.test.tsx`, `*/hooks.test.ts`, `*/components.test.tsx`
 
-```
-✓ MCP Servers - Compilation (13 tests)
-✓ MCP Servers - Package Structure (26 tests)
-✓ MCP Servers - TypeScript Configuration (13 tests)
-✓ MCP Servers - Source Code (52 tests)
-✓ MCP Servers - Tool Definitions (13 tests)
-✓ LLM Providers - Implementation (36 tests)
-✓ LLM Providers - Registry (2 tests)
-✓ Payment Integration - Client (4 tests)
-✓ Payment Integration - Endpoints (3 tests)
-✓ Payment Integration - Schema (3 tests)
-✓ Environment Configuration (3 tests)
-```
+#### Services Tests (`express-api/services.test.ts`)
+- **EncryptionService**: `encrypt()`, `decrypt()`, `hashKey()`, `getKeyPreview()`
+- **LicenseService**: `validate()`, `getTierFeatures()`
+- **ApiError**: Factory methods for all HTTP error types
+- **Validation Schemas**: UUID, pagination, licenseKey, aiQuery, userApiKey, userConnection
 
-**Total: ~168 unit tests**
+#### Middleware Tests (`express-api/middleware.test.ts`)
+- **Security Middleware**: Request sanitization, payload limits, rate limiting, CSRF
+- **Validation Middleware**: `validateBody()`, `validateQuery()`, `validateParams()`
+- **Auth Middleware**: JWT validation, API key validation
+- **Error Handlers**: Zod errors, JSON parse errors
+
+#### Context Tests (`desktop-app/contexts.test.tsx`)
+- **AuthContext**: User management, login/logout, authentication state
+- **LicenseContext**: License validation, activation, tier features, expiration
+
+#### Hooks Tests (`desktop-app/hooks.test.ts`)
+- **useAsync**: Async state management, success/error handling, toast notifications
+- **useFormSubmit**: Form submission with async operations
+- **useFetch**: Data fetching with loading states
+- **useMutation**: CRUD operations with callbacks
+
+#### Component Tests (`desktop-app/components.test.tsx`)
+- **Loading Components**: LoadingSpinner, LoadingOverlay, LoadingSkeleton, LoadingCard, LoadingTable
+- **Error Components**: ErrorBoundary, ErrorDisplay, ErrorCard, EmptyState
+- **Toast Components**: ToastProvider, useToast hook, notification types
+
+### API Route Tests
+
+Located in `*/routes.test.ts`, `*-api.test.ts`
+
+#### Express API Routes (`express-api/routes.test.ts`)
+- **Health Routes**: `/health`, `/ready` endpoints
+- **License Routes**: Validate, activate, deactivate, features
+- **User API Keys Routes**: CRUD operations, provider listing, key testing
+- **User Connections Routes**: Database connections, MCP integration
+- **AI Routes**: Query handling, provider listing
+- **Usage Routes**: Statistics, logging
+
+#### Admin Dashboard API (`admin-dashboard/licenses-api.test.ts`)
+- **GET /api/licenses**: Pagination, filtering, search, statistics
+- **POST /api/licenses**: License creation, key generation
+- **License Operations**: Revoke, extend, upgrade, transfer
+
+#### Landing Site API (`landing-site/payments-api.test.ts`)
+- **Plan Prices**: Configuration, formatting
+- **Checkout Creation**: Session generation, Dodo Payments integration
+- **Webhooks**: Signature verification, event handling
+- **Billing Cycles**: Monthly/yearly expiration calculation
 
 ### Integration Tests
 
-Integration tests may skip if external services aren't running:
+Located in `integration/flows.test.ts`
 
-```
-✓ MCP Server Integration (3 tests)
-✓ LLM Provider Integration (2 tests)
-✓ Payment Flow Integration (3 tests)
-✓ Database Schema Integration (2 tests)
-✓ End-to-End Workflow (2 tests)
-```
+- **User Registration & Payment Flow**: Complete purchase journey from registration to license
+- **License Activation Flow**: Desktop app activation with machine management
+- **API Key Management Flow**: BYOK setup, encryption, testing, usage
+- **MCP Connection Flow**: Database connection, MCP server, AI queries
+- **Admin Dashboard Flow**: License and user management workflows
+- **Error Recovery Flows**: Payment failures, expired licenses, network issues
+- **Concurrent Operations**: Race conditions, operation queuing
 
-**Total: ~12 integration tests**
+## Custom Jest Matchers
 
-## Prerequisites for Integration Tests
+The test suite includes custom matchers defined in `setup.ts`:
 
-### Optional Services (tests skip if not available):
+```typescript
+// Check if value is within a numeric range
+expect(value).toBeWithinRange(min, max);
 
-1. **MySQL** - Port 3306
-   ```bash
-   docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password mysql:8
-   ```
+// Check if string is a valid UUID
+expect(value).toBeValidUUID();
 
-2. **MongoDB** - Port 27017
-   ```bash
-   docker run -d -p 27017:27017 mongo:7
-   ```
-
-3. **Redis** - Port 6379
-   ```bash
-   docker run -d -p 6379:6379 redis:7
-   ```
-
-4. **Express API** - Port 4000
-   ```bash
-   cd apps/express-api && pnpm dev
-   ```
-
-5. **Cloud Backend** - Port 3001
-   ```bash
-   cd apps/cloud-backend && pnpm dev
-   ```
-
-## Continuous Integration
-
-These tests are designed to run in CI/CD pipelines:
-
-```yaml
-# .github/workflows/test.yml
-name: Tests
-on: [push, pull_request]
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: pnpm/action-setup@v2
-      - uses: actions/setup-node@v3
-      - run: pnpm install
-      - run: cd tests && pnpm test
+// Check if string is a valid JWT format
+expect(value).toBeValidJWT();
 ```
 
-## Debugging Failed Tests
+## Coverage Thresholds
 
-### View Detailed Output
+The test suite enforces minimum coverage thresholds:
 
-```bash
-pnpm test -- --verbose
+| Metric | Threshold |
+|--------|-----------|
+| Branches | 50% |
+| Functions | 50% |
+| Lines | 50% |
+| Statements | 50% |
+
+## Test Files Summary
+
+| File | Approx Tests | Description |
+|------|--------------|-------------|
+| `express-api/services.test.ts` | ~100 | Encryption, license validation, schemas |
+| `express-api/middleware.test.ts` | ~80 | Security, auth, validation middleware |
+| `express-api/routes.test.ts` | ~90 | Express API endpoints |
+| `desktop-app/contexts.test.tsx` | ~60 | Auth and License React contexts |
+| `desktop-app/hooks.test.ts` | ~70 | Custom React hooks |
+| `desktop-app/components.test.tsx` | ~80 | UI components |
+| `admin-dashboard/licenses-api.test.ts` | ~70 | Admin license management |
+| `landing-site/payments-api.test.ts` | ~80 | Payment processing |
+| `integration/flows.test.ts` | ~60 | End-to-end flows |
+
+**Total: ~700+ test cases**
+
+## Adding New Tests
+
+1. Create test file in the appropriate directory
+2. Follow naming convention: `*.test.ts` or `*.test.tsx`
+3. Use Jest globals: `describe`, `it`, `expect`, `jest`
+4. Mock external dependencies
+5. Test both success and error cases
+
+### Example Test
+
+```typescript
+import { describe, it, expect, jest, beforeEach } from '@jest/globals';
+
+describe('MyFeature', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('myFunction', () => {
+    it('should handle valid input', () => {
+      const result = myFunction('valid');
+      expect(result).toBe('expected');
+    });
+
+    it('should throw on invalid input', () => {
+      expect(() => myFunction(null)).toThrow();
+    });
+
+    it('should return correct type', () => {
+      const result = myFunction('test');
+      expect(typeof result).toBe('string');
+    });
+  });
+});
 ```
 
-### Run Specific Test
+## Mocking Guidelines
 
-```bash
-pnpm test -- -t "MySQL MCP Server"
+### Mocking Supabase
+
+```typescript
+const mockSupabase = {
+  from: jest.fn().mockReturnThis(),
+  select: jest.fn().mockReturnThis(),
+  insert: jest.fn().mockReturnThis(),
+  update: jest.fn().mockReturnThis(),
+  eq: jest.fn().mockReturnThis(),
+  single: jest.fn().mockResolvedValue({ data: mockData, error: null }),
+};
 ```
 
-### Debug Mode
+### Mocking Electron IPC
 
-```bash
-node --inspect-brk node_modules/.bin/jest --runInBand
+```typescript
+const mockElectron = {
+  auth: {
+    login: jest.fn().mockResolvedValue(undefined),
+    logout: jest.fn().mockResolvedValue(undefined),
+    check: jest.fn().mockResolvedValue({ user: mockUser }),
+  },
+  license: {
+    validate: jest.fn().mockResolvedValue({ valid: true }),
+  },
+};
+
+(global as any).window = { electron: mockElectron };
 ```
 
-## Contributing
+### Mocking Fetch
 
-When adding new features:
+```typescript
+const mockFetch = jest.fn().mockResolvedValue({
+  ok: true,
+  json: async () => ({ success: true, data: mockData }),
+});
 
-1. Add unit tests to `unit.test.ts`
-2. Add integration tests to `integration.test.ts`
-3. Ensure all tests pass: `pnpm test`
-4. Check coverage: `pnpm test:coverage`
-
-Target: **80%+ code coverage**
+(global as any).fetch = mockFetch;
+```
 
 ## Troubleshooting
 
-### Issue: "Cannot find module"
+### ESM Issues
+
+If you encounter ESM-related errors, use the experimental VM modules flag:
 
 ```bash
-cd tests && pnpm install
+node --experimental-vm-modules node_modules/jest/bin/jest.js
 ```
 
-### Issue: "Tests timeout"
+### Type Errors
 
-Increase timeout in `jest.config.json`:
+Ensure the following are installed and configured:
+- `@types/jest` in devDependencies
+- `@jest/globals` for proper typing
+- `tsconfig.json` includes Jest types
+
+### Timeout Issues
+
+For slow tests, increase timeout in `jest.config.json`:
+
 ```json
 {
   "testTimeout": 60000
 }
 ```
 
-### Issue: "MCP server fails to start"
+### Module Resolution
 
-Check environment variables are set correctly.
+If modules aren't resolving correctly, check:
+- `moduleDirectories` in jest.config.json
+- `moduleNameMapper` for path aliases
+- TypeScript paths in tsconfig.json
 
-### Issue: "API tests fail"
+## CI/CD Integration
 
-Ensure API servers are running on expected ports.
+### GitHub Actions Example
 
-## License
+```yaml
+- name: Run Tests
+  working-directory: tests
+  run: |
+    pnpm install
+    pnpm test:ci
+  env:
+    CI: true
+```
 
-MIT
+### Test Artifacts
+
+- Coverage reports are generated in `tests/coverage/`
+- JUnit XML reports are generated for CI integration
+- HTML coverage report available at `coverage/lcov-report/index.html`

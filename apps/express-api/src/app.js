@@ -11,6 +11,7 @@ import { rateLimit } from 'express-rate-limit';
 import { config } from './config/index.js';
 import { requestLogger } from './middleware/requestLogger.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
+import { sanitizeRequest, apiSecurityHeaders, verifyCsrfOrigin } from './middleware/security.js';
 
 // Routes
 import healthRoutes from './routes/health.js';
@@ -26,6 +27,9 @@ export function createApp() {
   // ==========================================================================
   // SECURITY MIDDLEWARE
   // ==========================================================================
+  
+  // API-specific security headers
+  app.use(apiSecurityHeaders);
   
   // Helmet - Security headers
   app.use(helmet({
@@ -72,6 +76,12 @@ export function createApp() {
   
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+  
+  // Sanitize all incoming requests
+  app.use(sanitizeRequest);
+  
+  // CSRF origin verification for state-changing requests
+  app.use(verifyCsrfOrigin(config.cors.origins));
 
   // ==========================================================================
   // LOGGING MIDDLEWARE

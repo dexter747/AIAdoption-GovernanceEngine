@@ -245,9 +245,31 @@ export interface ElectronAPI {
 
   // License API
   license: {
-    validate: (key: string) => Promise<any>;
-    get: () => Promise<any>;
-    refresh: () => Promise<any>;
+    validate: (key: string) => Promise<{
+      valid: boolean;
+      tier?: 'free' | 'starter' | 'pro' | 'enterprise';
+      expiresAt?: string | null;
+      features?: string[];
+      maxMachines?: number;
+      activeMachines?: number;
+      reason?: string;
+      error?: string;
+    }>;
+    get: () => Promise<{
+      id: string;
+      key: string;
+      activatedAt?: string;
+    } | null>;
+    refresh: () => Promise<{
+      valid: boolean;
+      license?: {
+        tier: 'free' | 'starter' | 'pro' | 'enterprise';
+        expiresAt?: string | null;
+        features?: string[];
+      };
+    }>;
+    activate: (key: string) => Promise<{ success: boolean; error?: string }>;
+    getStatus: () => Promise<{ active: boolean; details?: any }>;
   };
 
   // Settings API
