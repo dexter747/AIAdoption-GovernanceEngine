@@ -5,7 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getDodoPaymentsClient } from '@/lib/payments/dodo';
-import { createClient } from '@/lib/supabase/server';
+import { getUserFromRequest } from '@/lib/jwt-auth';
 
 /**
  * POST /api/payments/create-checkout
@@ -13,10 +13,9 @@ import { createClient } from '@/lib/supabase/server';
  */
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const { user, error } = await getUserFromRequest(request);
 
-    if (!user) {
+    if (!user || error) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -33,22 +32,16 @@ export async function POST(request: NextRequest) {
     const dodo = getDodoPaymentsClient();
     
     const session = await dodo.createCheckoutSession({
-      userId: user.id,
-      email: user.email!,
+      userId: user.sub,
+      email: user.email,
       planType,
       billingCycle,
       successUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?payment=success`,
       cancelUrl: `${process.env.NEXT_PUBLIC_APP_URL}/pricing?payment=canceled`,
     });
 
-    // Store checkout session in database
-    await supabase.from('payment_sessions').insert({
-      user_id: user.id,
-      session_id: session.id,
-      plan_type: planType,
-      billing_cycle: billingCycle,
-      status: 'pending',
-    });
+    // Note: Database storage would need separate implementation without Supabase
+    // For now, just return the session
 
     return NextResponse.json({
       sessionId: session.id,

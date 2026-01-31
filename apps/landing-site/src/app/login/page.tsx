@@ -1,7 +1,6 @@
 'use client';
 
 import { Suspense, useState } from 'react';
-import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Sparkles } from 'lucide-react';
 import Link from 'next/link';
@@ -10,29 +9,36 @@ function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
+  const error = searchParams.get('error');
   
   // Check if this is a desktop app login request
   const isDesktop = searchParams.get('desktop') === 'true';
-  const desktopCallback = searchParams.get('callback');
-  
-  // Set callback URL - if desktop, redirect to desktop callback page
-  const callbackUrl = isDesktop 
-    ? `/auth/desktop-callback?callback=${encodeURIComponent(desktopCallback || 'ainexus://auth/callback')}`
-    : searchParams.get('callbackUrl') || '/download';
+  const callbackUrl = searchParams.get('callbackUrl') || '/download';
 
-  const handleGoogleSignIn = async () => {
+  const handleGoogleSignIn = () => {
     setIsLoading(true);
-    try {
-      await signIn('google', { callbackUrl });
-    } catch (error) {
-      console.error('Sign in error:', error);
-      setIsLoading(false);
-    }
+    // Redirect to our JWT-based Google OAuth endpoint
+    const authUrl = new URL('/api/auth/google', window.location.origin);
+    authUrl.searchParams.set('desktop', isDesktop.toString());
+    authUrl.searchParams.set('callbackUrl', callbackUrl);
+    window.location.href = authUrl.toString();
   };
 
   return (
     <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center p-4">
       <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-2xl shadow-lg p-8 md:p-12 w-full max-w-md">
+        {/* Error Message */}
+        {error && (
+          <div className="mb-6 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+            <p className="text-sm text-red-600 dark:text-red-400">
+              {error === 'oauth_error' && 'Authentication was cancelled or failed.'}
+              {error === 'token_exchange_failed' && 'Failed to complete authentication.'}
+              {error === 'callback_failed' && 'Something went wrong. Please try again.'}
+              {!['oauth_error', 'token_exchange_failed', 'callback_failed'].includes(error) && 'An error occurred. Please try again.'}
+            </p>
+          </div>
+        )}
+        
         {/* Logo and Title */}
         <div className="flex flex-col items-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">

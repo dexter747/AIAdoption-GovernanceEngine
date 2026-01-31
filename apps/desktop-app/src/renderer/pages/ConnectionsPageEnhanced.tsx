@@ -27,8 +27,11 @@ export default function ConnectionsPageEnhanced() {
     try {
       const conns = await window.electron.mcp.getAllConnections();
       setConnections(conns);
-    } catch (error) {
-      console.error('Failed to load connections:', error);
+    } catch (error: any) {
+      // Silently handle API key errors - user might not have backend configured yet
+      if (!error?.message?.includes('Invalid API key')) {
+        console.error('Failed to load connections:', error);
+      }
     }
   };
 
@@ -36,8 +39,11 @@ export default function ConnectionsPageEnhanced() {
     try {
       const available = await window.electron.mcp.checkDocker();
       setDockerAvailable(available);
-    } catch (error) {
-      console.error('Failed to check Docker:', error);
+    } catch (error: any) {
+      // Silently handle - Docker might not be installed
+      if (!error?.message?.includes('Invalid API key')) {
+        console.error('Failed to check Docker:', error);
+      }
     }
   };
 

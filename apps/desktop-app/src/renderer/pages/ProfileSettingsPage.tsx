@@ -53,8 +53,8 @@ export default function ProfileSettingsPage() {
 
   const loadProfile = async () => {
     try {
-      const user = await window.electron.getUserProfile();
-      setProfile(user);
+      const user = await window.electron.api?.getUserProfile?.();
+      if (user) setProfile(user);
     } catch (error) {
       console.error('Failed to load profile:', error);
     } finally {
@@ -64,7 +64,7 @@ export default function ProfileSettingsPage() {
 
   const loadPreferences = async () => {
     try {
-      const prefs = await window.electron.getUserPreferences();
+      const prefs = await window.electron.api?.getUserPreferences?.();
       if (prefs) setPreferences(prefs);
     } catch (error) {
       console.error('Failed to load preferences:', error);
@@ -74,7 +74,7 @@ export default function ProfileSettingsPage() {
   const saveProfile = async () => {
     try {
       setIsSaving(true);
-      await window.electron.updateUserProfile(profile);
+      await window.electron.api?.updateUserProfile?.(profile);
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     } catch (error) {
@@ -87,7 +87,7 @@ export default function ProfileSettingsPage() {
   const savePreferences = async () => {
     try {
       setIsSaving(true);
-      await window.electron.updateUserPreferences(preferences);
+      await window.electron.api?.updateUserPreferences?.(preferences);
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     } catch (error) {
@@ -104,8 +104,10 @@ export default function ProfileSettingsPage() {
     try {
       const formData = new FormData();
       formData.append('avatar', file);
-      const result = await window.electron.uploadAvatar(formData);
-      setProfile(prev => prev ? { ...prev, avatar: result.url } : null);
+      const result = await window.electron.api?.uploadAvatar?.(formData);
+      if (result?.url) {
+        setProfile(prev => prev ? { ...prev, avatar: result.url } : null);
+      }
     } catch (error) {
       console.error('Failed to upload avatar:', error);
     }

@@ -9,6 +9,7 @@ contextBridge.exposeInMainWorld('electron', {
     login: () => ipcRenderer.invoke('auth:login'),
     logout: () => ipcRenderer.invoke('auth:logout'),
     getUser: () => ipcRenderer.invoke('auth:getUser'),
+    refresh: () => ipcRenderer.invoke('auth:refresh'),
     onSuccess: (callback: (data: any) => void) => {
       ipcRenderer.on('auth:success', (_event, data) => callback(data));
     },

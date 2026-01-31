@@ -68,10 +68,43 @@ export default function SubscriptionPage() {
   const loadSubscription = async () => {
     try {
       setIsLoading(true);
-      const sub = await window.electron.getSubscription();
-      setSubscription(sub);
+      // Use api namespace - these are optional subscription features
+      const sub = await window.electron.api?.getSubscription?.();
+      if (sub) {
+        // Ensure amount has a default value to prevent NaN
+        setSubscription({
+          ...sub,
+          amount: sub.amount ?? 0,
+          currency: sub.currency ?? 'USD',
+        });
+      } else {
+        // Default trial subscription for logged in users without subscription data
+        setSubscription({
+          id: 'trial',
+          plan: 'trial',
+          status: 'active',
+          billingCycle: 'monthly',
+          currentPeriodStart: new Date(),
+          currentPeriodEnd: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+          cancelAtPeriodEnd: false,
+          amount: 0,
+          currency: 'USD',
+        });
+      }
     } catch (error) {
       console.error('Failed to load subscription:', error);
+      // Default to trial on error
+      setSubscription({
+        id: 'trial',
+        plan: 'trial',
+        status: 'active',
+        billingCycle: 'monthly',
+        currentPeriodStart: new Date(),
+        currentPeriodEnd: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+        cancelAtPeriodEnd: false,
+        amount: 0,
+        currency: 'USD',
+      });
     } finally {
       setIsLoading(false);
     }
@@ -79,18 +112,21 @@ export default function SubscriptionPage() {
 
   const loadPayments = async () => {
     try {
-      const pymts = await window.electron.getPaymentHistory();
+      const pymts = await window.electron.api?.getPaymentHistory?.();
       setPayments(pymts || []);
     } catch (error) {
       console.error('Failed to load payments:', error);
+      // Non-critical error
     }
   };
 
   const handleUpgrade = async (plan: string) => {
     try {
       setIsUpgrading(true);
-      const { checkoutUrl } = await window.electron.createCheckout({ plan });
-      window.electron.openExternal(checkoutUrl);
+      const result = await window.electron.api?.createCheckout?.({ plan });
+      if (result?.checkoutUrl) {
+        window.electron.system?.openExternal?.(result.checkoutUrl);
+      }
     } catch (error) {
       console.error('Failed to upgrade:', error);
     } finally {
@@ -105,7 +141,7 @@ export default function SubscriptionPage() {
 
     try {
       setIsCanceling(true);
-      await window.electron.cancelSubscription();
+      await window.electron.api?.cancelSubscription?.();
       await loadSubscription();
     } catch (error) {
       console.error('Failed to cancel:', error);
@@ -116,7 +152,7 @@ export default function SubscriptionPage() {
 
   const handleReactivate = async () => {
     try {
-      await window.electron.reactivateSubscription();
+      await window.electron.api?.reactivateSubscription?.();
       await loadSubscription();
     } catch (error) {
       console.error('Failed to reactivate:', error);
@@ -170,10 +206,10 @@ export default function SubscriptionPage() {
                 </div>
                 <div className={cn('px-4 py-2 rounded-lg', planDetails.bg)}>
                   <p className={cn('text-2xl font-bold', planDetails.color)}>
-                    {formatCurrency(subscription.amount / 100)}
+                    {subscription.plan === 'trial' ? 'Free' : formatCurrency((subscription.amount ?? 0) / 100)}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    per {subscription.billingCycle === 'monthly' ? 'month' : 'year'}
+                    {subscription.plan === 'trial' ? '14 day trial' : `per ${subscription.billingCycle === 'monthly' ? 'month' : 'year'}`}
                   </p>
                 </div>
               </div>

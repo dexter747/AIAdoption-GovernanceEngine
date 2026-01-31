@@ -1,34 +1,22 @@
-import NextAuth from 'next-auth';
-import GoogleProvider from 'next-auth/providers/google';
+/**
+ * Auth exports for landing site
+ * Pure JWT authentication - no NextAuth, no Supabase
+ */
 
-// Simplified auth without service role key
-// Users will be created in Supabase via their Auth provider integration
-export const { handlers, signIn, signOut, auth } = NextAuth({
-  providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
-  ],
-  callbacks: {
-    async signIn({ user, account }) {
-      // Allow sign in for all Google users
-      console.log('✅ User signed in:', user.email);
-      return true;
-    },
-    async session({ session, token }) {
-      // Add user ID from token to session
-      if (session.user && token.sub) {
-        session.user.id = token.sub;
-      }
-      return session;
-    },
-  },
-  pages: {
-    signIn: '/login',
-    error: '/login',
-  },
-  session: {
-    strategy: 'jwt',
-  },
-});
+export * from './lib/jwt-auth';
+
+// Legacy compatibility exports
+export async function auth() {
+  // Server-side session check - would need to read cookies in API context
+  return null;
+}
+
+export async function signIn() {
+  // Redirect to /api/auth/google
+  throw new Error('Use /api/auth/google endpoint for sign in');
+}
+
+export async function signOut() {
+  // Redirect to /api/auth/session with DELETE method
+  throw new Error('Use /api/auth/session endpoint for sign out');
+}

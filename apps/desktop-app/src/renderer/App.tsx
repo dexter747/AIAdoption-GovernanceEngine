@@ -6,7 +6,6 @@ import { ToastProvider } from './components/ui/toast';
 import { ErrorBoundary } from './components/ui/error-boundary';
 import Sidebar from './components/Sidebar';
 import LoginPage from './pages/LoginPage';
-import DashboardPage from './pages/DashboardPage';
 import ConnectionsPageEnhanced from './pages/ConnectionsPageEnhanced';
 import QueriesPage from './pages/QueriesPage';
 import ChatPage from './pages/ChatPage';
@@ -20,7 +19,8 @@ import SubscriptionPage from './pages/SubscriptionPage';
 import ConnectionsDashboard from './pages/ConnectionsDashboard';
 import ProfileSettingsPage from './pages/ProfileSettingsPage';
 import LicenseActivationPage from './pages/LicenseActivationPage';
-import APIKeysPageNew from './pages/APIKeysPage';
+import LibraryPage from './pages/LibraryPage';
+import MyConnectionsPage from './pages/MyConnectionsPage';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
@@ -45,7 +45,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="flex min-h-screen bg-white dark:bg-black">
       <Sidebar />
       <main className="flex-1 overflow-auto">
         {children}
@@ -79,7 +79,27 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <AppLayout>
-              <DashboardPage />
+              <ModernChatPage />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/library"
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <LibraryPage />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/my-connections"
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <MyConnectionsPage />
             </AppLayout>
           </ProtectedRoute>
         }
@@ -98,7 +118,9 @@ function AppRoutes() {
         path="/chat"
         element={
           <ProtectedRoute>
-            <ModernChatPage />
+            <AppLayout>
+              <ModernChatPage />
+            </AppLayout>
           </ProtectedRoute>
         }
       />

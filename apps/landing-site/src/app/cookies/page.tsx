@@ -124,16 +124,16 @@ export default function CookiePolicy() {
                 </thead>
                 <tbody className="divide-y divide-border">
                   <tr>
-                    <td className="px-4 py-3 text-sm text-foreground font-mono">next-auth.session-token</td>
+                    <td className="px-4 py-3 text-sm text-foreground font-mono">auth-token</td>
                     <td className="px-4 py-3 text-sm text-muted-foreground">Essential</td>
-                    <td className="px-4 py-3 text-sm text-muted-foreground">Session</td>
-                    <td className="px-4 py-3 text-sm text-muted-foreground">User authentication</td>
+                    <td className="px-4 py-3 text-sm text-muted-foreground">1 hour</td>
+                    <td className="px-4 py-3 text-sm text-muted-foreground">User authentication (JWT access token)</td>
                   </tr>
                   <tr>
-                    <td className="px-4 py-3 text-sm text-foreground font-mono">next-auth.csrf-token</td>
+                    <td className="px-4 py-3 text-sm text-foreground font-mono">refresh-token</td>
                     <td className="px-4 py-3 text-sm text-muted-foreground">Essential</td>
-                    <td className="px-4 py-3 text-sm text-muted-foreground">Session</td>
-                    <td className="px-4 py-3 text-sm text-muted-foreground">CSRF protection</td>
+                    <td className="px-4 py-3 text-sm text-muted-foreground">7 days</td>
+                    <td className="px-4 py-3 text-sm text-muted-foreground">Token refresh for seamless authentication</td>
                   </tr>
                   <tr>
                     <td className="px-4 py-3 text-sm text-foreground font-mono">cookie-consent</td>

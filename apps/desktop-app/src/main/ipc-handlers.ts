@@ -601,11 +601,11 @@ ipcMain.handle('payments:get-history', async () => {
 
 ipcMain.handle('payments:create-checkout', async (_event, params) => {
   try {
-    // TODO: Integrate with Dodo Payments
-    // For now, open external checkout page
-    const checkoutUrl = `https://checkout.ainexus.com?plan=${params.plan}`;
+    // Get the API URL from environment or use default production URL
+    const baseUrl = process.env.LANDING_SITE_URL || 'https://ainexus.com';
+    const checkoutUrl = `${baseUrl}/subscribe?plan=${params.plan}`;
     shell.openExternal(checkoutUrl);
-    return { success: true, url: checkoutUrl };
+    return { success: true, checkoutUrl };
   } catch (error: any) {
     throw new Error(`Failed to create checkout: ${error.message}`);
   }

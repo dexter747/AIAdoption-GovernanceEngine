@@ -1,6 +1,10 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
+/**
+ * Create Supabase client for DATABASE access only
+ * Authentication is handled via JWT tokens - DO NOT use supabase.auth
+ */
 export function createClient() {
   const cookieStore = cookies();
 
@@ -35,8 +39,11 @@ export function createClient() {
   );
 }
 
+/**
+ * @deprecated Use JWT auth from '@/lib/jwt-auth' instead
+ * This function should not be used - authentication is handled via pure JWT
+ */
 export async function getUser() {
-  const supabase = createClient();
-  const { data: { user }, error } = await supabase.auth.getUser();
-  return { user, error };
+  console.warn('DEPRECATED: getUser() from supabase/server.ts should not be used. Use JWT auth instead.');
+  throw new Error('Supabase auth is deprecated. Use JWT auth from @/lib/jwt-auth instead.');
 }

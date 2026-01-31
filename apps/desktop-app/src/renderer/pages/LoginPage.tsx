@@ -5,11 +5,11 @@ export default function LoginPage() {
   const { login, isLoading } = useAuth();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-950 dark:via-blue-950 dark:to-indigo-950 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center p-4">
       <div className="w-full max-w-lg">
         {/* Logo and Header */}
         <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-3xl mb-6 shadow-2xl shadow-blue-500/50">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-blue-500 rounded-3xl mb-6 shadow-2xl shadow-blue-500/50">
             <Sparkles className="w-10 h-10 text-white" />
           </div>
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-3">
@@ -35,7 +35,7 @@ export default function LoginPage() {
           <button
             onClick={login}
             disabled={isLoading}
-            className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold text-lg rounded-2xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0"
+            className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-blue-500 text-white font-semibold text-lg rounded-2xl hover:bg-blue-600 transition-all duration-200 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0"
           >
             {isLoading ? (
               <>

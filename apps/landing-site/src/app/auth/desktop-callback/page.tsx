@@ -1,76 +1,137 @@
 'use client';
 
 import { Suspense, useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
-import { Sparkles, CheckCircle, Loader2 } from 'lucide-react';
+import { Sparkles, CheckCircle, Loader2, AlertCircle } from 'lucide-react';
+
+interface UserData {
+  id: string;
+  email: string;
+  name?: string;
+  image?: string;
+  plan?: string;
+}
 
 function DesktopCallbackContent() {
-  const { data: session, status } = useSession();
   const searchParams = useSearchParams();
   const [redirected, setRedirected] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [user, setUser] = useState<UserData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  // Get tokens from URL params (set by Google callback)
+  const tokenFromUrl = searchParams.get('token');
+  const refreshFromUrl = searchParams.get('refresh');
+
+  const sendAuthToDesktop = async (jwtToken: string, refreshToken: string, userData: UserData) => {
+    const userParam = encodeURIComponent(JSON.stringify(userData));
+    const httpCallbackUrl = `http://localhost:42069/auth/callback?token=${jwtToken}&refresh=${refreshToken}&user=${userParam}`;
+    const deepLinkUrl = `ainexus://auth/callback?token=${jwtToken}&refresh=${refreshToken}&user=${userParam}`;
+    
+    console.log('🔗 Sending JWT to desktop app');
+    
+    try {
+      // Try HTTP callback first (most reliable in development)
+      await fetch(httpCallbackUrl, { mode: 'no-cors' });
+      console.log('✅ HTTP callback succeeded');
+    } catch (err) {
+      console.log('⚠️ HTTP callback failed, trying deep link:', err);
+      
+      // Fallback to deep link
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = deepLinkUrl;
+      document.body.appendChild(iframe);
+      
+      setTimeout(() => {
+        window.location.href = deepLinkUrl;
+      }, 100);
+      
+      setTimeout(() => {
+        if (iframe.parentNode) {
+          document.body.removeChild(iframe);
+        }
+      }, 2000);
+    }
+  };
 
   useEffect(() => {
-    if (status === 'authenticated' && session?.user && !redirected) {
+    // If we have tokens from URL, use them directly
+    if (tokenFromUrl && !redirected) {
       setRedirected(true);
+      setIsLoading(false);
       
-      const token = btoa(JSON.stringify({
-        id: session.user.id || session.user.email,
-        email: session.user.email,
-        timestamp: Date.now(),
-      }));
-
-      const user = encodeURIComponent(JSON.stringify({
-        id: session.user.id || session.user.email,
-        email: session.user.email,
-        name: session.user.name,
-        image: session.user.image,
-      }));
-
-      // Try HTTP callback first (more reliable in development)
-      const httpCallbackUrl = `http://localhost:42069/auth/callback?token=${token}&user=${user}`;
-      const deepLinkUrl = `ainexus://auth/callback?token=${token}&user=${user}`;
-      
-      console.log('🔗 Trying HTTP callback:', httpCallbackUrl);
-      console.log('🔗 Fallback deep link:', deepLinkUrl);
-      
-      // Small delay to show success message
-      setTimeout(() => {
-        // Method 1: Try HTTP callback (most reliable in dev)
-        fetch(httpCallbackUrl, { mode: 'no-cors' })
-          .then(() => {
-            console.log('✅ HTTP callback succeeded');
-          })
-          .catch((err) => {
-            console.log('⚠️ HTTP callback failed, trying deep link:', err);
-            
-            // Fallback to deep link methods
-            const iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.src = deepLinkUrl;
-            document.body.appendChild(iframe);
-            
-            setTimeout(() => {
-              window.location.href = deepLinkUrl;
-            }, 100);
-            
-            setTimeout(() => {
-              const link = document.createElement('a');
-              link.href = deepLinkUrl;
-              link.click();
-            }, 200);
-            
-            setTimeout(() => {
-              if (iframe.parentNode) {
-                document.body.removeChild(iframe);
-              }
-            }, 2000);
-          });
-      }, 1500);
+      // Decode user from token
+      try {
+        const parts = tokenFromUrl.split('.');
+        if (parts.length === 3) {
+          const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+          const userData = {
+            id: payload.sub,
+            email: payload.email,
+            name: payload.name,
+            image: payload.image,
+            plan: payload.plan || 'trial',
+          };
+          setUser(userData);
+          
+          setTimeout(() => {
+            sendAuthToDesktop(tokenFromUrl, refreshFromUrl || '', userData);
+          }, 1000);
+        }
+      } catch (err) {
+        console.error('Failed to decode token:', err);
+        setError('Invalid token received');
+      }
+      return;
     }
-  }, [status, session, searchParams, redirected]);
 
-  if (status === 'loading') {
+    // Otherwise, fetch from session cookie
+    if (!redirected && !tokenFromUrl) {
+      fetch('/api/auth/token')
+        .then(async (res) => {
+          if (!res.ok) {
+            throw new Error('Not authenticated');
+          }
+          return res.json();
+        })
+        .then((data) => {
+          setUser(data.user);
+          setIsLoading(false);
+          setRedirected(true);
+          
+          setTimeout(() => {
+            sendAuthToDesktop(data.token, data.refreshToken, data.user);
+          }, 1000);
+        })
+        .catch((err) => {
+          console.error('Failed to get token:', err);
+          setError('Please sign in first');
+          setIsLoading(false);
+        });
+    }
+  }, [tokenFromUrl, refreshFromUrl, redirected]);
+
+  const handleManualRedirect = async () => {
+    if (tokenFromUrl && user) {
+      await sendAuthToDesktop(tokenFromUrl, refreshFromUrl || '', user);
+      return;
+    }
+    
+    try {
+      const res = await fetch('/api/auth/token');
+      if (!res.ok) {
+        throw new Error('Not authenticated');
+      }
+      const data = await res.json();
+      await sendAuthToDesktop(data.token, data.refreshToken, data.user);
+    } catch (err: any) {
+      console.error('Manual redirect failed:', err);
+      setError(err.message);
+    }
+  };
+
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center">
         <div className="text-center">
@@ -81,16 +142,18 @@ function DesktopCallbackContent() {
     );
   }
 
-  if (status === 'unauthenticated') {
+  if (error && !user) {
     return (
       <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center">
-        <div className="text-center">
-          <Sparkles className="w-12 h-12 text-blue-500 mx-auto mb-4" />
-          <h1 className="text-xl font-bold text-black dark:text-white mb-2">Authentication Required</h1>
-          <p className="text-gray-500 mb-4">Please sign in first to continue.</p>
+        <div className="text-center max-w-md px-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full mb-6">
+            <AlertCircle className="w-8 h-8 text-red-500" />
+          </div>
+          <h1 className="text-2xl font-bold text-black dark:text-white mb-2">Authentication Required</h1>
+          <p className="text-gray-500 mb-6">{error}</p>
           <a 
-            href={`/login?desktop=true&callback=${searchParams.get('callback') || 'ainexus://auth/callback'}`}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+            href="/login?desktop=true"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
           >
             Sign In
           </a>
@@ -107,7 +170,7 @@ function DesktopCallbackContent() {
         </div>
         <h1 className="text-2xl font-bold text-black dark:text-white mb-2">Authentication Successful!</h1>
         <p className="text-gray-500 mb-6">
-          You've been authenticated as <strong className="text-black dark:text-white">{session?.user?.name}</strong>. 
+          You've been authenticated as <strong className="text-black dark:text-white">{user?.name || user?.email}</strong>. 
           Redirecting you back to the AI Nexus app...
         </p>
         <div className="flex items-center justify-center gap-2 text-sm text-gray-400 mb-6">
@@ -115,34 +178,16 @@ function DesktopCallbackContent() {
           Opening desktop app...
         </div>
         
-        {/* Manual redirect buttons */}
         <div className="space-y-3">
           <button 
-            onClick={() => {
-              const token = btoa(JSON.stringify({
-                id: session?.user?.id || session?.user?.email,
-                email: session?.user?.email,
-                timestamp: Date.now(),
-              }));
-              const user = encodeURIComponent(JSON.stringify({
-                id: session?.user?.id || session?.user?.email,
-                email: session?.user?.email,
-                name: session?.user?.name,
-                image: session?.user?.image,
-              }));
-              const httpCallbackUrl = `http://localhost:42069/auth/callback?token=${token}&user=${user}`;
-              console.log('Manual HTTP callback:', httpCallbackUrl);
-              fetch(httpCallbackUrl, { mode: 'no-cors' })
-                .then(() => console.log('✅ Manual HTTP callback succeeded'))
-                .catch(err => console.error('❌ Manual HTTP callback failed:', err));
-            }}
+            onClick={handleManualRedirect}
             className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
           >
-            Open Desktop App Manually (HTTP)
+            Open Desktop App Manually
           </button>
           
           <p className="text-xs text-gray-400">
-            If the app doesn't open automatically, click the button above or check if the desktop app is running.
+            If the app doesn't open automatically, click the button above.
           </p>
         </div>
       </div>

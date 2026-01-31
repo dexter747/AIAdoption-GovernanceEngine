@@ -434,6 +434,123 @@ app.post('/api/ai/query', async (req, res) => {
 });
 
 // =============================================================================
+// USER CONNECTIONS (Database Connections for MCP)
+// =============================================================================
+
+// JWT validation middleware
+const validateJwtMiddleware = (req, res, next) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'No token provided' });
+    }
+
+    const token = authHeader.substring(7);
+    const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-in-production';
+    
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = decoded; // Add user info to request
+    next();
+  } catch (error) {
+    console.error('JWT validation error:', error);
+    return res.status(401).json({ error: 'Invalid or expired token' });
+  }
+};
+
+// GET /api/user/connections - Get all connections for authenticated user
+app.get('/api/user/connections', validateJwtMiddleware, async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const { data: connections, error } = await supabase
+      .from('user_connections')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching connections:', error);
+      throw error;
+    }
+
+    res.json({ connections: connections || [] });
+  } catch (error) {
+    console.error('Failed to fetch connections:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch connections',
+      message: error.message 
+    });
+  }
+});
+
+// POST /api/user/connections - Create new connection
+app.post('/api/user/connections', validateJwtMiddleware, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { name, type, config } = req.body;
+
+    if (!name || !type || !config) {
+      return res.status(400).json({ 
+        error: 'Missing required fields: name, type, config' 
+      });
+    }
+
+    // TODO: Encrypt sensitive config data
+    const { data: connection, error } = await supabase
+      .from('user_connections')
+      .insert({
+        user_id: userId,
+        name,
+        type,
+        config,
+        is_active: true
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error creating connection:', error);
+      throw error;
+    }
+
+    res.status(201).json({ connection });
+  } catch (error) {
+    console.error('Failed to create connection:', error);
+    res.status(500).json({ 
+      error: 'Failed to create connection',
+      message: error.message 
+    });
+  }
+});
+
+// DELETE /api/user/connections/:id - Delete connection
+app.delete('/api/user/connections/:id', validateJwtMiddleware, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { id } = req.params;
+
+    const { error } = await supabase
+      .from('user_connections')
+      .delete()
+      .eq('id', id)
+      .eq('user_id', userId);
+
+    if (error) {
+      console.error('Error deleting connection:', error);
+      throw error;
+    }
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Failed to delete connection:', error);
+    res.status(500).json({ 
+      error: 'Failed to delete connection',
+      message: error.message 
+    });
+  }
+});
+
+// =============================================================================
 // PAYMENTS WEBHOOK (Dodo Payments)
 // =============================================================================
 

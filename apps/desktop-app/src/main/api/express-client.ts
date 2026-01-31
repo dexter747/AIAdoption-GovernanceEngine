@@ -244,7 +244,9 @@ export class ExpressClient {
       headers: this.getHeaders(),
     });
     if (!response.ok) {
-      throw new Error('Failed to fetch connections');
+      const errorBody = await response.text();
+      console.error('getUserConnections failed:', response.status, errorBody);
+      throw new Error(`Failed to fetch connections: ${response.status} - ${errorBody}`);
     }
     const data = (await response.json()) as { data: any[] };
     return data.data;

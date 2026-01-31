@@ -241,8 +241,11 @@ export default function DatabaseConnectionsPage() {
         ...c,
         config: {}, // Don't store sensitive config in state
       })));
-    } catch (err) {
-      console.error('Failed to load connections:', err);
+    } catch (err: any) {
+      // Silently handle API key errors - user might not have backend configured yet
+      if (!err?.message?.includes('Invalid API key')) {
+        console.error('Failed to load connections:', err);
+      }
     } finally {
       setIsLoading(false);
     }

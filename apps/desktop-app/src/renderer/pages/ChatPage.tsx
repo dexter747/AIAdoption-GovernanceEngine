@@ -78,8 +78,11 @@ const ChatPage: React.FC = () => {
       if (enabledConnections.length > 0 && !selectedConnectionId) {
         setSelectedConnectionId(enabledConnections[0].id);
       }
-    } catch (err) {
-      console.error('Error loading connections:', err);
+    } catch (err: any) {
+      // Silently handle API key errors - user might not have backend configured yet
+      if (!err?.message?.includes('Invalid API key')) {
+        console.error('Error loading connections:', err);
+      }
     }
   };
 

@@ -1,15 +1,17 @@
 'use client';
 
-import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import { Sparkles } from 'lucide-react';
 
 export default function AdminLoginPage() {
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSignIn = async () => {
+  const handleSignIn = () => {
     setIsLoading(true);
-    await signIn('google', { callbackUrl: '/' });
+    // Redirect to JWT-based Google OAuth
+    const authUrl = new URL('/api/auth/google', window.location.origin);
+    authUrl.searchParams.set('callbackUrl', '/');
+    window.location.href = authUrl.toString();
   };
 
   return (
