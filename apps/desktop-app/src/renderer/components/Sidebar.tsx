@@ -4,7 +4,7 @@ import {
   MessageSquare, Settings, 
   CreditCard, LogOut, Sun, Moon, Monitor,
   Key, UserCircle, Shield, Library, FolderOpen, ChevronUp, Bot,
-  PanelLeftClose, PanelLeft
+  PanelLeftClose, PanelLeft, Brain
 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { cn } from '../lib/utils';
@@ -13,6 +13,7 @@ const navigation = [
   { name: 'Dashboard', href: '/', icon: MessageSquare },
   { name: 'Library', href: '/library', icon: Library },
   { name: 'My Connections', href: '/my-connections', icon: FolderOpen },
+  { name: 'Contexts', href: '/contexts', icon: Brain },
   { name: 'Subscription', href: '/subscription', icon: CreditCard },
 ];
 

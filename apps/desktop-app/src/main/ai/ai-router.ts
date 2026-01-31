@@ -1,5 +1,6 @@
 import { AIQueryOptions, AIQueryResult, AIProvider } from '@shared/types';
 import { AI_MODELS } from '@shared/types';
+import { contextManager, ContextWindowConfig } from '../context/context-manager';
 
 export class AIRouter {
   private totalCost: number = 0;
@@ -11,6 +12,31 @@ export class AIRouter {
     const model = options.model || this.selectOptimalModel(prompt);
     const provider = options.provider || this.getProviderForModel(model);
     
+    // Get context configuration for the model
+    const contextConfig = this.getContextConfigForModel(model);
+    
+    // Compile contexts into system prompt
+    let systemPrompt = options.systemPrompt || '';
+    let contextTokens = 0;
+    
+    try {
+      const compiled = contextManager.compile({
+        config: contextConfig,
+        connectionId: options.connectionId,
+        projectId: options.projectId,
+        additionalContextIds: options.contextIds,
+        excludeIds: options.excludeContextIds,
+      });
+      
+      // Prepend compiled context to system prompt
+      if (compiled.systemPrompt) {
+        systemPrompt = compiled.systemPrompt + (systemPrompt ? '\n\n---\n\n' + systemPrompt : '');
+      }
+      contextTokens = compiled.totalTokens;
+    } catch (err) {
+      console.error('Failed to compile contexts:', err);
+    }
+    
     // Get AI provider client
     const client = this.getProviderClient(provider);
     
@@ -20,6 +46,7 @@ export class AIRouter {
         model,
         temperature: options.temperature || 0.7,
         maxTokens: options.maxTokens || 4000,
+        systemPrompt,
       });
       
       // Calculate cost
@@ -36,12 +63,77 @@ export class AIRouter {
         cost,
         duration: Date.now() - startTime,
         timestamp: new Date(),
+        contextTokens, // Track how many tokens were used for context
       };
       
       return result;
     } catch (error: any) {
       throw new Error(`AI query failed: ${error.message}`);
     }
+  }
+
+  /**
+   * Get context window configuration for a specific model
+   */
+  private getContextConfigForModel(model: string): ContextWindowConfig {
+    const configs: Record<string, ContextWindowConfig> = {
+      'gpt-4o': {
+        maxTokens: 128000,
+        reservedForResponse: 4096,
+        reservedForConversation: 32000,
+      },
+      'gpt-4o-mini': {
+        maxTokens: 128000,
+        reservedForResponse: 4096,
+        reservedForConversation: 32000,
+      },
+      'gpt-4-turbo': {
+        maxTokens: 128000,
+        reservedForResponse: 4096,
+        reservedForConversation: 32000,
+      },
+      'gpt-3.5-turbo': {
+        maxTokens: 16385,
+        reservedForResponse: 2048,
+        reservedForConversation: 8000,
+      },
+      'claude-3-5-sonnet': {
+        maxTokens: 200000,
+        reservedForResponse: 8192,
+        reservedForConversation: 50000,
+      },
+      'claude-3-5-sonnet-20241022': {
+        maxTokens: 200000,
+        reservedForResponse: 8192,
+        reservedForConversation: 50000,
+      },
+      'claude-3-opus': {
+        maxTokens: 200000,
+        reservedForResponse: 4096,
+        reservedForConversation: 50000,
+      },
+      'claude-3-opus-20240229': {
+        maxTokens: 200000,
+        reservedForResponse: 4096,
+        reservedForConversation: 50000,
+      },
+      'gemini-1.5-pro': {
+        maxTokens: 1000000,
+        reservedForResponse: 8192,
+        reservedForConversation: 100000,
+      },
+      'gemini-1.5-flash': {
+        maxTokens: 1000000,
+        reservedForResponse: 8192,
+        reservedForConversation: 100000,
+      },
+    };
+    
+    return configs[model] || {
+      maxTokens: 32000,
+      reservedForResponse: 2048,
+      reservedForConversation: 8000,
+    };
   }
 
   async getAvailableModels() {

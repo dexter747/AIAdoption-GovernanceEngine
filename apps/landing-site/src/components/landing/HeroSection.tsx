@@ -44,14 +44,14 @@ export function HeroSection() {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-up delay-200">
             <Link
-              href="/subscribe"
+              href="/download"
               className="group w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-2xl hover:from-blue-600 hover:to-blue-700 transition-all font-semibold text-lg inline-flex items-center justify-center gap-3 shadow-xl shadow-blue-500/25 hover:shadow-blue-500/40 hover:-translate-y-1"
             >
-              Start Free Trial
+              Download Free
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
-              href="/docs"
+              href="#features"
               className="group w-full sm:w-auto px-8 py-4 bg-white text-gray-700 rounded-2xl hover:bg-gray-50 transition-all font-semibold text-lg inline-flex items-center justify-center gap-3 border-2 border-gray-200 hover:border-gray-300 shadow-lg hover:-translate-y-1"
             >
               <Play className="w-5 h-5 text-blue-500" />

@@ -1,11 +1,13 @@
 /**
  * Google OAuth Callback API
  * Handles the callback from Google after authentication
+ * Stores/updates user in Supabase (synced with admin dashboard)
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { generateTokenPair, generateRandomToken } from '@/lib/jwt-auth';
+import { generateTokenPair } from '@/lib/jwt-auth';
+import supabase from '@/lib/supabase';
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
@@ -78,7 +80,7 @@ export async function GET(request: NextRequest) {
 
     const tokenData: GoogleTokenResponse = await tokenResponse.json();
 
-    // Get user info
+    // Get user info from Google
     const userInfoResponse = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
       headers: { Authorization: `Bearer ${tokenData.access_token}` },
     });
@@ -89,9 +91,58 @@ export async function GET(request: NextRequest) {
 
     const googleUser: GoogleUserInfo = await userInfoResponse.json();
 
-    // Create user object
+    // Store user in Supabase (synced with admin dashboard)
+    let dbUserId = googleUser.id;
+    try {
+      // Check if user exists
+      const { data: existingUser } = await supabase
+        .from('users')
+        .select('id')
+        .eq('email', googleUser.email)
+        .single();
+
+      if (existingUser) {
+        // Update existing user
+        await supabase
+          .from('users')
+          .update({
+            full_name: googleUser.name,
+            avatar_url: googleUser.picture,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', existingUser.id);
+        dbUserId = existingUser.id;
+        console.log('✅ User updated in Supabase:', existingUser.id);
+      } else {
+        // Create new user
+        const { data: newUser, error: insertError } = await supabase
+          .from('users')
+          .insert({
+            email: googleUser.email,
+            full_name: googleUser.name,
+            avatar_url: googleUser.picture,
+            plan: 'free',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          })
+          .select('id')
+          .single();
+
+        if (insertError) {
+          console.error('Supabase insert error:', insertError);
+        } else if (newUser) {
+          dbUserId = newUser.id;
+          console.log('✅ New user created in Supabase:', newUser.id);
+        }
+      }
+    } catch (dbError) {
+      console.error('Supabase error (continuing):', dbError);
+      // Continue without database if it fails
+    }
+
+    // Create user object for JWT
     const user = {
-      id: googleUser.id,
+      id: dbUserId,
       email: googleUser.email,
       name: googleUser.name,
       image: googleUser.picture,
@@ -101,8 +152,9 @@ export async function GET(request: NextRequest) {
     // Generate JWT tokens
     const tokens = await generateTokenPair(user);
 
-    // Set session cookie
+    // Set session cookies
     const cookieStore = await cookies();
+    
     cookieStore.set('user_session', JSON.stringify(user), {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -137,7 +189,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(desktopCallbackUrl.toString());
     }
 
-    // Web callback
+    // Web callback - redirect to download page after auth
     const callbackUrl = stateData.callbackUrl || '/download';
     return NextResponse.redirect(new URL(callbackUrl, request.url));
   } catch (error) {

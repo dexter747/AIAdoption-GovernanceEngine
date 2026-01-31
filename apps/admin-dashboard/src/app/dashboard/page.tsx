@@ -2,7 +2,7 @@
 
 import { 
   Users, Download, DollarSign, TrendingUp, ArrowUpRight, ArrowDownRight,
-  RefreshCw
+  RefreshCw, Activity, BarChart3
 } from 'lucide-react';
 import { useState, useEffect, useCallback } from 'react';
 
@@ -35,19 +35,19 @@ interface Payment {
   date: string;
 }
 
-interface DownloadItem {
-  id: string;
-  user: string;
-  version: string;
-  platform: string;
-  date: string;
+interface ChartData {
+  userChartData: Array<{ date: string; users: number }>;
+  revenueChartData: Array<{ date: string; revenue: number }>;
+  downloadChartData: Array<{ date: string; downloads: number }>;
+  platformChartData: Array<{ name: string; value: number }>;
+  planChartData: Array<{ name: string; value: number }>;
 }
 
 export default function DashboardPage() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [payments, setPayments] = useState<Payment[]>([]);
-  const [downloads, setDownloads] = useState<DownloadItem[]>([]);
+  const [chartData, setChartData] = useState<ChartData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -55,26 +55,26 @@ export default function DashboardPage() {
     setLoading(true);
     setError(null);
     try {
-      const [statsRes, usersRes, paymentsRes, downloadsRes] = await Promise.all([
+      const [statsRes, usersRes, paymentsRes, analyticsRes] = await Promise.all([
         fetch('/api/stats'),
         fetch('/api/users?limit=5'),
-        fetch('/api/payments?limit=3'),
-        fetch('/api/downloads?limit=4'),
+        fetch('/api/payments?limit=5'),
+        fetch('/api/analytics'),
       ]);
 
-      const [statsData, usersData, paymentsData, downloadsData] = await Promise.all([
+      const [statsData, usersData, paymentsData, analyticsData] = await Promise.all([
         statsRes.json(),
         usersRes.json(),
         paymentsRes.json(),
-        downloadsRes.json(),
+        analyticsRes.json(),
       ]);
 
       setStats(statsData.error ? null : statsData);
       setUsers(usersData.users || []);
       setPayments(paymentsData.payments || []);
-      setDownloads(downloadsData.downloads || []);
+      setChartData(analyticsData.error ? null : analyticsData);
     } catch (err) {
-      setError('Failed to load dashboard data.');
+      setError('Failed to load dashboard data. Check your database connection.');
       console.error('Dashboard fetch error:', err);
     } finally {
       setLoading(false);
@@ -115,7 +115,7 @@ export default function DashboardPage() {
     },
     { 
       name: 'Revenue', 
-      value: `$${(stats?.totalRevenue || 0).toLocaleString()}`, 
+      value: `$${((stats?.totalRevenue || 0) / 100).toLocaleString()}`, 
       change: `${(stats?.revenueGrowth || 0) >= 0 ? '+' : ''}${stats?.revenueGrowth || 0}%`, 
       trend: (stats?.revenueGrowth || 0) >= 0 ? 'up' : 'down',
       icon: DollarSign,
@@ -126,33 +126,84 @@ export default function DashboardPage() {
       value: stats?.activeUsers?.toLocaleString() || '0', 
       change: `${(stats?.activeUserGrowth || 0) >= 0 ? '+' : ''}${stats?.activeUserGrowth || 0}%`, 
       trend: (stats?.activeUserGrowth || 0) >= 0 ? 'up' : 'down',
-      icon: TrendingUp,
+      icon: Activity,
       color: 'orange'
     },
   ];
 
+  // Simple bar chart component
+  const MiniBarChart = ({ data, dataKey, color }: { data: any[]; dataKey: string; color: string }) => {
+    const maxValue = Math.max(...data.map(d => d[dataKey]), 1);
+    return (
+      <div className="flex items-end gap-1 h-24">
+        {data.slice(-14).map((item, i) => (
+          <div
+            key={i}
+            className={`flex-1 rounded-t ${color}`}
+            style={{ height: `${(item[dataKey] / maxValue) * 100}%`, minHeight: '2px' }}
+            title={`${item.date}: ${item[dataKey]}`}
+          />
+        ))}
+      </div>
+    );
+  };
+
+  // Simple pie/donut display
+  const PlanDistribution = ({ data }: { data: Array<{ name: string; value: number }> }) => {
+    const total = data.reduce((sum, d) => sum + d.value, 0);
+    const colors = ['bg-blue-500', 'bg-purple-500', 'bg-green-500', 'bg-orange-500'];
+    
+    return (
+      <div className="space-y-3">
+        {data.map((item, i) => {
+          const percentage = total > 0 ? Math.round((item.value / total) * 100) : 0;
+          return (
+            <div key={item.name} className="flex items-center gap-3">
+              <div className={`w-3 h-3 rounded-full ${colors[i % colors.length]}`} />
+              <div className="flex-1">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-700 dark:text-gray-300">{item.name}</span>
+                  <span className="text-gray-500">{item.value} ({percentage}%)</span>
+                </div>
+                <div className="mt-1 h-1.5 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+                  <div 
+                    className={`h-full ${colors[i % colors.length]} rounded-full transition-all`}
+                    style={{ width: `${percentage}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
   return (
     <div className="p-8">
+      {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold text-black dark:text-white">Dashboard</h1>
-          <p className="text-gray-500 mt-1">Welcome back! Here is what is happening.</p>
+          <p className="text-gray-500 mt-1">Overview of your platform analytics and metrics</p>
         </div>
         <button
           onClick={fetchData}
-          className="flex items-center gap-2 px-4 py-2 text-sm text-gray-500 hover:text-black dark:hover:text-white border border-gray-200 dark:border-gray-800 rounded-lg"
+          className="flex items-center gap-2 px-4 py-2 text-sm text-gray-500 hover:text-black dark:hover:text-white border border-gray-200 dark:border-gray-800 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
         >
           <RefreshCw className="w-4 h-4" />
           Refresh
         </button>
       </div>
 
+      {/* Error Alert */}
       {error && (
         <div className="mb-6 bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
           <p className="text-yellow-600 dark:text-yellow-400 text-sm">{error}</p>
         </div>
       )}
 
+      {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {statsCards.map((stat) => (
           <div key={stat.name} className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl p-6">
@@ -183,7 +234,80 @@ export default function DashboardPage() {
         ))}
       </div>
 
+      {/* Analytics Charts Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        {/* User Signups Chart */}
+        <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-semibold text-black dark:text-white">User Signups</h3>
+            <span className="text-xs text-gray-500">Last 14 days</span>
+          </div>
+          {chartData?.userChartData ? (
+            <MiniBarChart data={chartData.userChartData} dataKey="users" color="bg-blue-500" />
+          ) : (
+            <div className="h-24 flex items-center justify-center text-gray-400 text-sm">No data</div>
+          )}
+        </div>
+
+        {/* Revenue Chart */}
+        <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-semibold text-black dark:text-white">Revenue</h3>
+            <span className="text-xs text-gray-500">Last 14 days</span>
+          </div>
+          {chartData?.revenueChartData ? (
+            <MiniBarChart data={chartData.revenueChartData} dataKey="revenue" color="bg-purple-500" />
+          ) : (
+            <div className="h-24 flex items-center justify-center text-gray-400 text-sm">No data</div>
+          )}
+        </div>
+
+        {/* Downloads Chart */}
+        <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-semibold text-black dark:text-white">Downloads</h3>
+            <span className="text-xs text-gray-500">Last 14 days</span>
+          </div>
+          {chartData?.downloadChartData ? (
+            <MiniBarChart data={chartData.downloadChartData} dataKey="downloads" color="bg-green-500" />
+          ) : (
+            <div className="h-24 flex items-center justify-center text-gray-400 text-sm">No data</div>
+          )}
+        </div>
+      </div>
+
+      {/* Distribution Charts Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        {/* Plan Distribution */}
+        <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl p-6">
+          <div className="flex items-center gap-2 mb-6">
+            <BarChart3 className="w-5 h-5 text-gray-400" />
+            <h3 className="font-semibold text-black dark:text-white">Plan Distribution</h3>
+          </div>
+          {chartData?.planChartData && chartData.planChartData.some(d => d.value > 0) ? (
+            <PlanDistribution data={chartData.planChartData} />
+          ) : (
+            <div className="h-32 flex items-center justify-center text-gray-400 text-sm">No users yet</div>
+          )}
+        </div>
+
+        {/* Platform Distribution */}
+        <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl p-6">
+          <div className="flex items-center gap-2 mb-6">
+            <Download className="w-5 h-5 text-gray-400" />
+            <h3 className="font-semibold text-black dark:text-white">Download Platforms</h3>
+          </div>
+          {chartData?.platformChartData && chartData.platformChartData.some(d => d.value > 0) ? (
+            <PlanDistribution data={chartData.platformChartData} />
+          ) : (
+            <div className="h-32 flex items-center justify-center text-gray-400 text-sm">No downloads yet</div>
+          )}
+        </div>
+      </div>
+
+      {/* Recent Activity Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Recent Users */}
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl">
           <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
             <h2 className="text-lg font-semibold text-black dark:text-white">Recent Users</h2>
@@ -195,21 +319,24 @@ export default function DashboardPage() {
             ) : (
               <div className="space-y-3">
                 {users.map((user) => (
-                  <div key={user.id} className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900">
+                  <div key={user.id} className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                        <span className="text-white text-xs font-medium">{user.name.charAt(0).toUpperCase()}</span>
+                      <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                        <span className="text-white text-sm font-medium">{user.name.charAt(0).toUpperCase()}</span>
                       </div>
                       <div>
                         <p className="text-sm font-medium text-black dark:text-white">{user.name}</p>
                         <p className="text-xs text-gray-500">{user.email}</p>
                       </div>
                     </div>
-                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                      user.plan === 'Enterprise' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400' :
-                      user.plan === 'Pro' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' :
-                      'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400'
-                    }`}>{user.plan}</span>
+                    <div className="text-right">
+                      <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                        user.plan === 'Enterprise' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400' :
+                        user.plan === 'Pro' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' :
+                        'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400'
+                      }`}>{user.plan}</span>
+                      <p className="text-xs text-gray-400 mt-1">{user.joined}</p>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -217,6 +344,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
+        {/* Recent Payments */}
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl">
           <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
             <h2 className="text-lg font-semibold text-black dark:text-white">Recent Payments</h2>
@@ -228,44 +356,29 @@ export default function DashboardPage() {
             ) : (
               <div className="space-y-3">
                 {payments.map((payment) => (
-                  <div key={payment.id} className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900">
-                    <div>
-                      <p className="text-sm font-medium text-black dark:text-white">{payment.user}</p>
-                      <p className="text-xs text-gray-500">{payment.date}</p>
+                  <div key={payment.id} className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-9 h-9 rounded-full flex items-center justify-center ${
+                        payment.status === 'Completed' ? 'bg-green-100 dark:bg-green-900/30' : 'bg-yellow-100 dark:bg-yellow-900/30'
+                      }`}>
+                        <DollarSign className={`w-4 h-4 ${
+                          payment.status === 'Completed' ? 'text-green-600' : 'text-yellow-600'
+                        }`} />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-black dark:text-white">{payment.user}</p>
+                        <p className="text-xs text-gray-500">{payment.plan}</p>
+                      </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-medium text-black dark:text-white">${payment.amount.toFixed(2)}</p>
-                      <span className={`text-xs ${payment.status === 'Completed' ? 'text-green-500' : 'text-yellow-500'}`}>
-                        {payment.status}
-                      </span>
+                      <p className="text-sm font-semibold text-black dark:text-white">${(payment.amount / 100).toFixed(2)}</p>
+                      <p className="text-xs text-gray-400">{payment.date}</p>
                     </div>
                   </div>
                 ))}
               </div>
             )}
           </div>
-        </div>
-      </div>
-
-      <div className="mt-6 bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl">
-        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-black dark:text-white">Recent Downloads</h2>
-          <a href="/dashboard/downloads" className="text-sm text-blue-500 hover:text-blue-600">View All</a>
-        </div>
-        <div className="p-4">
-          {downloads.length === 0 ? (
-            <p className="text-center text-gray-500 py-8">No downloads yet</p>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {downloads.map((download) => (
-                <div key={download.id} className="p-4 rounded-lg border border-gray-100 dark:border-gray-900">
-                  <p className="text-sm font-medium text-black dark:text-white">{download.user}</p>
-                  <p className="text-xs text-gray-500 mt-1">{download.version} - {download.platform}</p>
-                  <p className="text-xs text-gray-400 mt-2">{download.date}</p>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
       </div>
     </div>

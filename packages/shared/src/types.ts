@@ -61,6 +61,10 @@ export interface AIQueryOptions {
   maxTokens?: number;
   stream?: boolean;
   connectionId?: string;
+  projectId?: string;
+  systemPrompt?: string;
+  contextIds?: string[];       // Additional context IDs to include
+  excludeContextIds?: string[]; // Context IDs to exclude
 }
 
 export interface AIQueryResult {
@@ -77,6 +81,7 @@ export interface AIQueryResult {
   cost: number;
   duration: number;
   timestamp: Date;
+  contextTokens?: number; // Tokens used for context
 }
 
 // License Types

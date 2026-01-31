@@ -1,5 +1,74 @@
 // Type definitions for Electron IPC API exposed via preload script
 
+// =============================================================================
+// LLM CONTEXT TYPES
+// =============================================================================
+
+type ContextType = 
+  | 'system_prompt'
+  | 'database_schema'
+  | 'knowledge_base'
+  | 'memory_summary'
+  | 'project'
+  | 'template';
+
+interface LLMContext {
+  id: string;
+  name: string;
+  type: ContextType;
+  content: string;
+  description?: string;
+  tags: string[];
+  tokenCount: number;
+  charCount: number;
+  createdAt: Date;
+  updatedAt: Date;
+  lastUsedAt?: Date;
+  usageCount: number;
+  isActive: boolean;
+  priority: number;
+  maxTokens?: number;
+  autoInclude: boolean;
+  connectionId?: string;
+  projectId?: string;
+  sourceFile?: string;
+}
+
+interface ContextSearchOptions {
+  type?: ContextType;
+  tags?: string[];
+  isActive?: boolean;
+  autoInclude?: boolean;
+  connectionId?: string;
+  projectId?: string;
+  query?: string;
+}
+
+interface ContextWindowConfig {
+  maxTokens: number;
+  reservedForResponse: number;
+  reservedForConversation: number;
+}
+
+interface CompiledContext {
+  contexts: LLMContext[];
+  totalTokens: number;
+  systemPrompt: string;
+  truncated: boolean;
+}
+
+interface ContextStats {
+  totalContexts: number;
+  byType: Record<ContextType, number>;
+  totalTokens: number;
+  totalChars: number;
+  mostUsed: LLMContext[];
+}
+
+// =============================================================================
+// OTHER TYPES
+// =============================================================================
+
 interface MCPConnection {
   id: string;
   name: string;
@@ -96,6 +165,24 @@ interface ElectronAPI {
     deleteConnection: (id: string) => Promise<void>;
     getAvailableServers: () => Promise<any[]>;
     checkDocker: () => Promise<boolean>;
+    
+    // MCP Client SDK methods
+    connect: (config: { id: string; type: string; connectionString: string; name: string }) => 
+      Promise<{ success: boolean; tools?: any[]; status?: string; error?: string }>;
+    disconnect: (connectionId: string) => Promise<{ success: boolean; error?: string }>;
+    query: (connectionId: string, sql: string) => Promise<{ success: boolean; data?: any; error?: string }>;
+    callTool: (connectionId: string, toolName: string, args: any) => 
+      Promise<{ success: boolean; data?: any; error?: string }>;
+    listTables: (connectionId: string) => Promise<{ success: boolean; data?: any[]; error?: string }>;
+    getTableSchema: (connectionId: string, tableName: string) => 
+      Promise<{ success: boolean; data?: any; error?: string }>;
+    getTools: (connectionId: string) => Promise<any[]>;
+    getAllToolsForAI: () => Promise<any[]>;
+    getStatus: () => Promise<any>;
+    isConnected: (connectionId: string) => Promise<boolean>;
+    disconnectAll: () => Promise<{ success: boolean }>;
+    generateSchemaContext: (connectionId: string, connectionName: string) => 
+      Promise<{ success: boolean; context?: LLMContext; error?: string }>;
   };
 
   // Chat API
@@ -255,6 +342,73 @@ interface ElectronAPI {
     getPlatform: () => Promise<string>;
     openExternal: (url: string) => Promise<void>;
     showItemInFolder: (path: string) => Promise<void>;
+  };
+
+  // LLM Context API
+  context: {
+    // CRUD operations
+    create: (data: {
+      name: string;
+      type: ContextType;
+      content: string;
+      description?: string;
+      tags?: string[];
+      priority?: number;
+      autoInclude?: boolean;
+      connectionId?: string;
+      projectId?: string;
+      maxTokens?: number;
+    }) => Promise<LLMContext>;
+    get: (id: string) => Promise<LLMContext | undefined>;
+    update: (id: string, updates: Partial<LLMContext>) => Promise<LLMContext>;
+    delete: (id: string) => Promise<{ success: boolean }>;
+    list: (options?: ContextSearchOptions) => Promise<LLMContext[]>;
+    
+    // Context compilation
+    compile: (options: {
+      config: ContextWindowConfig;
+      connectionId?: string;
+      projectId?: string;
+      additionalContextIds?: string[];
+      excludeIds?: string[];
+    }) => Promise<CompiledContext>;
+    
+    // Schema management
+    createSchema: (data: {
+      connectionId: string;
+      connectionName: string;
+      tables: Array<{
+        name: string;
+        schema?: string;
+        columns: Array<{
+          name: string;
+          type: string;
+          nullable: boolean;
+          primaryKey?: boolean;
+          foreignKey?: { table: string; column: string };
+        }>;
+      }>;
+    }) => Promise<LLMContext>;
+    
+    // Knowledge base
+    importFile: (options?: { name?: string; tags?: string[]; chunkSize?: number }) => 
+      Promise<{ canceled: boolean; contexts: LLMContext[] }>;
+    importFilePath: (filePath: string, options?: { name?: string; tags?: string[]; chunkSize?: number }) => 
+      Promise<LLMContext[]>;
+    
+    // Memory
+    createMemory: (data: { conversationId: string; summary: string; keyFacts: string[] }) => 
+      Promise<LLMContext>;
+    
+    // Statistics & utilities
+    getStats: () => Promise<ContextStats>;
+    exportAll: () => Promise<{ success?: boolean; canceled?: boolean; path?: string }>;
+    importJson: (options?: { overwrite?: boolean }) => Promise<{ canceled: boolean; count: number }>;
+    getTemplates: () => Promise<Array<Omit<LLMContext, 'id' | 'createdAt' | 'updatedAt' | 'lastUsedAt' | 'usageCount' | 'charCount' | 'tokenCount'>>>;
+    
+    // Toggles
+    toggleActive: (id: string) => Promise<LLMContext>;
+    toggleAutoInclude: (id: string) => Promise<LLMContext>;
   };
 }
 

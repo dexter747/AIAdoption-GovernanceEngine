@@ -108,6 +108,8 @@ contextBridge.exposeInMainWorld('electron', {
     getStatus: () => ipcRenderer.invoke('mcp:get-status'),
     isConnected: (connectionId: string) => ipcRenderer.invoke('mcp:is-connected', connectionId),
     disconnectAll: () => ipcRenderer.invoke('mcp:disconnect-all'),
+    generateSchemaContext: (connectionId: string, connectionName: string) => 
+      ipcRenderer.invoke('mcp:generate-schema-context', connectionId, connectionName),
   },
 
   // Chat History API
@@ -167,5 +169,80 @@ contextBridge.exposeInMainWorld('electron', {
     setAuth: (userId: string, licenseKey: string, authToken?: string) => ipcRenderer.invoke('express:set-auth', userId, licenseKey, authToken),
     setAuthToken: (token: string) => ipcRenderer.invoke('express:set-auth-token', token),
     updateConfig: (config: any) => ipcRenderer.invoke('express:update-config', config),
+  },
+
+  // LLM Context API
+  context: {
+    // CRUD operations
+    create: (data: {
+      name: string;
+      type: string;
+      content: string;
+      description?: string;
+      tags?: string[];
+      priority?: number;
+      autoInclude?: boolean;
+      connectionId?: string;
+      projectId?: string;
+      maxTokens?: number;
+    }) => ipcRenderer.invoke('context:create', data),
+    get: (id: string) => ipcRenderer.invoke('context:get', id),
+    update: (id: string, updates: any) => ipcRenderer.invoke('context:update', id, updates),
+    delete: (id: string) => ipcRenderer.invoke('context:delete', id),
+    list: (options?: {
+      type?: string;
+      tags?: string[];
+      isActive?: boolean;
+      autoInclude?: boolean;
+      connectionId?: string;
+      projectId?: string;
+      query?: string;
+    }) => ipcRenderer.invoke('context:list', options),
+    
+    // Context compilation for LLM
+    compile: (options: {
+      config: { maxTokens: number; reservedForResponse: number; reservedForConversation: number };
+      connectionId?: string;
+      projectId?: string;
+      additionalContextIds?: string[];
+      excludeIds?: string[];
+    }) => ipcRenderer.invoke('context:compile', options),
+    
+    // Schema management
+    createSchema: (data: {
+      connectionId: string;
+      connectionName: string;
+      tables: Array<{
+        name: string;
+        schema?: string;
+        columns: Array<{
+          name: string;
+          type: string;
+          nullable: boolean;
+          primaryKey?: boolean;
+          foreignKey?: { table: string; column: string };
+        }>;
+      }>;
+    }) => ipcRenderer.invoke('context:create-schema', data),
+    
+    // Knowledge base
+    importFile: (options?: { name?: string; tags?: string[]; chunkSize?: number }) => 
+      ipcRenderer.invoke('context:import-file', options),
+    importFilePath: (filePath: string, options?: { name?: string; tags?: string[]; chunkSize?: number }) => 
+      ipcRenderer.invoke('context:import-file-path', filePath, options),
+    
+    // Memory
+    createMemory: (data: { conversationId: string; summary: string; keyFacts: string[] }) => 
+      ipcRenderer.invoke('context:create-memory', data),
+    
+    // Statistics & utilities
+    getStats: () => ipcRenderer.invoke('context:stats'),
+    exportAll: () => ipcRenderer.invoke('context:export'),
+    importJson: (options?: { overwrite?: boolean }) => ipcRenderer.invoke('context:import-json', options),
+    getTemplates: () => ipcRenderer.invoke('context:get-templates'),
+    
+    // Toggles
+    toggleActive: (id: string) => ipcRenderer.invoke('context:toggle-active', id),
+    toggleAutoInclude: (id: string) => ipcRenderer.invoke('context:toggle-auto-include', id),
   },
 });

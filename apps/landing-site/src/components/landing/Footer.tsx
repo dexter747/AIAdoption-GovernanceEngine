@@ -10,15 +10,15 @@ const footerLinks = {
   ],
   resources: [
     { name: 'Documentation', href: '/docs' },
-    { name: 'API Reference', href: '/api-reference' },
-    { name: 'Tutorials', href: '/tutorials' },
     { name: 'Blog', href: '/blog' },
+    { name: 'Contact', href: '/contact' },
+    { name: 'Tutorials', href: '/tutorials' },
   ],
   legal: [
-    { name: 'Privacy Policy', href: '/privacy-policy' },
-    { name: 'Terms of Service', href: '/terms-of-service' },
-    { name: 'Refund Policy', href: '/refund-policy' },
-    { name: 'Cookie Policy', href: '/cookie-policy' },
+    { name: 'Privacy Policy', href: '/privacy' },
+    { name: 'Terms of Service', href: '/terms' },
+    { name: 'Refund Policy', href: '/refund' },
+    { name: 'Cookie Policy', href: '/cookies' },
   ],
 };
 

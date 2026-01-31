@@ -1,4 +1,4 @@
-import { ipcMain } from 'electron';
+import { ipcMain, dialog } from 'electron';
 import { ConnectionManager } from './data/connection-manager';
 import { AIRouter } from './ai/ai-router';
 import { LicenseManager } from './license/license-manager';
@@ -6,6 +6,7 @@ import { SettingsManager } from './data/settings-manager';
 import { mcpConnectionManager } from './mcp/mcp-manager';
 import { mcpClient } from './mcp/mcp-client';
 import { chatHistoryManager } from './chat/chat-history-manager';
+import { contextManager, ContextType, ContextSearchOptions, ContextWindowConfig } from './context/context-manager';
 import { expressClient } from './api/express-client';
 import { app, shell } from 'electron';
 
@@ -225,6 +226,66 @@ ipcMain.handle('mcp:is-connected', async (_event, connectionId: string) => {
 ipcMain.handle('mcp:disconnect-all', async () => {
   await mcpClient.disconnectAll();
   return { success: true };
+});
+
+// Generate schema context for a database connection
+ipcMain.handle('mcp:generate-schema-context', async (_event, connectionId: string, connectionName: string) => {
+  try {
+    // Get list of tables
+    const tablesResult = await mcpClient.listTables(connectionId);
+    if (!tablesResult || !Array.isArray(tablesResult)) {
+      return { success: false, error: 'Failed to get tables' };
+    }
+
+    // Get schema for each table
+    const tables: Array<{
+      name: string;
+      schema?: string;
+      columns: Array<{
+        name: string;
+        type: string;
+        nullable: boolean;
+        primaryKey?: boolean;
+        foreignKey?: { table: string; column: string };
+      }>;
+    }> = [];
+
+    for (const table of tablesResult) {
+      try {
+        const schemaResult = await mcpClient.getTableSchema(connectionId, table.name || table);
+        if (schemaResult && schemaResult.columns) {
+          tables.push({
+            name: table.name || table,
+            schema: table.schema,
+            columns: schemaResult.columns.map((col: any) => ({
+              name: col.name || col.column_name,
+              type: col.type || col.data_type,
+              nullable: col.nullable !== false && col.is_nullable !== 'NO',
+              primaryKey: col.primaryKey || col.is_primary_key,
+              foreignKey: col.foreignKey,
+            })),
+          });
+        }
+      } catch (tableErr) {
+        console.warn(`Failed to get schema for table ${table.name || table}:`, tableErr);
+      }
+    }
+
+    if (tables.length === 0) {
+      return { success: false, error: 'No table schemas found' };
+    }
+
+    // Create database schema context
+    const context = contextManager.createDatabaseSchemaContext({
+      connectionId,
+      connectionName,
+      tables,
+    });
+
+    return { success: true, context };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
 });
 
 // =============================================================================
@@ -748,3 +809,215 @@ ipcMain.handle('api-keys:delete', async (_event, keyId) => {
     throw new Error(`Failed to delete API key: ${error.message}`);
   }
 });
+
+// =============================================================================
+// LLM CONTEXT MANAGEMENT HANDLERS
+// =============================================================================
+
+// Initialize default contexts on first load
+contextManager.initializeDefaults();
+
+// Create a new context
+ipcMain.handle('context:create', async (_event, data: {
+  name: string;
+  type: ContextType;
+  content: string;
+  description?: string;
+  tags?: string[];
+  priority?: number;
+  autoInclude?: boolean;
+  connectionId?: string;
+  projectId?: string;
+  maxTokens?: number;
+}) => {
+  try {
+    return contextManager.create(data);
+  } catch (error: any) {
+    throw new Error(`Failed to create context: ${error.message}`);
+  }
+});
+
+// Get a context by ID
+ipcMain.handle('context:get', async (_event, id: string) => {
+  return contextManager.get(id);
+});
+
+// Update a context
+ipcMain.handle('context:update', async (_event, id: string, updates: any) => {
+  try {
+    const updated = contextManager.update(id, updates);
+    if (!updated) throw new Error('Context not found');
+    return updated;
+  } catch (error: any) {
+    throw new Error(`Failed to update context: ${error.message}`);
+  }
+});
+
+// Delete a context
+ipcMain.handle('context:delete', async (_event, id: string) => {
+  try {
+    const success = contextManager.delete(id);
+    if (!success) throw new Error('Context not found');
+    return { success: true };
+  } catch (error: any) {
+    throw new Error(`Failed to delete context: ${error.message}`);
+  }
+});
+
+// List contexts with filtering
+ipcMain.handle('context:list', async (_event, options?: ContextSearchOptions) => {
+  return contextManager.list(options);
+});
+
+// Compile contexts for LLM context window
+ipcMain.handle('context:compile', async (_event, options: {
+  config: ContextWindowConfig;
+  connectionId?: string;
+  projectId?: string;
+  additionalContextIds?: string[];
+  excludeIds?: string[];
+}) => {
+  return contextManager.compile(options);
+});
+
+// Create database schema context
+ipcMain.handle('context:create-schema', async (_event, data: {
+  connectionId: string;
+  connectionName: string;
+  tables: Array<{
+    name: string;
+    schema?: string;
+    columns: Array<{
+      name: string;
+      type: string;
+      nullable: boolean;
+      primaryKey?: boolean;
+      foreignKey?: { table: string; column: string };
+    }>;
+  }>;
+}) => {
+  try {
+    return contextManager.createDatabaseSchemaContext(data);
+  } catch (error: any) {
+    throw new Error(`Failed to create schema context: ${error.message}`);
+  }
+});
+
+// Import knowledge file with file picker
+ipcMain.handle('context:import-file', async (_event, options?: {
+  name?: string;
+  tags?: string[];
+  chunkSize?: number;
+}) => {
+  try {
+    const result = await dialog.showOpenDialog({
+      properties: ['openFile'],
+      filters: [
+        { name: 'Text Files', extensions: ['txt', 'md', 'json', 'csv', 'sql'] },
+        { name: 'All Files', extensions: ['*'] },
+      ],
+    });
+    
+    if (result.canceled || result.filePaths.length === 0) {
+      return { canceled: true, contexts: [] };
+    }
+    
+    const contexts = contextManager.importKnowledgeFile(result.filePaths[0], options);
+    return { canceled: false, contexts };
+  } catch (error: any) {
+    throw new Error(`Failed to import file: ${error.message}`);
+  }
+});
+
+// Import knowledge from provided file path
+ipcMain.handle('context:import-file-path', async (_event, filePath: string, options?: {
+  name?: string;
+  tags?: string[];
+  chunkSize?: number;
+}) => {
+  try {
+    const contexts = contextManager.importKnowledgeFile(filePath, options);
+    return contexts;
+  } catch (error: any) {
+    throw new Error(`Failed to import file: ${error.message}`);
+  }
+});
+
+// Create memory summary
+ipcMain.handle('context:create-memory', async (_event, data: {
+  conversationId: string;
+  summary: string;
+  keyFacts: string[];
+}) => {
+  try {
+    return contextManager.createMemorySummary(data);
+  } catch (error: any) {
+    throw new Error(`Failed to create memory summary: ${error.message}`);
+  }
+});
+
+// Get context statistics
+ipcMain.handle('context:stats', async () => {
+  return contextManager.getStats();
+});
+
+// Export all contexts
+ipcMain.handle('context:export', async () => {
+  try {
+    const json = contextManager.exportAll();
+    const result = await dialog.showSaveDialog({
+      defaultPath: 'llm-contexts.json',
+      filters: [{ name: 'JSON', extensions: ['json'] }],
+    });
+    
+    if (!result.canceled && result.filePath) {
+      const fs = require('fs');
+      fs.writeFileSync(result.filePath, json);
+      return { success: true, path: result.filePath };
+    }
+    return { canceled: true };
+  } catch (error: any) {
+    throw new Error(`Failed to export contexts: ${error.message}`);
+  }
+});
+
+// Import contexts from JSON
+ipcMain.handle('context:import-json', async (_event, options?: { overwrite?: boolean }) => {
+  try {
+    const result = await dialog.showOpenDialog({
+      properties: ['openFile'],
+      filters: [{ name: 'JSON', extensions: ['json'] }],
+    });
+    
+    if (result.canceled || result.filePaths.length === 0) {
+      return { canceled: true, count: 0 };
+    }
+    
+    const fs = require('fs');
+    const json = fs.readFileSync(result.filePaths[0], 'utf-8');
+    const count = contextManager.importFromJson(json, options);
+    return { canceled: false, count };
+  } catch (error: any) {
+    throw new Error(`Failed to import contexts: ${error.message}`);
+  }
+});
+
+// Get default templates
+ipcMain.handle('context:get-templates', async () => {
+  return contextManager.getDefaultTemplates();
+});
+
+// Toggle context active state
+ipcMain.handle('context:toggle-active', async (_event, id: string) => {
+  const context = contextManager.get(id);
+  if (!context) throw new Error('Context not found');
+  return contextManager.update(id, { isActive: !context.isActive });
+});
+
+// Toggle context auto-include
+ipcMain.handle('context:toggle-auto-include', async (_event, id: string) => {
+  const context = contextManager.get(id);
+  if (!context) throw new Error('Context not found');
+  return contextManager.update(id, { autoInclude: !context.autoInclude });
+});
+

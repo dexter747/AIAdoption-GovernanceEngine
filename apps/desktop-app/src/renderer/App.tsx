@@ -21,6 +21,7 @@ import ProfileSettingsPage from './pages/ProfileSettingsPage';
 import LicenseActivationPage from './pages/LicenseActivationPage';
 import LibraryPage from './pages/LibraryPage';
 import MyConnectionsPage from './pages/MyConnectionsPage';
+import ContextManager from './components/ContextManager';
 import { useState, useEffect } from 'react';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -238,6 +239,16 @@ function AppRoutes() {
           <ProtectedRoute>
             <AppLayout>
               <LicenseActivationPage />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/contexts"
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <ContextManager />
             </AppLayout>
           </ProtectedRoute>
         }
