@@ -67,10 +67,13 @@ https://your-staging-domain.vercel.app
 
 ### Authorized redirect URIs:
 ```
-http://localhost:3000/api/auth/callback/google
-https://your-production-domain.com/api/auth/callback/google
-https://your-staging-domain.vercel.app/api/auth/callback/google
+http://localhost:3000/api/auth/google/callback
+http://localhost:3001/api/auth/google/callback
+https://your-production-domain.com/api/auth/google/callback
+https://your-staging-domain.vercel.app/api/auth/google/callback
 ```
+
+**Note:** Use port 3000 for landing-site, port 3001 for admin-dashboard
 
 5. Click **Create**
 6. **IMPORTANT:** Copy the **Client ID** and **Client Secret**
@@ -80,6 +83,9 @@ https://your-staging-domain.vercel.app/api/auth/callback/google
 Update `.env.local` in `apps/landing-site/`:
 
 ```env
+# App URL (must match your authorized redirect URI domain)
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+
 # NextAuth (use the generated secrets from terminal)
 NEXTAUTH_SECRET=5ObPqrSAoAqhZLIXB0oCfXcLLL8Ay1qAaamjvBoX1M8=
 NEXTAUTH_URL=http://localhost:3000
@@ -87,9 +93,20 @@ NEXTAUTH_URL=http://localhost:3000
 # Google OAuth (paste your credentials here)
 GOOGLE_CLIENT_ID=your-client-id-here.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=your-client-secret-here
+GOOGLE_REDIRECT_URI=http://localhost:3000/api/auth/google/callback
 
 # JWT for license keys (use the second generated secret)
 JWT_SECRET=pHfIFnGr1nBV8aUkySn+Jhl3nAoLgIDxVnd28VBJr7o=
+```
+
+For `apps/admin-dashboard/.env.local`:
+
+```env
+NEXT_PUBLIC_APP_URL=http://localhost:3001
+NEXTAUTH_URL=http://localhost:3001
+GOOGLE_CLIENT_ID=your-client-id-here.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your-client-secret-here
+GOOGLE_REDIRECT_URI=http://localhost:3001/api/auth/google/callback
 ```
 
 ## Step 6: Get Supabase Service Role Key

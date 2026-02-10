@@ -81,25 +81,33 @@ export default function DashboardPage() {
         name: c.name || `Connection ${idx + 1}`,
         type: c.type || c.connection_type || 'Unknown',
         status: c.status || 'connected',
-        queries: c.queries || Math.floor(Math.random() * 200),
+        queries: c.queries || 0,
         icon: DB_ICONS[c.type] || '🗄️'
       })));
 
-      // Update stats
+      // Update stats from real data
       setStats({
         connections: connArray.length,
-        queries: Math.floor(Math.random() * 100) + 20,
-        tokens: `${(Math.random() * 50).toFixed(1)}k`,
-        responseTime: `${(Math.random() * 2 + 0.5).toFixed(1)}s`
+        queries: 0,
+        tokens: '0',
+        responseTime: '—'
       });
 
-      // Mock recent queries
-      setRecentQueries([
-        { id: 1, query: 'Show me all users who signed up last month', database: 'Production DB', time: '5 min ago', status: 'success', model: 'GPT-4o' },
-        { id: 2, query: 'Calculate monthly revenue by product category', database: 'Analytics DB', time: '15 min ago', status: 'success', model: 'Claude 3.5' },
-        { id: 3, query: 'Find duplicate customer entries', database: 'Production DB', time: '1 hour ago', status: 'success', model: 'GPT-4o Mini' },
-        { id: 4, query: 'Generate sales forecast for Q2', database: 'Analytics DB', time: '2 hours ago', status: 'error', model: 'Claude 3 Opus' },
-      ]);
+      // Load real query history if available
+      try {
+        const history = await (window.electron.express as any)?.getQueryHistory?.() || [];
+        setRecentQueries(Array.isArray(history) ? history.slice(0, 5).map((q: any, i: number) => ({
+          id: i + 1,
+          query: q.query || q.text || '',
+          database: q.database || q.connection_name || 'Unknown',
+          time: q.created_at ? new Date(q.created_at).toLocaleString() : '',
+          status: q.status || 'success',
+          model: q.model || undefined,
+        })) : []);
+      } catch {
+        // No query history available yet
+        setRecentQueries([]);
+      }
 
     } catch (error: any) {
       // Silently handle API key errors - user might not have backend configured yet
@@ -110,10 +118,10 @@ export default function DashboardPage() {
   };
 
   const statCards = [
-    { name: 'Connected Databases', value: stats.connections.toString(), icon: Database, color: 'blue', trend: '+2 this week' },
-    { name: 'AI Queries Today', value: stats.queries.toString(), icon: MessageSquare, color: 'green', trend: '+12% vs yesterday' },
-    { name: 'Tokens Used', value: stats.tokens, icon: Zap, color: 'purple', trend: 'Within budget' },
-    { name: 'Avg Response Time', value: stats.responseTime, icon: TrendingUp, color: 'orange', trend: '-0.3s improved' },
+    { name: 'Connected Databases', value: stats.connections.toString(), icon: Database, color: 'blue', trend: '' },
+    { name: 'AI Queries Today', value: stats.queries.toString(), icon: MessageSquare, color: 'green', trend: '' },
+    { name: 'Tokens Used', value: stats.tokens, icon: Zap, color: 'purple', trend: '' },
+    { name: 'Avg Response Time', value: stats.responseTime, icon: TrendingUp, color: 'orange', trend: '' },
   ];
 
   return (

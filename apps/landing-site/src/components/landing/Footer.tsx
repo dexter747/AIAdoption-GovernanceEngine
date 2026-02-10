@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Sparkles, Globe, Shield, Lock } from 'lucide-react';
+import { Shield, Lock } from 'lucide-react';
 
 const footerLinks = {
   product: [
@@ -22,50 +22,31 @@ const footerLinks = {
   ],
 };
 
-const socialLinks = ['twitter', 'github', 'linkedin'];
-
 export function Footer() {
   return (
-    <footer className="py-16 bg-gray-50 border-t border-gray-100">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="grid md:grid-cols-5 gap-12 mb-12">
+    <footer className="py-14 bg-gray-50 dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="grid md:grid-cols-5 gap-10 mb-10">
           {/* Brand */}
           <div className="md:col-span-2">
-            <Link href="/" className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-white" />
+            <Link href="/" className="flex items-center gap-2.5 mb-3">
+              <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
+                <span className="text-white text-sm font-bold">AI</span>
               </div>
-              <span className="text-xl font-bold text-gray-900">AI Nexus</span>
+              <span className="text-base font-semibold text-gray-900 dark:text-white">AI Nexus</span>
             </Link>
-            <p className="text-gray-600 mb-6 max-w-sm">
+            <p className="text-sm text-gray-500 dark:text-gray-400 font-medium max-w-xs leading-relaxed">
               Bringing the power of AI to your legacy systems. Connect, query, and transform your data.
             </p>
-            {/* Social Links */}
-            <div className="flex gap-4">
-              {socialLinks.map((social) => (
-                <a
-                  key={social}
-                  href={`https://${social}.com/ainexus`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                >
-                  <Globe className="w-5 h-5" />
-                </a>
-              ))}
-            </div>
           </div>
 
-          {/* Product Links */}
+          {/* Product */}
           <div>
-            <h4 className="font-semibold text-gray-900 mb-4">Product</h4>
-            <ul className="space-y-3">
+            <h4 className="text-xs font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-3">Product</h4>
+            <ul className="space-y-2">
               {footerLinks.product.map((item) => (
                 <li key={item.name}>
-                  <Link
-                    href={item.href}
-                    className="text-gray-600 hover:text-blue-600 transition-colors"
-                  >
+                  <Link href={item.href} className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-medium transition-colors">
                     {item.name}
                   </Link>
                 </li>
@@ -73,16 +54,13 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Resources Links */}
+          {/* Resources */}
           <div>
-            <h4 className="font-semibold text-gray-900 mb-4">Resources</h4>
-            <ul className="space-y-3">
+            <h4 className="text-xs font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-3">Resources</h4>
+            <ul className="space-y-2">
               {footerLinks.resources.map((item) => (
                 <li key={item.name}>
-                  <Link
-                    href={item.href}
-                    className="text-gray-600 hover:text-blue-600 transition-colors"
-                  >
+                  <Link href={item.href} className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-medium transition-colors">
                     {item.name}
                   </Link>
                 </li>
@@ -90,16 +68,13 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Legal Links */}
+          {/* Legal */}
           <div>
-            <h4 className="font-semibold text-gray-900 mb-4">Legal</h4>
-            <ul className="space-y-3">
+            <h4 className="text-xs font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-3">Legal</h4>
+            <ul className="space-y-2">
               {footerLinks.legal.map((item) => (
                 <li key={item.name}>
-                  <Link
-                    href={item.href}
-                    className="text-gray-600 hover:text-blue-600 transition-colors"
-                  >
+                  <Link href={item.href} className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-medium transition-colors">
                     {item.name}
                   </Link>
                 </li>
@@ -108,18 +83,18 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="pt-8 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-gray-500 text-sm">
+        {/* Bottom */}
+        <div className="pt-6 border-t border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-gray-400 dark:text-gray-500 font-medium">
             &copy; {new Date().getFullYear()} AI Nexus. All rights reserved.
           </p>
-          <div className="flex items-center gap-6 text-sm text-gray-500">
-            <span className="flex items-center gap-2">
-              <Shield className="w-4 h-4" />
+          <div className="flex items-center gap-4 text-xs text-gray-400 dark:text-gray-500 font-medium">
+            <span className="flex items-center gap-1.5">
+              <Shield className="w-3.5 h-3.5" />
               SOC 2 Compliant
             </span>
-            <span className="flex items-center gap-2">
-              <Lock className="w-4 h-4" />
+            <span className="flex items-center gap-1.5">
+              <Lock className="w-3.5 h-3.5" />
               GDPR Ready
             </span>
           </div>

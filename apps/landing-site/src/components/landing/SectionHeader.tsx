@@ -5,24 +5,15 @@ interface SectionHeaderProps {
   description?: string;
 }
 
-const badgeColors = {
-  blue: 'bg-blue-50 text-blue-600',
-  purple: 'bg-purple-50 text-purple-600',
-  green: 'bg-green-50 text-green-600',
-  orange: 'bg-orange-50 text-orange-600',
-};
-
-export function SectionHeader({ badge, badgeColor = 'blue', title, description }: SectionHeaderProps) {
+export function SectionHeader({ badge, title, description }: SectionHeaderProps) {
   return (
-    <div className="text-center mb-20">
-      <span
-        className={`inline-block px-4 py-2 rounded-full text-sm font-semibold mb-4 ${badgeColors[badgeColor]}`}
-      >
+    <div className="text-center mb-14">
+      <span className="inline-block px-3 py-1 rounded-md bg-blue-50 dark:bg-blue-950 text-xs font-medium text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-4">
         {badge}
       </span>
-      <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">{title}</h2>
+      <h2 className="text-3xl lg:text-4xl font-semibold text-gray-900 dark:text-white mb-4">{title}</h2>
       {description && (
-        <p className="text-xl text-gray-600 max-w-2xl mx-auto">{description}</p>
+        <p className="text-base text-gray-500 dark:text-gray-400 max-w-xl mx-auto font-medium">{description}</p>
       )}
     </div>
   );

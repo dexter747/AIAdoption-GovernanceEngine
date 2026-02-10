@@ -142,6 +142,7 @@ contextBridge.exposeInMainWorld('electron', {
     queryAI: (request: any) => ipcRenderer.invoke('express:query-ai', request),
     validateLicense: (licenseKey: string, deviceId: string, deviceInfo?: any) => 
       ipcRenderer.invoke('express:validate-license', licenseKey, deviceId, deviceInfo),
+    getAutoLicense: () => ipcRenderer.invoke('express:get-auto-license'),
     
     // User API Keys (BYOK)
     getProvidersList: () => ipcRenderer.invoke('express:get-providers-list'),

@@ -6,6 +6,8 @@ import express from 'express';
 import cors from 'cors';
 import { createClient } from '@supabase/supabase-js';
 import jwt from 'jsonwebtoken';
+import userApiKeysRoutes from './routes/user-api-keys.js';
+import { errorHandler } from './middleware/errorHandler.js';
 
 const app = express();
 const PORT = process.env.PORT || 5500;
@@ -200,63 +202,9 @@ app.post('/api/licenses/validate', async (req, res) => {
 });
 
 // =============================================================================
-// USER API KEYS MANAGEMENT
+// USER API KEYS MANAGEMENT (modular routes from user-api-keys.js)
 // =============================================================================
-
-app.get('/api/users/:userId/api-keys', async (req, res) => {
-  try {
-    const { userId } = req.params;
-
-    const { data: apiKeys, error } = await supabase
-      .from('api_keys')
-      .select('id, provider, key_name, is_active, created_at')
-      .eq('user_id', userId)
-      .eq('is_active', true)
-      .order('created_at', { ascending: false });
-
-    if (error) throw error;
-
-    res.json({ apiKeys });
-  } catch (error) {
-    console.error('Error fetching API keys:', error);
-    res.status(500).json({ error: 'Failed to fetch API keys' });
-  }
-});
-
-app.post('/api/users/:userId/api-keys', async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const { provider, apiKey, keyName } = req.body;
-
-    if (!provider || !apiKey) {
-      return res.status(400).json({ error: 'Provider and apiKey are required' });
-    }
-
-    // TODO: Encrypt the API key before storing
-    const encryptedKey = Buffer.from(apiKey).toString('base64'); // Simple encoding for now
-
-    const { data, error } = await supabase
-      .from('api_keys')
-      .insert({
-        user_id: userId,
-        provider,
-        encrypted_key: encryptedKey,
-        key_name: keyName,
-      })
-      .select()
-      .single();
-
-    if (error) throw error;
-
-    res.json({ 
-      message: 'API key added successfully',
-      keyId: data.id,
-    });
-  } catch (error) {
-    console.error('Error adding API key:', error);
-    res.status(500).json({ error: 'Failed to add API key' });
-  }
-});
+app.use('/api/user/api-keys', userApiKeysRoutes);
 
 // =============================================================================
 // USAGE TRACKING
@@ -680,6 +628,11 @@ app.use((err, req, res, next) => {
 
 // =============================================================================
 // START SERVER
+// =============================================================================
+// ERROR HANDLER (must be last middleware)
+// =============================================================================
+app.use(errorHandler);
+
 // =============================================================================
 
 app.listen(PORT, () => {

@@ -251,8 +251,6 @@ describe('Express Server', () => {
       { method: 'get', path: '/health' },
       { method: 'get', path: '/api/status' },
       { method: 'post', path: '/api/licenses/validate' },
-      { method: 'get', path: '/api/users/:userId/api-keys' },
-      { method: 'post', path: '/api/users/:userId/api-keys' },
       { method: 'post', path: '/api/usage/log' },
       { method: 'get', path: '/api/usage/:userId' },
       { method: 'get', path: '/api/subscriptions/:userId' },
@@ -281,6 +279,18 @@ describe('Express Server', () => {
     test('has JWT validation middleware', () => {
       expect(serverContent).toContain('validateJwtMiddleware');
       expect(serverContent).toContain('jwt.verify');
+    });
+  });
+
+  describe('BYOK routes', () => {
+    test('mounts modular user-api-keys routes', () => {
+      expect(serverContent).toContain("import userApiKeysRoutes from './routes/user-api-keys.js'");
+      expect(serverContent).toContain("app.use('/api/user/api-keys', userApiKeysRoutes)");
+    });
+
+    test('has error handler middleware', () => {
+      expect(serverContent).toContain("import { errorHandler } from './middleware/errorHandler.js'");
+      expect(serverContent).toContain('app.use(errorHandler)');
     });
   });
 

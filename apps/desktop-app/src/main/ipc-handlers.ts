@@ -426,13 +426,33 @@ ipcMain.handle('express:validate-license', async (_event, licenseKey, deviceId, 
   return await expressClient.validateLicense(licenseKey, deviceId, deviceInfo);
 });
 
+// Auto-license: check subscription and get license without manual key input
+ipcMain.handle('express:get-auto-license', async () => {
+  try {
+    return await expressClient.getAutoLicense();
+  } catch (error: any) {
+    console.error('Auto-license check failed:', error.message);
+    return { valid: true, tier: 'free', features: ['basic_chat'] };
+  }
+});
+
 // User API Keys (BYOK)
 ipcMain.handle('express:get-providers-list', async () => {
-  return await expressClient.getProvidersList();
+  try {
+    return await expressClient.getProvidersList();
+  } catch (error: any) {
+    console.error('Failed to fetch providers list:', error.message);
+    return [];
+  }
 });
 
 ipcMain.handle('express:get-user-api-keys', async () => {
-  return await expressClient.getUserApiKeys();
+  try {
+    return await expressClient.getUserApiKeys();
+  } catch (error: any) {
+    console.error('Failed to fetch user API keys:', error.message);
+    return [];
+  }
 });
 
 ipcMain.handle('express:get-user-api-key-by-provider', async (_event, provider) => {
@@ -763,14 +783,38 @@ ipcMain.handle('subscription:reactivate', async () => {
 // User profile & preferences
 ipcMain.handle('user:get-profile', async () => {
   try {
+    // Try stored profile first
     const profile = await settingsManager.get('userProfile');
-    return profile || {
-      id: 'user-1',
-      email: 'user@example.com',
-      name: 'Demo User',
-      role: 'user',
-      createdAt: new Date(),
-    };
+    if (profile) {
+      // Proxy Google avatar through Express to avoid 429
+      if (profile.avatar && profile.avatar.includes('googleusercontent.com')) {
+        const expressUrl = expressClient?.getBaseUrl?.() || 'http://localhost:5500';
+        profile.avatar = `${expressUrl}/api/avatar/proxy?url=${encodeURIComponent(profile.avatar)}`;
+      }
+      return profile;
+    }
+
+    // Try to get from auth data
+    const authData = await settingsManager.get('authData');
+    if (authData?.user) {
+      let avatar = authData.user.image || '';
+      // Proxy Google avatar through Express to avoid 429
+      if (avatar && avatar.includes('googleusercontent.com')) {
+        const expressUrl = expressClient?.getBaseUrl?.() || 'http://localhost:5500';
+        avatar = `${expressUrl}/api/avatar/proxy?url=${encodeURIComponent(avatar)}`;
+      }
+      return {
+        id: authData.user.id,
+        email: authData.user.email,
+        name: authData.user.name || '',
+        avatar,
+        role: 'user',
+        createdAt: new Date(),
+      };
+    }
+
+    // No authenticated user
+    return null;
   } catch (error) {
     console.error('Failed to get user profile:', error);
     return null;
@@ -813,9 +857,15 @@ ipcMain.handle('user:update-preferences', async (_event, preferences) => {
 
 ipcMain.handle('user:upload-avatar', async (_event, formData) => {
   try {
-    // TODO: Implement avatar upload
-    // For now, return mock URL
-    const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.name || 'User')}`;
+    // Generate a text-based avatar as placeholder until real upload is implemented
+    const name = formData.name || 'User';
+    const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=3b82f6&color=fff&size=128`;
+    
+    // Save to profile
+    const profile = await settingsManager.get('userProfile') || {};
+    (profile as any).avatar = avatarUrl;
+    await settingsManager.set('userProfile', profile);
+    
     return { url: avatarUrl };
   } catch (error: any) {
     throw new Error(`Failed to upload avatar: ${error.message}`);

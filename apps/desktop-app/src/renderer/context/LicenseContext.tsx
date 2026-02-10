@@ -44,9 +44,30 @@ export function LicenseProvider({ children }: { children: ReactNode }) {
 
   const loadStoredLicense = async () => {
     try {
+      // Try auto-license from subscription first (no manual key needed)
+      try {
+        const autoLicense = await (window.electron as any)?.express?.getAutoLicense?.();
+        if (autoLicense?.valid && autoLicense.tier && autoLicense.tier !== 'free') {
+          setLicense({
+            id: 'auto-' + Date.now(),
+            key: 'auto-assigned',
+            tier: autoLicense.tier as License['tier'],
+            status: 'active',
+            expiresAt: autoLicense.expiresAt || null,
+            features: autoLicense.features || TIER_FEATURES[autoLicense.tier] || [],
+            maxMachines: 3,
+            activeMachines: 1,
+          });
+          setIsLoading(false);
+          return;
+        }
+      } catch {
+        // Auto-license not available, try manual key
+      }
+
+      // Fall back to stored manual license key
       const storedLicense = await window.electron?.license.get();
       if (storedLicense) {
-        // Validate on startup
         const result = await window.electron?.license.validate(storedLicense.key);
         if (result?.valid) {
           const tier = result.tier || 'free';

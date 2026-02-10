@@ -125,6 +125,49 @@ app.get('/api/auth/me', authMiddleware(), (req, res) => {
   });
 });
 
+// Avatar proxy — prevents 429 from Google's image CDN
+const avatarCache = new Map();
+app.get('/api/avatar/proxy', async (req, res) => {
+  try {
+    const url = req.query.url;
+    if (!url || typeof url !== 'string' || !url.startsWith('https://')) {
+      return res.status(400).json({ error: 'Invalid URL' });
+    }
+
+    const cacheKey = url;
+    const cached = avatarCache.get(cacheKey);
+    if (cached && Date.now() - cached.ts < 3600000) {
+      res.set('Content-Type', cached.contentType);
+      res.set('Cache-Control', 'public, max-age=3600');
+      return res.send(cached.buffer);
+    }
+
+    const resp = await fetch(url, {
+      headers: { 'User-Agent': 'AI-Nexus/1.0' },
+    });
+    if (!resp.ok) {
+      return res.status(resp.status).json({ error: 'Upstream error' });
+    }
+
+    const buffer = Buffer.from(await resp.arrayBuffer());
+    const contentType = resp.headers.get('content-type') || 'image/jpeg';
+
+    avatarCache.set(cacheKey, { buffer, contentType, ts: Date.now() });
+    // Cap cache at 500 entries
+    if (avatarCache.size > 500) {
+      const oldest = avatarCache.keys().next().value;
+      avatarCache.delete(oldest);
+    }
+
+    res.set('Content-Type', contentType);
+    res.set('Cache-Control', 'public, max-age=3600');
+    res.send(buffer);
+  } catch (error) {
+    console.error('Avatar proxy error:', error.message);
+    res.status(500).json({ error: 'Proxy failed' });
+  }
+});
+
 // License validation endpoint
 app.post('/api/licenses/validate', async (req, res) => {
   try {
@@ -156,6 +199,67 @@ app.post('/api/licenses/validate', async (req, res) => {
     });
   }
 });
+
+// Auto-license: Check user's subscription and return license without manual key
+app.get('/api/licenses/auto', authMiddleware(), async (req, res) => {
+  try {
+    const userId = req.user.sub || req.user.id;
+    if (!userId) {
+      return res.json({ valid: false, tier: 'free', features: getPlanFeatures('free') });
+    }
+
+    const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    
+    if (!supabaseUrl || !supabaseKey) {
+      return res.json({ valid: true, tier: 'free', features: getPlanFeatures('free') });
+    }
+
+    const { createClient } = await import('@supabase/supabase-js');
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // Check user's plan from the users table
+    const { data: user } = await supabase
+      .from('users')
+      .select('plan')
+      .eq('id', userId)
+      .single();
+
+    const plan = user?.plan || 'free';
+
+    // Check for active subscription
+    const { data: subscription } = await supabase
+      .from('subscriptions')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('status', 'active')
+      .single();
+
+    const activePlan = subscription ? (subscription.plan || plan) : plan;
+    const expiresAt = subscription?.current_period_end || null;
+
+    res.json({
+      valid: true,
+      tier: activePlan,
+      features: getPlanFeatures(activePlan),
+      expiresAt,
+      autoAssigned: true,
+    });
+  } catch (error) {
+    console.error('Auto-license check error:', error);
+    res.json({ valid: true, tier: 'free', features: getPlanFeatures('free') });
+  }
+});
+
+function getPlanFeatures(plan) {
+  const features = {
+    free: ['basic_chat'],
+    starter: ['basic_chat', 'history', 'export'],
+    professional: ['basic_chat', 'history', 'export', 'custom_prompts', 'mcp_integration'],
+    enterprise: ['basic_chat', 'history', 'export', 'custom_prompts', 'mcp_integration', 'sso', 'audit_log', 'priority_support'],
+  };
+  return features[plan] || features.free;
+}
 
 // AI query endpoint (for desktop app)
 app.post('/api/ai/query', async (req, res) => {

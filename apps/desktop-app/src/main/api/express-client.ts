@@ -32,6 +32,10 @@ export class ExpressClient {
     this.authToken = config.authToken || null;
   }
 
+  getBaseUrl(): string {
+    return this.baseURL;
+  }
+
   setAuth(userId: string, licenseKey: string, authToken?: string) {
     this._userId = userId;
     this._licenseKey = licenseKey;
@@ -59,6 +63,27 @@ export class ExpressClient {
       throw new Error('Express API is not reachable');
     }
     return (await response.json()) as { status: string; timestamp: string };
+  }
+
+  // Auto-license: check user's subscription and get license without manual key
+  async getAutoLicense(): Promise<{
+    valid: boolean;
+    tier: string;
+    features: string[];
+    expiresAt?: string | null;
+    autoAssigned?: boolean;
+  }> {
+    try {
+      const response = await fetch(`${this.baseURL}/api/licenses/auto`, {
+        headers: this.getHeaders(),
+      });
+      if (!response.ok) {
+        return { valid: true, tier: 'free', features: ['basic_chat'] };
+      }
+      return await response.json();
+    } catch {
+      return { valid: true, tier: 'free', features: ['basic_chat'] };
+    }
   }
 
   // Get available AI providers
@@ -183,7 +208,7 @@ export class ExpressClient {
     updates: { key_name?: string; api_key?: string; config?: any; is_active?: boolean }
   ): Promise<any> {
     const response = await fetch(`${this.baseURL}/api/user/api-keys/${keyId}`, {
-      method: 'PATCH',
+      method: 'PUT',
       headers: this.getHeaders(),
       body: JSON.stringify(updates),
     });

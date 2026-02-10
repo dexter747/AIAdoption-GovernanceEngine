@@ -146,7 +146,7 @@ export async function GET(request: NextRequest) {
       email: googleUser.email,
       name: googleUser.name,
       image: googleUser.picture,
-      plan: 'trial' as const,
+      plan: 'free' as const,
     };
 
     // Generate JWT tokens
