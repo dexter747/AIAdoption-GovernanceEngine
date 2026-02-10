@@ -211,7 +211,10 @@ export function FeaturesSection() {
           </p>
           <a 
             href="#demo" 
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-blue-500 text-white font-medium hover:bg-blue-600 transition-all duration-300
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-blue-500 text-white font-medium hover:bg-blue-600 transition-all duration-300"
+          >
+            <Zap className="w-5 h-5" />
+            Watch 2-Minute Demo
           </a>
         </div>
       </div>
