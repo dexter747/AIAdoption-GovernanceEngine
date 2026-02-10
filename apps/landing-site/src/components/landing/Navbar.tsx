@@ -76,9 +76,9 @@ export function Navbar() {
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2">
               <div className="w-7 h-7 rounded-lg bg-blue-500 flex items-center justify-center">
-                <span className="text-white text-xs font-bold">AI</span>
+                <span className="text-white text-xs font-medium">AI</span>
               </div>
-              <span className="text-sm font-semibold text-black dark:text-white">AI Nexus</span>
+              <span className="text-sm font-medium text-black dark:text-white">AI Nexus</span>
             </Link>
 
             {/* Desktop Nav */}
@@ -165,7 +165,7 @@ export function Navbar() {
             ) : (
               <Link
                 href="/login"
-                className="px-4 py-1.5 text-xs font-semibold bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-all hover:shadow-lg hover:shadow-blue-500/25"
+                className="px-4 py-1.5 text-xs font-medium bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-all hover:shadow-lg hover:shadow-blue-500/25"
               >
                 Sign In
               </Link>
