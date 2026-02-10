@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { CreditCard, TrendingUp, Calendar, Check, X, Loader2, ExternalLink } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
@@ -331,7 +331,7 @@ export default function SubscriptionPage() {
                     <Button 
                       variant="ghost" 
                       size="sm"
-                      onClick={() => window.electron.openExternal(payment.invoiceUrl!)}
+                      onClick={() => window.electron.system?.openExternal?.(payment.invoiceUrl!)}
                     >
                       <ExternalLink className="w-4 h-4 mr-2" />
                       Invoice

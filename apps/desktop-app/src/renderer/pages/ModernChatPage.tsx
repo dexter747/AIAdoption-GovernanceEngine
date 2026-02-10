@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { 
   Send, Loader2, Bot, User, Plus, Trash2, Copy, Check,
   MessageSquare, ChevronDown, PanelLeftClose, PanelLeft, Search,
-  Clock, Pencil, Lightbulb, Code, Briefcase, Sparkles, Paperclip, X, FileText
+  Clock, Pencil, Lightbulb, Code, Briefcase, Sparkles, Paperclip, X, FileText, Database
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import ReactMarkdown from 'react-markdown';
@@ -107,6 +107,36 @@ const QUICK_ACTIONS = [
   { icon: Sparkles, label: 'AI\'s choice', prompt: 'Surprise me with something interesting', color: 'hover:bg-purple-500/10 hover:text-purple-500 hover:border-purple-500/30' },
 ];
 
+// Helper: get the correct provider string for a model
+function getProviderForModel(modelId: string): string {
+  const model = LLM_MODELS.find(m => m.id === modelId);
+  if (!model) return 'groq';
+  const providerMap: Record<string, string> = {
+    'OpenAI': 'openai',
+    'Anthropic': 'anthropic',
+    'Google': 'google',
+    'Meta': 'groq', // Meta models run on Groq
+    'xAI': 'xai',
+    'Groq': 'groq',
+    'Mistral': 'mistral',
+    'DeepSeek': 'deepseek',
+    'Alibaba': 'groq', // Qwen models run on Groq
+    'Moonshot': 'groq',
+  };
+  return providerMap[model.provider] || 'groq';
+}
+
+// Helper: get context window config for a model
+function getContextWindowConfig(modelId: string): { maxTokens: number; reservedForResponse: number; reservedForConversation: number } {
+  const model = LLM_MODELS.find(m => m.id === modelId);
+  const provider = model?.provider || '';
+  
+  if (provider === 'Anthropic') return { maxTokens: 200000, reservedForResponse: 8192, reservedForConversation: 50000 };
+  if (provider === 'Google') return { maxTokens: 1000000, reservedForResponse: 8192, reservedForConversation: 100000 };
+  if (modelId.includes('gpt-5') || modelId.includes('gpt-4')) return { maxTokens: 128000, reservedForResponse: 4096, reservedForConversation: 32000 };
+  return { maxTokens: 32000, reservedForResponse: 2048, reservedForConversation: 8000 };
+}
+
 export default function ModernChatPage() {
   const { user } = useAuth();
   const location = useLocation();
@@ -122,6 +152,7 @@ export default function ModernChatPage() {
   const [showModelDropdown, setShowModelDropdown] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [attachedFiles, setAttachedFiles] = useState<{ name: string; content: string; type: string }[]>([]);
+  const [contextStatus, setContextStatus] = useState<string>('');
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -166,6 +197,37 @@ export default function ModernChatPage() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Auto-generate schema context when a database connection is selected
+  useEffect(() => {
+    if (!selectedConnection) {
+      setContextStatus('');
+      return;
+    }
+    
+    const generateSchema = async () => {
+      try {
+        const conn = connections.find(c => c.id === selectedConnection);
+        if (!conn) return;
+        
+        // Check if schema context already exists for this connection
+        const existingContexts = await window.electron?.context?.list?.({ connectionId: selectedConnection });
+        const hasSchema = existingContexts?.some?.((c: any) => c.type === 'database_schema');
+        
+        if (!hasSchema) {
+          console.log(`[Chat] Auto-generating schema context for ${conn.name}...`);
+          const result = await window.electron?.mcp?.generateSchemaContext?.(selectedConnection, conn.name);
+          if (result?.success) {
+            console.log(`[Chat] Schema context created for ${conn.name}`);
+          }
+        }
+      } catch (err) {
+        console.warn('Auto-schema generation skipped:', err);
+      }
+    };
+    
+    generateSchema();
+  }, [selectedConnection, connections]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -316,40 +378,118 @@ export default function ModernChatPage() {
 
     try {
       let response;
+      const provider = getProviderForModel(selectedModel);
+      
+      // Compile contexts (system prompts, database schemas, knowledge, etc.)
+      let systemMessages: { role: string; content: string }[] = [];
+      try {
+        const contextConfig = getContextWindowConfig(selectedModel);
+        const compiled = await window.electron?.context?.compile?.({
+          config: contextConfig,
+          connectionId: selectedConnection || undefined,
+        });
+        
+        if (compiled?.systemPrompt) {
+          systemMessages = [{ role: 'system', content: compiled.systemPrompt }];
+          setContextStatus(`${compiled.contexts?.length || 0} contexts (${compiled.totalTokens || 0} tokens)`);
+        }
+      } catch (ctxErr) {
+        console.warn('Context compilation skipped:', ctxErr);
+      }
       
       if (selectedConnection) {
+        // DATABASE MODE: Query via MCP, then optionally analyze with AI
         const mcp = window.electron.mcp as any;
-        if (mcp?.query) {
-          const mcpResult = await mcp.query(selectedConnection, input.trim());
-          response = mcpResult;
-        } else {
+        const isNaturalLanguage = !input.trim().toUpperCase().startsWith('SELECT') && 
+                                   !input.trim().toUpperCase().startsWith('INSERT') &&
+                                   !input.trim().toUpperCase().startsWith('UPDATE') &&
+                                   !input.trim().toUpperCase().startsWith('DELETE') &&
+                                   !input.trim().toUpperCase().startsWith('CREATE') &&
+                                   !input.trim().toUpperCase().startsWith('ALTER') &&
+                                   !input.trim().toUpperCase().startsWith('DROP') &&
+                                   !input.trim().toUpperCase().startsWith('SHOW') &&
+                                   !input.trim().toUpperCase().startsWith('DESCRIBE') &&
+                                   !input.trim().toUpperCase().startsWith('PRAGMA');
+        
+        if (isNaturalLanguage) {
+          // Natural language → Ask AI to generate SQL first, with DB schema context
+          const connName = connections.find(c => c.id === selectedConnection)?.name || selectedConnection;
+          const queryMessages = [
+            ...systemMessages,
+            { role: 'system', content: `You are connected to database "${connName}". The user will ask questions about the data. Generate and explain SQL queries, or analyze results. When generating SQL, wrap it in \`\`\`sql code blocks.` },
+            ...updatedMessages.map(m => ({ role: m.role, content: m.content })),
+          ];
+          
           response = await window.electron.express?.queryAI?.({
             userId: 'local-user',
             licenseId: 'local',
-            provider: selectedModel.includes('claude') ? 'anthropic' : selectedModel.includes('gpt') ? 'openai' : 'groq',
+            provider,
             model: selectedModel,
-            messages: [{ role: 'user', content: `[Database: ${selectedConnection}] ${input.trim()}` }],
+            messages: queryMessages,
+            connectionId: selectedConnection,
+          });
+        } else if (mcp?.query) {
+          // Direct SQL → Execute via MCP, then format results
+          const mcpResult = await mcp.query(selectedConnection, input.trim());
+          
+          if (mcpResult?.success && mcpResult?.data) {
+            // Format MCP results as AI-friendly response
+            const resultText = typeof mcpResult.data === 'string' 
+              ? mcpResult.data 
+              : JSON.stringify(mcpResult.data, null, 2);
+            
+            // Send to AI for analysis
+            response = await window.electron.express?.queryAI?.({
+              userId: 'local-user',
+              licenseId: 'local',
+              provider,
+              model: selectedModel,
+              messages: [
+                ...systemMessages,
+                { role: 'system', content: 'Analyze the following database query results and provide a clear summary.' },
+                { role: 'user', content: `SQL Query: ${input.trim()}\n\nResults:\n\`\`\`json\n${resultText}\n\`\`\`` },
+              ],
+            });
+          } else {
+            // MCP query failed, return error
+            response = { content: `Database query failed: ${mcpResult?.error || 'Unknown error'}` };
+          }
+        } else {
+          // Fallback: send via Express with connection context  
+          response = await window.electron.express?.queryAI?.({
+            userId: 'local-user',
+            licenseId: 'local',
+            provider,
+            model: selectedModel,
+            messages: [
+              ...systemMessages,
+              ...updatedMessages.map(m => ({ role: m.role, content: m.content })),
+            ],
             connectionId: selectedConnection,
           });
         }
       } else {
+        // CHAT MODE: Standard AI conversation with compiled contexts
         response = await window.electron.express?.queryAI?.({
           userId: 'local-user',
           licenseId: 'local',
-          provider: selectedModel.includes('claude') ? 'anthropic' : selectedModel.includes('gpt') ? 'openai' : 'groq',
+          provider,
           model: selectedModel,
-          messages: updatedMessages.map(m => ({ role: m.role, content: m.content })),
+          messages: [
+            ...systemMessages,
+            ...updatedMessages.map(m => ({ role: m.role, content: m.content })),
+          ],
         });
       }
 
       const assistantMessage: Message = {
         id: `msg-${Date.now() + 1}`,
         role: 'assistant',
-        content: response?.content || response?.message || response?.data?.content || 'No response received',
+        content: (response as any)?.content || (response as any)?.message || (response as any)?.data?.content || (response as any)?.data?.response || (response as any)?.response || 'No response received',
         timestamp: new Date(),
         model: selectedModel,
-        tokens: response?.tokens || response?.usage,
-        cost: response?.cost,
+        tokens: (response as any)?.tokens || (response as any)?.usage || (response as any)?.data?.usage,
+        cost: (response as any)?.cost || (response as any)?.data?.usage?.cost,
       };
 
       const finalSession = {
@@ -360,6 +500,29 @@ export default function ModernChatPage() {
 
       setCurrentSession(finalSession);
       setSessions(prev => prev.map(s => s.id === session!.id ? finalSession : s));
+
+      // Auto-generate conversation memory summary every 10 messages
+      if (finalSession.messages.length > 0 && finalSession.messages.length % 10 === 0) {
+        try {
+          const recentMessages = finalSession.messages.slice(-10);
+          const summaryPrompt = recentMessages.map(m => `${m.role}: ${m.content}`).join('\n');
+          
+          // Extract key facts for memory
+          const keyFacts = recentMessages
+            .filter(m => m.role === 'assistant')
+            .map(m => m.content.slice(0, 200))
+            .slice(0, 5);
+          
+          await window.electron?.context?.createMemory?.({
+            conversationId: session!.id,
+            summary: `Conversation summary (${finalSession.messages.length} messages): ${finalSession.title}. Topics discussed: ${summaryPrompt.slice(0, 500)}`,
+            keyFacts,
+          });
+          console.log('[Chat] Memory summary saved');
+        } catch (memErr) {
+          console.warn('Memory summary creation skipped:', memErr);
+        }
+      }
 
       try {
         await window.electron.chat?.updateConversation?.(session.id, {
@@ -543,8 +706,14 @@ export default function ModernChatPage() {
           
           {/* Center - Can show connection if selected */}
           {selectedConnection && (
-            <div className="text-xs text-gray-500 dark:text-gray-400">
-              Connected to {connections.find(c => c.id === selectedConnection)?.name}
+            <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+              <Database className="w-3.5 h-3.5" />
+              {connections.find(c => c.id === selectedConnection)?.name}
+              {contextStatus && (
+                <span className="ml-2 px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full">
+                  {contextStatus}
+                </span>
+              )}
             </div>
           )}
 

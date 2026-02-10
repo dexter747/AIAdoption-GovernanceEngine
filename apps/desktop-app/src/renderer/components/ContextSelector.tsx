@@ -4,7 +4,7 @@
  * Dropdown/popover for selecting contexts to include in a conversation
  */
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useContexts, LLMContext, ContextType } from '../hooks/useContexts';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
@@ -55,7 +55,7 @@ export default function ContextSelector({
   showAutoIncluded = true,
   compact = false,
 }: ContextSelectorProps) {
-  const { contexts, loading } = useContexts({ isActive: true });
+  const { contexts } = useContexts({ isActive: true });
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 

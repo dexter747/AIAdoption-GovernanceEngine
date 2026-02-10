@@ -11,10 +11,14 @@ contextBridge.exposeInMainWorld('electron', {
     getUser: () => ipcRenderer.invoke('auth:getUser'),
     refresh: () => ipcRenderer.invoke('auth:refresh'),
     onSuccess: (callback: (data: any) => void) => {
-      ipcRenderer.on('auth:success', (_event, data) => callback(data));
+      const handler = (_event: any, data: any) => callback(data);
+      ipcRenderer.on('auth:success', handler);
+      return () => { ipcRenderer.removeListener('auth:success', handler); };
     },
     onError: (callback: (error: string) => void) => {
-      ipcRenderer.on('auth:error', (_event, error) => callback(error));
+      const handler = (_event: any, error: string) => callback(error);
+      ipcRenderer.on('auth:error', handler);
+      return () => { ipcRenderer.removeListener('auth:error', handler); };
     },
   },
 

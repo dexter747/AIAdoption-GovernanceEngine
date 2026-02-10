@@ -80,6 +80,11 @@ export function useContexts(initialOptions?: ContextSearchOptions) {
     try {
       setLoading(true);
       setError(null);
+      
+      if (!window.electron?.context?.list) {
+        throw new Error('Context API not available. Please restart the application.');
+      }
+      
       const result = await window.electron.context.list(options);
       // Convert dates from string to Date objects
       const parsed = result.map((ctx: any) => ({
@@ -91,6 +96,7 @@ export function useContexts(initialOptions?: ContextSearchOptions) {
       setContexts(parsed);
     } catch (err: any) {
       setError(err.message || 'Failed to load contexts');
+      console.error('Failed to load contexts:', err);
     } finally {
       setLoading(false);
     }
@@ -162,6 +168,10 @@ export function useContexts(initialOptions?: ContextSearchOptions) {
   // Load stats
   const loadStats = useCallback(async () => {
     try {
+      if (!window.electron?.context?.getStats) {
+        console.warn('Context API not available yet');
+        return null;
+      }
       const result = await window.electron.context.getStats();
       setStats(result);
       return result;

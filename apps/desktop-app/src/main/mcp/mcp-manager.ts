@@ -87,7 +87,28 @@ export class MCPConnectionManager {
     },
     zendesk: {
       type: 'npm' as const,
-      available: false,
+      localPath: '../../../../../packages/mcp-servers/zendesk/dist/index.js',
+      available: true,
+    },
+    mariadb: {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/mariadb/dist/index.js',
+      available: true,
+    },
+    redis: {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/redis/dist/index.js',
+      available: true,
+    },
+    elasticsearch: {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/elasticsearch/dist/index.js',
+      available: true,
+    },
+    workday: {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/workday/dist/index.js',
+      available: true,
     },
   };
 
@@ -314,6 +335,26 @@ export class MCPConnectionManager {
       env.JIRA_BASE_URL = config.host;
       env.JIRA_EMAIL = config.username;
       env.JIRA_API_TOKEN = config.password;
+    } else if (connection.type === 'mariadb') {
+      env.MARIADB_HOST = config.host;
+      env.MARIADB_PORT = String(config.port);
+      env.MARIADB_USER = config.username;
+      env.MARIADB_PASSWORD = config.password;
+      env.MARIADB_DATABASE = config.database || '';
+    } else if (connection.type === 'redis') {
+      env.REDIS_URL = `redis://${config.username ? config.username + ':' + config.password + '@' : ''}${config.host}:${config.port}`;
+    } else if (connection.type === 'elasticsearch') {
+      env.ELASTICSEARCH_URL = `${config.ssl ? 'https' : 'http'}://${config.host}:${config.port}`;
+      if (config.username) env.ELASTICSEARCH_USERNAME = config.username;
+      if (config.password) env.ELASTICSEARCH_PASSWORD = config.password;
+    } else if (connection.type === 'zendesk') {
+      env.ZENDESK_SUBDOMAIN = config.host;
+      env.ZENDESK_EMAIL = config.username;
+      env.ZENDESK_API_TOKEN = config.password;
+    } else if (connection.type === 'workday') {
+      env.WORKDAY_TENANT = config.host;
+      env.WORKDAY_USERNAME = config.username;
+      env.WORKDAY_PASSWORD = config.password;
     }
 
     // Start MCP server as child process

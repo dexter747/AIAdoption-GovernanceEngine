@@ -117,7 +117,7 @@ function startCallbackServer() {
       if (token) {
         try {
           // Decode JWT to get user info and expiry
-          let user = { id: '', email: '', name: '' };
+          let user: { id: string; email: string; name: string; image?: string } = { id: '', email: '', name: '' };
           let expiresAt = Date.now() + (60 * 60 * 1000); // Default 1 hour
 
           // Decode JWT payload
@@ -247,7 +247,7 @@ function handleDeepLink(url: string) {
       if (token) {
         try {
           // Decode JWT to get user info and expiry
-          let user = { id: '', email: '', name: '' };
+          let user: { id: string; email: string; name: string; image?: string } = { id: '', email: '', name: '' };
           let expiresAt = Date.now() + (60 * 60 * 1000); // Default 1 hour
 
           // Decode JWT payload

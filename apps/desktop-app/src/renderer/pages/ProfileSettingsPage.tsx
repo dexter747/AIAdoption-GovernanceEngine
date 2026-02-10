@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { User, Mail, Key, Shield, Bell, Palette, Save, Upload, Check, Loader2 } from 'lucide-react';
+import { User, Shield, Palette, Save, Upload, Check, Loader2 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
-import { Textarea } from '../components/ui/textarea';
+// Textarea removed - not used in current layout
 import { cn } from '../lib/utils';
 import { motion } from 'framer-motion';
 

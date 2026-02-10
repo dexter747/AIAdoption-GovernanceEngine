@@ -142,6 +142,60 @@ ipcMain.handle('mcp:client-connect', async (_event, config: {
 }) => {
   try {
     const result = await mcpClient.connect(config as any);
+    
+    // Auto-generate schema context after successful connection
+    try {
+      console.log(`[IPC] Auto-generating schema context for "${config.name}"...`);
+      
+      // Get list of tables
+      const tablesResult = await mcpClient.listTables(config.id);
+      if (tablesResult && Array.isArray(tablesResult)) {
+        const tables: Array<{
+          name: string;
+          schema?: string;
+          columns: Array<{
+            name: string;
+            type: string;
+            nullable: boolean;
+            primaryKey?: boolean;
+            foreignKey?: { table: string; column: string };
+          }>;
+        }> = [];
+
+        for (const table of tablesResult.slice(0, 50)) { // Limit to 50 tables
+          try {
+            const schemaResult = await mcpClient.getTableSchema(config.id, table.name || table);
+            if (schemaResult && schemaResult.columns) {
+              tables.push({
+                name: table.name || table,
+                schema: table.schema,
+                columns: schemaResult.columns.map((col: any) => ({
+                  name: col.name || col.column_name,
+                  type: col.type || col.data_type,
+                  nullable: col.nullable !== false && col.is_nullable !== 'NO',
+                  primaryKey: col.primaryKey || col.is_primary_key,
+                  foreignKey: col.foreignKey,
+                })),
+              });
+            }
+          } catch (tableErr) {
+            // Skip tables that fail
+          }
+        }
+
+        if (tables.length > 0) {
+          contextManager.createDatabaseSchemaContext({
+            connectionId: config.id,
+            connectionName: config.name,
+            tables,
+          });
+          console.log(`[IPC] Schema context created: ${tables.length} tables for "${config.name}"`);
+        }
+      }
+    } catch (schemaErr) {
+      console.warn('[IPC] Auto-schema generation failed (non-critical):', schemaErr);
+    }
+    
     return { 
       success: true, 
       tools: result.tools,
@@ -553,12 +607,13 @@ ipcMain.handle('chat:get-sessions', async () => {
 
 ipcMain.handle('ai:chat', async (_event, params) => {
   try {
-    const { messages, model, stream } = params;
+    const { messages, model, stream, connectionId } = params;
     
-    // Use AI router for chat
+    // Use AI router for chat - includes context compilation
     // @ts-ignore - conversationHistory not in AIQueryOptions type yet
     const response = await aiRouter.query(messages[messages.length - 1].content, {
       model,
+      connectionId,
       conversationHistory: messages.slice(0, -1),
       stream: stream || false,
     } as any);
@@ -578,14 +633,18 @@ ipcMain.handle('mcp:query-with-ai', async (_event, params) => {
     
     // Optionally enhance with AI if model specified
     if (model && result.rows) {
+      // Include compiled contexts (especially the database schema) for better AI analysis
       const aiResponse = await aiRouter.query(
         `Analyze this database query result:\nQuery: ${query}\nResults: ${JSON.stringify(result.rows, null, 2)}`,
-        { model }
+        { 
+          model,
+          connectionId,  // This triggers inclusion of schema context
+        }
       );
       return {
         ...result,
         // @ts-ignore - text property exists at runtime
-        aiAnalysis: aiResponse.text || aiResponse.response,
+        aiAnalysis: aiResponse.response || aiResponse.text,
       };
     }
     

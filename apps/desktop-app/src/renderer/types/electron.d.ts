@@ -90,8 +90,8 @@ export interface ElectronAPI {
     login: () => Promise<{ opened: boolean }>;
     logout: () => Promise<{ success: boolean }>;
     getUser: () => Promise<User | null>;
-    onSuccess: (callback: (data: AuthData) => void) => void;
-    onError: (callback: (error: string) => void) => void;
+    onSuccess: (callback: (data: AuthData) => void) => (() => void);
+    onError: (callback: (error: string) => void) => (() => void);
   };
 
   // Connection API
@@ -129,6 +129,7 @@ export interface ElectronAPI {
     getStatus: () => Promise<{ connections: string[]; activeCount: number }>;
     isConnected: (connectionId: string) => Promise<boolean>;
     disconnectAll: () => Promise<{ success: boolean }>;
+    generateSchemaContext: (connectionId: string, connectionName: string) => Promise<any>;
   };
 
   // Chat API
@@ -284,6 +285,91 @@ export interface ElectronAPI {
     getVersion: () => Promise<string>;
     checkUpdates: () => Promise<any>;
     openExternal: (url: string) => Promise<void>;
+  };
+
+  // Modern UI API (consolidated)
+  api: {
+    getUserConnections: () => Promise<any[]>;
+    testConnection: (connectionId: string) => Promise<any>;
+    deleteConnection: (connectionId: string) => Promise<any>;
+    getAvailableModels: () => Promise<any[]>;
+    getChatSessions: () => Promise<any[]>;
+    chat: (params: { messages: any[]; model: string; stream?: boolean }) => Promise<any>;
+    queryWithMCP: (params: { connectionId: string; query: string; model: string }) => Promise<any>;
+    saveChatSession: (session: any) => Promise<any>;
+    getSubscription: () => Promise<any>;
+    getPaymentHistory: () => Promise<any[]>;
+    createCheckout: (params: { plan: string }) => Promise<any>;
+    cancelSubscription: () => Promise<any>;
+    reactivateSubscription: () => Promise<any>;
+    getUserProfile: () => Promise<any>;
+    getUserPreferences: () => Promise<any>;
+    updateUserProfile: (profile: any) => Promise<any>;
+    updateUserPreferences: (preferences: any) => Promise<any>;
+    uploadAvatar: (formData: any) => Promise<any>;
+    getAPIKeys: () => Promise<any[]>;
+    addAPIKey: (key: any) => Promise<any>;
+    updateAPIKey: (key: any) => Promise<any>;
+    deleteAPIKey: (keyId: string) => Promise<any>;
+  };
+
+  // LLM Context API
+  context: {
+    create: (data: {
+      name: string;
+      type: string;
+      content: string;
+      description?: string;
+      tags?: string[];
+      priority?: number;
+      autoInclude?: boolean;
+      connectionId?: string;
+      projectId?: string;
+      maxTokens?: number;
+    }) => Promise<any>;
+    get: (id: string) => Promise<any>;
+    update: (id: string, updates: any) => Promise<any>;
+    delete: (id: string) => Promise<void>;
+    list: (options?: {
+      type?: string;
+      tags?: string[];
+      isActive?: boolean;
+      autoInclude?: boolean;
+      connectionId?: string;
+      projectId?: string;
+      query?: string;
+    }) => Promise<any[]>;
+    compile: (options: {
+      config: { maxTokens: number; reservedForResponse: number; reservedForConversation: number };
+      connectionId?: string;
+      projectId?: string;
+      additionalContextIds?: string[];
+      excludeIds?: string[];
+    }) => Promise<any>;
+    createSchema: (data: {
+      connectionId: string;
+      connectionName: string;
+      tables: Array<{
+        name: string;
+        schema?: string;
+        columns: Array<{
+          name: string;
+          type: string;
+          nullable: boolean;
+          primaryKey?: boolean;
+          foreignKey?: { table: string; column: string };
+        }>;
+      }>;
+    }) => Promise<any>;
+    importFile: (options?: { name?: string; tags?: string[]; chunkSize?: number }) => Promise<any>;
+    importFilePath: (filePath: string, options?: { name?: string; tags?: string[]; chunkSize?: number }) => Promise<any>;
+    createMemory: (data: { conversationId: string; summary: string; keyFacts: string[] }) => Promise<any>;
+    getStats: () => Promise<any>;
+    exportAll: () => Promise<any>;
+    importJson: (options?: { overwrite?: boolean }) => Promise<any>;
+    getTemplates: () => Promise<any[]>;
+    toggleActive: (id: string) => Promise<any>;
+    toggleAutoInclude: (id: string) => Promise<any>;
   };
 }
 

@@ -1,6 +1,8 @@
 import { AIQueryOptions, AIQueryResult, AIProvider } from '@shared/types';
 import { AI_MODELS } from '@shared/types';
 import { contextManager, ContextWindowConfig } from '../context/context-manager';
+import { expressClient } from '../api/express-client';
+import { randomUUID } from 'crypto';
 
 export class AIRouter {
   private totalCost: number = 0;
@@ -41,29 +43,73 @@ export class AIRouter {
     const client = this.getProviderClient(provider);
     
     try {
-      // Send query to AI provider
-      const response = await client.complete(prompt, {
-        model,
-        temperature: options.temperature || 0.7,
-        maxTokens: options.maxTokens || 4000,
-        systemPrompt,
-      });
+      // Build messages array for the API
+      const messages: Array<{ role: string; content: string }> = [];
+      
+      // Add compiled system prompt
+      if (systemPrompt) {
+        messages.push({ role: 'system', content: systemPrompt });
+      }
+      
+      // Add conversation history if provided
+      // @ts-ignore - conversationHistory may exist on options
+      if (options.conversationHistory && Array.isArray(options.conversationHistory)) {
+        // @ts-ignore
+        for (const msg of options.conversationHistory) {
+          messages.push({ role: msg.role, content: msg.content });
+        }
+      }
+      
+      // Add the current prompt
+      messages.push({ role: 'user', content: prompt });
+      
+      // Route through Express backend (real LLM API calls)
+      let response: any;
+      try {
+        response = await expressClient.queryAI({
+          userId: 'local-user',
+          licenseId: 'local',
+          provider,
+          model,
+          messages,
+          temperature: options.temperature || 0.7,
+          maxTokens: options.maxTokens || 4000,
+        });
+      } catch (expressErr: any) {
+        // Fallback to stub if Express is not available
+        console.warn('Express backend unavailable, using stub:', expressErr.message);
+        response = await client.complete(prompt, {
+          model,
+          temperature: options.temperature || 0.7,
+          maxTokens: options.maxTokens || 4000,
+          systemPrompt,
+        });
+      }
+      
+      // Normalize response format
+      const responseText = response.content || response.text || response.response || 
+                           response.data?.content || response.data?.response || 
+                           'No response received';
+      const usage = response.usage || response.tokens || { input: 0, output: 0, total: 0 };
       
       // Calculate cost
-      const cost = this.calculateCost(model, response.usage);
+      const cost = this.calculateCost(model, { 
+        input: usage.input || usage.prompt_tokens || usage.tokensUsed || 0, 
+        output: usage.output || usage.completion_tokens || 0 
+      });
       this.totalCost += cost;
       
       const result: AIQueryResult = {
-        id: crypto.randomUUID(),
+        id: randomUUID(),
         prompt,
-        response: response.text,
+        response: responseText,
         model,
         provider,
-        tokens: response.usage,
+        tokens: usage,
         cost,
         duration: Date.now() - startTime,
         timestamp: new Date(),
-        contextTokens, // Track how many tokens were used for context
+        contextTokens,
       };
       
       return result;
@@ -161,20 +207,26 @@ export class AIRouter {
 
   private getProviderForModel(model: string): AIProvider {
     const modelConfig = AI_MODELS[model as keyof typeof AI_MODELS];
-    return modelConfig?.provider as AIProvider || 'openai';
+    if (modelConfig?.provider) return modelConfig.provider as AIProvider;
+    
+    // Fallback: infer from model name patterns
+    if (model.startsWith('gpt') || model.startsWith('o1') || model.startsWith('o3') || model.startsWith('o4')) return 'openai' as AIProvider;
+    if (model.startsWith('claude')) return 'anthropic' as AIProvider;
+    if (model.startsWith('gemini')) return 'google' as AIProvider;
+    if (model.startsWith('llama')) return 'groq' as AIProvider;
+    if (model.startsWith('grok')) return 'xai' as AIProvider;
+    if (model.startsWith('mistral') || model.startsWith('mixtral')) return 'mistral' as AIProvider;
+    if (model.startsWith('deepseek')) return 'deepseek' as AIProvider;
+    return 'groq' as AIProvider;
   }
 
   private getProviderClient(_provider: AIProvider) {
-    // Stub - will be implemented with actual AI provider clients
+    // Fallback stub - only used when Express backend is unavailable
     return {
       complete: async (_prompt: string, _options: any) => {
         return {
-          text: 'AI response placeholder',
-          usage: {
-            input: 100,
-            output: 200,
-            total: 300,
-          },
+          text: '⚠️ AI backend is not available. Please check your Express API server is running on port 5500 and your API keys are configured.',
+          usage: { input: 0, output: 0, total: 0 },
         };
       },
     };

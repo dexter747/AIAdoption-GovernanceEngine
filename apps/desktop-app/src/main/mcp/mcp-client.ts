@@ -9,7 +9,7 @@ import { EventEmitter } from 'events';
 
 interface MCPServerConfig {
   id: string;
-  type: 'postgresql' | 'mysql' | 'sqlite' | 'mongodb' | 'sqlserver';
+  type: 'postgresql' | 'mysql' | 'sqlite' | 'mongodb' | 'sqlserver' | 'oracle' | 'sap-hana' | 'mariadb' | 'redis' | 'elasticsearch' | 'salesforce' | 'servicenow' | 'jira' | 'zendesk' | 'workday';
   connectionString: string;
   name: string;
 }
@@ -56,7 +56,88 @@ export class MCPClientManager extends EventEmitter {
       command: 'npx',
       args: ['-y', '@azure-samples/mssql-mcp-server'],
       envKey: 'MSSQL_CONNECTION_STRING'
+    },
+    // MongoDB - local MCP server
+    mongodb: {
+      command: 'node',
+      args: [],  // Will be resolved to local path at connect time
+      envKey: 'MONGODB_URI'
+    },
+    // Oracle - local MCP server
+    oracle: {
+      command: 'node',
+      args: [],
+      envKey: 'ORACLE_CONNECT_STRING'
+    },
+    // SAP HANA - local MCP server
+    'sap-hana': {
+      command: 'node',
+      args: [],
+      envKey: 'SAP_HANA_HOST'
+    },
+    // MariaDB - local MCP server (MySQL-compatible)
+    mariadb: {
+      command: 'node',
+      args: [],
+      envKey: 'MARIADB_CONNECTION_STRING'
+    },
+    // Redis - local MCP server
+    redis: {
+      command: 'node',
+      args: [],
+      envKey: 'REDIS_URL'
+    },
+    // Elasticsearch - local MCP server
+    elasticsearch: {
+      command: 'node',
+      args: [],
+      envKey: 'ELASTICSEARCH_URL'
+    },
+    // Salesforce - local MCP server
+    salesforce: {
+      command: 'node',
+      args: [],
+      envKey: 'SALESFORCE_INSTANCE_URL'
+    },
+    // ServiceNow - local MCP server
+    servicenow: {
+      command: 'node',
+      args: [],
+      envKey: 'SERVICENOW_INSTANCE_URL'
+    },
+    // Jira - local MCP server
+    jira: {
+      command: 'node',
+      args: [],
+      envKey: 'JIRA_BASE_URL'
+    },
+    // Zendesk - local MCP server
+    zendesk: {
+      command: 'node',
+      args: [],
+      envKey: 'ZENDESK_SUBDOMAIN'
+    },
+    // Workday - local MCP server
+    workday: {
+      command: 'node',
+      args: [],
+      envKey: 'WORKDAY_TENANT'
     }
+  };
+
+  // Map local MCP server types to their built package paths
+  private localServerPaths: Record<string, string> = {
+    mongodb: '../../../../../packages/mcp-servers/mongodb/dist/index.js',
+    oracle: '../../../../../packages/mcp-servers/oracle/dist/index.js',
+    'sap-hana': '../../../../../packages/mcp-servers/sap-hana/dist/index.js',
+    mariadb: '../../../../../packages/mcp-servers/mariadb/dist/index.js',
+    redis: '../../../../../packages/mcp-servers/redis/dist/index.js',
+    elasticsearch: '../../../../../packages/mcp-servers/elasticsearch/dist/index.js',
+    salesforce: '../../../../../packages/mcp-servers/salesforce/dist/index.js',
+    servicenow: '../../../../../packages/mcp-servers/servicenow/dist/index.js',
+    jira: '../../../../../packages/mcp-servers/jira/dist/index.js',
+    zendesk: '../../../../../packages/mcp-servers/zendesk/dist/index.js',
+    workday: '../../../../../packages/mcp-servers/workday/dist/index.js',
   };
 
   constructor() {
@@ -106,13 +187,25 @@ export class MCPClientManager extends EventEmitter {
         [serverConfig.envKey]: connectionString
       };
 
-      console.log(`[MCP] Spawning: ${serverConfig.command} ${serverConfig.args.join(' ')}`);
+      // Resolve command and args for local MCP servers
+      let command = serverConfig.command;
+      let args = [...serverConfig.args];
+      
+      // For local MCP servers (command=node, empty args), resolve the local path
+      if (command === 'node' && args.length === 0 && this.localServerPaths[type]) {
+        const path = await import('path');
+        const resolvedPath = path.resolve(__dirname, this.localServerPaths[type]);
+        args = [resolvedPath];
+        console.log(`[MCP] Using local MCP server: ${resolvedPath}`);
+      }
+
+      console.log(`[MCP] Spawning: ${command} ${args.join(' ')}`);
       
       // Create MCP client with stdio transport
       // StdioClientTransport spawns the process internally
       const transport = new StdioClientTransport({
-        command: serverConfig.command,
-        args: serverConfig.args,
+        command,
+        args,
         env,
         stderr: 'pipe' // Capture stderr for debugging
       });
@@ -288,8 +381,19 @@ export class MCPClientManager extends EventEmitter {
       case 'sqlserver':
         sql = `SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' ORDER BY TABLE_NAME`;
         break;
+      case 'oracle':
+        sql = `SELECT table_name FROM user_tables ORDER BY table_name`;
+        break;
+      case 'mariadb':
+        sql = `SHOW TABLES`;
+        break;
+      case 'sap-hana':
+        sql = `SELECT TABLE_NAME FROM SYS.TABLES WHERE SCHEMA_NAME = CURRENT_SCHEMA ORDER BY TABLE_NAME`;
+        break;
       default:
-        throw new Error(`list_tables not supported for ${type}`);
+        // For non-SQL systems (MongoDB, Redis, Salesforce, etc.),
+        // they must expose a list tool via MCP
+        throw new Error(`list_tables not supported for ${type} - this system's MCP server must provide a list tool`);
     }
 
     return this.query(connectionId, sql);
@@ -332,8 +436,18 @@ export class MCPClientManager extends EventEmitter {
       case 'sqlserver':
         sql = `SELECT COLUMN_NAME, DATA_TYPE, IS_NULLABLE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '${tableName}'`;
         break;
+      case 'oracle':
+        sql = `SELECT COLUMN_NAME, DATA_TYPE, NULLABLE FROM USER_TAB_COLUMNS WHERE TABLE_NAME = '${tableName.toUpperCase()}' ORDER BY COLUMN_ID`;
+        break;
+      case 'mariadb':
+        sql = `DESCRIBE ${tableName}`;
+        break;
+      case 'sap-hana':
+        sql = `SELECT COLUMN_NAME, DATA_TYPE_NAME, IS_NULLABLE FROM SYS.TABLE_COLUMNS WHERE SCHEMA_NAME = CURRENT_SCHEMA AND TABLE_NAME = '${tableName}' ORDER BY POSITION`;
+        break;
       default:
-        throw new Error(`get_table_schema not supported for ${type}`);
+        // For non-SQL systems, they must expose a describe tool via MCP
+        throw new Error(`get_table_schema not supported for ${type} - this system's MCP server must provide a describe tool`);
     }
 
     return this.query(connectionId, sql);

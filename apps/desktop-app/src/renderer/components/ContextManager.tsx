@@ -370,6 +370,26 @@ export default function ContextManager() {
     loadStats();
   }, [loadStats, contexts]);
 
+  // Check if context API is available
+  if (error && error.includes('not available')) {
+    return (
+      <div className="p-6">
+        <Card>
+          <CardContent className="p-12 text-center">
+            <div className="text-4xl mb-4">⚠️</div>
+            <h3 className="text-lg font-semibold mb-2">Context API Not Available</h3>
+            <p className="text-muted-foreground mb-4">
+              The context management system is not yet initialized. Please restart the application.
+            </p>
+            <Button onClick={() => window.location.reload()}>
+              Reload Application
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   const filteredContexts = contexts.filter(ctx => {
     if (filterType !== 'all' && ctx.type !== filterType) return false;
     if (searchQuery) {

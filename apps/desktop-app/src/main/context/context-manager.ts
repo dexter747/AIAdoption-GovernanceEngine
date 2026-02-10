@@ -13,6 +13,7 @@ import Store from 'electron-store';
 import { app } from 'electron';
 import * as fs from 'fs';
 import * as path from 'path';
+import { randomUUID } from 'crypto';
 
 // =============================================================================
 // TYPES
@@ -101,10 +102,10 @@ export class ContextManager {
   private knowledgeBasePath: string;
 
   constructor() {
-    this.store = new Store({
+    this.store = new Store<{ contexts: LLMContext[] }>({
       name: 'llm-contexts',
       defaults: {
-        contexts: [],
+        contexts: [] as LLMContext[],
       },
     });
 
@@ -155,7 +156,7 @@ export class ContextManager {
     projectId?: string;
     maxTokens?: number;
   }): LLMContext {
-    const id = crypto.randomUUID();
+    const id = randomUUID();
     const now = new Date();
     const tokenCount = estimateTokens(data.content);
 
@@ -348,8 +349,28 @@ export class ContextManager {
         // Update usage stats
         this.recordUsage(ctx.id);
       } else {
+        // Smart truncation: try to include a truncated version of the context
+        const remainingTokens = availableTokens - totalTokens;
+        
+        if (remainingTokens > 200) {
+          // Include a truncated version (estimate chars from tokens)
+          const maxChars = remainingTokens * 3; // conservative estimate
+          const truncatedContent = ctx.content.slice(0, maxChars) + 
+            '\n\n[... context truncated to fit token window ...]';
+          
+          const truncatedCtx: LLMContext = {
+            ...ctx,
+            content: truncatedContent,
+            tokenCount: estimateTokens(truncatedContent),
+          };
+          
+          includedContexts.push(truncatedCtx);
+          totalTokens += truncatedCtx.tokenCount;
+          this.recordUsage(ctx.id);
+        }
+        
         truncated = true;
-        // Could potentially include partial context here
+        break; // Stop adding more contexts
       }
     }
     

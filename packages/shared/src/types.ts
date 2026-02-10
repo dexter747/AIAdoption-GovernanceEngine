@@ -22,7 +22,11 @@ export type LegacySystemType =
   | 'salesforce'
   | 'servicenow'
   | 'jira'
-  | 'zendesk';
+  | 'zendesk'
+  | 'mariadb'
+  | 'redis'
+  | 'elasticsearch'
+  | 'workday';
 
 export interface ConnectionStatus {
   id: string;
@@ -41,7 +45,9 @@ export type AIProvider =
   | 'mistral'
   | 'groq'
   | 'perplexity'
-  | 'ollama';
+  | 'ollama'
+  | 'xai'
+  | 'deepseek';
 
 export interface AIModel {
   id: string;
