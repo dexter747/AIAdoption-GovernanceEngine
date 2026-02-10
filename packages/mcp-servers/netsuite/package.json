@@ -1,0 +1,10 @@
+{
+  "name": "@ai-nexus/mcp-server-netsuite",
+  "version": "1.0.0",
+  "description": "MCP server for Oracle NetSuite",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": { "build": "tsc", "watch": "tsc --watch", "start": "node dist/index.js" },
+  "dependencies": { "@modelcontextprotocol/sdk": "^1.0.0", "axios": "^1.6.7", "oauth-1.0a": "^2.2.6", "crypto-js": "^4.2.0" },
+  "devDependencies": { "@types/crypto-js": "^4.2.1", "typescript": "^5.3.3" }
+}

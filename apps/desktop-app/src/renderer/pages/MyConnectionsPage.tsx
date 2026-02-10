@@ -8,6 +8,7 @@ import {
 import { Button } from '../components/ui/button';
 import { cn } from '../lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getSimpleConnectionTypes } from '../config/connection-types';
 
 interface UserConnection {
   id: string;
@@ -24,35 +25,7 @@ interface UserConnection {
 }
 
 // Connection types with icons
-const CONNECTION_TYPES: Record<string, { icon: string; name: string; color: string }> = {
-  mysql: { icon: '🐬', name: 'MySQL', color: 'from-blue-500 to-blue-600' },
-  postgres: { icon: '🐘', name: 'PostgreSQL', color: 'from-indigo-500 to-indigo-600' },
-  mariadb: { icon: '🦭', name: 'MariaDB', color: 'from-sky-500 to-sky-600' },
-  sqlserver: { icon: '🔷', name: 'SQL Server', color: 'from-red-500 to-red-600' },
-  oracle: { icon: '🔴', name: 'Oracle', color: 'from-orange-500 to-orange-600' },
-  sqlite: { icon: '📦', name: 'SQLite', color: 'from-gray-500 to-gray-600' },
-  mongodb: { icon: '🍃', name: 'MongoDB', color: 'from-green-500 to-green-600' },
-  redis: { icon: '🔥', name: 'Redis', color: 'from-red-400 to-red-500' },
-  elasticsearch: { icon: '🔍', name: 'Elasticsearch', color: 'from-yellow-500 to-yellow-600' },
-  dynamodb: { icon: '⚡', name: 'DynamoDB', color: 'from-purple-500 to-purple-600' },
-  cassandra: { icon: '👁️', name: 'Cassandra', color: 'from-teal-500 to-teal-600' },
-  'sap-hana': { icon: '💎', name: 'SAP HANA', color: 'from-cyan-500 to-cyan-600' },
-  salesforce: { icon: '☁️', name: 'Salesforce', color: 'from-sky-400 to-sky-500' },
-  servicenow: { icon: '⚡', name: 'ServiceNow', color: 'from-teal-400 to-teal-500' },
-  workday: { icon: '👥', name: 'Workday', color: 'from-orange-400 to-orange-500' },
-  jira: { icon: '📋', name: 'Jira', color: 'from-blue-400 to-blue-500' },
-  confluence: { icon: '📝', name: 'Confluence', color: 'from-blue-500 to-blue-600' },
-  zendesk: { icon: '🎫', name: 'Zendesk', color: 'from-emerald-500 to-emerald-600' },
-  hubspot: { icon: '🧡', name: 'HubSpot', color: 'from-orange-500 to-orange-600' },
-  intercom: { icon: '💬', name: 'Intercom', color: 'from-blue-500 to-blue-600' },
-  freshdesk: { icon: '🎯', name: 'Freshdesk', color: 'from-green-500 to-green-600' },
-  snowflake: { icon: '❄️', name: 'Snowflake', color: 'from-cyan-400 to-cyan-500' },
-  bigquery: { icon: '📊', name: 'BigQuery', color: 'from-blue-500 to-blue-600' },
-  redshift: { icon: '🔶', name: 'Redshift', color: 'from-red-500 to-red-600' },
-  databricks: { icon: '🧱', name: 'Databricks', color: 'from-red-400 to-orange-500' },
-  'mcp-server': { icon: '🔌', name: 'MCP Server', color: 'from-purple-500 to-pink-500' },
-  'custom-api': { icon: '🔗', name: 'Custom API', color: 'from-gray-500 to-gray-600' },
-};
+const CONNECTION_TYPES = getSimpleConnectionTypes();
 
 export default function MyConnectionsPage() {
   const navigate = useNavigate();

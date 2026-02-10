@@ -115,7 +115,7 @@ export interface ElectronAPI {
     getAvailableServers: () => Promise<any[]>;
     checkDocker: () => Promise<boolean>;
     // New MCP Client SDK methods
-    connect: (config: { id: string; type: string; connectionString: string; name: string }) => 
+    connect: (config: { id: string; type: string; connectionString: string; name: string; connectionParams?: Record<string, string> }) => 
       Promise<{ success: boolean; error?: string }>;
     disconnect: (connectionId: string) => Promise<{ success: boolean }>;
     query: (connectionId: string, sql: string) => Promise<{ success: boolean; data?: any; error?: string }>;

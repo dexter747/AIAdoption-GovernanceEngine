@@ -8,271 +8,28 @@ import { Button } from '../components/ui/button';
 import { cn } from '../lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-
-// Comprehensive connection types - all available integrations
-const CONNECTION_LIBRARY = {
-  // Relational Databases
-  mysql: { 
-    icon: '🐬', 
-    name: 'MySQL', 
-    description: 'Open-source relational database',
-    color: 'from-blue-500 to-blue-600',
-    bgColor: 'bg-blue-500/10',
-    borderColor: 'border-blue-500/30',
-    category: 'database'
-  },
-  postgres: { 
-    icon: '🐘', 
-    name: 'PostgreSQL', 
-    description: 'Advanced open-source database',
-    color: 'from-indigo-500 to-indigo-600',
-    bgColor: 'bg-indigo-500/10',
-    borderColor: 'border-indigo-500/30',
-    category: 'database'
-  },
-  mariadb: { 
-    icon: '🦭', 
-    name: 'MariaDB', 
-    description: 'MySQL-compatible database',
-    color: 'from-sky-500 to-sky-600',
-    bgColor: 'bg-sky-500/10',
-    borderColor: 'border-sky-500/30',
-    category: 'database'
-  },
-  sqlserver: { 
-    icon: '🔷', 
-    name: 'SQL Server', 
-    description: 'Microsoft enterprise database',
-    color: 'from-red-500 to-red-600',
-    bgColor: 'bg-red-500/10',
-    borderColor: 'border-red-500/30',
-    category: 'database'
-  },
-  oracle: { 
-    icon: '🔴', 
-    name: 'Oracle', 
-    description: 'Enterprise-grade database',
-    color: 'from-orange-500 to-orange-600',
-    bgColor: 'bg-orange-500/10',
-    borderColor: 'border-orange-500/30',
-    category: 'database'
-  },
-  sqlite: { 
-    icon: '📦', 
-    name: 'SQLite', 
-    description: 'Lightweight embedded database',
-    color: 'from-gray-500 to-gray-600',
-    bgColor: 'bg-gray-500/10',
-    borderColor: 'border-gray-500/30',
-    category: 'database'
-  },
-  
-  // NoSQL Databases
-  mongodb: { 
-    icon: '🍃', 
-    name: 'MongoDB', 
-    description: 'Document-oriented NoSQL database',
-    color: 'from-green-500 to-green-600',
-    bgColor: 'bg-green-500/10',
-    borderColor: 'border-green-500/30',
-    category: 'nosql'
-  },
-  redis: { 
-    icon: '🔥', 
-    name: 'Redis', 
-    description: 'In-memory data store',
-    color: 'from-red-400 to-red-500',
-    bgColor: 'bg-red-400/10',
-    borderColor: 'border-red-400/30',
-    category: 'nosql'
-  },
-  elasticsearch: { 
-    icon: '🔍', 
-    name: 'Elasticsearch', 
-    description: 'Search and analytics engine',
-    color: 'from-yellow-500 to-yellow-600',
-    bgColor: 'bg-yellow-500/10',
-    borderColor: 'border-yellow-500/30',
-    category: 'nosql'
-  },
-  dynamodb: { 
-    icon: '⚡', 
-    name: 'DynamoDB', 
-    description: 'AWS managed NoSQL database',
-    color: 'from-purple-500 to-purple-600',
-    bgColor: 'bg-purple-500/10',
-    borderColor: 'border-purple-500/30',
-    category: 'nosql'
-  },
-  cassandra: { 
-    icon: '👁️', 
-    name: 'Cassandra', 
-    description: 'Distributed NoSQL database',
-    color: 'from-teal-500 to-teal-600',
-    bgColor: 'bg-teal-500/10',
-    borderColor: 'border-teal-500/30',
-    category: 'nosql'
-  },
-  
-  // Enterprise Systems
-  'sap-hana': { 
-    icon: '💎', 
-    name: 'SAP HANA', 
-    description: 'In-memory enterprise platform',
-    color: 'from-cyan-500 to-cyan-600',
-    bgColor: 'bg-cyan-500/10',
-    borderColor: 'border-cyan-500/30',
-    category: 'enterprise'
-  },
-  salesforce: { 
-    icon: '☁️', 
-    name: 'Salesforce', 
-    description: 'CRM and enterprise cloud platform',
-    color: 'from-sky-400 to-sky-500',
-    bgColor: 'bg-sky-400/10',
-    borderColor: 'border-sky-400/30',
-    category: 'enterprise'
-  },
-  servicenow: { 
-    icon: '⚡', 
-    name: 'ServiceNow', 
-    description: 'IT service management platform',
-    color: 'from-teal-400 to-teal-500',
-    bgColor: 'bg-teal-400/10',
-    borderColor: 'border-teal-400/30',
-    category: 'enterprise'
-  },
-  workday: { 
-    icon: '👥', 
-    name: 'Workday', 
-    description: 'HR and finance management',
-    color: 'from-orange-400 to-orange-500',
-    bgColor: 'bg-orange-400/10',
-    borderColor: 'border-orange-400/30',
-    category: 'enterprise'
-  },
-  jira: { 
-    icon: '📋', 
-    name: 'Jira', 
-    description: 'Project and issue tracking',
-    color: 'from-blue-400 to-blue-500',
-    bgColor: 'bg-blue-400/10',
-    borderColor: 'border-blue-400/30',
-    category: 'enterprise'
-  },
-  confluence: { 
-    icon: '📝', 
-    name: 'Confluence', 
-    description: 'Team collaboration and documentation',
-    color: 'from-blue-500 to-blue-600',
-    bgColor: 'bg-blue-500/10',
-    borderColor: 'border-blue-500/30',
-    category: 'enterprise'
-  },
-  
-  // Support & CRM
-  zendesk: { 
-    icon: '🎫', 
-    name: 'Zendesk', 
-    description: 'Customer support platform',
-    color: 'from-emerald-500 to-emerald-600',
-    bgColor: 'bg-emerald-500/10',
-    borderColor: 'border-emerald-500/30',
-    category: 'crm'
-  },
-  hubspot: { 
-    icon: '🧡', 
-    name: 'HubSpot', 
-    description: 'Marketing and sales CRM',
-    color: 'from-orange-500 to-orange-600',
-    bgColor: 'bg-orange-500/10',
-    borderColor: 'border-orange-500/30',
-    category: 'crm'
-  },
-  intercom: { 
-    icon: '💬', 
-    name: 'Intercom', 
-    description: 'Customer messaging platform',
-    color: 'from-blue-500 to-blue-600',
-    bgColor: 'bg-blue-500/10',
-    borderColor: 'border-blue-500/30',
-    category: 'crm'
-  },
-  freshdesk: { 
-    icon: '🎯', 
-    name: 'Freshdesk', 
-    description: 'Help desk software',
-    color: 'from-green-500 to-green-600',
-    bgColor: 'bg-green-500/10',
-    borderColor: 'border-green-500/30',
-    category: 'crm'
-  },
-  
-  // Cloud Data Warehouses
-  snowflake: { 
-    icon: '❄️', 
-    name: 'Snowflake', 
-    description: 'Cloud data platform',
-    color: 'from-cyan-400 to-cyan-500',
-    bgColor: 'bg-cyan-400/10',
-    borderColor: 'border-cyan-400/30',
-    category: 'warehouse'
-  },
-  bigquery: { 
-    icon: '📊', 
-    name: 'BigQuery', 
-    description: 'Google serverless data warehouse',
-    color: 'from-blue-500 to-blue-600',
-    bgColor: 'bg-blue-500/10',
-    borderColor: 'border-blue-500/30',
-    category: 'warehouse'
-  },
-  redshift: { 
-    icon: '🔶', 
-    name: 'Redshift', 
-    description: 'AWS cloud data warehouse',
-    color: 'from-red-500 to-red-600',
-    bgColor: 'bg-red-500/10',
-    borderColor: 'border-red-500/30',
-    category: 'warehouse'
-  },
-  databricks: { 
-    icon: '🧱', 
-    name: 'Databricks', 
-    description: 'Unified analytics platform',
-    color: 'from-red-400 to-orange-500',
-    bgColor: 'bg-red-400/10',
-    borderColor: 'border-red-400/30',
-    category: 'warehouse'
-  },
-  
-  // MCP Servers / Custom
-  'mcp-server': { 
-    icon: '🔌', 
-    name: 'MCP Server', 
-    description: 'Model Context Protocol server',
-    color: 'from-purple-500 to-pink-500',
-    bgColor: 'bg-purple-500/10',
-    borderColor: 'border-purple-500/30',
-    category: 'mcp'
-  },
-  'custom-api': { 
-    icon: '🔗', 
-    name: 'Custom API', 
-    description: 'Connect to any REST/GraphQL API',
-    color: 'from-gray-500 to-gray-600',
-    bgColor: 'bg-gray-500/10',
-    borderColor: 'border-gray-500/30',
-    category: 'mcp'
-  },
-};
+import { CONNECTION_LIBRARY } from '../config/connection-types';
 
 const CATEGORIES = [
   { id: 'all', name: 'All', icon: Grid3x3 },
   { id: 'database', name: 'Databases', icon: Database },
   { id: 'nosql', name: 'NoSQL', icon: HardDrive },
   { id: 'enterprise', name: 'Enterprise', icon: Server },
-  { id: 'crm', name: 'CRM & Support', icon: Headphones },
+  { id: 'erp', name: 'ERP', icon: Server },
+  { id: 'crm', name: 'CRM & Sales', icon: Headphones },
+  { id: 'hcm', name: 'HCM & HR', icon: Server },
+  { id: 'healthcare', name: 'Healthcare', icon: Server },
+  { id: 'insurance', name: 'Insurance', icon: Server },
+  { id: 'supply-chain', name: 'Supply Chain', icon: Warehouse },
+  { id: 'finance', name: 'Finance', icon: Server },
+  { id: 'commerce', name: 'Commerce', icon: Server },
+  { id: 'telecom', name: 'Telecom', icon: Server },
+  { id: 'document', name: 'Documents', icon: Server },
+  { id: 'government', name: 'Government', icon: Server },
+  { id: 'education', name: 'Education', icon: Server },
+  { id: 'asset', name: 'Assets', icon: Server },
+  { id: 'procurement', name: 'Procurement', icon: Server },
+  { id: 'legacy', name: 'Legacy', icon: Server },
   { id: 'warehouse', name: 'Data Warehouse', icon: Warehouse },
   { id: 'mcp', name: 'MCP & APIs', icon: Zap },
 ];

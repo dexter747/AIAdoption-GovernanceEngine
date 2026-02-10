@@ -98,7 +98,7 @@ contextBridge.exposeInMainWorld('electron', {
     checkDocker: () => ipcRenderer.invoke('mcp:check-docker'),
     
     // New MCP Client SDK methods
-    connect: (config: { id: string; type: string; connectionString: string; name: string }) => 
+    connect: (config: { id: string; type: string; connectionString: string; name: string; connectionParams?: Record<string, string> }) => 
       ipcRenderer.invoke('mcp:client-connect', config),
     disconnect: (connectionId: string) => ipcRenderer.invoke('mcp:client-disconnect', connectionId),
     query: (connectionId: string, sql: string) => ipcRenderer.invoke('mcp:query', connectionId, sql),

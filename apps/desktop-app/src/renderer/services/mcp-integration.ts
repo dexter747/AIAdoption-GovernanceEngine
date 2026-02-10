@@ -15,7 +15,7 @@ import { BackendWebSocket, createBackendWebSocket, ToolExecutionRequest } from '
 interface MCPConnection {
   id: string;
   name: string;
-  type: 'postgresql' | 'mysql' | 'sqlite' | 'sqlserver' | 'mongodb';
+  type: string;
   status: 'connected' | 'disconnected' | 'error';
   tools: Array<{ name: string; description: string; inputSchema: any }>;
 }
@@ -104,13 +104,28 @@ class MCPIntegrationService {
         const ssl = config.ssl ? '?sslmode=require' : '';
         return `postgresql://${config.user || config.username}:${config.password}@${config.host}:${config.port || 5432}/${config.database}${ssl}`;
       case 'mysql':
+      case 'mariadb':
         return `mysql://${config.user || config.username}:${config.password}@${config.host}:${config.port || 3306}/${config.database}`;
       case 'sqlite':
         return config.path || config.filePath || config.database;
       case 'mongodb':
         return config.connectionString || `mongodb://${config.host}:${config.port || 27017}/${config.database}`;
+      case 'sqlserver':
+        return `Server=${config.host},${config.port || 1433};Database=${config.database};User Id=${config.user || config.username};Password=${config.password};`;
+      case 'oracle':
+        return `${config.host}:${config.port || 1521}/${config.database}`;
+      case 'redis':
+        return config.url || `redis://${config.host}:${config.port || 6379}`;
+      case 'elasticsearch':
+        return config.url || `http://${config.host}:${config.port || 9200}`;
+      case 'cassandra':
+        return config.contactPoints || `${config.host}:${config.port || 9042}`;
+      case 'neo4j':
+        return config.uri || `bolt://${config.host}:${config.port || 7687}`;
+      case 'couchdb':
+        return config.url || `http://${config.host}:${config.port || 5984}`;
       default:
-        // For unknown types, try to build a generic connection string
+        // For REST API / enterprise systems, pass config as JSON
         if (config.host && config.database) {
           return `${type}://${config.user || config.username}:${config.password}@${config.host}:${config.port}/${config.database}`;
         }
@@ -129,11 +144,19 @@ class MCPIntegrationService {
   ): Promise<MCPConnection> {
     console.log('[MCP Integration] Adding connection:', name, type);
     
-    // Build connection string from config
+    // Build connection string from config (legacy backward compat)
     const connectionString = this.buildConnectionString(type, connectionConfig);
     
+    // Also pass raw connection params so the main process can set all env vars
+    const connectionParams: Record<string, string> = {};
+    for (const [key, value] of Object.entries(connectionConfig)) {
+      if (value !== undefined && value !== null && value !== '') {
+        connectionParams[key] = String(value);
+      }
+    }
+    
     // Use IPC to connect via main process MCP client
-    const result = await window.electron.mcp.connect({ id, type, connectionString, name });
+    const result = await window.electron.mcp.connect({ id, type, connectionString, name, connectionParams });
     
     if (!result.success) {
       throw new Error(result.error || 'Failed to connect');

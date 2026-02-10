@@ -7,6 +7,7 @@ import { ConnectionConfig, LegacySystemType } from '@shared/types';
 import Store from 'electron-store';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import { buildEnvVarsFromParams } from './connection-env-map.js';
 
 const execAsync = promisify(exec);
 
@@ -108,6 +109,272 @@ export class MCPConnectionManager {
     workday: {
       type: 'npm',
       localPath: '../../../../../packages/mcp-servers/workday/dist/index.js',
+      available: true,
+    },
+    // --- NEW DATABASE SERVERS ---
+    cassandra: {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/cassandra/dist/index.js',
+      available: true,
+    },
+    couchdb: {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/couchdb/dist/index.js',
+      available: true,
+    },
+    neo4j: {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/neo4j/dist/index.js',
+      available: true,
+    },
+    dynamodb: {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/dynamodb/dist/index.js',
+      available: true,
+    },
+    // --- CRM & SALES ---
+    hubspot: {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/hubspot/dist/index.js',
+      available: true,
+    },
+    'oracle-siebel': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/oracle-siebel/dist/index.js',
+      available: true,
+    },
+    dynamics365: {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/dynamics365/dist/index.js',
+      available: true,
+    },
+    // --- ERP ---
+    netsuite: {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/netsuite/dist/index.js',
+      available: true,
+    },
+    'infor-cloudsuite': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/infor-cloudsuite/dist/index.js',
+      available: true,
+    },
+    'jd-edwards': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/jd-edwards/dist/index.js',
+      available: true,
+    },
+    epicor: {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/epicor/dist/index.js',
+      available: true,
+    },
+    'sage-intacct': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/sage-intacct/dist/index.js',
+      available: true,
+    },
+    'oracle-peoplesoft': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/oracle-peoplesoft/dist/index.js',
+      available: true,
+    },
+    'oracle-opera': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/oracle-opera/dist/index.js',
+      available: true,
+    },
+    // --- HCM & HR ---
+    'sap-successfactors': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/sap-successfactors/dist/index.js',
+      available: true,
+    },
+    adp: {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/adp/dist/index.js',
+      available: true,
+    },
+    'ukg-kronos': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/ukg-kronos/dist/index.js',
+      available: true,
+    },
+    'sap-concur': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/sap-concur/dist/index.js',
+      available: true,
+    },
+    // --- HEALTHCARE ---
+    'epic-fhir': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/epic-fhir/dist/index.js',
+      available: true,
+    },
+    cerner: {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/cerner/dist/index.js',
+      available: true,
+    },
+    meditech: {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/meditech/dist/index.js',
+      available: true,
+    },
+    allscripts: {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/allscripts/dist/index.js',
+      available: true,
+    },
+    // --- INSURANCE ---
+    guidewire: {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/guidewire/dist/index.js',
+      available: true,
+    },
+    'duck-creek': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/duck-creek/dist/index.js',
+      available: true,
+    },
+    'applied-epic': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/applied-epic/dist/index.js',
+      available: true,
+    },
+    // --- SUPPLY CHAIN ---
+    'manhattan-associates': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/manhattan-associates/dist/index.js',
+      available: true,
+    },
+    'blue-yonder': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/blue-yonder/dist/index.js',
+      available: true,
+    },
+    descartes: {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/descartes/dist/index.js',
+      available: true,
+    },
+    // --- FINANCE & BANKING ---
+    fis: {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/fis/dist/index.js',
+      available: true,
+    },
+    finastra: {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/finastra/dist/index.js',
+      available: true,
+    },
+    temenos: {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/temenos/dist/index.js',
+      available: true,
+    },
+    blackline: {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/blackline/dist/index.js',
+      available: true,
+    },
+    quickbooks: {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/quickbooks/dist/index.js',
+      available: true,
+    },
+    // --- COMMERCE ---
+    shopify: {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/shopify/dist/index.js',
+      available: true,
+    },
+    magento: {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/magento/dist/index.js',
+      available: true,
+    },
+    // --- TELECOM ---
+    amdocs: {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/amdocs/dist/index.js',
+      available: true,
+    },
+    'ericsson-bss': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/ericsson-bss/dist/index.js',
+      available: true,
+    },
+    // --- DOCUMENT MANAGEMENT ---
+    sharepoint: {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/sharepoint/dist/index.js',
+      available: true,
+    },
+    documentum: {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/documentum/dist/index.js',
+      available: true,
+    },
+    'ibm-filenet': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/ibm-filenet/dist/index.js',
+      available: true,
+    },
+    box: {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/box/dist/index.js',
+      available: true,
+    },
+    // --- GOVERNMENT ---
+    'cgi-momentum': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/cgi-momentum/dist/index.js',
+      available: true,
+    },
+    'tyler-technologies': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/tyler-technologies/dist/index.js',
+      available: true,
+    },
+    // --- EDUCATION ---
+    'ellucian-banner': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/ellucian-banner/dist/index.js',
+      available: true,
+    },
+    // --- ASSET & FACILITIES ---
+    'ibm-maximo': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/ibm-maximo/dist/index.js',
+      available: true,
+    },
+    'ibm-tririga': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/ibm-tririga/dist/index.js',
+      available: true,
+    },
+    'ge-predix': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/ge-predix/dist/index.js',
+      available: true,
+    },
+    // --- PROCUREMENT ---
+    'sap-ariba': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/sap-ariba/dist/index.js',
+      available: true,
+    },
+    coupa: {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/coupa/dist/index.js',
+      available: true,
+    },
+    // --- LEGACY / MAINFRAME ---
+    as400: {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/as400/dist/index.js',
       available: true,
     },
   };
@@ -293,69 +560,47 @@ export class MCPConnectionManager {
       throw new Error('No package or local path specified');
     }
 
-    // Set environment variables based on connection type
-    const env = { ...process.env };
+    // Set environment variables using schema-driven mapping
+    const env: Record<string, string> = Object.fromEntries(
+      Object.entries(process.env).filter(([_, v]) => v !== undefined) as [string, string][]
+    );
 
-    if (connection.type === 'postgresql') {
-      env.POSTGRES_CONNECTION_STRING = `postgresql://${config.username}:${config.password}@${config.host}:${config.port}/${config.database}`;
-    } else if (connection.type === 'mysql') {
-      env.MYSQL_HOST = config.host;
-      env.MYSQL_PORT = String(config.port);
-      env.MYSQL_USER = config.username;
-      env.MYSQL_PASSWORD = config.password;
-      env.MYSQL_DATABASE = config.database;
-    } else if (connection.type === 'mongodb') {
-      env.MONGODB_URI = `mongodb://${config.username}:${config.password}@${config.host}:${config.port}/${config.database}`;
-    } else if (connection.type === 'oracle') {
-      env.ORACLE_USER = config.username;
-      env.ORACLE_PASSWORD = config.password;
-      env.ORACLE_HOST = config.host;
-      env.ORACLE_PORT = String(config.port);
-      env.ORACLE_SERVICE = config.database;
-    } else if (connection.type === 'sqlserver') {
-      env.SQLSERVER_HOST = config.host;
-      env.SQLSERVER_PORT = String(config.port);
-      env.SQLSERVER_USER = config.username;
-      env.SQLSERVER_PASSWORD = config.password;
-      env.SQLSERVER_DATABASE = config.database;
-    } else if (connection.type === 'sap-hana') {
-      env.SAP_HANA_HOST = config.host;
-      env.SAP_HANA_PORT = String(config.port);
-      env.SAP_HANA_USER = config.username;
-      env.SAP_HANA_PASSWORD = config.password;
-    } else if (connection.type === 'salesforce') {
-      env.SALESFORCE_INSTANCE_URL = config.host;
-      env.SALESFORCE_ACCESS_TOKEN = config.password;
-      env.SALESFORCE_USERNAME = config.username;
-    } else if (connection.type === 'servicenow') {
-      env.SERVICENOW_INSTANCE_URL = config.host;
-      env.SERVICENOW_USERNAME = config.username;
-      env.SERVICENOW_PASSWORD = config.password;
-    } else if (connection.type === 'jira') {
-      env.JIRA_BASE_URL = config.host;
-      env.JIRA_EMAIL = config.username;
-      env.JIRA_API_TOKEN = config.password;
-    } else if (connection.type === 'mariadb') {
-      env.MARIADB_HOST = config.host;
-      env.MARIADB_PORT = String(config.port);
-      env.MARIADB_USER = config.username;
-      env.MARIADB_PASSWORD = config.password;
-      env.MARIADB_DATABASE = config.database || '';
-    } else if (connection.type === 'redis') {
-      env.REDIS_URL = `redis://${config.username ? config.username + ':' + config.password + '@' : ''}${config.host}:${config.port}`;
-    } else if (connection.type === 'elasticsearch') {
-      env.ELASTICSEARCH_URL = `${config.ssl ? 'https' : 'http'}://${config.host}:${config.port}`;
-      if (config.username) env.ELASTICSEARCH_USERNAME = config.username;
-      if (config.password) env.ELASTICSEARCH_PASSWORD = config.password;
-    } else if (connection.type === 'zendesk') {
-      env.ZENDESK_SUBDOMAIN = config.host;
-      env.ZENDESK_EMAIL = config.username;
-      env.ZENDESK_API_TOKEN = config.password;
-    } else if (connection.type === 'workday') {
-      env.WORKDAY_TENANT = config.host;
-      env.WORKDAY_USERNAME = config.username;
-      env.WORKDAY_PASSWORD = config.password;
+    // Merge top-level ConnectionConfig fields + options into a single params object
+    const connectionParams: Record<string, string> = {};
+    if (config.host) connectionParams.host = config.host;
+    if (config.port) connectionParams.port = String(config.port);
+    if (config.database) connectionParams.database = config.database;
+    if (config.username) connectionParams.username = config.username;
+    if (config.password) connectionParams.password = config.password;
+    if (config.ssl !== undefined) connectionParams.ssl = config.ssl ? 'require' : 'disable';
+
+    // Merge any extra fields from options (accessToken, clientId, tenantId, etc.)
+    if (config.options) {
+      for (const [key, value] of Object.entries(config.options)) {
+        if (value !== undefined && value !== null && value !== '') {
+          connectionParams[key] = String(value);
+        }
+      }
     }
+
+    // Build env vars from the connection params via the schema mapping
+    const mappedEnvVars = buildEnvVarsFromParams(connection.type, connectionParams);
+    Object.assign(env, mappedEnvVars);
+
+    // Legacy: for postgresql, also build the connection string (some tools use it)
+    if (connection.type === 'postgresql' && config.host && config.username) {
+      env.POSTGRES_CONNECTION_STRING = `postgresql://${config.username}:${config.password}@${config.host}:${config.port}/${config.database}`;
+    }
+    // Legacy: for mongodb, also build the connection URI
+    if (connection.type === 'mongodb' && config.host) {
+      env.MONGODB_URI = config.options?.uri || `mongodb://${config.username}:${config.password}@${config.host}:${config.port}/${config.database}`;
+    }
+    // Legacy: for redis, also build the URL
+    if (connection.type === 'redis' && config.host) {
+      env.REDIS_URL = config.options?.url || `redis://${config.username ? config.username + ':' + config.password + '@' : ''}${config.host}:${config.port}`;
+    }
+
+    console.log(`[MCP Manager] Set ${Object.keys(mappedEnvVars).length} env vars for ${connection.type}:`, Object.keys(mappedEnvVars));
 
     // Start MCP server as child process
     console.log(`Starting MCP server: ${command} ${args.join(' ')}`);

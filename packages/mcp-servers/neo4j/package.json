@@ -1,0 +1,10 @@
+{
+  "name": "@ai-nexus/mcp-server-neo4j",
+  "version": "1.0.0",
+  "description": "MCP server for Neo4j graph database",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": { "build": "tsc", "watch": "tsc --watch", "start": "node dist/index.js" },
+  "dependencies": { "@modelcontextprotocol/sdk": "^1.0.0", "neo4j-driver": "^5.17.0" },
+  "devDependencies": { "typescript": "^5.3.3" }
+}

@@ -516,7 +516,11 @@ describe('MCP Manager', () => {
     ];
 
     test.each(systems)('supports %s in server configs', (system) => {
-      expect(managerContent).toContain(`'${system}'`);
+      // Check that the system type appears in either the mcpServers map
+      // or the env-var mapping import (buildEnvVarsFromParams)
+      const hasInMcpServers = managerContent.includes(`${system}:`);
+      const hasQuotedKey = managerContent.includes(`'${system}'`);
+      expect(hasInMcpServers || hasQuotedKey).toBe(true);
     });
   });
 

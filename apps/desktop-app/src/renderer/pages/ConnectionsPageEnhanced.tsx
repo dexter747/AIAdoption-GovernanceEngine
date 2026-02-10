@@ -1,5 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Database, Plus, Power, PowerOff, Trash2, Settings, CheckCircle, XCircle, AlertCircle, RefreshCw } from 'lucide-react';
+import { CONNECTION_LIBRARY } from '../config/connection-types';
+import { getFieldSchema } from '../config/connection-fields';
 
 interface MCPConnection {
   id: string;
@@ -93,18 +95,12 @@ export default function ConnectionsPageEnhanced() {
   };
 
   const getTypeBadge = (type: string) => {
-    const colors: Record<string, string> = {
-      postgresql: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300',
-      mysql: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300',
-      mongodb: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300',
-      oracle: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300',
-      sqlserver: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300',
-      'sap-hana': 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-300',
-    };
-
+    const info = CONNECTION_LIBRARY[type];
+    const defaultClass = 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300';
+    
     return (
-      <span className={`px-2 py-1 rounded-full text-xs font-medium ${colors[type] || 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}>
-        {type.toUpperCase()}
+      <span className={`px-2 py-1 rounded-full text-xs font-medium ${defaultClass}`}>
+        {info ? info.name : type.toUpperCase()}
       </span>
     );
   };
@@ -291,23 +287,53 @@ export default function ConnectionsPageEnhanced() {
 
 // Add Connection Modal Component
 function AddConnectionModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: () => void }) {
-  const [formData, setFormData] = useState({
-    name: '',
-    type: 'postgresql',
-    host: 'localhost',
-    port: 5432,
-    database: '',
-    username: '',
-    password: '',
-  });
+  const [selectedType, setSelectedType] = useState('postgresql');
+  const [connectionName, setConnectionName] = useState('');
+  const [fieldValues, setFieldValues] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
+
+  // Get the field schema for the currently selected type
+  const fieldSchema = useMemo(() => getFieldSchema(selectedType), [selectedType]);
+
+  // When type changes, reset field values with defaults from the schema
+  useEffect(() => {
+    const defaults: Record<string, string> = {};
+    for (const field of fieldSchema.fields) {
+      if (field.defaultValue !== undefined) {
+        defaults[field.key] = String(field.defaultValue);
+      }
+    }
+    setFieldValues(defaults);
+  }, [selectedType, fieldSchema]);
+
+  const handleFieldChange = (key: string, value: string) => {
+    setFieldValues(prev => ({ ...prev, [key]: value }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      await window.electron.mcp.addConnection(formData);
+      // Build the config: standard ConnectionConfig fields + options for extra fields
+      const config: Record<string, any> = {
+        name: connectionName,
+        type: selectedType,
+        options: {} as Record<string, string>,
+      };
+
+      // Map field values to standard ConnectionConfig fields where appropriate
+      const standardFields = ['host', 'port', 'database', 'username', 'password', 'ssl'];
+      for (const [key, value] of Object.entries(fieldValues)) {
+        if (value === undefined || value === '') continue;
+        if (standardFields.includes(key)) {
+          config[key] = key === 'port' ? parseInt(value, 10) : value;
+        } else {
+          config.options[key] = value;
+        }
+      }
+
+      await window.electron.mcp.addConnection(config);
       onSuccess();
     } catch (error: any) {
       alert(`Failed to add connection: ${error.message}`);
@@ -316,14 +342,26 @@ function AddConnectionModal({ onClose, onSuccess }: { onClose: () => void; onSuc
     }
   };
 
+  // Group fields by their group property
+  const groupedFields = useMemo(() => {
+    const groups = new Map<string, typeof fieldSchema.fields>();
+    for (const field of fieldSchema.fields) {
+      const group = field.group || 'Connection';
+      if (!groups.has(group)) groups.set(group, []);
+      groups.get(group)!.push(field);
+    }
+    return groups;
+  }, [fieldSchema]);
+
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6 border-b border-gray-200 dark:border-gray-800">
           <h2 className="text-xl font-bold text-black dark:text-white">Add MCP Connection</h2>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          {/* Connection Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Connection Name
@@ -331,96 +369,77 @@ function AddConnectionModal({ onClose, onSuccess }: { onClose: () => void; onSuc
             <input
               type="text"
               required
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              value={connectionName}
+              onChange={(e) => setConnectionName(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white focus:ring-2 focus:ring-blue-500"
-              placeholder="My Database"
+              placeholder="My Connection"
             />
           </div>
 
+          {/* System Type Selector */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Database Type
+              System Type
             </label>
             <select
-              value={formData.type}
-              onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+              value={selectedType}
+              onChange={(e) => setSelectedType(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white focus:ring-2 focus:ring-blue-500"
             >
-              <option value="postgresql">PostgreSQL</option>
-              <option value="mysql">MySQL</option>
-              <option value="mongodb">MongoDB</option>
-              <option value="oracle">Oracle</option>
-              <option value="sqlserver">SQL Server</option>
+              {Object.entries(CONNECTION_LIBRARY).map(([key, info]) => (
+                <option key={key} value={key}>{info.icon} {info.name}</option>
+              ))}
             </select>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Host
-              </label>
-              <input
-                type="text"
-                required
-                value={formData.host}
-                onChange={(e) => setFormData({ ...formData, host: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Port
-              </label>
-              <input
-                type="number"
-                required
-                value={formData.port}
-                onChange={(e) => setFormData({ ...formData, port: parseInt(e.target.value) })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Database Name
-            </label>
-            <input
-              type="text"
-              required
-              value={formData.database}
-              onChange={(e) => setFormData({ ...formData, database: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Username
-            </label>
-            <input
-              type="text"
-              required
-              value={formData.username}
-              onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Password
-            </label>
-            <input
-              type="password"
-              required
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+          {/* Dynamic Fields grouped by category */}
+          {Array.from(groupedFields.entries()).map(([groupName, fields]) => (
+            <fieldset key={groupName} className="space-y-3">
+              {groupedFields.size > 1 && (
+                <legend className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">
+                  {groupName}
+                </legend>
+              )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {fields.map((field) => (
+                  <div key={field.key} className={field.type === 'textarea' ? 'sm:col-span-2' : ''}>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      {field.label}
+                      {field.required && <span className="text-red-500 ml-1">*</span>}
+                    </label>
+                    {field.type === 'select' ? (
+                      <select
+                        value={fieldValues[field.key] || ''}
+                        onChange={(e) => handleFieldChange(field.key, e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="">Select...</option>
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                      </select>
+                    ) : field.type === 'textarea' ? (
+                      <textarea
+                        value={fieldValues[field.key] || ''}
+                        onChange={(e) => handleFieldChange(field.key, e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white focus:ring-2 focus:ring-blue-500 h-20"
+                        placeholder={field.placeholder}
+                        required={field.required}
+                      />
+                    ) : (
+                      <input
+                        type={field.type === 'password' ? 'password' : field.type === 'number' ? 'number' : 'text'}
+                        value={fieldValues[field.key] || ''}
+                        onChange={(e) => handleFieldChange(field.key, e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white focus:ring-2 focus:ring-blue-500"
+                        placeholder={field.placeholder}
+                        required={field.required}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </fieldset>
+          ))}
 
           <div className="flex gap-3 pt-4">
             <button

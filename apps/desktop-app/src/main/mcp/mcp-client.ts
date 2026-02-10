@@ -6,11 +6,50 @@
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
 import { EventEmitter } from 'events';
+import { buildEnvVarsFromParams } from './connection-env-map.js';
 
 interface MCPServerConfig {
   id: string;
-  type: 'postgresql' | 'mysql' | 'sqlite' | 'mongodb' | 'sqlserver' | 'oracle' | 'sap-hana' | 'mariadb' | 'redis' | 'elasticsearch' | 'salesforce' | 'servicenow' | 'jira' | 'zendesk' | 'workday';
+  type:
+    // Databases
+    | 'postgresql' | 'mysql' | 'sqlite' | 'mongodb' | 'sqlserver' | 'oracle'
+    | 'sap-hana' | 'mariadb' | 'redis' | 'elasticsearch'
+    | 'cassandra' | 'couchdb' | 'neo4j' | 'dynamodb'
+    // CRM & Sales
+    | 'salesforce' | 'hubspot' | 'oracle-siebel' | 'dynamics365'
+    // ITSM & Support
+    | 'servicenow' | 'jira' | 'zendesk'
+    // ERP
+    | 'netsuite' | 'infor-cloudsuite' | 'jd-edwards' | 'epicor'
+    | 'sage-intacct' | 'oracle-peoplesoft' | 'oracle-opera'
+    // HCM & HR
+    | 'workday' | 'sap-successfactors' | 'adp' | 'ukg-kronos' | 'sap-concur'
+    // Healthcare
+    | 'epic-fhir' | 'cerner' | 'meditech' | 'allscripts'
+    // Insurance
+    | 'guidewire' | 'duck-creek' | 'applied-epic'
+    // Supply Chain & Logistics
+    | 'manhattan-associates' | 'blue-yonder' | 'descartes'
+    // Finance & Banking
+    | 'fis' | 'finastra' | 'temenos' | 'blackline' | 'quickbooks'
+    // Commerce
+    | 'shopify' | 'magento'
+    // Telecom
+    | 'amdocs' | 'ericsson-bss'
+    // Document Management
+    | 'sharepoint' | 'documentum' | 'ibm-filenet' | 'box'
+    // Government
+    | 'cgi-momentum' | 'tyler-technologies'
+    // Education
+    | 'ellucian-banner'
+    // Asset & Facilities
+    | 'ibm-maximo' | 'ibm-tririga' | 'ge-predix'
+    // Procurement
+    | 'sap-ariba' | 'coupa'
+    // Legacy / Mainframe
+    | 'as400';
   connectionString: string;
+  connectionParams?: Record<string, string>;
   name: string;
 }
 
@@ -122,7 +161,73 @@ export class MCPClientManager extends EventEmitter {
       command: 'node',
       args: [],
       envKey: 'WORKDAY_TENANT'
-    }
+    },
+    // --- NEW DATABASE SERVERS ---
+    cassandra: { command: 'node', args: [], envKey: 'CASSANDRA_CONTACT_POINTS' },
+    couchdb: { command: 'node', args: [], envKey: 'COUCHDB_URL' },
+    neo4j: { command: 'node', args: [], envKey: 'NEO4J_URI' },
+    dynamodb: { command: 'node', args: [], envKey: 'AWS_REGION' },
+    // --- CRM & SALES ---
+    hubspot: { command: 'node', args: [], envKey: 'HUBSPOT_ACCESS_TOKEN' },
+    'oracle-siebel': { command: 'node', args: [], envKey: 'SIEBEL_BASE_URL' },
+    dynamics365: { command: 'node', args: [], envKey: 'DYNAMICS365_TENANT_ID' },
+    // --- ERP ---
+    netsuite: { command: 'node', args: [], envKey: 'NETSUITE_ACCOUNT_ID' },
+    'infor-cloudsuite': { command: 'node', args: [], envKey: 'INFOR_ION_API_URL' },
+    'jd-edwards': { command: 'node', args: [], envKey: 'JDE_AIS_BASE_URL' },
+    epicor: { command: 'node', args: [], envKey: 'EPICOR_BASE_URL' },
+    'sage-intacct': { command: 'node', args: [], envKey: 'INTACCT_SENDER_ID' },
+    'oracle-peoplesoft': { command: 'node', args: [], envKey: 'PEOPLESOFT_BASE_URL' },
+    'oracle-opera': { command: 'node', args: [], envKey: 'OPERA_BASE_URL' },
+    // --- HCM & HR ---
+    'sap-successfactors': { command: 'node', args: [], envKey: 'SF_API_URL' },
+    adp: { command: 'node', args: [], envKey: 'ADP_BASE_URL' },
+    'ukg-kronos': { command: 'node', args: [], envKey: 'UKG_BASE_URL' },
+    'sap-concur': { command: 'node', args: [], envKey: 'CONCUR_BASE_URL' },
+    // --- HEALTHCARE ---
+    'epic-fhir': { command: 'node', args: [], envKey: 'EPIC_FHIR_BASE_URL' },
+    cerner: { command: 'node', args: [], envKey: 'CERNER_FHIR_BASE_URL' },
+    meditech: { command: 'node', args: [], envKey: 'MEDITECH_FHIR_BASE_URL' },
+    allscripts: { command: 'node', args: [], envKey: 'ALLSCRIPTS_BASE_URL' },
+    // --- INSURANCE ---
+    guidewire: { command: 'node', args: [], envKey: 'GUIDEWIRE_BASE_URL' },
+    'duck-creek': { command: 'node', args: [], envKey: 'DUCKCREEK_BASE_URL' },
+    'applied-epic': { command: 'node', args: [], envKey: 'APPLIED_EPIC_BASE_URL' },
+    // --- SUPPLY CHAIN ---
+    'manhattan-associates': { command: 'node', args: [], envKey: 'MANHATTAN_BASE_URL' },
+    'blue-yonder': { command: 'node', args: [], envKey: 'BLUEYONDER_BASE_URL' },
+    descartes: { command: 'node', args: [], envKey: 'DESCARTES_BASE_URL' },
+    // --- FINANCE & BANKING ---
+    fis: { command: 'node', args: [], envKey: 'FIS_BASE_URL' },
+    finastra: { command: 'node', args: [], envKey: 'FINASTRA_BASE_URL' },
+    temenos: { command: 'node', args: [], envKey: 'TEMENOS_BASE_URL' },
+    blackline: { command: 'node', args: [], envKey: 'BLACKLINE_BASE_URL' },
+    quickbooks: { command: 'node', args: [], envKey: 'QUICKBOOKS_BASE_URL' },
+    // --- COMMERCE ---
+    shopify: { command: 'node', args: [], envKey: 'SHOPIFY_STORE_URL' },
+    magento: { command: 'node', args: [], envKey: 'MAGENTO_BASE_URL' },
+    // --- TELECOM ---
+    amdocs: { command: 'node', args: [], envKey: 'AMDOCS_BASE_URL' },
+    'ericsson-bss': { command: 'node', args: [], envKey: 'ERICSSON_BSS_BASE_URL' },
+    // --- DOCUMENT MANAGEMENT ---
+    sharepoint: { command: 'node', args: [], envKey: 'SHAREPOINT_TENANT_ID' },
+    documentum: { command: 'node', args: [], envKey: 'DOCUMENTUM_BASE_URL' },
+    'ibm-filenet': { command: 'node', args: [], envKey: 'FILENET_BASE_URL' },
+    box: { command: 'node', args: [], envKey: 'BOX_CLIENT_ID' },
+    // --- GOVERNMENT ---
+    'cgi-momentum': { command: 'node', args: [], envKey: 'MOMENTUM_BASE_URL' },
+    'tyler-technologies': { command: 'node', args: [], envKey: 'TYLER_BASE_URL' },
+    // --- EDUCATION ---
+    'ellucian-banner': { command: 'node', args: [], envKey: 'BANNER_BASE_URL' },
+    // --- ASSET & FACILITIES ---
+    'ibm-maximo': { command: 'node', args: [], envKey: 'MAXIMO_BASE_URL' },
+    'ibm-tririga': { command: 'node', args: [], envKey: 'TRIRIGA_BASE_URL' },
+    'ge-predix': { command: 'node', args: [], envKey: 'PREDIX_BASE_URL' },
+    // --- PROCUREMENT ---
+    'sap-ariba': { command: 'node', args: [], envKey: 'ARIBA_BASE_URL' },
+    coupa: { command: 'node', args: [], envKey: 'COUPA_BASE_URL' },
+    // --- LEGACY / MAINFRAME ---
+    as400: { command: 'node', args: [], envKey: 'AS400_BASE_URL' },
   };
 
   // Map local MCP server types to their built package paths
@@ -138,6 +243,72 @@ export class MCPClientManager extends EventEmitter {
     jira: '../../../../../packages/mcp-servers/jira/dist/index.js',
     zendesk: '../../../../../packages/mcp-servers/zendesk/dist/index.js',
     workday: '../../../../../packages/mcp-servers/workday/dist/index.js',
+    // New database servers
+    cassandra: '../../../../../packages/mcp-servers/cassandra/dist/index.js',
+    couchdb: '../../../../../packages/mcp-servers/couchdb/dist/index.js',
+    neo4j: '../../../../../packages/mcp-servers/neo4j/dist/index.js',
+    dynamodb: '../../../../../packages/mcp-servers/dynamodb/dist/index.js',
+    // CRM & Sales
+    hubspot: '../../../../../packages/mcp-servers/hubspot/dist/index.js',
+    'oracle-siebel': '../../../../../packages/mcp-servers/oracle-siebel/dist/index.js',
+    dynamics365: '../../../../../packages/mcp-servers/dynamics365/dist/index.js',
+    // ERP
+    netsuite: '../../../../../packages/mcp-servers/netsuite/dist/index.js',
+    'infor-cloudsuite': '../../../../../packages/mcp-servers/infor-cloudsuite/dist/index.js',
+    'jd-edwards': '../../../../../packages/mcp-servers/jd-edwards/dist/index.js',
+    epicor: '../../../../../packages/mcp-servers/epicor/dist/index.js',
+    'sage-intacct': '../../../../../packages/mcp-servers/sage-intacct/dist/index.js',
+    'oracle-peoplesoft': '../../../../../packages/mcp-servers/oracle-peoplesoft/dist/index.js',
+    'oracle-opera': '../../../../../packages/mcp-servers/oracle-opera/dist/index.js',
+    // HCM & HR
+    'sap-successfactors': '../../../../../packages/mcp-servers/sap-successfactors/dist/index.js',
+    adp: '../../../../../packages/mcp-servers/adp/dist/index.js',
+    'ukg-kronos': '../../../../../packages/mcp-servers/ukg-kronos/dist/index.js',
+    'sap-concur': '../../../../../packages/mcp-servers/sap-concur/dist/index.js',
+    // Healthcare
+    'epic-fhir': '../../../../../packages/mcp-servers/epic-fhir/dist/index.js',
+    cerner: '../../../../../packages/mcp-servers/cerner/dist/index.js',
+    meditech: '../../../../../packages/mcp-servers/meditech/dist/index.js',
+    allscripts: '../../../../../packages/mcp-servers/allscripts/dist/index.js',
+    // Insurance
+    guidewire: '../../../../../packages/mcp-servers/guidewire/dist/index.js',
+    'duck-creek': '../../../../../packages/mcp-servers/duck-creek/dist/index.js',
+    'applied-epic': '../../../../../packages/mcp-servers/applied-epic/dist/index.js',
+    // Supply Chain
+    'manhattan-associates': '../../../../../packages/mcp-servers/manhattan-associates/dist/index.js',
+    'blue-yonder': '../../../../../packages/mcp-servers/blue-yonder/dist/index.js',
+    descartes: '../../../../../packages/mcp-servers/descartes/dist/index.js',
+    // Finance & Banking
+    fis: '../../../../../packages/mcp-servers/fis/dist/index.js',
+    finastra: '../../../../../packages/mcp-servers/finastra/dist/index.js',
+    temenos: '../../../../../packages/mcp-servers/temenos/dist/index.js',
+    blackline: '../../../../../packages/mcp-servers/blackline/dist/index.js',
+    quickbooks: '../../../../../packages/mcp-servers/quickbooks/dist/index.js',
+    // Commerce
+    shopify: '../../../../../packages/mcp-servers/shopify/dist/index.js',
+    magento: '../../../../../packages/mcp-servers/magento/dist/index.js',
+    // Telecom
+    amdocs: '../../../../../packages/mcp-servers/amdocs/dist/index.js',
+    'ericsson-bss': '../../../../../packages/mcp-servers/ericsson-bss/dist/index.js',
+    // Document Management
+    sharepoint: '../../../../../packages/mcp-servers/sharepoint/dist/index.js',
+    documentum: '../../../../../packages/mcp-servers/documentum/dist/index.js',
+    'ibm-filenet': '../../../../../packages/mcp-servers/ibm-filenet/dist/index.js',
+    box: '../../../../../packages/mcp-servers/box/dist/index.js',
+    // Government
+    'cgi-momentum': '../../../../../packages/mcp-servers/cgi-momentum/dist/index.js',
+    'tyler-technologies': '../../../../../packages/mcp-servers/tyler-technologies/dist/index.js',
+    // Education
+    'ellucian-banner': '../../../../../packages/mcp-servers/ellucian-banner/dist/index.js',
+    // Asset & Facilities
+    'ibm-maximo': '../../../../../packages/mcp-servers/ibm-maximo/dist/index.js',
+    'ibm-tririga': '../../../../../packages/mcp-servers/ibm-tririga/dist/index.js',
+    'ge-predix': '../../../../../packages/mcp-servers/ge-predix/dist/index.js',
+    // Procurement
+    'sap-ariba': '../../../../../packages/mcp-servers/sap-ariba/dist/index.js',
+    coupa: '../../../../../packages/mcp-servers/coupa/dist/index.js',
+    // Legacy / Mainframe
+    as400: '../../../../../packages/mcp-servers/as400/dist/index.js',
   };
 
   constructor() {
@@ -179,13 +350,22 @@ export class MCPClientManager extends EventEmitter {
     this.clients.set(id, instance);
 
     try {
-      // Create environment with connection string
-      const env: Record<string, string> = {
-        ...Object.fromEntries(
-          Object.entries(process.env).filter(([_, v]) => v !== undefined) as [string, string][]
-        ),
-        [serverConfig.envKey]: connectionString
-      };
+      // Create environment with connection parameters
+      const baseEnv: Record<string, string> = Object.fromEntries(
+        Object.entries(process.env).filter(([_, v]) => v !== undefined) as [string, string][]
+      );
+
+      let env: Record<string, string>;
+
+      if (config.connectionParams && Object.keys(config.connectionParams).length > 0) {
+        // New multi-env-var path: map form field values to env var names via schema
+        const mappedEnvVars = buildEnvVarsFromParams(type, config.connectionParams);
+        env = { ...baseEnv, ...mappedEnvVars };
+        console.log(`[MCP] Set ${Object.keys(mappedEnvVars).length} env vars for ${type}:`, Object.keys(mappedEnvVars));
+      } else {
+        // Legacy single-connection-string path
+        env = { ...baseEnv, [serverConfig.envKey]: connectionString };
+      }
 
       // Resolve command and args for local MCP servers
       let command = serverConfig.command;

@@ -3,30 +3,97 @@ export interface ConnectionConfig {
   id?: string;
   name: string;
   type: LegacySystemType;
-  host: string;
-  port: number;
+  host?: string;
+  port?: number;
   database?: string;
-  username: string;
-  password: string;
+  username?: string;
+  password?: string;
   ssl?: boolean;
   options?: Record<string, any>;
 }
 
 export type LegacySystemType =
+  // Databases
   | 'postgresql'
   | 'mysql'
   | 'oracle'
   | 'sqlserver'
   | 'sap-hana'
   | 'mongodb'
-  | 'salesforce'
-  | 'servicenow'
-  | 'jira'
-  | 'zendesk'
   | 'mariadb'
   | 'redis'
   | 'elasticsearch'
-  | 'workday';
+  | 'cassandra'
+  | 'couchdb'
+  | 'neo4j'
+  | 'dynamodb'
+  // CRM & Sales
+  | 'salesforce'
+  | 'hubspot'
+  | 'oracle-siebel'
+  | 'dynamics365'
+  // ITSM & Support
+  | 'servicenow'
+  | 'jira'
+  | 'zendesk'
+  // ERP
+  | 'netsuite'
+  | 'infor-cloudsuite'
+  | 'jd-edwards'
+  | 'epicor'
+  | 'sage-intacct'
+  | 'oracle-peoplesoft'
+  | 'oracle-opera'
+  // HCM & HR
+  | 'workday'
+  | 'sap-successfactors'
+  | 'adp'
+  | 'ukg-kronos'
+  | 'sap-concur'
+  // Healthcare
+  | 'epic-fhir'
+  | 'cerner'
+  | 'meditech'
+  | 'allscripts'
+  // Insurance
+  | 'guidewire'
+  | 'duck-creek'
+  | 'applied-epic'
+  // Supply Chain & Logistics
+  | 'manhattan-associates'
+  | 'blue-yonder'
+  | 'descartes'
+  // Finance & Banking
+  | 'fis'
+  | 'finastra'
+  | 'temenos'
+  | 'blackline'
+  | 'quickbooks'
+  // Commerce
+  | 'shopify'
+  | 'magento'
+  // Telecom
+  | 'amdocs'
+  | 'ericsson-bss'
+  // Document Management
+  | 'sharepoint'
+  | 'documentum'
+  | 'ibm-filenet'
+  | 'box'
+  // Government
+  | 'cgi-momentum'
+  | 'tyler-technologies'
+  // Education
+  | 'ellucian-banner'
+  // Asset & Facilities
+  | 'ibm-maximo'
+  | 'ibm-tririga'
+  | 'ge-predix'
+  // Procurement
+  | 'sap-ariba'
+  | 'coupa'
+  // Legacy / Mainframe
+  | 'as400';
 
 export interface ConnectionStatus {
   id: string;
