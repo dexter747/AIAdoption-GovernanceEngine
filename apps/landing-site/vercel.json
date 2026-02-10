@@ -1,8 +1,9 @@
 {
-  "buildCommand": "pnpm run build",
-  "installCommand": "pnpm install --no-frozen-lockfile",
+  "buildCommand": "cd ../.. && pnpm install && cd apps/landing-site && pnpm run build",
+  "installCommand": "cd ../.. && pnpm install",
   "framework": "nextjs",
   "regions": ["iad1"],
+  "outputDirectory": ".next",
   "env": {
     "NODE_ENV": "production"
   }
