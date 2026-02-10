@@ -175,7 +175,6 @@ export function Navbar() {
           </div>
         </div>
 
-        </div>
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-black">
