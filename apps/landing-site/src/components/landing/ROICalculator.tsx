@@ -28,31 +28,31 @@ export default function ROICalculator() {
           start: 'top 80%',
         },
         opacity: 0,
-        y: 30,
-        duration: 0.8,
-        ease: 'power3.out',
+        y: 20,
+        duration: 0.6,
+        ease: 'power2.out',
       });
 
       gsap.from('.roi-calculator', {
         scrollTrigger: {
           trigger: '.roi-calculator',
-          start: 'top 70%',
+          start: 'top 80%',
         },
         opacity: 0,
-        x: -50,
-        duration: 0.8,
-        ease: 'power3.out',
+        x: -30,
+        duration: 0.6,
+        ease: 'power2.out',
       });
 
       gsap.from('.roi-results', {
         scrollTrigger: {
           trigger: '.roi-results',
-          start: 'top 70%',
+          start: 'top 80%',
         },
         opacity: 0,
-        x: 50,
-        duration: 0.8,
-        ease: 'power3.out',
+        x: 30,
+        duration: 0.6,
+        ease: 'power2.out',
       });
     }, sectionRef);
 

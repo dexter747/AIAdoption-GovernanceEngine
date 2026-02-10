@@ -132,12 +132,13 @@ export function FeaturesSection() {
         gsap.from(cards, {
           scrollTrigger: {
             trigger: cardsRef.current,
-            start: 'top 70%',
+            start: 'top 80%',
           },
-          y: 40,
+          y: 30,
           opacity: 0,
           duration: 0.5,
-          stagger: 0.08,
+          stagger: 0.06,
+          ease: 'power2.out',
         });
       }
     }, sectionRef);

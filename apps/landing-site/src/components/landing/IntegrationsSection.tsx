@@ -96,12 +96,13 @@ export function IntegrationsSection() {
         gsap.from(cards, {
           scrollTrigger: {
             trigger: cardsRef.current,
-            start: 'top 70%',
+            start: 'top 80%',
           },
-          scale: 0.9,
+          y: 20,
           opacity: 0,
-          duration: 0.3,
-          stagger: 0.03,
+          duration: 0.4,
+          stagger: 0.02,
+          ease: 'power2.out',
         });
       }
     }, sectionRef);

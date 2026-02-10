@@ -121,12 +121,13 @@ export function PricingSection() {
         gsap.from(cards, {
           scrollTrigger: {
             trigger: cardsRef.current,
-            start: 'top 70%',
+            start: 'top 80%',
           },
-          y: 50,
+          y: 30,
           opacity: 0,
-          duration: 0.6,
-          stagger: 0.15,
+          duration: 0.5,
+          stagger: 0.1,
+          ease: 'power2.out',
         });
       }
     }, sectionRef);

@@ -76,12 +76,13 @@ export function TrustSection() {
         gsap.from(badges, {
           scrollTrigger: {
             trigger: badgesRef.current,
-            start: 'top 75%',
+            start: 'top 80%',
           },
-          scale: 0.9,
+          y: 20,
           opacity: 0,
-          duration: 0.4,
-          stagger: 0.08,
+          duration: 0.5,
+          stagger: 0.05,
+          ease: 'power2.out',
         });
       }
 
@@ -93,10 +94,11 @@ export function TrustSection() {
             trigger: logosRef.current,
             start: 'top 80%',
           },
-          y: 20,
+          y: 15,
           opacity: 0,
           duration: 0.4,
-          stagger: 0.05,
+          stagger: 0.04,
+          ease: 'power2.out',
         });
       }
     }, sectionRef);

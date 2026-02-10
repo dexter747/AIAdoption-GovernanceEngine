@@ -5,7 +5,7 @@ import { ArrowRight, Sparkles, Check, Zap } from 'lucide-react';
 
 export function CTASection() {
   return (
-    <section className="relative py-24 overflow-hidden bg-black dark:bg-white">
+    <section className="relative py-24 overflow-hidden bg-white dark:bg-black">
 
       <div className="relative max-w-5xl mx-auto px-6 text-center">
         {/* Badge */}
@@ -15,19 +15,19 @@ export function CTASection() {
         </div>
 
         {/* Headline */}
-        <h2 className="text-4xl md:text-6xl font-medium text-white dark:text-black mb-6 leading-tight">
+        <h2 className="text-4xl md:text-6xl font-medium text-black dark:text-white mb-6 leading-tight">
           Ready to transform your
           <br />
           legacy systems with AI?
         </h2>
 
         {/* Description */}
-        <p className="text-xl text-gray-400 dark:text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-xl text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto leading-relaxed">
           Join 2,500+ enterprises using AI Nexus to unlock insights, automate workflows, and save 89% on data access time.
         </p>
 
         {/* Benefits */}
-        <div className="flex flex-wrap items-center justify-center gap-6 mb-10 text-gray-300 dark:text-gray-600">
+        <div className="flex flex-wrap items-center justify-center gap-6 mb-10 text-gray-600 dark:text-gray-300">
           <div className="flex items-center gap-2">
             <Check className="w-5 h-5 text-blue-500" />
             <span className="text-sm font-medium">No credit card required</span>
@@ -54,14 +54,14 @@ export function CTASection() {
           </Link>
           <Link
             href="/contact"
-            className="px-8 py-4 bg-gray-800 dark:bg-gray-200 text-white dark:text-black rounded-xl hover:bg-gray-700 dark:hover:bg-gray-300 transition-all font-medium text-lg inline-flex items-center justify-center gap-3 border border-gray-700 dark:border-gray-300"
+            className="px-8 py-4 bg-gray-200 dark:bg-gray-800 text-black dark:text-white rounded-xl hover:bg-gray-300 dark:hover:bg-gray-700 transition-all font-medium text-lg inline-flex items-center justify-center gap-3 border border-gray-300 dark:border-gray-700"
           >
             Talk to Sales
           </Link>
         </div>
 
         {/* Trust indicators */}
-        <div className="mt-12 flex flex-wrap items-center justify-center gap-8 text-gray-400 dark:text-gray-600 text-sm">
+        <div className="mt-12 flex flex-wrap items-center justify-center gap-8 text-gray-600 dark:text-gray-400 text-sm">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-blue-500" />
             SOC 2 Type II Certified

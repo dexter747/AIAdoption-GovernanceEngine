@@ -70,21 +70,21 @@ export default function FAQSection() {
           start: 'top 80%',
         },
         opacity: 0,
-        y: 30,
-        duration: 0.8,
-        ease: 'power3.out',
+        y: 20,
+        duration: 0.6,
+        ease: 'power2.out',
       });
 
       gsap.from('.faq-item', {
         scrollTrigger: {
           trigger: '.faq-container',
-          start: 'top 70%',
+          start: 'top 80%',
         },
         opacity: 0,
-        y: 20,
-        duration: 0.6,
-        stagger: 0.1,
-        ease: 'power3.out',
+        y: 15,
+        duration: 0.5,
+        stagger: 0.06,
+        ease: 'power2.out',
       });
     }, sectionRef);
 

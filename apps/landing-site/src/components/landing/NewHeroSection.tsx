@@ -15,48 +15,48 @@ export default function HeroSection() {
       gsap.from('.hero-badge', {
         opacity: 0,
         y: -20,
-        duration: 0.6,
-        ease: 'power3.out',
+        duration: 0.5,
+        ease: 'power2.out',
       });
 
       gsap.from('.hero-title', {
         opacity: 0,
-        y: 30,
-        duration: 0.8,
-        delay: 0.2,
-        ease: 'power3.out',
+        y: 20,
+        duration: 0.6,
+        delay: 0.1,
+        ease: 'power2.out',
       });
 
       gsap.from('.hero-description', {
         opacity: 0,
-        y: 20,
-        duration: 0.8,
-        delay: 0.4,
-        ease: 'power3.out',
+        y: 15,
+        duration: 0.6,
+        delay: 0.2,
+        ease: 'power2.out',
       });
 
       gsap.from('.hero-cta', {
         opacity: 0,
-        y: 20,
-        duration: 0.8,
-        delay: 0.6,
-        ease: 'power3.out',
+        y: 15,
+        duration: 0.6,
+        delay: 0.3,
+        ease: 'power2.out',
       });
 
       gsap.from('.hero-stats', {
         opacity: 0,
-        y: 30,
-        duration: 0.8,
-        delay: 0.8,
-        ease: 'power3.out',
+        y: 20,
+        duration: 0.6,
+        delay: 0.4,
+        ease: 'power2.out',
       });
 
       gsap.from('.hero-visual', {
         opacity: 0,
-        scale: 0.95,
-        duration: 1,
-        delay: 0.4,
-        ease: 'power3.out',
+        scale: 0.98,
+        duration: 0.7,
+        delay: 0.2,
+        ease: 'power2.out',
       });
 
       // Floating animation for visual elements
