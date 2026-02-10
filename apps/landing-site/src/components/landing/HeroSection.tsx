@@ -11,29 +11,29 @@ const trustBadges = [
 
 export function HeroSection() {
   return (
-    <section className="relative pt-20 pb-20 lg:pt-28 lg:pb-28">
+    <section className="relative pt-12 pb-16 lg:pt-20 lg:pb-20">
       <div className="max-w-6xl mx-auto px-6">
         <div className="text-center max-w-3xl mx-auto">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950 border border-blue-100 dark:border-blue-900 text-sm font-medium text-blue-700 dark:text-blue-300 mb-8 animate-fade-in">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950 border border-blue-100 dark:border-blue-900 text-sm font-medium text-blue-700 dark:text-blue-300 mb-6">
             <span className="flex h-1.5 w-1.5 rounded-full bg-blue-500" />
             Now with GPT-4o, Claude 3.5 &amp; Gemini 2
           </div>
 
           {/* Heading */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-medium text-black dark:text-white mb-6 leading-[1.1] tracking-tight animate-slide-up">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-medium text-black dark:text-white mb-6 leading-[1.1] tracking-tight">
             Bring AI to Your{' '}
             <span className="text-blue-500">Legacy Systems</span>
           </h1>
 
           {/* Subheading */}
-          <p className="text-lg text-gray-600 dark:text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed animate-slide-up delay-100">
+          <p className="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto leading-relaxed">
             Connect your databases and enterprise systems to powerful AI models.
             Query your data in natural language — no code required.
           </p>
 
           {/* CTA */}
-          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center animate-slide-up delay-200">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
             <Link
               href="/download"
               className="w-full sm:w-auto px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium text-sm inline-flex items-center justify-center gap-2"
@@ -50,7 +50,7 @@ export function HeroSection() {
           </div>
 
           {/* Trust */}
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm text-gray-500 dark:text-gray-400 animate-fade-in delay-300">
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm text-gray-500 dark:text-gray-400">
             {trustBadges.map(({ icon: Icon, text }) => (
               <span key={text} className="flex items-center gap-1.5">
                 <Icon className="w-3.5 h-3.5 text-blue-500" />
@@ -61,9 +61,9 @@ export function HeroSection() {
         </div>
 
         {/* Preview */}
-        <div className="mt-16 animate-slide-up delay-400">
+        <div className="mt-12">
           <div className="relative mx-auto max-w-4xl">
-            <div className="rounded-xl overflow-hidden border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm">
+            <div className="rounded-xl overflow-hidden border border-gray-200 dark:border-gray-800 bg-white dark:bg-black shadow-sm">
               {/* Window Chrome */}
               <div className="bg-gray-100 dark:bg-gray-900 px-4 py-2.5 flex items-center gap-2 border-b border-gray-200 dark:border-gray-800">
                 <div className="flex gap-1.5">
@@ -78,18 +78,18 @@ export function HeroSection() {
                 </div>
               </div>
               {/* App Preview */}
-              <div className="p-8 bg-gray-950 min-h-[280px] flex flex-col items-center justify-center gap-4">
-                <div className="flex items-center gap-2 text-gray-500 text-xs font-medium">
+              <div className="p-8 bg-black dark:bg-gray-900 min-h-[280px] flex flex-col items-center justify-center gap-4">
+                <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 text-xs font-medium">
                   <Terminal className="w-3.5 h-3.5" />
                   Connected to production_db (PostgreSQL)
                 </div>
-                <div className="max-w-lg w-full bg-gray-900 rounded-lg border border-gray-800 px-4 py-3">
-                  <p className="text-gray-300 text-sm font-medium">
+                <div className="max-w-lg w-full bg-gray-900 dark:bg-gray-800 rounded-lg border border-gray-800 dark:border-gray-700 px-4 py-3">
+                  <p className="text-gray-300 dark:text-gray-200 text-sm font-medium">
                     &quot;Show me all customers who haven&apos;t ordered in 30 days&quot;
                   </p>
                 </div>
                 <div className="flex items-center gap-2 text-blue-400 text-xs font-medium">
-                  <div className="w-1 h-1 rounded-full bg-blue-400 animate-pulse" />
+                  <div className="w-1 h-1 rounded-full bg-blue-400" />
                   Generating SQL with GPT-4o...
                 </div>
               </div>

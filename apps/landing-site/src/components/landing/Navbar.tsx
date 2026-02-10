@@ -64,46 +64,45 @@ export function Navbar() {
 
   return (
     <>
-      <div className="h-20" />
+      <div className="h-16" />
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="h-16 flex items-center justify-between">
+          <div className="h-16 flex items-center justify-between gap-4">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-blue-500 flex items-center justify-center">
-                <span className="text-white text-sm font-bold">AI</span>
+            <Link href="/" className="flex items-center gap-2 flex-shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center">
+                <span className="text-white text-xs font-bold">AI</span>
               </div>
-              <span className="text-base font-semibold text-black dark:text-white">AI Nexus</span>
+              <span className="text-sm font-bold text-black dark:text-white whitespace-nowrap">AI Nexus</span>
             </Link>
 
             {/* Desktop Nav */}
-            <div className="hidden md:flex items-center gap-2">
+            <div className="hidden md:flex items-center gap-1 flex-shrink-0">
               {navLinks.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+                  className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 whitespace-nowrap"
                 >
                   {item.name}
                 </Link>
               ))}
             </div>
-          </div>
 
-          {/* Right side */}
-          <div className="flex items-center gap-3">
+            {/* Right side */}
+            <div className="flex items-center gap-2 flex-shrink-0">
             {/* Dark mode toggle */}
             <button
               onClick={() => setTheme(isDark ? 'light' : 'dark')}
-              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex-shrink-0"
               aria-label="Toggle theme"
             >
-              {isDark ? <Sun className="w-5 h-5 text-gray-700 dark:text-gray-300" /> : <Moon className="w-5 h-5 text-gray-700 dark:text-gray-300" />}
+              {isDark ? <Sun className="w-4 h-4 text-gray-700 dark:text-gray-300" /> : <Moon className="w-4 h-4 text-gray-700 dark:text-gray-300" />}
             </button>
 
             <Link
               href="/download"
-              className="hidden sm:inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 whitespace-nowrap"
             >
               <Download className="w-4 h-4" />
               Download
@@ -160,18 +159,19 @@ export function Navbar() {
             ) : (
               <Link
                 href="/login"
-                className="px-5 py-2 text-sm font-medium bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all"
+                className="px-4 py-2 text-sm font-medium bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all whitespace-nowrap"
               >
                 Sign In
               </Link>
             )}
 
             <button
-              className="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex-shrink-0"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
-              {mobileMenuOpen ? <X className="w-6 h-6 text-gray-700 dark:text-gray-300" /> : <Menu className="w-6 h-6 text-gray-700 dark:text-gray-300" />}
+              {mobileMenuOpen ? <X className="w-5 h-5 text-gray-700 dark:text-gray-300" /> : <Menu className="w-5 h-5 text-gray-700 dark:text-gray-300" />}
             </button>
+          </div>
           </div>
         </div>
 
