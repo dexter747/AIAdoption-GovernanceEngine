@@ -187,15 +187,15 @@ const ChatHistorySidebar: React.FC<ChatHistorySidebarProps> = ({
           <div className="grid grid-cols-3 gap-2 text-xs">
             <div className="text-center p-2 rounded-xl bg-white/[0.03] border border-white/5">
               <div className="text-gray-500 mb-0.5">Chats</div>
-              <div className="font-semibold text-white">{stats.totalConversations}</div>
+              <div className="font-medium text-white">{stats.totalConversations}</div>
             </div>
             <div className="text-center p-2 rounded-xl bg-white/[0.03] border border-white/5">
               <div className="text-gray-500 mb-0.5">Tokens</div>
-              <div className="font-semibold text-white">{(stats.totalTokens / 1000).toFixed(1)}K</div>
+              <div className="font-medium text-white">{(stats.totalTokens / 1000).toFixed(1)}K</div>
             </div>
             <div className="text-center p-2 rounded-xl bg-white/[0.03] border border-white/5">
               <div className="text-gray-500 mb-0.5">Cost</div>
-              <div className="font-semibold text-emerald-400">{formatCost(stats.totalCost)}</div>
+              <div className="font-medium text-emerald-400">{formatCost(stats.totalCost)}</div>
             </div>
           </div>
         </div>
@@ -246,7 +246,7 @@ const ChatHistorySidebar: React.FC<ChatHistorySidebarProps> = ({
             {/* Pinned Conversations */}
             {pinnedConversations.length > 0 && (
               <>
-                <div className="px-3 py-2 text-[10px] font-bold text-gray-600 uppercase tracking-wider">
+                <div className="px-3 py-2 text-[10px] font-medium text-gray-600 uppercase tracking-wider">
                   Pinned
                 </div>
                 {pinnedConversations.map((conversation) => (
@@ -270,7 +270,7 @@ const ChatHistorySidebar: React.FC<ChatHistorySidebarProps> = ({
             {unpinnedConversations.length > 0 && (
               <>
                 {pinnedConversations.length > 0 && (
-                  <div className="px-3 py-2 text-[10px] font-bold text-gray-600 uppercase tracking-wider mt-2">
+                  <div className="px-3 py-2 text-[10px] font-medium text-gray-600 uppercase tracking-wider mt-2">
                     Recent
                   </div>
                 )}

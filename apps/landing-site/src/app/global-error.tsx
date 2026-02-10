@@ -25,7 +25,7 @@ export default function GlobalError({
               <Sparkles className="w-16 h-16 text-red-500" />
             </div>
             
-            <h1 className="text-2xl font-bold text-black dark:text-white mb-2">
+            <h1 className="text-2xl font-medium text-black dark:text-white mb-2">
               Something went wrong!
             </h1>
             <p className="text-gray-500 mb-8">

@@ -31,9 +31,9 @@ export function Footer() {
           <div className="md:col-span-2">
             <Link href="/" className="flex items-center gap-2.5 mb-3">
               <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
-                <span className="text-white text-sm font-bold">AI</span>
+                <span className="text-white text-sm font-medium">AI</span>
               </div>
-              <span className="text-base font-semibold text-gray-900 dark:text-white">AI Nexus</span>
+              <span className="text-base font-medium text-gray-900 dark:text-white">AI Nexus</span>
             </Link>
             <p className="text-sm text-gray-500 dark:text-gray-400 font-medium max-w-xs leading-relaxed">
               Bringing the power of AI to your legacy systems. Connect, query, and transform your data.
@@ -42,7 +42,7 @@ export function Footer() {
 
           {/* Product */}
           <div>
-            <h4 className="text-xs font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-3">Product</h4>
+            <h4 className="text-xs font-medium text-gray-900 dark:text-white uppercase tracking-wider mb-3">Product</h4>
             <ul className="space-y-2">
               {footerLinks.product.map((item) => (
                 <li key={item.name}>
@@ -56,7 +56,7 @@ export function Footer() {
 
           {/* Resources */}
           <div>
-            <h4 className="text-xs font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-3">Resources</h4>
+            <h4 className="text-xs font-medium text-gray-900 dark:text-white uppercase tracking-wider mb-3">Resources</h4>
             <ul className="space-y-2">
               {footerLinks.resources.map((item) => (
                 <li key={item.name}>
@@ -70,7 +70,7 @@ export function Footer() {
 
           {/* Legal */}
           <div>
-            <h4 className="text-xs font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-3">Legal</h4>
+            <h4 className="text-xs font-medium text-gray-900 dark:text-white uppercase tracking-wider mb-3">Legal</h4>
             <ul className="space-y-2">
               {footerLinks.legal.map((item) => (
                 <li key={item.name}>

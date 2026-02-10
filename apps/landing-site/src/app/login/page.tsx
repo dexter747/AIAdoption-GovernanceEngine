@@ -44,7 +44,7 @@ function LoginContent() {
           <div className="flex items-center justify-center gap-2 mb-4">
             <Sparkles className="w-10 h-10 text-blue-500" />
           </div>
-          <h1 className="text-2xl font-bold text-black dark:text-white">
+          <h1 className="text-2xl font-medium text-black dark:text-white">
             AI Nexus
           </h1>
           <p className="text-gray-500 text-sm mt-2">
@@ -55,7 +55,7 @@ function LoginContent() {
         <div className="space-y-6">
           {/* Heading */}
           <div className="text-center space-y-2">
-            <h2 className="text-xl font-semibold text-black dark:text-white">Welcome Back</h2>
+            <h2 className="text-xl font-medium text-black dark:text-white">Welcome Back</h2>
             <p className="text-gray-500 text-sm">
               Sign in to access your account
             </p>

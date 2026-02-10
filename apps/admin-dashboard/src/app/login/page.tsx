@@ -20,7 +20,7 @@ export default function AdminLoginPage() {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
             <Sparkles className="w-8 h-8 text-blue-500" />
-            <span className="text-2xl font-semibold text-black">AI Nexus</span>
+            <span className="text-2xl font-medium text-black">AI Nexus</span>
           </div>
           <h1 className="text-xl font-medium text-black mb-2">Admin Portal</h1>
           <p className="text-sm text-gray-500">Sign in with your admin account</p>

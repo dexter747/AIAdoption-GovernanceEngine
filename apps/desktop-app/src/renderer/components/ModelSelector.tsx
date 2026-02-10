@@ -206,7 +206,7 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <span className="text-xs font-semibold text-emerald-400">Free Model</span>
+              <span className="text-xs font-medium text-emerald-400">Free Model</span>
             </div>
           )}
         </div>

@@ -124,7 +124,7 @@ export default function ConnectionsPageEnhanced() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-black dark:text-white">MCP Connections</h1>
+          <h1 className="text-2xl font-medium text-black dark:text-white">MCP Connections</h1>
           <p className="text-gray-500 mt-1">
             Manage Model Context Protocol connections to databases and systems
           </p>
@@ -191,7 +191,7 @@ export default function ConnectionsPageEnhanced() {
                     {/* Connection Info */}
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-lg font-semibold text-black dark:text-white">
+                        <h3 className="text-lg font-medium text-black dark:text-white">
                           {conn.name}
                         </h3>
                         {getTypeBadge(conn.type)}
@@ -357,7 +357,7 @@ function AddConnectionModal({ onClose, onSuccess }: { onClose: () => void; onSuc
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white dark:bg-gray-900 rounded-xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6 border-b border-gray-200 dark:border-gray-800">
-          <h2 className="text-xl font-bold text-black dark:text-white">Add MCP Connection</h2>
+          <h2 className="text-xl font-medium text-black dark:text-white">Add MCP Connection</h2>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
@@ -396,7 +396,7 @@ function AddConnectionModal({ onClose, onSuccess }: { onClose: () => void; onSuc
           {Array.from(groupedFields.entries()).map(([groupName, fields]) => (
             <fieldset key={groupName} className="space-y-3">
               {groupedFields.size > 1 && (
-                <legend className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">
+                <legend className="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">
                   {groupName}
                 </legend>
               )}

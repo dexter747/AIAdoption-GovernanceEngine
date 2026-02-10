@@ -42,7 +42,7 @@ export default function ConnectionsPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-black dark:text-white">Connections</h1>
+          <h1 className="text-2xl font-medium text-black dark:text-white">Connections</h1>
           <p className="text-gray-500 mt-1">Manage your database connections</p>
         </div>
         <button 
@@ -84,7 +84,7 @@ export default function ConnectionsPage() {
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="text-lg font-semibold text-black dark:text-white">{conn.name}</h3>
+                    <h3 className="text-lg font-medium text-black dark:text-white">{conn.name}</h3>
                     <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${
                       conn.status === 'connected' 
                         ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' 

@@ -95,7 +95,7 @@ export default function PaymentsPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-black dark:text-white">Payments</h1>
+          <h1 className="text-2xl font-medium text-black dark:text-white">Payments</h1>
           <p className="text-gray-500 mt-1">Manage all payment transactions</p>
         </div>
         <button
@@ -146,25 +146,25 @@ export default function PaymentsPage() {
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-4">
           <div className="flex items-center gap-2">
             <DollarSign className="w-5 h-5 text-green-500" />
-            <p className="text-2xl font-bold text-green-500">${summary.totalRevenue.toFixed(2)}</p>
+            <p className="text-2xl font-medium text-green-500">${summary.totalRevenue.toFixed(2)}</p>
           </div>
           <p className="text-sm text-gray-500">Total Revenue</p>
         </div>
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-4">
-          <p className="text-2xl font-bold text-black dark:text-white">{total}</p>
+          <p className="text-2xl font-medium text-black dark:text-white">{total}</p>
           <p className="text-sm text-gray-500">Total Transactions</p>
         </div>
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-4">
           <div className="flex items-center gap-2">
             <Clock className="w-5 h-5 text-yellow-500" />
-            <p className="text-2xl font-bold text-yellow-500">${summary.pendingAmount.toFixed(2)}</p>
+            <p className="text-2xl font-medium text-yellow-500">${summary.pendingAmount.toFixed(2)}</p>
           </div>
           <p className="text-sm text-gray-500">Pending</p>
         </div>
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-4">
           <div className="flex items-center gap-2">
             <RefreshCw className="w-5 h-5 text-gray-500" />
-            <p className="text-2xl font-bold text-gray-500">${summary.refundedAmount.toFixed(2)}</p>
+            <p className="text-2xl font-medium text-gray-500">${summary.refundedAmount.toFixed(2)}</p>
           </div>
           <p className="text-sm text-gray-500">Refunded</p>
         </div>
@@ -206,7 +206,7 @@ export default function PaymentsPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="text-sm font-semibold text-black dark:text-white">${payment.amount.toFixed(2)}</span>
+                      <span className="text-sm font-medium text-black dark:text-white">${payment.amount.toFixed(2)}</span>
                     </td>
                     <td className="px-6 py-4">
                       <span className={`px-2 py-1 text-xs font-medium rounded-full ${

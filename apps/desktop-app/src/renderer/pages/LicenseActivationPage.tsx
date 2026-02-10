@@ -81,7 +81,7 @@ export default function LicenseActivationPage() {
   return (
     <div className="p-8 max-w-2xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-black dark:text-white flex items-center gap-2">
+        <h1 className="text-2xl font-medium text-black dark:text-white flex items-center gap-2">
           <Key className="w-6 h-6 text-blue-500" />
           License Management
         </h1>

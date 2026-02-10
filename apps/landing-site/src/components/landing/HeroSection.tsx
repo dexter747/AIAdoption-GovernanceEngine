@@ -21,13 +21,13 @@ export function HeroSection() {
           </div>
 
           {/* Heading */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold text-gray-900 dark:text-white mb-6 leading-[1.1] tracking-tight animate-slide-up">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-medium text-black dark:text-white mb-6 leading-[1.1] tracking-tight animate-slide-up">
             Bring AI to Your{' '}
-            <span className="text-blue-600 dark:text-blue-400">Legacy Systems</span>
+            <span className="text-blue-500">Legacy Systems</span>
           </h1>
 
           {/* Subheading */}
-          <p className="text-lg text-gray-500 dark:text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed font-medium animate-slide-up delay-100">
+          <p className="text-lg text-gray-600 dark:text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed animate-slide-up delay-100">
             Connect your databases and enterprise systems to powerful AI models.
             Query your data in natural language — no code required.
           </p>
@@ -36,21 +36,21 @@ export function HeroSection() {
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center animate-slide-up delay-200">
             <Link
               href="/download"
-              className="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm inline-flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium text-sm inline-flex items-center justify-center gap-2"
             >
               Download Free
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
               href="#features"
-              className="w-full sm:w-auto px-6 py-3 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-medium text-sm inline-flex items-center justify-center gap-2 border border-gray-200 dark:border-gray-700"
+              className="w-full sm:w-auto px-6 py-3 bg-white dark:bg-black text-black dark:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors font-medium text-sm inline-flex items-center justify-center gap-2 border border-gray-300 dark:border-gray-700"
             >
               Learn More
             </Link>
           </div>
 
           {/* Trust */}
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm text-gray-400 dark:text-gray-500 font-medium animate-fade-in delay-300">
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm text-gray-500 dark:text-gray-400 animate-fade-in delay-300">
             {trustBadges.map(({ icon: Icon, text }) => (
               <span key={text} className="flex items-center gap-1.5">
                 <Icon className="w-3.5 h-3.5 text-blue-500" />
@@ -65,14 +65,14 @@ export function HeroSection() {
           <div className="relative mx-auto max-w-4xl">
             <div className="rounded-xl overflow-hidden border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm">
               {/* Window Chrome */}
-              <div className="bg-gray-50 dark:bg-gray-800 px-4 py-2.5 flex items-center gap-2 border-b border-gray-200 dark:border-gray-700">
+              <div className="bg-gray-100 dark:bg-gray-900 px-4 py-2.5 flex items-center gap-2 border-b border-gray-200 dark:border-gray-800">
                 <div className="flex gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-full bg-gray-300 dark:bg-gray-600" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-gray-300 dark:bg-gray-600" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-gray-300 dark:bg-gray-600" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-gray-400" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-gray-400" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-gray-400" />
                 </div>
                 <div className="flex-1 flex items-center justify-center">
-                  <div className="px-3 py-0.5 rounded bg-gray-100 dark:bg-gray-700 text-xs text-gray-400 dark:text-gray-500 font-medium">
+                  <div className="px-3 py-0.5 rounded bg-gray-200 dark:bg-gray-800 text-xs text-gray-600 dark:text-gray-400">
                     AI Nexus
                   </div>
                 </div>

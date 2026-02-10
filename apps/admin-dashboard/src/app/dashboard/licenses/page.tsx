@@ -151,7 +151,7 @@ export default function LicensesPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-black dark:text-white flex items-center gap-2">
+          <h1 className="text-2xl font-medium text-black dark:text-white flex items-center gap-2">
             <Key className="w-6 h-6 text-blue-500" />
             Licenses
           </h1>
@@ -184,7 +184,7 @@ export default function LicensesPage() {
                 <Key className="w-5 h-5 text-blue-500" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-black dark:text-white">{stats.total}</p>
+                <p className="text-2xl font-medium text-black dark:text-white">{stats.total}</p>
                 <p className="text-sm text-gray-500">Total Licenses</p>
               </div>
             </div>
@@ -195,7 +195,7 @@ export default function LicensesPage() {
                 <CheckCircle className="w-5 h-5 text-green-500" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-black dark:text-white">{stats.active}</p>
+                <p className="text-2xl font-medium text-black dark:text-white">{stats.active}</p>
                 <p className="text-sm text-gray-500">Active</p>
               </div>
             </div>
@@ -206,7 +206,7 @@ export default function LicensesPage() {
                 <XCircle className="w-5 h-5 text-red-500" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-black dark:text-white">{stats.expired}</p>
+                <p className="text-2xl font-medium text-black dark:text-white">{stats.expired}</p>
                 <p className="text-sm text-gray-500">Expired</p>
               </div>
             </div>
@@ -217,7 +217,7 @@ export default function LicensesPage() {
                 <Crown className="w-5 h-5 text-purple-500" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-black dark:text-white">{stats.byTier.pro + stats.byTier.enterprise}</p>
+                <p className="text-2xl font-medium text-black dark:text-white">{stats.byTier.pro + stats.byTier.enterprise}</p>
                 <p className="text-sm text-gray-500">Pro & Enterprise</p>
               </div>
             </div>
@@ -419,7 +419,7 @@ export default function LicensesPage() {
       {showCreateModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white dark:bg-gray-900 rounded-xl p-6 max-w-md w-full mx-4">
-            <h2 className="text-xl font-bold text-black dark:text-white mb-4">Create License</h2>
+            <h2 className="text-xl font-medium text-black dark:text-white mb-4">Create License</h2>
             <p className="text-gray-500 mb-4">
               License creation requires user selection. Please use the Users page to create licenses for specific users.
             </p>

@@ -57,7 +57,7 @@ export default function PricingPage() {
     <div className="p-8">
       {/* Header */}
       <div className="text-center mb-12">
-        <h1 className="text-2xl font-bold text-black dark:text-white">Pricing Plans</h1>
+        <h1 className="text-2xl font-medium text-black dark:text-white">Pricing Plans</h1>
         <p className="text-gray-500 mt-2">Choose the plan that's right for you</p>
       </div>
 
@@ -82,9 +82,9 @@ export default function PricingPage() {
             )}
 
             <div className="text-center mb-6">
-              <h3 className="text-lg font-semibold text-black dark:text-white">{plan.name}</h3>
+              <h3 className="text-lg font-medium text-black dark:text-white">{plan.name}</h3>
               <div className="mt-2">
-                <span className="text-3xl font-bold text-black dark:text-white">{plan.price}</span>
+                <span className="text-3xl font-medium text-black dark:text-white">{plan.price}</span>
                 <span className="text-gray-500">{plan.period}</span>
               </div>
               <p className="text-sm text-gray-500 mt-2">{plan.description}</p>

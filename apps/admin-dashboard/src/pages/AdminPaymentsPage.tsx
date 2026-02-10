@@ -204,7 +204,7 @@ export default function AdminPaymentsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Payments & Subscriptions</h1>
+          <h1 className="text-3xl font-medium">Payments & Subscriptions</h1>
           <p className="text-muted-foreground mt-2">
             Manage payments, subscriptions, and billing
           </p>
@@ -222,7 +222,7 @@ export default function AdminPaymentsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Total Revenue</p>
-                <p className="text-2xl font-bold mt-1">{formatCurrency(stats.totalRevenue)}</p>
+                <p className="text-2xl font-medium mt-1">{formatCurrency(stats.totalRevenue)}</p>
               </div>
               <DollarSign className="w-8 h-8 text-primary" />
             </div>
@@ -233,7 +233,7 @@ export default function AdminPaymentsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">MRR</p>
-                <p className="text-2xl font-bold mt-1 text-green-600">{formatCurrency(stats.mrr)}</p>
+                <p className="text-2xl font-medium mt-1 text-green-600">{formatCurrency(stats.mrr)}</p>
               </div>
               <RefreshCw className="w-8 h-8 text-green-600" />
             </div>
@@ -244,7 +244,7 @@ export default function AdminPaymentsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Active Subscriptions</p>
-                <p className="text-2xl font-bold mt-1">{stats.activeSubscriptions}</p>
+                <p className="text-2xl font-medium mt-1">{stats.activeSubscriptions}</p>
               </div>
               <CheckCircle className="w-8 h-8 text-primary" />
             </div>
@@ -255,7 +255,7 @@ export default function AdminPaymentsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Past Due</p>
-                <p className="text-2xl font-bold mt-1 text-yellow-600">{stats.pastDue}</p>
+                <p className="text-2xl font-medium mt-1 text-yellow-600">{stats.pastDue}</p>
               </div>
               <AlertCircle className="w-8 h-8 text-yellow-600" />
             </div>
@@ -355,7 +355,7 @@ export default function AdminPaymentsPage() {
                           </div>
                         </td>
                         <td className="p-4">
-                          <span className="font-semibold">{formatCurrency(payment.amount)}</span>
+                          <span className="font-medium">{formatCurrency(payment.amount)}</span>
                         </td>
                         <td className="p-4">
                           <span className="text-sm">{payment.plan}</span>
@@ -430,7 +430,7 @@ export default function AdminPaymentsPage() {
                           </Badge>
                         </td>
                         <td className="p-4">
-                          <span className="font-semibold">{formatCurrency(subscription.mrr)}</span>
+                          <span className="font-medium">{formatCurrency(subscription.mrr)}</span>
                         </td>
                         <td className="p-4">
                           <div className="text-sm">

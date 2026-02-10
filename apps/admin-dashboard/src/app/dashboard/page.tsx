@@ -184,7 +184,7 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-black dark:text-white">Dashboard</h1>
+          <h1 className="text-2xl font-medium text-black dark:text-white">Dashboard</h1>
           <p className="text-gray-500 mt-1">Overview of your platform analytics and metrics</p>
         </div>
         <button
@@ -228,7 +228,7 @@ export default function DashboardPage() {
                 {stat.change}
               </span>
             </div>
-            <p className="text-2xl font-bold text-black dark:text-white">{stat.value}</p>
+            <p className="text-2xl font-medium text-black dark:text-white">{stat.value}</p>
             <p className="text-sm text-gray-500 mt-1">{stat.name}</p>
           </div>
         ))}
@@ -239,7 +239,7 @@ export default function DashboardPage() {
         {/* User Signups Chart */}
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-black dark:text-white">User Signups</h3>
+            <h3 className="font-medium text-black dark:text-white">User Signups</h3>
             <span className="text-xs text-gray-500">Last 14 days</span>
           </div>
           {chartData?.userChartData ? (
@@ -252,7 +252,7 @@ export default function DashboardPage() {
         {/* Revenue Chart */}
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-black dark:text-white">Revenue</h3>
+            <h3 className="font-medium text-black dark:text-white">Revenue</h3>
             <span className="text-xs text-gray-500">Last 14 days</span>
           </div>
           {chartData?.revenueChartData ? (
@@ -265,7 +265,7 @@ export default function DashboardPage() {
         {/* Downloads Chart */}
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-black dark:text-white">Downloads</h3>
+            <h3 className="font-medium text-black dark:text-white">Downloads</h3>
             <span className="text-xs text-gray-500">Last 14 days</span>
           </div>
           {chartData?.downloadChartData ? (
@@ -282,7 +282,7 @@ export default function DashboardPage() {
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl p-6">
           <div className="flex items-center gap-2 mb-6">
             <BarChart3 className="w-5 h-5 text-gray-400" />
-            <h3 className="font-semibold text-black dark:text-white">Plan Distribution</h3>
+            <h3 className="font-medium text-black dark:text-white">Plan Distribution</h3>
           </div>
           {chartData?.planChartData && chartData.planChartData.some(d => d.value > 0) ? (
             <PlanDistribution data={chartData.planChartData} />
@@ -295,7 +295,7 @@ export default function DashboardPage() {
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl p-6">
           <div className="flex items-center gap-2 mb-6">
             <Download className="w-5 h-5 text-gray-400" />
-            <h3 className="font-semibold text-black dark:text-white">Download Platforms</h3>
+            <h3 className="font-medium text-black dark:text-white">Download Platforms</h3>
           </div>
           {chartData?.platformChartData && chartData.platformChartData.some(d => d.value > 0) ? (
             <PlanDistribution data={chartData.platformChartData} />
@@ -310,7 +310,7 @@ export default function DashboardPage() {
         {/* Recent Users */}
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl">
           <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-black dark:text-white">Recent Users</h2>
+            <h2 className="text-lg font-medium text-black dark:text-white">Recent Users</h2>
             <a href="/dashboard/users" className="text-sm text-blue-500 hover:text-blue-600">View All</a>
           </div>
           <div className="p-4">
@@ -347,7 +347,7 @@ export default function DashboardPage() {
         {/* Recent Payments */}
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl">
           <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-black dark:text-white">Recent Payments</h2>
+            <h2 className="text-lg font-medium text-black dark:text-white">Recent Payments</h2>
             <a href="/dashboard/payments" className="text-sm text-blue-500 hover:text-blue-600">View All</a>
           </div>
           <div className="p-4">
@@ -371,7 +371,7 @@ export default function DashboardPage() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-semibold text-black dark:text-white">${(payment.amount / 100).toFixed(2)}</p>
+                      <p className="text-sm font-medium text-black dark:text-white">${(payment.amount / 100).toFixed(2)}</p>
                       <p className="text-xs text-gray-400">{payment.date}</p>
                     </div>
                   </div>

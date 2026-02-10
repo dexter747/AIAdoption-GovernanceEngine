@@ -167,7 +167,7 @@ export default function AdminUsersPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">User Management</h1>
+          <h1 className="text-3xl font-medium">User Management</h1>
           <p className="text-muted-foreground mt-2">
             Manage users, roles, and permissions
           </p>
@@ -185,7 +185,7 @@ export default function AdminUsersPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Total Users</p>
-                <p className="text-2xl font-bold mt-1">{stats.total}</p>
+                <p className="text-2xl font-medium mt-1">{stats.total}</p>
               </div>
               <Users className="w-8 h-8 text-primary" />
             </div>
@@ -196,7 +196,7 @@ export default function AdminUsersPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Active</p>
-                <p className="text-2xl font-bold mt-1 text-green-600">{stats.active}</p>
+                <p className="text-2xl font-medium mt-1 text-green-600">{stats.active}</p>
               </div>
               <UserCheck className="w-8 h-8 text-green-600" />
             </div>
@@ -207,7 +207,7 @@ export default function AdminUsersPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Suspended</p>
-                <p className="text-2xl font-bold mt-1 text-yellow-600">{stats.suspended}</p>
+                <p className="text-2xl font-medium mt-1 text-yellow-600">{stats.suspended}</p>
               </div>
               <UserX className="w-8 h-8 text-yellow-600" />
             </div>
@@ -218,7 +218,7 @@ export default function AdminUsersPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Total Revenue</p>
-                <p className="text-2xl font-bold mt-1">{formatCurrency(stats.revenue)}</p>
+                <p className="text-2xl font-medium mt-1">{formatCurrency(stats.revenue)}</p>
               </div>
               <Crown className="w-8 h-8 text-primary" />
             </div>

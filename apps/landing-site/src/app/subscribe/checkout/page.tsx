@@ -58,7 +58,7 @@ function CheckoutContent() {
           {/* Order Summary */}
           <div className="order-2 lg:order-1">
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
+              <h2 className="text-xl font-medium text-gray-900 dark:text-white mb-6">
                 Order Summary
               </h2>
 
@@ -77,8 +77,8 @@ function CheckoutContent() {
                 </div>
                 <hr className="border-gray-200 dark:border-gray-700" />
                 <div className="flex justify-between text-lg">
-                  <span className="font-semibold text-gray-900 dark:text-white">Total</span>
-                  <span className="font-bold text-gray-900 dark:text-white">
+                  <span className="font-medium text-gray-900 dark:text-white">Total</span>
+                  <span className="font-medium text-gray-900 dark:text-white">
                     ${amount.toFixed(2)}/{cycle === 'yearly' ? 'yr' : 'mo'}
                   </span>
                 </div>
@@ -118,7 +118,7 @@ function CheckoutContent() {
           {/* Payment Form */}
           <div className="order-1 lg:order-2">
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
+              <h2 className="text-xl font-medium text-gray-900 dark:text-white mb-6">
                 Payment Details
               </h2>
 
@@ -207,7 +207,7 @@ function CheckoutContent() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {loading ? (
                     <>

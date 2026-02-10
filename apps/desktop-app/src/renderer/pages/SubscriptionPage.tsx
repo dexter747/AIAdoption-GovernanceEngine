@@ -173,7 +173,7 @@ export default function SubscriptionPage() {
     <div className="p-8 space-y-8 max-w-7xl mx-auto">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold">Subscription & Billing</h1>
+        <h1 className="text-3xl font-medium">Subscription & Billing</h1>
         <p className="text-muted-foreground mt-2">
           Manage your subscription, view invoices, and upgrade your plan
         </p>
@@ -205,7 +205,7 @@ export default function SubscriptionPage() {
                   </CardDescription>
                 </div>
                 <div className={cn('px-4 py-2 rounded-lg', planDetails.bg)}>
-                  <p className={cn('text-2xl font-bold', planDetails.color)}>
+                  <p className={cn('text-2xl font-medium', planDetails.color)}>
                     {subscription.plan === 'trial' ? 'Free' : formatCurrency((subscription.amount ?? 0) / 100)}
                   </p>
                   <p className="text-sm text-muted-foreground">
@@ -217,7 +217,7 @@ export default function SubscriptionPage() {
             <CardContent className="space-y-6">
               {/* Features */}
               <div>
-                <h3 className="font-semibold mb-3">Plan Features</h3>
+                <h3 className="font-medium mb-3">Plan Features</h3>
                 <div className="grid grid-cols-2 gap-3">
                   {planDetails.features.map((feature, index) => (
                     <div key={index} className="flex items-center gap-2">
@@ -357,15 +357,15 @@ export default function SubscriptionPage() {
         <CardContent>
           <div className="grid grid-cols-3 gap-4">
             <div className="text-center p-4 border rounded-lg">
-              <p className="text-3xl font-bold text-primary">1,234</p>
+              <p className="text-3xl font-medium text-primary">1,234</p>
               <p className="text-sm text-muted-foreground mt-1">Queries</p>
             </div>
             <div className="text-center p-4 border rounded-lg">
-              <p className="text-3xl font-bold text-purple-600">45.2K</p>
+              <p className="text-3xl font-medium text-purple-600">45.2K</p>
               <p className="text-sm text-muted-foreground mt-1">Tokens</p>
             </div>
             <div className="text-center p-4 border rounded-lg">
-              <p className="text-3xl font-bold text-green-600">$12.45</p>
+              <p className="text-3xl font-medium text-green-600">$12.45</p>
               <p className="text-sm text-muted-foreground mt-1">Cost</p>
             </div>
           </div>

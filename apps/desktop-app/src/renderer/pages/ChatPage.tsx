@@ -293,7 +293,7 @@ const ChatPage: React.FC = () => {
               </svg>
             </button>
             <div>
-              <h1 className="text-lg font-semibold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+              <h1 className="text-lg font-medium bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
                 {currentConversation?.title || 'New Chat'}
               </h1>
               {currentConversation && (
@@ -340,7 +340,7 @@ const ChatPage: React.FC = () => {
                   </svg>
                 </div>
                 
-                <h2 className="text-3xl font-bold bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent mb-3">
+                <h2 className="text-3xl font-medium bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent mb-3">
                   Start a Conversation
                 </h2>
                 <p className="text-gray-500 mb-8 text-base">
@@ -351,22 +351,22 @@ const ChatPage: React.FC = () => {
                 <div className="grid grid-cols-2 gap-3 text-left">
                   <div className="group p-5 bg-white/[0.03] hover:bg-white/[0.06] border border-white/10 hover:border-white/20 rounded-2xl transition-all duration-300 cursor-pointer backdrop-blur-xl">
                     <div className="text-3xl mb-3">💡</div>
-                    <div className="text-sm font-semibold text-white mb-1.5 group-hover:text-blue-400 transition-colors">Query Database</div>
+                    <div className="text-sm font-medium text-white mb-1.5 group-hover:text-blue-400 transition-colors">Query Database</div>
                     <div className="text-xs text-gray-500 leading-relaxed">Connect to a database and ask questions in natural language</div>
                   </div>
                   <div className="group p-5 bg-white/[0.03] hover:bg-white/[0.06] border border-white/10 hover:border-white/20 rounded-2xl transition-all duration-300 cursor-pointer backdrop-blur-xl">
                     <div className="text-3xl mb-3">🔧</div>
-                    <div className="text-sm font-semibold text-white mb-1.5 group-hover:text-purple-400 transition-colors">Code Assistance</div>
+                    <div className="text-sm font-medium text-white mb-1.5 group-hover:text-purple-400 transition-colors">Code Assistance</div>
                     <div className="text-xs text-gray-500 leading-relaxed">Get help with SQL queries, debugging, and optimization</div>
                   </div>
                   <div className="group p-5 bg-white/[0.03] hover:bg-white/[0.06] border border-white/10 hover:border-white/20 rounded-2xl transition-all duration-300 cursor-pointer backdrop-blur-xl">
                     <div className="text-3xl mb-3">📊</div>
-                    <div className="text-sm font-semibold text-white mb-1.5 group-hover:text-green-400 transition-colors">Data Analysis</div>
+                    <div className="text-sm font-medium text-white mb-1.5 group-hover:text-green-400 transition-colors">Data Analysis</div>
                     <div className="text-xs text-gray-500 leading-relaxed">Analyze data patterns and generate insights</div>
                   </div>
                   <div className="group p-5 bg-white/[0.03] hover:bg-white/[0.06] border border-white/10 hover:border-white/20 rounded-2xl transition-all duration-300 cursor-pointer backdrop-blur-xl">
                     <div className="text-3xl mb-3">✨</div>
-                    <div className="text-sm font-semibold text-white mb-1.5 group-hover:text-orange-400 transition-colors">Multi-Provider</div>
+                    <div className="text-sm font-medium text-white mb-1.5 group-hover:text-orange-400 transition-colors">Multi-Provider</div>
                     <div className="text-xs text-gray-500 leading-relaxed">Choose from 15+ AI providers and 50+ models</div>
                   </div>
                 </div>

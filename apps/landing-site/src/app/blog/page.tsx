@@ -58,7 +58,7 @@ export default function BlogPage() {
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
               <Sparkles className="w-4 h-4 text-white" />
             </div>
-            <span className="font-bold text-gray-900">AI Nexus</span>
+            <span className="font-medium text-gray-900">AI Nexus</span>
           </Link>
           <div className="flex items-center gap-4">
             <Link href="/download" className="text-sm text-gray-600 hover:text-gray-900 font-medium">
@@ -66,7 +66,7 @@ export default function BlogPage() {
             </Link>
             <Link
               href="/login"
-              className="px-4 py-2 text-sm font-semibold bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all"
+              className="px-4 py-2 text-sm font-medium bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all"
             >
               Sign In
             </Link>
@@ -82,7 +82,7 @@ export default function BlogPage() {
 
         <div className="container relative mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
+            <h1 className="text-4xl sm:text-5xl font-medium text-gray-900 mb-4">
               Blog
             </h1>
             <p className="text-lg text-gray-500 max-w-2xl mx-auto">
@@ -132,12 +132,12 @@ export default function BlogPage() {
 
                   <div className="p-6">
                     <div className="flex items-center gap-3 mb-3">
-                      <span className="px-2.5 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full">
+                      <span className="px-2.5 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">
                         {post.category}
                       </span>
                     </div>
 
-                    <h2 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                    <h2 className="text-xl font-medium text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                       {post.title}
                     </h2>
                     <p className="text-gray-500 text-sm mb-4 line-clamp-2">
@@ -173,7 +173,7 @@ export default function BlogPage() {
       <section className="py-16 bg-gradient-to-r from-blue-500 to-purple-600">
         <div className="container mx-auto px-6">
           <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
+            <h2 className="text-2xl sm:text-3xl font-medium text-white mb-4">
               Stay Updated
             </h2>
             <p className="text-white/80 mb-8">
@@ -187,7 +187,7 @@ export default function BlogPage() {
               />
               <button
                 type="submit"
-                className="px-6 py-3 bg-white text-blue-600 font-semibold rounded-xl hover:bg-gray-100 transition-colors flex items-center justify-center gap-2"
+                className="px-6 py-3 bg-white text-blue-600 font-medium rounded-xl hover:bg-gray-100 transition-colors flex items-center justify-center gap-2"
               >
                 Subscribe
                 <ArrowRight className="w-4 h-4" />

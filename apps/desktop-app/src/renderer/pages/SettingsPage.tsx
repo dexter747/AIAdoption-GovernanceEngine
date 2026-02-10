@@ -26,7 +26,7 @@ export default function SettingsPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-black dark:text-white">Settings</h1>
+          <h1 className="text-2xl font-medium text-black dark:text-white">Settings</h1>
           <p className="text-gray-500 mt-1">Manage your application preferences</p>
         </div>
         <button className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
@@ -57,7 +57,7 @@ export default function SettingsPage() {
       <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl p-6">
         {activeTab === 'general' && (
           <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-black dark:text-white">General Settings</h3>
+            <h3 className="text-lg font-medium text-black dark:text-white">General Settings</h3>
             
             <div className="grid gap-6 max-w-md">
               <div>
@@ -113,7 +113,7 @@ export default function SettingsPage() {
 
         {activeTab === 'ai' && (
           <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-black dark:text-white">AI Provider Settings</h3>
+            <h3 className="text-lg font-medium text-black dark:text-white">AI Provider Settings</h3>
             
             <div className="grid gap-6 max-w-md">
               <div>
@@ -151,7 +151,7 @@ export default function SettingsPage() {
 
         {activeTab === 'notifications' && (
           <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-black dark:text-white">Notification Settings</h3>
+            <h3 className="text-lg font-medium text-black dark:text-white">Notification Settings</h3>
             
             <div className="grid gap-6 max-w-md">
               <div className="flex items-center justify-between">
@@ -193,7 +193,7 @@ export default function SettingsPage() {
 
         {activeTab === 'security' && (
           <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-black dark:text-white">Security Settings</h3>
+            <h3 className="text-lg font-medium text-black dark:text-white">Security Settings</h3>
             
             <div className="grid gap-4 max-w-md">
               <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">

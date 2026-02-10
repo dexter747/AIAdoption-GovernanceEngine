@@ -177,7 +177,7 @@ export default function MyConnectionsPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-black dark:text-white">My Connections</h1>
+            <h1 className="text-3xl font-medium text-black dark:text-white">My Connections</h1>
             <p className="text-gray-500 dark:text-white/50 mt-1">
               Manage your connected databases and services
             </p>
@@ -210,7 +210,7 @@ export default function MyConnectionsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-500 dark:text-white/50 text-sm">Total Connections</p>
-                <p className="text-3xl font-bold text-black dark:text-white mt-1">{connections.length}</p>
+                <p className="text-3xl font-medium text-black dark:text-white mt-1">{connections.length}</p>
               </div>
               <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
                 <Database className="w-6 h-6 text-blue-500" />
@@ -227,7 +227,7 @@ export default function MyConnectionsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-500 dark:text-white/50 text-sm">Active</p>
-                <p className="text-3xl font-bold text-green-500 mt-1">
+                <p className="text-3xl font-medium text-green-500 mt-1">
                   {connections.filter(c => c.status === 'connected').length}
                 </p>
               </div>
@@ -246,7 +246,7 @@ export default function MyConnectionsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-500 dark:text-white/50 text-sm">With Errors</p>
-                <p className="text-3xl font-bold text-red-500 mt-1">
+                <p className="text-3xl font-medium text-red-500 mt-1">
                   {connections.filter(c => c.status === 'error').length}
                 </p>
               </div>
@@ -265,7 +265,7 @@ export default function MyConnectionsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-500 dark:text-white/50 text-sm">Total Queries</p>
-                <p className="text-3xl font-bold text-purple-500 mt-1">
+                <p className="text-3xl font-medium text-purple-500 mt-1">
                   {connections.reduce((acc, c) => acc + (c.queriesCount || 0), 0)}
                 </p>
               </div>
@@ -318,7 +318,7 @@ export default function MyConnectionsPage() {
         {filteredConnections.length === 0 ? (
           <div className="text-center py-16 bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-white/10 rounded-2xl">
             <Database className="w-16 h-16 text-gray-300 dark:text-white/20 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-700 dark:text-white/70 mb-2">No connections yet</h3>
+            <h3 className="text-xl font-medium text-gray-700 dark:text-white/70 mb-2">No connections yet</h3>
             <p className="text-gray-500 dark:text-white/50 mb-6 max-w-md mx-auto">
               Add connections from the library to start querying your data with AI
             </p>
@@ -362,7 +362,7 @@ export default function MyConnectionsPage() {
                     {/* Connection Info */}
                     <div className={cn('mt-4', viewMode === 'list' && 'mt-0 flex-1')}>
                       <div className="flex items-center gap-3 mb-1">
-                        <h3 className="text-lg font-semibold text-black dark:text-white">{conn.name}</h3>
+                        <h3 className="text-lg font-medium text-black dark:text-white">{conn.name}</h3>
                         {getStatusBadge(conn.status)}
                       </div>
                       <p className="text-sm text-gray-500 dark:text-white/50">{connInfo.name}</p>
@@ -471,7 +471,7 @@ export default function MyConnectionsPage() {
               <Bot className="w-5 h-5 text-blue-500" />
             </div>
             <div className="flex-1">
-              <h3 className="font-semibold text-black dark:text-white mb-1">AI-Powered CRUD Operations</h3>
+              <h3 className="font-medium text-black dark:text-white mb-1">AI-Powered CRUD Operations</h3>
               <p className="text-sm text-gray-600 dark:text-white/60">
                 Use natural language to Create, Read, Update, and Delete data in your connected systems. 
                 The AI chat interface on your Dashboard can query and modify data across all your connections.

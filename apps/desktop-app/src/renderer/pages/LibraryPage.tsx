@@ -161,7 +161,7 @@ export default function LibraryPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-black dark:text-white">Connection Library</h1>
+            <h1 className="text-3xl font-medium text-black dark:text-white">Connection Library</h1>
             <p className="text-gray-500 dark:text-white/50 mt-1">
               Browse and add connections to your workspace
             </p>
@@ -259,7 +259,7 @@ export default function LibraryPage() {
                   </div>
                   
                   <div className={cn('mt-4', viewMode === 'list' && 'mt-0 flex-1')}>
-                    <h3 className="text-lg font-semibold text-black dark:text-white">{conn.name}</h3>
+                    <h3 className="text-lg font-medium text-black dark:text-white">{conn.name}</h3>
                     <p className="text-sm text-gray-500 dark:text-white/50 mt-1">{conn.description}</p>
                   </div>
 
@@ -326,7 +326,7 @@ export default function LibraryPage() {
                     {CONNECTION_LIBRARY[selectedType as keyof typeof CONNECTION_LIBRARY]?.icon}
                   </div>
                   <div>
-                    <h2 className="text-xl font-semibold text-black dark:text-white">
+                    <h2 className="text-xl font-medium text-black dark:text-white">
                       Add {CONNECTION_LIBRARY[selectedType as keyof typeof CONNECTION_LIBRARY]?.name}
                     </h2>
                     <p className="text-sm text-gray-500 dark:text-white/50">

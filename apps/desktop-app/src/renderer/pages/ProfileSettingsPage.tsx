@@ -131,7 +131,7 @@ export default function ProfileSettingsPage() {
     <div className="p-8 space-y-6 max-w-5xl mx-auto">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold">Settings</h1>
+        <h1 className="text-3xl font-medium">Settings</h1>
         <p className="text-muted-foreground mt-2">
           Manage your account settings and preferences
         </p>
@@ -200,7 +200,7 @@ export default function ProfileSettingsPage() {
                   </label>
                 </div>
                 <div>
-                  <h3 className="font-semibold">{profile.name}</h3>
+                  <h3 className="font-medium">{profile.name}</h3>
                   <p className="text-sm text-muted-foreground">{profile.email}</p>
                   <p className="text-xs text-muted-foreground mt-1">
                     Member since {new Date(profile.createdAt).toLocaleDateString()}

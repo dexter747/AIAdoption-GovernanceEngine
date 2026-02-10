@@ -40,7 +40,7 @@ export default function SettingsPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-black dark:text-white">Settings</h1>
+          <h1 className="text-2xl font-medium text-black dark:text-white">Settings</h1>
           <p className="text-gray-500 mt-1">Manage your platform settings</p>
         </div>
         <button 
@@ -74,7 +74,7 @@ export default function SettingsPage() {
       <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl">
         {activeTab === 'general' && (
           <div className="p-6 space-y-6">
-            <h3 className="text-lg font-semibold text-black dark:text-white">General Settings</h3>
+            <h3 className="text-lg font-medium text-black dark:text-white">General Settings</h3>
             
             <div className="grid gap-6">
               <div>
@@ -152,7 +152,7 @@ export default function SettingsPage() {
 
         {activeTab === 'notifications' && (
           <div className="p-6 space-y-6">
-            <h3 className="text-lg font-semibold text-black dark:text-white">Notification Settings</h3>
+            <h3 className="text-lg font-medium text-black dark:text-white">Notification Settings</h3>
             
             <div className="grid gap-6 max-w-md">
               <div className="flex items-center justify-between">
@@ -228,7 +228,7 @@ export default function SettingsPage() {
 
         {activeTab === 'security' && (
           <div className="p-6 space-y-6">
-            <h3 className="text-lg font-semibold text-black dark:text-white">Security Settings</h3>
+            <h3 className="text-lg font-medium text-black dark:text-white">Security Settings</h3>
             
             <div className="grid gap-6">
               <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg max-w-md">
@@ -269,7 +269,7 @@ export default function SettingsPage() {
 
         {activeTab === 'billing' && (
           <div className="p-6 space-y-6">
-            <h3 className="text-lg font-semibold text-black dark:text-white">Billing Settings</h3>
+            <h3 className="text-lg font-medium text-black dark:text-white">Billing Settings</h3>
             
             <div className="grid gap-6">
               <div>

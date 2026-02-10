@@ -96,7 +96,7 @@ export default function DownloadsPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-black dark:text-white">Downloads</h1>
+          <h1 className="text-2xl font-medium text-black dark:text-white">Downloads</h1>
           <p className="text-gray-500 mt-1">Track all software downloads</p>
         </div>
         <button
@@ -145,27 +145,27 @@ export default function DownloadsPage() {
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-4">
-          <p className="text-2xl font-bold text-black dark:text-white">{total}</p>
+          <p className="text-2xl font-medium text-black dark:text-white">{total}</p>
           <p className="text-sm text-gray-500">Total Downloads</p>
         </div>
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-4">
           <div className="flex items-center gap-2">
             <Monitor className="w-5 h-5 text-blue-500" />
-            <p className="text-2xl font-bold text-blue-500">{platforms.windows}</p>
+            <p className="text-2xl font-medium text-blue-500">{platforms.windows}</p>
           </div>
           <p className="text-sm text-gray-500">Windows</p>
         </div>
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-4">
           <div className="flex items-center gap-2">
             <Apple className="w-5 h-5 text-gray-500" />
-            <p className="text-2xl font-bold text-gray-700 dark:text-gray-300">{platforms.macos}</p>
+            <p className="text-2xl font-medium text-gray-700 dark:text-gray-300">{platforms.macos}</p>
           </div>
           <p className="text-sm text-gray-500">macOS</p>
         </div>
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-4">
           <div className="flex items-center gap-2">
             <Terminal className="w-5 h-5 text-orange-500" />
-            <p className="text-2xl font-bold text-orange-500">{platforms.linux}</p>
+            <p className="text-2xl font-medium text-orange-500">{platforms.linux}</p>
           </div>
           <p className="text-sm text-gray-500">Linux</p>
         </div>

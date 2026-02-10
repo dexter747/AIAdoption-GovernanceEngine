@@ -125,7 +125,7 @@ export default function DownloadPage() {
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
                 <Sparkles className="w-4 h-4 text-white" />
               </div>
-              <span className="font-bold text-gray-900">AI Nexus</span>
+              <span className="font-medium text-gray-900">AI Nexus</span>
             </Link>
           </div>
         </header>
@@ -137,7 +137,7 @@ export default function DownloadPage() {
               <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center mx-auto mb-6 shadow-xl shadow-blue-500/25">
                 <Lock className="w-10 h-10 text-white" />
               </div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-3">Sign in to Download</h1>
+              <h1 className="text-3xl font-medium text-gray-900 mb-3">Sign in to Download</h1>
               <p className="text-gray-500 text-lg">
                 Create a free account to download AI Nexus and unlock all features.
               </p>
@@ -146,7 +146,7 @@ export default function DownloadPage() {
             <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
               <Link
                 href="/login?callbackUrl=/download"
-                className="flex items-center justify-center gap-3 w-full py-3.5 px-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all shadow-lg shadow-blue-500/25"
+                className="flex items-center justify-center gap-3 w-full py-3.5 px-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all shadow-lg shadow-blue-500/25"
               >
                 Sign in with Google
                 <ArrowRight className="w-5 h-5" />
@@ -197,7 +197,7 @@ export default function DownloadPage() {
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
               <Sparkles className="w-4 h-4 text-white" />
             </div>
-            <span className="font-bold text-gray-900">AI Nexus</span>
+            <span className="font-medium text-gray-900">AI Nexus</span>
           </Link>
           <div className="flex items-center gap-4">
             <Link href="/" className="text-sm text-gray-500 hover:text-gray-900 flex items-center gap-1">
@@ -208,7 +208,7 @@ export default function DownloadPage() {
               {user.image ? (
                 <img src={user.image} alt="" className="w-8 h-8 rounded-full" />
               ) : (
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-semibold">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-medium">
                   {user.name?.charAt(0) || user.email.charAt(0).toUpperCase()}
                 </div>
               )}
@@ -232,7 +232,7 @@ export default function DownloadPage() {
               <CheckCircle2 className="w-4 h-4" />
               Signed in as {user.email}
             </div>
-            <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
+            <h1 className="text-4xl sm:text-5xl font-medium text-gray-900 mb-4">
               Download AI Nexus
             </h1>
             <p className="text-lg text-gray-500">
@@ -273,7 +273,7 @@ export default function DownloadPage() {
               <div className="bg-gradient-to-r from-blue-500 via-blue-600 to-purple-600 px-8 py-6 text-white">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h2 className="text-xl font-semibold mb-1">AI Nexus for {current.name}</h2>
+                    <h2 className="text-xl font-medium mb-1">AI Nexus for {current.name}</h2>
                     <p className="text-white/80 text-sm">Version {currentVersion} • Released {releaseDate}</p>
                   </div>
                   <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center backdrop-blur-sm">
@@ -287,7 +287,7 @@ export default function DownloadPage() {
                 {/* Recommended Download */}
                 <div className="mb-6">
                   <div className="flex items-center gap-2 mb-4">
-                    <span className="px-2.5 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
+                    <span className="px-2.5 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">
                       RECOMMENDED
                     </span>
                   </div>
@@ -300,7 +300,7 @@ export default function DownloadPage() {
                         <Download className="w-6 h-6" />
                       </div>
                       <div>
-                        <p className="font-semibold text-gray-900">{current.recommended.name}</p>
+                        <p className="font-medium text-gray-900">{current.recommended.name}</p>
                         <p className="text-sm text-gray-500">{current.recommended.size}</p>
                       </div>
                     </div>
@@ -364,7 +364,7 @@ export default function DownloadPage() {
       <section className="py-16 bg-white border-t border-gray-100">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-2xl font-bold text-gray-900 text-center mb-12">Quick Installation</h2>
+            <h2 className="text-2xl font-medium text-gray-900 text-center mb-12">Quick Installation</h2>
             
             <div className="grid md:grid-cols-3 gap-8">
               {[
@@ -373,10 +373,10 @@ export default function DownloadPage() {
                 { step: '3', title: 'Sign In', desc: 'Use your Google account to sync everything' },
               ].map((item, i) => (
                 <div key={i} className="text-center">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 text-white font-bold text-xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/25">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 text-white font-medium text-xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/25">
                     {item.step}
                   </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">{item.title}</h3>
+                  <h3 className="font-medium text-gray-900 mb-2">{item.title}</h3>
                   <p className="text-gray-500 text-sm">{item.desc}</p>
                 </div>
               ))}
@@ -390,7 +390,7 @@ export default function DownloadPage() {
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center justify-between mb-8">
-              <h2 className="text-2xl font-bold text-gray-900">Previous Releases</h2>
+              <h2 className="text-2xl font-medium text-gray-900">Previous Releases</h2>
               <Link href="/changelog" className="text-sm text-blue-600 hover:text-blue-700 flex items-center gap-1 font-medium">
                 View changelog <ExternalLink className="w-4 h-4" />
               </Link>
@@ -404,7 +404,7 @@ export default function DownloadPage() {
               ].map((release, i) => (
                 <div key={i} className="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-xl hover:border-gray-300 transition-colors">
                   <div>
-                    <p className="font-semibold text-gray-900">Version {release.version}</p>
+                    <p className="font-medium text-gray-900">Version {release.version}</p>
                     <p className="text-sm text-gray-500">{release.date} • {release.notes}</p>
                   </div>
                   <Link href={`/downloads/archive/${release.version}`} className="text-sm text-blue-600 hover:text-blue-700 font-medium">
@@ -421,11 +421,11 @@ export default function DownloadPage() {
       <section className="py-16">
         <div className="container mx-auto px-6">
           <div className="max-w-3xl mx-auto text-center bg-gradient-to-r from-blue-500 via-blue-600 to-purple-600 rounded-3xl p-12 shadow-2xl shadow-blue-500/25">
-            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Need more features?</h2>
+            <h2 className="text-2xl sm:text-3xl font-medium text-white mb-4">Need more features?</h2>
             <p className="text-white/80 mb-8">Upgrade to Pro for unlimited queries, all AI providers, and priority support.</p>
             <Link 
               href="/pricing" 
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-blue-600 rounded-xl hover:bg-gray-50 transition-all font-semibold shadow-lg"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-blue-600 rounded-xl hover:bg-gray-50 transition-all font-medium shadow-lg"
             >
               View Pricing <ArrowRight className="w-5 h-5" />
             </Link>

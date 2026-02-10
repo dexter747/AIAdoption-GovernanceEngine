@@ -727,7 +727,7 @@ export default function ModernChatPage() {
             <div className="h-full flex flex-col items-center justify-center px-4 max-w-3xl mx-auto">
               {/* Greeting */}
               <div className="text-center mb-12">
-                <h1 className="text-4xl font-semibold text-gray-900 dark:text-white mb-2">
+                <h1 className="text-4xl font-medium text-gray-900 dark:text-white mb-2">
                   {getGreeting()}, {getFirstName()}
                 </h1>
                 <p className="text-gray-500 dark:text-gray-400">How can I help you today?</p>

@@ -85,7 +85,7 @@ export default function UsersPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-black dark:text-white">Users</h1>
+          <h1 className="text-2xl font-medium text-black dark:text-white">Users</h1>
           <p className="text-gray-500 mt-1">Manage all registered users</p>
         </div>
         <div className="flex gap-3">
@@ -140,19 +140,19 @@ export default function UsersPage() {
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-4">
-          <p className="text-2xl font-bold text-black dark:text-white">{total}</p>
+          <p className="text-2xl font-medium text-black dark:text-white">{total}</p>
           <p className="text-sm text-gray-500">Total Users</p>
         </div>
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-4">
-          <p className="text-2xl font-bold text-green-500">{stats.active}</p>
+          <p className="text-2xl font-medium text-green-500">{stats.active}</p>
           <p className="text-sm text-gray-500">Active</p>
         </div>
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-4">
-          <p className="text-2xl font-bold text-yellow-500">{stats.pending}</p>
+          <p className="text-2xl font-medium text-yellow-500">{stats.pending}</p>
           <p className="text-sm text-gray-500">Pending</p>
         </div>
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-4">
-          <p className="text-2xl font-bold text-gray-500">{stats.inactive}</p>
+          <p className="text-2xl font-medium text-gray-500">{stats.inactive}</p>
           <p className="text-sm text-gray-500">Inactive</p>
         </div>
       </div>

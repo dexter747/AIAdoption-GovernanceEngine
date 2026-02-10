@@ -74,7 +74,7 @@ export function ErrorDisplay({
       <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mb-4">
         <AlertTriangle className="w-8 h-8 text-red-500" />
       </div>
-      <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+      <h2 className="text-xl font-medium text-gray-900 dark:text-white mb-2">
         {title}
       </h2>
       <p className="text-gray-500 dark:text-gray-400 text-center max-w-md mb-4">

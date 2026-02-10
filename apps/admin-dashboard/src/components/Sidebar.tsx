@@ -55,7 +55,7 @@ export function Sidebar() {
       <div className="h-16 flex items-center px-6 border-b border-gray-200 dark:border-gray-800">
         <Link href="/dashboard" className="flex items-center gap-2">
           <Sparkles className="w-7 h-7 text-blue-500" />
-          <span className="text-xl font-semibold text-black dark:text-white">Admin</span>
+          <span className="text-xl font-medium text-black dark:text-white">Admin</span>
         </Link>
       </div>
 

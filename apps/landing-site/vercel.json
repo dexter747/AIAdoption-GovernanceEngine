@@ -1,0 +1,9 @@
+{
+  "buildCommand": "cd ../.. && pnpm install && cd apps/landing-site && pnpm run build",
+  "installCommand": "pnpm install --shamefully-hoist",
+  "framework": "nextjs",
+  "regions": ["iad1"],
+  "env": {
+    "NODE_ENV": "production"
+  }
+}

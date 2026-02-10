@@ -43,7 +43,7 @@ export function HowItWorksSection() {
                 <div className="text-xs font-medium text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-2">
                   Step {item.step}
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{item.title}</h3>
+                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">{item.title}</h3>
                 <p className="text-sm text-gray-500 dark:text-gray-400 font-medium leading-relaxed">{item.description}</p>
               </div>
             );

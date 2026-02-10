@@ -39,7 +39,7 @@ export default function QueriesPage() {
     <div className="p-8 h-full flex flex-col">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-black dark:text-white">AI Queries</h1>
+        <h1 className="text-2xl font-medium text-black dark:text-white">AI Queries</h1>
         <p className="text-gray-500 mt-1">Ask questions in natural language and get SQL queries</p>
       </div>
 
@@ -102,7 +102,7 @@ export default function QueriesPage() {
         <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-blue-500" />
-            <h2 className="text-lg font-semibold text-black dark:text-white">Generated Query</h2>
+            <h2 className="text-lg font-medium text-black dark:text-white">Generated Query</h2>
           </div>
           <button
             onClick={handleCopy}

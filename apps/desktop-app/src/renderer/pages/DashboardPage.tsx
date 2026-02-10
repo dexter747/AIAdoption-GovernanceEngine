@@ -134,7 +134,7 @@ export default function DashboardPage() {
       >
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-black dark:text-white">Dashboard</h1>
+            <h1 className="text-3xl font-medium text-black dark:text-white">Dashboard</h1>
             <p className="text-gray-500 dark:text-white/50 mt-1">Welcome back! Here's your AI workspace overview.</p>
           </div>
           <Link
@@ -211,7 +211,7 @@ export default function DashboardPage() {
                 <ArrowUpRight className="w-4 h-4" />
               </div>
             </div>
-            <p className="text-3xl font-bold text-black dark:text-white mb-1">{stat.value}</p>
+            <p className="text-3xl font-medium text-black dark:text-white mb-1">{stat.value}</p>
             <p className="text-sm text-gray-500 dark:text-white/50">{stat.name}</p>
             <p className="text-xs text-green-500 mt-2">{stat.trend}</p>
           </motion.div>
@@ -233,7 +233,7 @@ export default function DashboardPage() {
                 <Activity className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h2 className="text-lg font-semibold text-black dark:text-white">Recent Queries</h2>
+                <h2 className="text-lg font-medium text-black dark:text-white">Recent Queries</h2>
                 <p className="text-xs text-gray-500 dark:text-white/40">AI-powered database queries</p>
               </div>
             </div>
@@ -298,7 +298,7 @@ export default function DashboardPage() {
                 <Server className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h2 className="text-lg font-semibold text-black dark:text-white">Connected Databases</h2>
+                <h2 className="text-lg font-medium text-black dark:text-white">Connected Databases</h2>
                 <p className="text-xs text-gray-500 dark:text-white/40">Active data sources</p>
               </div>
             </div>
@@ -368,7 +368,7 @@ export default function DashboardPage() {
               <Brain className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-black dark:text-white">Available AI Models</h2>
+              <h2 className="text-lg font-medium text-black dark:text-white">Available AI Models</h2>
               <p className="text-xs text-gray-500 dark:text-white/40">Configured LLM providers</p>
             </div>
           </div>

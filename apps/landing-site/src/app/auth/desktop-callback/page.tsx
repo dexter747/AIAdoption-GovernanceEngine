@@ -149,7 +149,7 @@ function DesktopCallbackContent() {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full mb-6">
             <AlertCircle className="w-8 h-8 text-red-500" />
           </div>
-          <h1 className="text-2xl font-bold text-black dark:text-white mb-2">Authentication Required</h1>
+          <h1 className="text-2xl font-medium text-black dark:text-white mb-2">Authentication Required</h1>
           <p className="text-gray-500 mb-6">{error}</p>
           <a 
             href="/login?desktop=true"
@@ -168,7 +168,7 @@ function DesktopCallbackContent() {
         <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full mb-6">
           <CheckCircle className="w-8 h-8 text-green-500" />
         </div>
-        <h1 className="text-2xl font-bold text-black dark:text-white mb-2">Authentication Successful!</h1>
+        <h1 className="text-2xl font-medium text-black dark:text-white mb-2">Authentication Successful!</h1>
         <p className="text-gray-500 mb-6">
           You've been authenticated as <strong className="text-black dark:text-white">{user?.name || user?.email}</strong>. 
           Redirecting you back to the AI Nexus app...

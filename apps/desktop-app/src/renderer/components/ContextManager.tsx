@@ -205,7 +205,7 @@ function ContextEditor({
       <div className="bg-background border rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto m-4">
         <form onSubmit={handleSubmit}>
           <div className="p-6 border-b">
-            <h2 className="text-xl font-semibold">
+            <h2 className="text-xl font-medium">
               {context ? 'Edit Context' : 'New Context'}
             </h2>
           </div>
@@ -317,25 +317,25 @@ function StatsCard({ stats }: { stats: ContextStats }) {
     <div className="grid grid-cols-4 gap-4 mb-6">
       <Card>
         <CardContent className="p-4 text-center">
-          <div className="text-2xl font-bold">{stats.totalContexts}</div>
+          <div className="text-2xl font-medium">{stats.totalContexts}</div>
           <div className="text-sm text-muted-foreground">Total Contexts</div>
         </CardContent>
       </Card>
       <Card>
         <CardContent className="p-4 text-center">
-          <div className="text-2xl font-bold">{stats.totalTokens.toLocaleString()}</div>
+          <div className="text-2xl font-medium">{stats.totalTokens.toLocaleString()}</div>
           <div className="text-sm text-muted-foreground">Total Tokens</div>
         </CardContent>
       </Card>
       <Card>
         <CardContent className="p-4 text-center">
-          <div className="text-2xl font-bold">{stats.byType.system_prompt || 0}</div>
+          <div className="text-2xl font-medium">{stats.byType.system_prompt || 0}</div>
           <div className="text-sm text-muted-foreground">System Prompts</div>
         </CardContent>
       </Card>
       <Card>
         <CardContent className="p-4 text-center">
-          <div className="text-2xl font-bold">{stats.byType.knowledge_base || 0}</div>
+          <div className="text-2xl font-medium">{stats.byType.knowledge_base || 0}</div>
           <div className="text-sm text-muted-foreground">Knowledge Docs</div>
         </CardContent>
       </Card>
@@ -377,7 +377,7 @@ export default function ContextManager() {
         <Card>
           <CardContent className="p-12 text-center">
             <div className="text-4xl mb-4">⚠️</div>
-            <h3 className="text-lg font-semibold mb-2">Context API Not Available</h3>
+            <h3 className="text-lg font-medium mb-2">Context API Not Available</h3>
             <p className="text-muted-foreground mb-4">
               The context management system is not yet initialized. Please restart the application.
             </p>
@@ -450,7 +450,7 @@ export default function ContextManager() {
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold">Context Manager</h1>
+          <h1 className="text-2xl font-medium">Context Manager</h1>
           <p className="text-muted-foreground">
             Manage your LLM contexts, system prompts, and knowledge base
           </p>
@@ -504,7 +504,7 @@ export default function ContextManager() {
         <Card>
           <CardContent className="p-12 text-center">
             <div className="text-4xl mb-4">📚</div>
-            <h3 className="text-lg font-semibold mb-2">No contexts yet</h3>
+            <h3 className="text-lg font-medium mb-2">No contexts yet</h3>
             <p className="text-muted-foreground mb-4">
               Create system prompts, import knowledge files, or let AI generate context from your databases.
             </p>

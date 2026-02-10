@@ -83,7 +83,7 @@ export default function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
       <div className="h-14 flex items-center justify-between px-3 border-b border-gray-200 dark:border-gray-800 app-region-drag">
         <div className={cn("flex items-center gap-2 app-region-no-drag", collapsed && "justify-center w-full")}>
           <Bot className="w-6 h-6 text-blue-500 flex-shrink-0" />
-          {!collapsed && <span className="text-lg font-semibold text-black dark:text-white">AI Nexus</span>}
+          {!collapsed && <span className="text-lg font-medium text-black dark:text-white">AI Nexus</span>}
         </div>
         {onToggle && !collapsed && (
           <button

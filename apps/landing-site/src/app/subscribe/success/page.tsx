@@ -59,7 +59,7 @@ function SuccessContent() {
           <div className="inline-flex items-center justify-center w-20 h-20 bg-green-500/20 rounded-full mb-6">
             <CheckCircle className="w-10 h-10 text-green-500" />
           </div>
-          <h1 className="text-4xl font-bold text-white mb-2">
+          <h1 className="text-4xl font-medium text-white mb-2">
             Welcome to AI Nexus!
           </h1>
           <p className="text-xl text-gray-400">
@@ -70,7 +70,7 @@ function SuccessContent() {
         {/* Subscription Details */}
         {subscription && (
           <div className="bg-gray-800 rounded-xl p-6 mb-8">
-            <h2 className="text-lg font-semibold text-white mb-4">Subscription Details</h2>
+            <h2 className="text-lg font-medium text-white mb-4">Subscription Details</h2>
             <div className="space-y-3">
               <div className="flex justify-between">
                 <span className="text-gray-400">Plan</span>
@@ -91,7 +91,7 @@ function SuccessContent() {
         {/* License Key */}
         {licenseKey && (
           <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-xl p-6 mb-8">
-            <h2 className="text-lg font-semibold text-white mb-2">Your License Key</h2>
+            <h2 className="text-lg font-medium text-white mb-2">Your License Key</h2>
             <p className="text-sm text-gray-400 mb-4">
               Use this key to activate the desktop application.
             </p>
@@ -119,10 +119,10 @@ function SuccessContent() {
 
         {/* Next Steps */}
         <div className="bg-gray-800 rounded-xl p-6 mb-8">
-          <h2 className="text-lg font-semibold text-white mb-4">Next Steps</h2>
+          <h2 className="text-lg font-medium text-white mb-4">Next Steps</h2>
           <ol className="space-y-4">
             <li className="flex items-start gap-3">
-              <span className="flex items-center justify-center w-6 h-6 bg-blue-500 rounded-full text-white text-sm font-bold">
+              <span className="flex items-center justify-center w-6 h-6 bg-blue-500 rounded-full text-white text-sm font-medium">
                 1
               </span>
               <div>
@@ -131,7 +131,7 @@ function SuccessContent() {
               </div>
             </li>
             <li className="flex items-start gap-3">
-              <span className="flex items-center justify-center w-6 h-6 bg-blue-500 rounded-full text-white text-sm font-bold">
+              <span className="flex items-center justify-center w-6 h-6 bg-blue-500 rounded-full text-white text-sm font-medium">
                 2
               </span>
               <div>
@@ -140,7 +140,7 @@ function SuccessContent() {
               </div>
             </li>
             <li className="flex items-start gap-3">
-              <span className="flex items-center justify-center w-6 h-6 bg-blue-500 rounded-full text-white text-sm font-bold">
+              <span className="flex items-center justify-center w-6 h-6 bg-blue-500 rounded-full text-white text-sm font-medium">
                 3
               </span>
               <div>
@@ -155,14 +155,14 @@ function SuccessContent() {
         <div className="flex flex-col sm:flex-row gap-4">
           <Link
             href="/download"
-            className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors"
+            className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-colors"
           >
             <Download className="w-5 h-5" />
             Download Desktop App
           </Link>
           <Link
             href="/"
-            className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-xl transition-colors"
+            className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-gray-700 hover:bg-gray-600 text-white font-medium rounded-xl transition-colors"
           >
             Go to Dashboard
             <ArrowRight className="w-5 h-5" />

@@ -126,7 +126,7 @@ function AddConnectionModal({ isOpen, onClose, onAdd }: AddConnectionModalProps)
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-slate-800 rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
-        <h2 className="text-xl font-semibold text-white mb-4">Add Database Connection</h2>
+        <h2 className="text-xl font-medium text-white mb-4">Add Database Connection</h2>
         
         <form onSubmit={handleSubmit}>
           {/* Connection Name */}
@@ -305,7 +305,7 @@ export default function DatabaseConnectionsPage() {
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-white">Database Connections</h1>
+          <h1 className="text-2xl font-medium text-white">Database Connections</h1>
           <p className="text-slate-400 mt-1">
             Connect your databases to query them with AI
           </p>

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const cache = new Map<string, { buffer: Buffer; contentType: string; ts: number }>();
+const cache = new Map<string, { arrayBuffer: ArrayBuffer; contentType: string; ts: number }>();
 
 export async function GET(req: NextRequest) {
   const url = req.nextUrl.searchParams.get('url');
@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
   // Check cache (1 hour TTL)
   const cached = cache.get(url);
   if (cached && Date.now() - cached.ts < 3600000) {
-    return new NextResponse(cached.buffer, {
+    return new NextResponse(cached.arrayBuffer, {
       headers: {
         'Content-Type': cached.contentType,
         'Cache-Control': 'public, max-age=3600',
@@ -29,10 +29,10 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Upstream error' }, { status: resp.status });
     }
 
-    const buffer = Buffer.from(await resp.arrayBuffer());
+    const arrayBuffer = await resp.arrayBuffer();
     const contentType = resp.headers.get('content-type') || 'image/jpeg';
 
-    cache.set(url, { buffer, contentType, ts: Date.now() });
+    cache.set(url, { arrayBuffer, contentType, ts: Date.now() });
 
     // Cap cache at 500 entries
     if (cache.size > 500) {
@@ -40,7 +40,7 @@ export async function GET(req: NextRequest) {
       if (oldest) cache.delete(oldest);
     }
 
-    return new NextResponse(buffer, {
+    return new NextResponse(arrayBuffer, {
       headers: {
         'Content-Type': contentType,
         'Cache-Control': 'public, max-age=3600',

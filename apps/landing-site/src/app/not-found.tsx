@@ -11,8 +11,8 @@ export default function NotFound() {
           <Sparkles className="w-16 h-16 text-blue-500" />
         </div>
         
-        <h1 className="text-6xl font-bold text-black dark:text-white mb-2">404</h1>
-        <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-4">
+        <h1 className="text-6xl font-medium text-black dark:text-white mb-2">404</h1>
+        <h2 className="text-xl font-medium text-gray-700 dark:text-gray-300 mb-4">
           Page Not Found
         </h2>
         <p className="text-gray-500 mb-8">

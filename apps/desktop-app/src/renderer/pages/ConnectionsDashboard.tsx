@@ -159,7 +159,7 @@ export default function ConnectionsDashboard() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-black dark:text-white">Connections</h1>
+            <h1 className="text-3xl font-medium text-black dark:text-white">Connections</h1>
             <p className="text-gray-500 dark:text-white/50 mt-1">
               Connect your databases and enterprise systems
             </p>
@@ -186,7 +186,7 @@ export default function ConnectionsDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-500 dark:text-white/50 text-sm">Total Connections</p>
-                <p className="text-3xl font-bold text-black dark:text-white mt-1">{connections.length}</p>
+                <p className="text-3xl font-medium text-black dark:text-white mt-1">{connections.length}</p>
               </div>
               <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
                 <Database className="w-6 h-6 text-blue-400" />
@@ -203,7 +203,7 @@ export default function ConnectionsDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-500 dark:text-white/50 text-sm">Active</p>
-                <p className="text-3xl font-bold mt-1 text-green-500">
+                <p className="text-3xl font-medium mt-1 text-green-500">
                   {connections.filter(c => c.status === 'connected').length}
                 </p>
               </div>
@@ -222,7 +222,7 @@ export default function ConnectionsDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-500 dark:text-white/50 text-sm">Inactive</p>
-                <p className="text-3xl font-bold mt-1 text-gray-600 dark:text-white/60">
+                <p className="text-3xl font-medium mt-1 text-gray-600 dark:text-white/60">
                   {connections.filter(c => c.status === 'disconnected').length}
                 </p>
               </div>
@@ -241,7 +241,7 @@ export default function ConnectionsDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-500 dark:text-white/50 text-sm">Errors</p>
-                <p className="text-3xl font-bold mt-1 text-red-500">
+                <p className="text-3xl font-medium mt-1 text-red-500">
                   {connections.filter(c => c.status === 'error').length}
                 </p>
               </div>
@@ -313,7 +313,7 @@ export default function ConnectionsDashboard() {
           </div>
         ) : filteredConnections.length > 0 ? (
           <div>
-            <h2 className="text-lg font-semibold mb-4">Your Connections</h2>
+            <h2 className="text-lg font-medium mb-4">Your Connections</h2>
             <div className={cn(
               viewMode === 'grid' 
                 ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4' 
@@ -346,7 +346,7 @@ export default function ConnectionsDashboard() {
                               {connType.icon}
                             </div>
                             <div>
-                              <h3 className="font-semibold">{connection.name}</h3>
+                              <h3 className="font-medium">{connection.name}</h3>
                               <p className="text-white/50 text-sm">{connType.name}</p>
                             </div>
                           </div>
@@ -413,7 +413,7 @@ export default function ConnectionsDashboard() {
 
         {/* Add New Connection Section */}
         <div>
-          <h2 className="text-lg font-semibold mb-4">
+          <h2 className="text-lg font-medium mb-4">
             {connections.length === 0 ? 'Get Started - Add a Connection' : 'Add New Connection'}
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
@@ -457,7 +457,7 @@ export default function ConnectionsDashboard() {
                 <Zap className="w-6 h-6 text-blue-400" />
               </div>
               <div>
-                <h3 className="font-semibold text-lg mb-2">Quick Setup Guide</h3>
+                <h3 className="font-medium text-lg mb-2">Quick Setup Guide</h3>
                 <div className="space-y-2 text-white/70 text-sm">
                   <p className="flex items-center gap-2">
                     <span className="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 text-xs flex items-center justify-center">1</span>
