@@ -20,6 +20,15 @@ export class AutoUpdaterManager {
     // Configure auto-updater
     autoUpdater.autoDownload = false;
     autoUpdater.autoInstallOnAppQuit = true;
+    
+    // Set update feed URL for production
+    if (process.env.NODE_ENV === 'production') {
+      autoUpdater.setFeedURL({
+        provider: 'generic',
+        url: 'https://releases.ainexus.com',
+        channel: 'latest',
+      } as any);
+    }
 
     this.setupEventHandlers();
   }

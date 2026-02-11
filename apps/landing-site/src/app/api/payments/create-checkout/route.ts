@@ -8,10 +8,10 @@ const supabase = createClient(
 );
 
 const PLAN_PRICES = {
-  trial: { monthly: 0, yearly: 0 },
-  professional: { monthly: 4900, yearly: 49000 }, // in cents
-  team: { monthly: 19900, yearly: 199000 },
-  enterprise: { monthly: 0, yearly: 0 }, // custom
+  starter: { monthly: 19900, yearly: 199000 }, // $199/month, $1,990/year
+  professional: { monthly: 49900, yearly: 499000 }, // $499/month, $4,990/year
+  enterprise: { monthly: 99900, yearly: 999000 }, // $999/month, $9,990/year
+  custom: { monthly: 0, yearly: 0 }, // contact sales
 };
 
 const DODO_API_URL = process.env.DODO_API_URL || 'https://api.dodopayments.com';
@@ -37,10 +37,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Enterprise requires custom handling
-    if (planType === 'enterprise') {
+    // Custom plan requires sales contact
+    if (planType === 'custom') {
       return NextResponse.json(
-        { error: 'Enterprise plans require custom pricing. Please contact sales.' },
+        { error: 'Custom plans require tailored pricing. Please contact sales.' },
         { status: 400 }
       );
     }

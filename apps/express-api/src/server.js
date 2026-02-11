@@ -7,6 +7,9 @@ import cors from 'cors';
 import { createClient } from '@supabase/supabase-js';
 import jwt from 'jsonwebtoken';
 import userApiKeysRoutes from './routes/user-api-keys.js';
+import adminRoutes from './routes/admin.js';
+import licensesRoutes from './routes/licenses-new.js';
+import subscriptionsRoutes from './routes/subscriptions.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 const app = express();
@@ -205,6 +208,21 @@ app.post('/api/licenses/validate', async (req, res) => {
 // USER API KEYS MANAGEMENT (modular routes from user-api-keys.js)
 // =============================================================================
 app.use('/api/user/api-keys', userApiKeysRoutes);
+
+// =============================================================================
+// ADMIN ROUTES
+// =============================================================================
+app.use('/api/admin', adminRoutes);
+
+// =============================================================================
+// LICENSE VALIDATION (New system)
+// =============================================================================
+app.use('/api/licenses', licensesRoutes);
+
+// =============================================================================
+// SUBSCRIPTION MANAGEMENT
+// =============================================================================
+app.use('/api/subscriptions', subscriptionsRoutes);
 
 // =============================================================================
 // USAGE TRACKING
