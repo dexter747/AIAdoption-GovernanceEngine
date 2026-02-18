@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase';
 
 export async function GET(request: NextRequest) {
   try {
@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     
     const offset = (page - 1) * limit;
 
-    let query = supabase
+    let query = supabaseAdmin
       .from('users')
       .select('*', { count: 'exact' });
 
@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
     // Get subscription status for each user
     const usersWithStatus = await Promise.all(
       (users || []).map(async (user) => {
-        const { data: subscription } = await supabase
+        const { data: subscription } = await supabaseAdmin
           .from('subscriptions')
           .select('status')
           .eq('user_id', user.id)

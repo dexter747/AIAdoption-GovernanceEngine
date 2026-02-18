@@ -1,49 +1,48 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase';
 
 export async function GET() {
   try {
     // Get total users
-    const { count: totalUsers, error: usersError } = await supabase
+    const { count: totalUsers, error: usersError } = await supabaseAdmin
       .from('users')
       .select('*', { count: 'exact', head: true });
 
     if (usersError) throw usersError;
 
-    // Get total downloads
-    const { count: totalDownloads, error: downloadsError } = await supabase
-      .from('downloads')
+    // Get total license activations (replaces downloads table)
+    const { count: totalDownloads } = await supabaseAdmin
+      .from('license_activations')
       .select('*', { count: 'exact', head: true });
 
     // Get total revenue (completed payments)
-    const { data: paymentsData, error: paymentsError } = await supabase
+    const { data: paymentsData } = await supabaseAdmin
       .from('payments')
       .select('amount')
       .eq('status', 'completed');
 
     const totalRevenue = paymentsData?.reduce((sum, p) => sum + Number(p.amount), 0) || 0;
 
-    // Get active users (logged in within last 30 days)
+    // Get active users (updated within last 30 days)
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    
-    const { count: activeUsers, error: activeError } = await supabase
+
+    const { count: activeUsers } = await supabaseAdmin
       .from('users')
       .select('*', { count: 'exact', head: true })
       .gte('updated_at', thirtyDaysAgo.toISOString());
 
-    // Calculate growth (compare to previous period)
     const sixtyDaysAgo = new Date();
     sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
 
     // Previous period users
-    const { count: prevUsers } = await supabase
+    const { count: prevUsers } = await supabaseAdmin
       .from('users')
       .select('*', { count: 'exact', head: true })
       .lt('created_at', thirtyDaysAgo.toISOString());
 
     // Current period new users
-    const { count: newUsers } = await supabase
+    const { count: newUsers } = await supabaseAdmin
       .from('users')
       .select('*', { count: 'exact', head: true })
       .gte('created_at', thirtyDaysAgo.toISOString());
@@ -52,25 +51,26 @@ export async function GET() {
       ? ((newUsers || 0) / prevUsers) * 100 
       : (newUsers || 0) > 0 ? 100 : 0;
 
-    // Previous period downloads
-    const { count: prevDownloads } = await supabase
-      .from('downloads')
+    // Previous period activations (replaces downloads)
+    const { count: prevDownloads } = await supabaseAdmin
+      .from('license_activations')
       .select('*', { count: 'exact', head: true })
-      .lt('created_at', thirtyDaysAgo.toISOString())
-      .gte('created_at', sixtyDaysAgo.toISOString());
+      .lt('activated_at', thirtyDaysAgo.toISOString())
+      .gte('activated_at', sixtyDaysAgo.toISOString());
 
-    // Current period downloads
-    const { count: currentDownloads } = await supabase
-      .from('downloads')
+    // Current period activations
+    const { count: currentDownloads } = await supabaseAdmin
+      .from('license_activations')
       .select('*', { count: 'exact', head: true })
-      .gte('created_at', thirtyDaysAgo.toISOString());
+      .gte('activated_at', thirtyDaysAgo.toISOString());
 
-    const downloadGrowth = prevDownloads && prevDownloads > 0 
-      ? (((currentDownloads || 0) - prevDownloads) / prevDownloads) * 100 
-      : (currentDownloads || 0) > 0 ? 100 : 0;
+    const downloadGrowth =
+      prevDownloads && prevDownloads > 0
+        ? (((currentDownloads || 0) - prevDownloads) / prevDownloads) * 100
+        : (currentDownloads || 0) > 0 ? 100 : 0;
 
     // Previous period revenue
-    const { data: prevPayments } = await supabase
+    const { data: prevPayments } = await supabaseAdmin
       .from('payments')
       .select('amount')
       .eq('status', 'completed')
@@ -80,7 +80,7 @@ export async function GET() {
     const prevRevenue = prevPayments?.reduce((sum, p) => sum + Number(p.amount), 0) || 0;
 
     // Current period revenue
-    const { data: currentPayments } = await supabase
+    const { data: currentPayments } = await supabaseAdmin
       .from('payments')
       .select('amount')
       .eq('status', 'completed')

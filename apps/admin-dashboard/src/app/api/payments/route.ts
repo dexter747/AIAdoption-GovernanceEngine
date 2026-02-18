@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase';
 
 export async function GET(request: NextRequest) {
   try {
@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     const offset = (page - 1) * limit;
 
     // Get payments with user info
-    let query = supabase
+    let query = supabaseAdmin
       .from('payments')
       .select('*, users!inner(email, full_name), subscriptions(plan)', { count: 'exact' });
 
@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
     if (error) throw error;
 
     // Calculate totals
-    const { data: allPayments } = await supabase
+    const { data: allPayments } = await supabaseAdmin
       .from('payments')
       .select('amount, status');
 

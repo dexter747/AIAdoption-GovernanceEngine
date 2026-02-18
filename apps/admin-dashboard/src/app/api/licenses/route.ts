@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase';
 
 export async function GET(request: NextRequest) {
   try {
@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     
     const offset = (page - 1) * limit;
 
-    let query = supabase
+    let query = supabaseAdmin
       .from('licenses')
       .select(`
         *,
@@ -81,7 +81,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get stats
-    const { data: allLicenses } = await supabase
+    const { data: allLicenses } = await supabaseAdmin
       .from('licenses')
       .select('tier, is_active, expires_at');
 
@@ -148,7 +148,7 @@ export async function POST(request: NextRequest) {
     const keyHash = crypto.createHash('sha256').update(licenseKey).digest('hex');
     const keyPreview = `${licenseKey.slice(0, 8)}...${licenseKey.slice(-4)}`;
 
-    const { data: license, error } = await supabase
+    const { data: license, error } = await supabaseAdmin
       .from('licenses')
       .insert({
         user_id: userId,

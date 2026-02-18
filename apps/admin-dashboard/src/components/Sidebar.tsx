@@ -1,10 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { 
   LayoutDashboard, Users, Download, CreditCard, Settings, 
-  LogOut, Sparkles, Sun, Moon, Monitor, Key
+  LogOut, Sparkles, Sun, Moon, Monitor, Key, BarChart2
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
@@ -13,12 +13,14 @@ const navigation = [
   { name: 'Users', href: '/dashboard/users', icon: Users },
   { name: 'Licenses', href: '/dashboard/licenses', icon: Key },
   { name: 'Payments', href: '/dashboard/payments', icon: CreditCard },
-  { name: 'Downloads', href: '/dashboard/downloads', icon: Download },
+  { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart2 },
+  { name: 'Activations', href: '/dashboard/downloads', icon: Download },
   { name: 'Settings', href: '/dashboard/settings', icon: Settings },
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [theme, setTheme] = useState<'light' | 'dark' | 'system'>('system');
   const [mounted, setMounted] = useState(false);
 
@@ -30,6 +32,12 @@ export function Sidebar() {
       applyTheme(savedTheme);
     }
   }, []);
+
+  const handleSignOut = async () => {
+    await fetch('/api/auth/session', { method: 'DELETE' });
+    router.push('/login');
+    router.refresh();
+  };
 
   const applyTheme = (newTheme: 'light' | 'dark' | 'system') => {
     const root = document.documentElement;
@@ -131,11 +139,13 @@ export function Sidebar() {
             <span className="text-white text-sm font-medium">A</span>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-black dark:text-white truncate">Admin User</p>
-            <p className="text-xs text-gray-500 truncate">admin@example.com</p>
+            <p className="text-sm font-medium text-black dark:text-white truncate">Admin</p>
+            <p className="text-xs text-gray-500 truncate">admin@gmail.com</p>
           </div>
         </div>
-        <button className="w-full mt-2 flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950 transition-colors">
+        <button
+          onClick={handleSignOut}
+          className="w-full mt-2 flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950 transition-colors">
           <LogOut className="w-5 h-5" />
           Sign Out
         </button>

@@ -7,9 +7,11 @@ interface DownloadItem {
   id: string;
   user: string;
   email: string;
-  version: string;
+  version: string;   // license tier
   platform: string;
+  deviceName: string;
   date: string;
+  isActive: boolean;
 }
 
 interface DownloadsResponse {
@@ -39,11 +41,9 @@ export default function DownloadsPage() {
   const [downloads, setDownloads] = useState<DownloadItem[]>([]);
   const [total, setTotal] = useState(0);
   const [platforms, setPlatforms] = useState({ windows: 0, macos: 0, linux: 0 });
-  const [versions, setVersions] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterPlatform, setFilterPlatform] = useState('all');
-  const [filterVersion, setFilterVersion] = useState('all');
   const [page, setPage] = useState(1);
 
   const fetchDownloads = useCallback(async () => {
@@ -54,23 +54,18 @@ export default function DownloadsPage() {
       params.append('limit', '10');
       if (searchQuery) params.append('search', searchQuery);
       if (filterPlatform !== 'all') params.append('platform', filterPlatform);
-      if (filterVersion !== 'all') params.append('version', filterVersion);
 
       const res = await fetch(`/api/downloads?${params.toString()}`);
       const data: DownloadsResponse = await res.json();
       setDownloads(data.downloads || []);
       setTotal(data.total || 0);
       setPlatforms(data.platforms || { windows: 0, macos: 0, linux: 0 });
-
-      // Get unique versions
-      const uniqueVersions = [...new Set((data.downloads || []).map((d: DownloadItem) => d.version))];
-      setVersions(uniqueVersions);
     } catch (err) {
-      console.error('Failed to fetch downloads:', err);
+      console.error('Failed to fetch activations:', err);
     } finally {
       setLoading(false);
     }
-  }, [page, searchQuery, filterPlatform, filterVersion]);
+  }, [page, searchQuery, filterPlatform]);
 
   useEffect(() => {
     fetchDownloads();
@@ -78,14 +73,14 @@ export default function DownloadsPage() {
 
   useEffect(() => {
     setPage(1);
-  }, [searchQuery, filterPlatform, filterVersion]);
+  }, [searchQuery, filterPlatform]);
 
   if (loading && downloads.length === 0) {
     return (
       <div className="p-8 flex items-center justify-center min-h-screen">
         <div className="text-center">
           <RefreshCw className="w-8 h-8 text-blue-500 animate-spin mx-auto mb-4" />
-          <p className="text-gray-500">Loading downloads...</p>
+          <p className="text-gray-500">Loading activations...</p>
         </div>
       </div>
     );
@@ -96,8 +91,8 @@ export default function DownloadsPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-medium text-black dark:text-white">Downloads</h1>
-          <p className="text-gray-500 mt-1">Track all software downloads</p>
+          <h1 className="text-2xl font-medium text-black dark:text-white">Activations</h1>
+          <p className="text-gray-500 mt-1">Track all license activations by device</p>
         </div>
         <button
           onClick={fetchDownloads}
@@ -126,19 +121,9 @@ export default function DownloadsPage() {
           className="px-4 py-2 bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg text-sm text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="all">All Platforms</option>
-          <option value="Windows">Windows</option>
-          <option value="macOS">macOS</option>
-          <option value="Linux">Linux</option>
-        </select>
-        <select
-          value={filterVersion}
-          onChange={(e) => setFilterVersion(e.target.value)}
-          className="px-4 py-2 bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg text-sm text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="all">All Versions</option>
-          {versions.map(v => (
-            <option key={v} value={v}>{v}</option>
-          ))}
+          <option value="windows">Windows</option>
+          <option value="macos">macOS</option>
+          <option value="linux">Linux</option>
         </select>
       </div>
 
@@ -146,7 +131,7 @@ export default function DownloadsPage() {
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-4">
           <p className="text-2xl font-medium text-black dark:text-white">{total}</p>
-          <p className="text-sm text-gray-500">Total Downloads</p>
+          <p className="text-sm text-gray-500">Total Activations</p>
         </div>
         <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-4">
           <div className="flex items-center gap-2">
@@ -178,7 +163,8 @@ export default function DownloadsPage() {
             <thead>
               <tr className="border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50">
                 <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase">User</th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase">Version</th>
+                <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase">Device</th>
+                <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase">Tier</th>
                 <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase">Platform</th>
                 <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase">Date</th>
               </tr>
@@ -205,7 +191,10 @@ export default function DownloadsPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+                      <p className="text-sm text-black dark:text-white">{download.deviceName || '—'}</p>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 capitalize">
                         {download.version}
                       </span>
                     </td>
@@ -232,7 +221,7 @@ export default function DownloadsPage() {
         {/* Pagination */}
         <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-800 flex items-center justify-between">
           <p className="text-sm text-gray-500">
-            Showing <span className="font-medium text-black dark:text-white">{downloads.length}</span> of <span className="font-medium text-black dark:text-white">{total}</span> downloads
+            Showing <span className="font-medium text-black dark:text-white">{downloads.length}</span> of <span className="font-medium text-black dark:text-white">{total}</span> activations
           </p>
           <div className="flex gap-2">
             <button 

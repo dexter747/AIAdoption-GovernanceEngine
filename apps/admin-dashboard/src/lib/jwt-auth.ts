@@ -8,6 +8,7 @@ const JWT_ISSUER = 'ai-nexus';
 
 // Only allow specific admin emails
 export const ADMIN_EMAILS = [
+  'admin@gmail.com',
   'maitreyak1806@gmail.com',
   // Add more admin emails here
 ];

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase';
 
 export async function GET() {
   try {
@@ -7,30 +7,30 @@ export async function GET() {
     const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
     
     // Get daily user signups for the last 30 days
-    const { data: usersData } = await supabase
+    const { data: usersData } = await supabaseAdmin
       .from('users')
       .select('created_at')
       .gte('created_at', thirtyDaysAgo.toISOString())
       .order('created_at', { ascending: true });
 
     // Get daily revenue for the last 30 days
-    const { data: paymentsData } = await supabase
+    const { data: paymentsData } = await supabaseAdmin
       .from('payments')
       .select('amount, created_at')
       .eq('status', 'completed')
       .gte('created_at', thirtyDaysAgo.toISOString())
       .order('created_at', { ascending: true });
 
-    // Get daily downloads for the last 30 days
-    const { data: downloadsData } = await supabase
-      .from('downloads')
-      .select('created_at, platform')
-      .gte('created_at', thirtyDaysAgo.toISOString())
-      .order('created_at', { ascending: true });
+    // Get license activations for the last 30 days (replaces downloads)
+    const { data: activationsData } = await supabaseAdmin
+      .from('license_activations')
+      .select('activated_at, platform')
+      .gte('activated_at', thirtyDaysAgo.toISOString())
+      .order('activated_at', { ascending: true });
 
-    // Get plan distribution
-    const { data: plansData } = await supabase
-      .from('users')
+    // Get plan distribution from subscriptions
+    const { data: plansData } = await supabaseAdmin
+      .from('subscriptions')
       .select('plan');
 
     // Process into daily data
@@ -65,21 +65,21 @@ export async function GET() {
       }
     });
 
-    // Aggregate downloads by day and platform
-    downloadsData?.forEach(download => {
-      const dateStr = new Date(download.created_at).toISOString().split('T')[0];
+    // Aggregate activations by day and platform
+    activationsData?.forEach(activation => {
+      const dateStr = new Date(activation.activated_at).toISOString().split('T')[0];
       if (dailyDownloads[dateStr] !== undefined) {
         dailyDownloads[dateStr]++;
       }
-      const platform = download.platform?.toLowerCase() || 'other';
+      const platform = activation.platform?.toLowerCase() || 'other';
       if (platformCounts[platform] !== undefined) {
         platformCounts[platform]++;
       }
     });
 
-    // Aggregate plans
-    plansData?.forEach(user => {
-      const plan = user.plan || 'free';
+    // Aggregate plans from subscriptions
+    plansData?.forEach(sub => {
+      const plan = sub.plan || 'free';
       if (planCounts[plan] !== undefined) {
         planCounts[plan]++;
       }

@@ -44,33 +44,24 @@ importers:
 
   apps/admin-dashboard:
     dependencies:
-      '@prisma/client':
-        specifier: ^5.8.1
-        version: 5.22.0(prisma@5.22.0)
-      '@shared/types':
-        specifier: workspace:*
-        version: link:../../packages/shared
       '@supabase/supabase-js':
         specifier: ^2.90.1
         version: 2.90.1
+      bcryptjs:
+        specifier: ^2.4.3
+        version: 2.4.3
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.1
       lucide-react:
         specifier: ^0.263.1
         version: 0.263.1(react@18.3.1)
-      mongoose:
-        specifier: ^8.0.3
-        version: 8.21.0(@aws-sdk/credential-providers@3.970.0)
       next:
         specifier: 14.2.18
         version: 14.2.18(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next-auth:
         specifier: 5.0.0-beta.30
         version: 5.0.0-beta.30(next@14.2.18(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(nodemailer@7.0.12)(react@18.3.1)
-      nodemailer:
-        specifier: ^7.0.12
-        version: 7.0.12
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -81,12 +72,12 @@ importers:
         specifier: ^2.10.4
         version: 2.15.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
+      '@types/bcryptjs':
+        specifier: ^2.4.6
+        version: 2.4.6
       '@types/node':
         specifier: ^20.10.6
         version: 20.19.30
-      '@types/nodemailer':
-        specifier: ^6.4.14
-        version: 6.4.21
       '@types/react':
         specifier: ^18.3.12
         version: 18.3.27

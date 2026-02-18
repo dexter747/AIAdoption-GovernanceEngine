@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase';
 
 export async function GET(
   request: NextRequest,
@@ -8,7 +8,7 @@ export async function GET(
   try {
     const { id } = await params;
 
-    const { data: license, error } = await supabase
+    const { data: license, error } = await supabaseAdmin
       .from('licenses')
       .select(`
         *,
@@ -63,7 +63,7 @@ export async function PATCH(
       updates.expires_at = expiresAt;
     }
 
-    const { data: license, error } = await supabase
+    const { data: license, error } = await supabaseAdmin
       .from('licenses')
       .update(updates)
       .eq('id', id)
@@ -90,7 +90,7 @@ export async function DELETE(
     const { id } = await params;
 
     // Soft delete - just deactivate
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('licenses')
       .update({ 
         is_active: false,
