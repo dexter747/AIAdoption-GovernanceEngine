@@ -1,16 +1,9 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Check, Sparkles, Building2, Rocket, X } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardFooter } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
-
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 interface PricingTier {
   name: string;
@@ -96,56 +89,16 @@ const pricingTiers: PricingTier[] = [
 ];
 
 export function PricingSection() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const headerRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!sectionRef.current || !headerRef.current || !cardsRef.current) return;
-
-    const ctx = gsap.context(() => {
-      // Animate header
-      gsap.from(headerRef.current, {
-        scrollTrigger: {
-          trigger: headerRef.current,
-          start: 'top 80%',
-        },
-        y: 30,
-        opacity: 0,
-        duration: 0.6,
-      });
-
-      // Stagger animate pricing cards
-      const cards = cardsRef.current?.querySelectorAll('.pricing-card');
-      if (cards) {
-        gsap.from(cards, {
-          scrollTrigger: {
-            trigger: cardsRef.current,
-            start: 'top 80%',
-          },
-          y: 30,
-          opacity: 0,
-          duration: 0.5,
-          stagger: 0.1,
-          ease: 'power2.out',
-        });
-      }
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
     <section 
-      ref={sectionRef}
       id="pricing" 
-      className="relative py-24 bg-gradient-to-b from-white via-indigo-50/30 to-white dark:from-gray-950 dark:via-indigo-950/10 dark:to-gray-950"
+      className="relative py-24 bg-gradient-to-b from-white via-indigo-50/30 to-white"
     >
       {/* Background decoration */}
-      <div className="absolute inset-0 bg-grid-gray-900/[0.02] dark:bg-grid-gray-100/[0.02]" />
+      <div className="absolute inset-0 bg-grid-gray-900/[0.02]" />
       
       <div className="relative max-w-7xl mx-auto px-6">
-        <div ref={headerRef} className="text-center max-w-3xl mx-auto mb-16">
+        <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 text-sm font-medium mb-4">
             <Sparkles className="w-4 h-4" />
             Simple, Transparent Pricing
@@ -161,7 +114,7 @@ export function PricingSection() {
           </p>
         </div>
 
-        <div ref={cardsRef} className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {pricingTiers.map((tier) => {
             const Icon = tier.icon;
             return (

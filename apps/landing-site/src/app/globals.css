@@ -59,6 +59,14 @@
   }
   html {
     scroll-behavior: smooth;
+    /* Always start light — JS may override for dark mode toggle */
+    background-color: #ffffff;
+    color-scheme: light;
+  }
+  /* Prevent flash of dark on initial load */
+  html:not(.dark) body {
+    background-color: #ffffff;
+    color: #000000;
   }
 }
 

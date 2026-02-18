@@ -1,12 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
 import { HelpCircle } from 'lucide-react';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const faqs = [
   {
@@ -60,39 +55,8 @@ const faqs = [
 ];
 
 export default function FAQSection() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from('.faq-header', {
-        scrollTrigger: {
-          trigger: '.faq-header',
-          start: 'top 80%',
-        },
-        opacity: 0,
-        y: 20,
-        duration: 0.6,
-        ease: 'power2.out',
-      });
-
-      gsap.from('.faq-item', {
-        scrollTrigger: {
-          trigger: '.faq-container',
-          start: 'top 80%',
-        },
-        opacity: 0,
-        y: 15,
-        duration: 0.5,
-        stagger: 0.06,
-        ease: 'power2.out',
-      });
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <section ref={sectionRef} className="py-20 bg-gray-50 dark:bg-gray-900/50">
+    <section className="py-20 bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="faq-header text-center mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 mb-6">

@@ -8,6 +8,15 @@ import { expressClient } from './api/express-client';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Safe logger to prevent EPIPE errors when stdout is closed
+const safeLog = (...args: any[]) => {
+  try {
+    console.log(...args);
+  } catch (e) {
+    // Ignore EPIPE errors during hot reload or when renderer disconnects
+  }
+};
+
 const store = new Store({
   name: 'auth',
   encryptionKey: 'ai-nexus-secure-key-2024',
@@ -92,7 +101,7 @@ function startCallbackServer() {
   if (callbackServer) return;
 
   callbackServer = http.createServer((req, res) => {
-    console.log('📡 HTTP callback received:', req.url);
+    safeLog('📡 HTTP callback received:', req.url);
     
     if (req.url?.startsWith('/auth/callback')) {
       const url = new URL(req.url, `http://localhost:${AUTH_CALLBACK_PORT}`);
@@ -143,7 +152,7 @@ function startCallbackServer() {
             } catch {}
           }
 
-          console.log('✅ HTTP callback auth data parsed:', { email: user.email });
+          safeLog('✅ HTTP callback auth data parsed:', { email: user.email });
 
           const authData: AuthData = {
             accessToken: token,
@@ -154,11 +163,11 @@ function startCallbackServer() {
 
           store.set('authData', authData);
           expressClient.setAuthToken(authData.accessToken);
-          console.log('💾 Auth data saved to store via HTTP callback');
+          safeLog('💾 Auth data saved to store via HTTP callback');
 
           if (mainWindow && !mainWindow.isDestroyed()) {
             mainWindow.webContents.send('auth:success', authData);
-            console.log('📨 Auth success event sent to renderer via HTTP callback');
+            safeLog('📨 Auth success event sent to renderer via HTTP callback');
 
             if (mainWindow.isMinimized()) mainWindow.restore();
             mainWindow.focus();
@@ -175,7 +184,7 @@ function startCallbackServer() {
   });
 
   callbackServer.listen(AUTH_CALLBACK_PORT, 'localhost', () => {
-    console.log(`🌐 OAuth callback server listening on http://localhost:${AUTH_CALLBACK_PORT}`);
+    safeLog(`🌐 OAuth callback server listening on http://localhost:${AUTH_CALLBACK_PORT}`);
   });
 
   callbackServer.on('error', (err) => {

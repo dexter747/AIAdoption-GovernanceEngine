@@ -206,7 +206,11 @@ export default function DownloadPage() {
             </Link>
             <div className="flex items-center gap-2 pl-4 border-l border-gray-200">
               {user.image ? (
-                <img src={user.image} alt="" className="w-8 h-8 rounded-full" />
+                <img 
+                  src={user.image.includes('googleusercontent.com') ? `/api/avatar/proxy?url=${encodeURIComponent(user.image)}` : user.image} 
+                  alt="" 
+                  className="w-8 h-8 rounded-full" 
+                />
               ) : (
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-medium">
                   {user.name?.charAt(0) || user.email.charAt(0).toUpperCase()}

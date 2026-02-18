@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
 import { 
   Database, 
   Server, 
@@ -17,12 +16,6 @@ import {
   LucideIcon
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
-
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 interface Integration {
   name: string;
@@ -71,52 +64,12 @@ const integrations: Integration[] = [
 const categories = Array.from(new Set(integrations.map(i => i.category)));
 
 export function IntegrationsSection() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const headerRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!sectionRef.current || !headerRef.current || !cardsRef.current) return;
-
-    const ctx = gsap.context(() => {
-      // Animate header
-      gsap.from(headerRef.current, {
-        scrollTrigger: {
-          trigger: headerRef.current,
-          start: 'top 80%',
-        },
-        y: 30,
-        opacity: 0,
-        duration: 0.6,
-      });
-
-      // Stagger animate integration cards
-      const cards = cardsRef.current?.querySelectorAll('.integration-card');
-      if (cards) {
-        gsap.from(cards, {
-          scrollTrigger: {
-            trigger: cardsRef.current,
-            start: 'top 80%',
-          },
-          y: 20,
-          opacity: 0,
-          duration: 0.4,
-          stagger: 0.02,
-          ease: 'power2.out',
-        });
-      }
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
     <section 
-      ref={sectionRef}
-      className="relative py-24 bg-white dark:bg-black"
+      className="relative py-24 bg-white"
     >
       <div className="max-w-7xl mx-auto px-6">
-        <div ref={headerRef} className="text-center max-w-3xl mx-auto mb-16">
+        <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 text-sm font-medium mb-4">
             <Boxes className="w-4 h-4" />
             64+ Integrations
@@ -146,7 +99,7 @@ export function IntegrationsSection() {
         </div>
 
         {/* Integration cards */}
-        <div ref={cardsRef} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
           {integrations.map((integration) => {
             const Icon = integration.icon;
             return (

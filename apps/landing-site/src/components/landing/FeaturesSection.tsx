@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
 import { 
   Database, 
   Cpu, 
@@ -17,12 +16,6 @@ import {
   Timer
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
-
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 interface Feature {
   icon: LucideIcon;
@@ -107,53 +100,13 @@ const features: Feature[] = [
 ];
 
 export function FeaturesSection() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const headerRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!sectionRef.current || !headerRef.current || !cardsRef.current) return;
-
-    const ctx = gsap.context(() => {
-      // Animate header
-      gsap.from(headerRef.current, {
-        scrollTrigger: {
-          trigger: headerRef.current,
-          start: 'top 80%',
-        },
-        y: 30,
-        opacity: 0,
-        duration: 0.6,
-      });
-
-      // Stagger animate cards
-      const cards = cardsRef.current?.querySelectorAll('.feature-card');
-      if (cards) {
-        gsap.from(cards, {
-          scrollTrigger: {
-            trigger: cardsRef.current,
-            start: 'top 80%',
-          },
-          y: 30,
-          opacity: 0,
-          duration: 0.5,
-          stagger: 0.06,
-          ease: 'power2.out',
-        });
-      }
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
     <section 
-      ref={sectionRef} 
       id="features" 
-      className="relative py-24 bg-white dark:bg-black"
+      className="relative py-24 bg-white"
     >
       <div className="relative max-w-7xl mx-auto px-6">
-        <div ref={headerRef} className="text-center max-w-3xl mx-auto mb-16">
+        <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 text-sm font-medium mb-4">
             <Zap className="w-4 h-4" />
             Enterprise Features
@@ -170,7 +123,7 @@ export function FeaturesSection() {
           </p>
         </div>
 
-        <div ref={cardsRef} className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature) => {
             const Icon = feature.icon;
             return (

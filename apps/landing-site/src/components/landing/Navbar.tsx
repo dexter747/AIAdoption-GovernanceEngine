@@ -63,10 +63,8 @@ export function Navbar() {
   };
 
   return (
-    <>
-      <div className="h-20" />
-      <nav className="fixed top-3 left-0 right-0 z-50 px-4">
-        <div className="max-w-7xl mx-auto bg-white/80 dark:bg-black/80 backdrop-blur-xl rounded-2xl border border-gray-200 dark:border-gray-800 shadow-lg">
+    <nav className="fixed top-4 left-0 right-0 z-50 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto bg-white/70 dark:bg-black/70 backdrop-blur-2xl rounded-2xl border border-gray-200/50 dark:border-gray-800/50 shadow-2xl shadow-gray-200/50 dark:shadow-black/50">
         <div className="px-6">
           <div className="h-16 flex items-center justify-between gap-4">
             {/* Logo */}
@@ -204,6 +202,5 @@ export function Navbar() {
         )}
         </div>
       </nav>
-    </>
   );
 }

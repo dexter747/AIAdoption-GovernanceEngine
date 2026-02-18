@@ -5,10 +5,16 @@ import jwt from 'jsonwebtoken';
 
 const router = express.Router();
 
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!
-);
+let _supabase = null;
+function getSupabase() {
+  if (!_supabase) {
+    _supabase = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_KEY
+    );
+  }
+  return _supabase;
+}
 
 const JWT_SECRET = process.env.JWT_SECRET || 'ai-nexus-jwt-secret-change-in-production';
 
@@ -24,7 +30,7 @@ router.post('/validate', async (req, res) => {
     }
 
     // Look up license in database
-    const { data: license, error } = await supabase
+    const { data: license, error } = await getSupabase()
       .from('licenses')
       .select(`
         *,
@@ -62,7 +68,7 @@ router.post('/validate', async (req, res) => {
 
     // Record device activation
     if (deviceId) {
-      await supabase.from('license_activations').upsert({
+      await getSupabase().from('license_activations').upsert({
         license_id: license.id,
         device_id: deviceId,
         app_version: appVersion,
@@ -88,7 +94,7 @@ router.post('/validate', async (req, res) => {
         validated: true,
       },
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error('License validation error:', error);
     res.status(500).json({ valid: false, error: 'Validation failed' });
   }
@@ -106,7 +112,7 @@ router.post('/deactivate', async (req, res) => {
     }
 
     // Find license
-    const { data: license } = await supabase
+    const { data: license } = await getSupabase()
       .from('licenses')
       .select('id')
       .eq('license_key', licenseKey)
@@ -117,7 +123,7 @@ router.post('/deactivate', async (req, res) => {
     }
 
     // Remove device activation
-    const { error } = await supabase
+    const { error } = await getSupabase()
       .from('license_activations')
       .delete()
       .eq('license_id', license.id)
@@ -126,7 +132,7 @@ router.post('/deactivate', async (req, res) => {
     if (error) throw error;
 
     res.json({ success: true, message: 'License deactivated on this device' });
-  } catch (error: any) {
+  } catch (error) {
     console.error('License deactivation error:', error);
     res.status(500).json({ error: error.message });
   }
@@ -140,7 +146,7 @@ router.get('/:licenseKey/devices', async (req, res) => {
     const { licenseKey } = req.params;
 
     // Find license
-    const { data: license } = await supabase
+    const { data: license } = await getSupabase()
       .from('licenses')
       .select('id')
       .eq('license_key', licenseKey)
@@ -151,7 +157,7 @@ router.get('/:licenseKey/devices', async (req, res) => {
     }
 
     // Get activations
-    const { data: activations, error } = await supabase
+    const { data: activations, error } = await getSupabase()
       .from('license_activations')
       .select('*')
       .eq('license_id', license.id)
@@ -160,7 +166,7 @@ router.get('/:licenseKey/devices', async (req, res) => {
     if (error) throw error;
 
     res.json({ devices: activations || [] });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error fetching devices:', error);
     res.status(500).json({ error: error.message });
   }
@@ -169,8 +175,8 @@ router.get('/:licenseKey/devices', async (req, res) => {
 /**
  * Helper function to get plan limits
  */
-function getPlanLimits(planType: string) {
-  const limits: Record<string, any> = {
+function getPlanLimits(planType) {
+  const limits = {
     starter: {
       maxAIProviders: 5,
       maxDatabases: 3,

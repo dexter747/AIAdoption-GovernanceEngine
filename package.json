@@ -20,7 +20,13 @@
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "type-check": "pnpm --recursive run type-check",
     "test": "pnpm --recursive run test",
-    "clean": "pnpm --recursive run clean && rm -rf node_modules"
+    "clean": "pnpm --recursive run clean && rm -rf node_modules",
+    "check": "./scripts/check-system.sh",
+    "setup": "./scripts/setup-env.sh",
+    "migrate": "./scripts/migrate-database.sh",
+    "start-dev": "./scripts/start-dev.sh",
+    "test-payment": "./scripts/test-payment-flow.sh",
+    "build-mcp": "./scripts/build-all-mcp-servers.sh"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
@@ -38,6 +44,5 @@
   "engines": {
     "node": ">=20.0.0",
     "pnpm": ">=8.0.0"
-  },
-  "packageManager": "pnpm@8.15.1"
+  }
 }

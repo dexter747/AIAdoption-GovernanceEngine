@@ -115,13 +115,16 @@ if (providers.perplexity.enabled) {
   });
 }
 
-// Supabase client for usage tracking (optional)
-let supabase = null;
-if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY) {
-  supabase = createClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_KEY
-  );
+// Supabase client for usage tracking (optional - lazy init)
+let _supabaseAiRouter = null;
+function getSupabase() {
+  if (!_supabaseAiRouter && process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY) {
+    _supabaseAiRouter = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_KEY
+    );
+  }
+  return _supabaseAiRouter;
 }
 
 // =============================================================================
@@ -434,6 +437,7 @@ function calculateGoogleCost(model, totalTokens) {
 // =============================================================================
 
 async function getUserApiKey(userId, provider) {
+  const supabase = getSupabase();
   if (!supabase) return null;
   
   try {
@@ -458,6 +462,7 @@ async function getUserApiKey(userId, provider) {
 }
 
 async function logUsage({ userId, licenseId, provider, model, tokensUsed, cost, metadata }) {
+  const supabase = getSupabase();
   if (!supabase) {
     // No database configured, skip usage logging
     return;

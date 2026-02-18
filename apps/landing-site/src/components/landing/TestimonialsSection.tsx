@@ -1,14 +1,7 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
 import { Star, Quote } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
-
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
-}
+import { cn } from '@/lib/utils';
 
 interface Testimonial {
   quote: string;
@@ -77,147 +70,137 @@ const testimonials: Testimonial[] = [
   },
 ];
 
-export function TestimonialsSection() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const headerRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<HTMLDivElement>(null);
+// Split: first 3 go to one row, next 3 to the other (each row has both halves duplicated for seamless loop)
+const row1 = [...testimonials.slice(0, 3), ...testimonials.slice(3, 6)];
+const row2 = [...testimonials.slice(3, 6), ...testimonials.slice(0, 3)];
 
-  useEffect(() => {
-    if (!sectionRef.current || !headerRef.current || !cardsRef.current) return;
-
-    const ctx = gsap.context(() => {
-      // Animate header
-      gsap.from(headerRef.current, {
-        scrollTrigger: {
-          trigger: headerRef.current,
-          start: 'top 80%',
-        },
-        y: 30,
-        opacity: 0,
-        duration: 0.6,
-      });
-
-      // Stagger animate testimonial cards
-      const cards = cardsRef.current?.querySelectorAll('.testimonial-card');
-      if (cards) {
-        gsap.from(cards, {
-          scrollTrigger: {
-            trigger: cardsRef.current,
-            start: 'top 80%',
-          },
-          y: 25,
-          opacity: 0,
-          duration: 0.5,
-          stagger: 0.08,
-          ease: 'power2.out',
-        });
-      }
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
-
+function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
   return (
-    <section 
-      ref={sectionRef}
-      className="relative py-24 bg-white dark:bg-gray-950"
-    >
-      <div className="max-w-7xl mx-auto px-6">
-        <div ref={headerRef} className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 text-sm font-medium mb-4">
-            <Star className="w-4 h-4 fill-current" />
+    <div className="flex-shrink-0 w-[340px] mx-3 bg-white border border-gray-200/80 rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-blue-300 transition-all duration-300">
+      {/* Quote icon */}
+      <Quote className="w-7 h-7 text-blue-400/30 mb-3" />
+
+      {/* Rating */}
+      <div className="flex gap-0.5 mb-3">
+        {Array.from({ length: testimonial.rating }).map((_, i) => (
+          <Star key={i} className="w-3.5 h-3.5 text-blue-500 fill-blue-500" />
+        ))}
+      </div>
+
+      {/* Quote */}
+      <p className="text-gray-600 text-sm leading-relaxed mb-4 italic line-clamp-4">
+        &quot;{testimonial.quote}&quot;
+      </p>
+
+      {/* Results badge */}
+      {testimonial.results && (
+        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50 text-blue-600 text-xs font-medium mb-4">
+          <div className="w-1.5 h-1.5 rounded-full bg-blue-500 flex-shrink-0" />
+          {testimonial.results}
+        </div>
+      )}
+
+      {/* Author */}
+      <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
+        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center flex-shrink-0 shadow-sm">
+          <span className="text-white text-xs font-semibold">{testimonial.avatar}</span>
+        </div>
+        <div className="min-w-0">
+          <div className="font-semibold text-gray-900 text-sm truncate">{testimonial.author}</div>
+          <div className="text-xs text-gray-500 truncate">{testimonial.role}</div>
+          <div className="text-xs text-gray-400 truncate">{testimonial.company}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MarqueeRow({
+  items,
+  reverse = false,
+}: {
+  items: Testimonial[];
+  reverse?: boolean;
+}) {
+  const doubled = [...items, ...items];
+  return (
+    <div className="relative flex overflow-hidden">
+      <div
+        className={cn(
+          'flex w-max',
+          reverse ? 'animate-marquee-reverse' : 'animate-marquee'
+        )}
+      >
+        {doubled.map((t, i) => (
+          <TestimonialCard key={`${t.author}-${i}`} testimonial={t} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export function TestimonialsSection() {
+  return (
+    <section className="relative py-24 bg-white overflow-hidden">
+      {/* Subtle dot grid */}
+      <div
+        className="absolute inset-0 opacity-[0.025]"
+        style={{
+          backgroundImage: 'radial-gradient(circle, #6366f1 1px, transparent 1px)',
+          backgroundSize: '32px 32px',
+        }}
+      />
+
+      {/* Header */}
+      <div className="relative max-w-7xl mx-auto px-6">
+        <div className="text-center max-w-2xl mx-auto mb-14">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-sm font-medium mb-4">
+            <Star className="w-3.5 h-3.5 fill-current" />
             Customer Stories
           </div>
-          <h2 className="text-4xl  md:text-5xl font-medium text-black dark:text-white mb-4">
+          <h2 className="text-4xl md:text-5xl font-medium text-gray-900 mb-4">
             Trusted by{' '}
-            <span className="text-blue-500">
-              2,500+ enterprises
-            </span>
+            <span className="text-blue-500">2,500+ enterprises</span>
           </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-400">
+          <p className="text-lg text-gray-500">
             See how teams are transforming their legacy systems with AI Nexus
           </p>
         </div>
+      </div>
 
-        <div ref={cardsRef} className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {testimonials.map((testimonial) => (
-            <Card 
-              key={testimonial.author}
-              className="testimonial-card group relative border-gray-200 dark:border-gray-800 hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-300"
-            >
-              <CardContent className="p-6">
-                {/* Quote icon */}
-                <Quote className="w-8 h-8 text-blue-500/20 dark:text-blue-400/20 mb-4" />
+      {/* Bidirectional marquee — bleeds edge-to-edge */}
+      <div className="relative">
+        {/* Left & right fade masks */}
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-white to-transparent z-10" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-white to-transparent z-10" />
 
-                {/* Rating */}
-                <div className="flex gap-0.5 mb-4">
-                  {Array.from({ length: testimonial.rating }).map((_, i) => (
-                    <Star 
-                      key={i} 
-                      className="w-4 h-4 text-blue-500 fill-blue-500" 
-                    />
-                  ))}
-                </div>
-
-                {/* Quote */}
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-5 italic">
-                  &quot;{testimonial.quote}&quot;
-                </p>
-
-                {/* Results badge */}
-                {testimonial.results && (
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 text-xs font-medium mb-4">
-                    <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                    {testimonial.results}
-                  </div>
-                )}
-
-                {/* Author */}
-                <div className="flex items-center gap-3 pt-4 border-t border-gray-100 dark:border-gray-800">
-                  <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0">
-                    <span className="text-white text-sm font-medium">
-                      {testimonial.avatar}
-                    </span>
-                  </div>
-                  <div className="min-w-0">
-                    <div className="font-medium text-black dark:text-white truncate">
-                      {testimonial.author}
-                    </div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400 truncate">
-                      {testimonial.role}
-                    </div>
-                    <div className="text-xs text-gray-500 dark:text-gray-500 font-medium truncate">
-                      {testimonial.company}
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+        <div className="flex flex-col gap-4 py-2">
+          <MarqueeRow items={row1} reverse={false} />
+          <MarqueeRow items={row2} reverse={true} />
         </div>
+      </div>
 
-        {/* Trust indicators */}
-        <div className="mt-16 text-center">
-          <div className="inline-flex flex-wrap items-center justify-center gap-8 text-gray-400 dark:text-gray-600">
-            <div className="text-center">
-              <div className="text-2xl font-medium text-gray-900 dark:text-white">4.9/5</div>
-              <div className="text-xs">Average Rating</div>
-            </div>
-            <div className="w-px h-12 bg-gray-200 dark:bg-gray-800" />
-            <div className="text-center">
-              <div className="text-2xl font-medium text-gray-900 dark:text-white">2,500+</div>
-              <div className="text-xs">Enterprise Customers</div>
-            </div>
-            <div className="w-px h-12 bg-gray-200 dark:bg-gray-800" />
-            <div className="text-center">
-              <div className="text-2xl font-medium text-gray-900 dark:text-white">98%</div>
-              <div className="text-xs">Customer Satisfaction</div>
-            </div>
-            <div className="w-px h-12 bg-gray-200 dark:bg-gray-800" />
-            <div className="text-center">
-              <div className="text-2xl font-medium text-gray-900 dark:text-white">10M+</div>
-              <div className="text-xs">Queries Processed</div>
-            </div>
+      {/* Trust indicators */}
+      <div className="relative max-w-7xl mx-auto px-6">
+        <div className="mt-14 flex flex-wrap items-center justify-center gap-8">
+          <div className="text-center">
+            <div className="text-2xl font-semibold text-gray-900">4.9/5</div>
+            <div className="text-xs text-gray-500 mt-0.5">Average Rating</div>
+          </div>
+          <div className="w-px h-10 bg-gray-200" />
+          <div className="text-center">
+            <div className="text-2xl font-semibold text-gray-900">2,500+</div>
+            <div className="text-xs text-gray-500 mt-0.5">Enterprise Customers</div>
+          </div>
+          <div className="w-px h-10 bg-gray-200" />
+          <div className="text-center">
+            <div className="text-2xl font-semibold text-gray-900">98%</div>
+            <div className="text-xs text-gray-500 mt-0.5">Customer Satisfaction</div>
+          </div>
+          <div className="w-px h-10 bg-gray-200" />
+          <div className="text-center">
+            <div className="text-2xl font-semibold text-gray-900">10M+</div>
+            <div className="text-xs text-gray-500 mt-0.5">Queries Processed</div>
           </div>
         </div>
       </div>

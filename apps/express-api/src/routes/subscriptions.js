@@ -3,10 +3,16 @@ import { createClient } from '@supabase/supabase-js';
 
 const router = express.Router();
 
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!
-);
+let _supabase = null;
+function getSupabase() {
+  if (!_supabase) {
+    _supabase = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_KEY
+    );
+  }
+  return _supabase;
+}
 
 /**
  * GET /api/subscriptions/:userId - Get user's subscription
@@ -15,7 +21,7 @@ router.get('/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
 
-    const { data: subscription, error } = await supabase
+    const { data: subscription, error } = await getSupabase()
       .from('subscriptions')
       .select('*')
       .eq('user_id', userId)
@@ -29,7 +35,7 @@ router.get('/:userId', async (req, res) => {
     }
 
     res.json({ subscription: subscription || null });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error fetching subscription:', error);
     res.status(500).json({ error: error.message });
   }
@@ -48,7 +54,7 @@ router.post('/:userId/upgrade', async (req, res) => {
     }
 
     // Get current subscription
-    const { data: currentSub } = await supabase
+    const { data: currentSub } = await getSupabase()
       .from('subscriptions')
       .select('*')
       .eq('user_id', userId)
@@ -63,7 +69,7 @@ router.post('/:userId/upgrade', async (req, res) => {
     const newAmount = getPlanAmount(newPlanType, currentSub.billing_cycle);
 
     // Update subscription
-    const { data: updatedSub, error } = await supabase
+    const { data: updatedSub, error } = await getSupabase()
       .from('subscriptions')
       .update({
         plan_type: newPlanType,
@@ -77,13 +83,13 @@ router.post('/:userId/upgrade', async (req, res) => {
     if (error) throw error;
 
     // Update license
-    await supabase
+    await getSupabase()
       .from('licenses')
       .update({ plan_type: newPlanType })
       .eq('subscription_id', currentSub.id);
 
     res.json({ subscription: updatedSub, message: 'Subscription upgraded successfully' });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error upgrading subscription:', error);
     res.status(500).json({ error: error.message });
   }
@@ -102,7 +108,7 @@ router.post('/:userId/downgrade', async (req, res) => {
     }
 
     // Get current subscription
-    const { data: currentSub } = await supabase
+    const { data: currentSub } = await getSupabase()
       .from('subscriptions')
       .select('*')
       .eq('user_id', userId)
@@ -116,7 +122,7 @@ router.post('/:userId/downgrade', async (req, res) => {
     const newAmount = getPlanAmount(newPlanType, currentSub.billing_cycle);
 
     // Schedule downgrade at period end
-    const { data: updatedSub, error } = await supabase
+    const { data: updatedSub, error } = await getSupabase()
       .from('subscriptions')
       .update({
         // Don't change plan_type immediately for downgrades
@@ -139,7 +145,7 @@ router.post('/:userId/downgrade', async (req, res) => {
       subscription: updatedSub,
       message: `Downgrade scheduled. Will take effect on ${currentSub.current_period_end}`,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error downgrading subscription:', error);
     res.status(500).json({ error: error.message });
   }
@@ -154,7 +160,7 @@ router.post('/:userId/cancel', async (req, res) => {
     const { reason, immediate } = req.body;
 
     // Get current subscription
-    const { data: currentSub } = await supabase
+    const { data: currentSub } = await getSupabase()
       .from('subscriptions')
       .select('*')
       .eq('user_id', userId)
@@ -167,7 +173,7 @@ router.post('/:userId/cancel', async (req, res) => {
 
     if (immediate) {
       // Cancel immediately
-      const { data: cancelledSub, error } = await supabase
+      const { data: cancelledSub, error } = await getSupabase()
         .from('subscriptions')
         .update({
           status: 'cancelled',
@@ -182,7 +188,7 @@ router.post('/:userId/cancel', async (req, res) => {
       if (error) throw error;
 
       // Deactivate licenses immediately
-      await supabase
+      await getSupabase()
         .from('licenses')
         .update({ status: 'cancelled' })
         .eq('subscription_id', currentSub.id);
@@ -190,7 +196,7 @@ router.post('/:userId/cancel', async (req, res) => {
       res.json({ subscription: cancelledSub, message: 'Subscription cancelled immediately' });
     } else {
       // Cancel at period end
-      const { data: updatedSub, error } = await supabase
+      const { data: updatedSub, error } = await getSupabase()
         .from('subscriptions')
         .update({
           cancel_at_period_end: true,
@@ -208,7 +214,7 @@ router.post('/:userId/cancel', async (req, res) => {
         message: `Subscription will be cancelled on ${currentSub.current_period_end}`,
       });
     }
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error cancelling subscription:', error);
     res.status(500).json({ error: error.message });
   }
@@ -222,7 +228,7 @@ router.post('/:userId/reactivate', async (req, res) => {
     const { userId } = req.params;
 
     // Find cancelled subscription
-    const { data: cancelledSub } = await supabase
+    const { data: cancelledSub } = await getSupabase()
       .from('subscriptions')
       .select('*')
       .eq('user_id', userId)
@@ -242,7 +248,7 @@ router.post('/:userId/reactivate', async (req, res) => {
     }
 
     // Reactivate
-    const { data: reactivatedSub, error } = await supabase
+    const { data: reactivatedSub, error } = await getSupabase()
       .from('subscriptions')
       .update({
         status: 'active',
@@ -258,13 +264,13 @@ router.post('/:userId/reactivate', async (req, res) => {
     if (error) throw error;
 
     // Reactivate licenses
-    await supabase
+    await getSupabase()
       .from('licenses')
       .update({ status: 'active' })
       .eq('subscription_id', cancelledSub.id);
 
     res.json({ subscription: reactivatedSub, message: 'Subscription reactivated successfully' });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error reactivating subscription:', error);
     res.status(500).json({ error: error.message });
   }
@@ -278,7 +284,7 @@ router.get('/:userId/usage', async (req, res) => {
     const { userId } = req.params;
 
     // Get current subscription to determine period
-    const { data: subscription } = await supabase
+    const { data: subscription } = await getSupabase()
       .from('subscriptions')
       .select('current_period_start, plan_type')
       .eq('user_id', userId)
@@ -288,7 +294,7 @@ router.get('/:userId/usage', async (req, res) => {
     const periodStart = subscription?.current_period_start || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
 
     // Get usage logs
-    const { data: usageLogs, error } = await supabase
+    const { data: usageLogs, error } = await getSupabase()
       .from('usage_logs')
       .select('*')
       .eq('user_id', userId)
@@ -315,7 +321,7 @@ router.get('/:userId/usage', async (req, res) => {
       limits,
       periodStart,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error fetching usage:', error);
     res.status(500).json({ error: error.message });
   }
@@ -324,8 +330,8 @@ router.get('/:userId/usage', async (req, res) => {
 /**
  * Helper functions
  */
-function getPlanAmount(planType: string, billingCycle: string): number {
-  const prices: Record<string, any> = {
+function getPlanAmount(planType, billingCycle) {
+  const prices = {
     starter: { monthly: 19900, yearly: 199000 },
     professional: { monthly: 49900, yearly: 499000 },
     enterprise: { monthly: 99900, yearly: 999000 },
@@ -334,8 +340,8 @@ function getPlanAmount(planType: string, billingCycle: string): number {
   return prices[planType]?.[billingCycle] || 0;
 }
 
-function getPlanLimits(planType: string) {
-  const limits: Record<string, any> = {
+function getPlanLimits(planType) {
+  const limits = {
     starter: {
       maxAIProviders: 5,
       maxDatabases: 3,

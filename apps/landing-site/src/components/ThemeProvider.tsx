@@ -13,17 +13,21 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>('system');
+  const [theme, setThemeState] = useState<Theme>('light');
   const [systemTheme, setSystemTheme] = useState<'light' | 'dark'>('light');
 
   useEffect(() => {
-    // Get saved theme from localStorage
+    // Web apps always default to light — ignore any stored dark preference
     const savedTheme = localStorage.getItem('theme') as Theme | null;
-    if (savedTheme) {
+    if (savedTheme && savedTheme !== 'dark') {
       setThemeState(savedTheme);
+    } else {
+      // Force light and persist it
+      localStorage.setItem('theme', 'light');
+      setThemeState('light');
     }
 
-    // Detect system theme
+    // Detect system theme (used only if theme === 'system')
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     setSystemTheme(mediaQuery.matches ? 'dark' : 'light');
 

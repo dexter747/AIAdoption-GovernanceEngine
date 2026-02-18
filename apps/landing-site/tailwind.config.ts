@@ -74,6 +74,9 @@ const config: Config = {
         'bounce-slow': 'bounce 3s infinite',
         'shimmer': 'shimmer 2s infinite',
         'float': 'float 6s ease-in-out infinite',
+        // Bidirectional marquee
+        'marquee': 'marquee 45s linear infinite',
+        'marquee-reverse': 'marquee-reverse 50s linear infinite',
       },
       keyframes: {
         fadeIn: {
@@ -103,6 +106,14 @@ const config: Config = {
         float: {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-20px)' },
+        },
+        marquee: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
+        'marquee-reverse': {
+          '0%': { transform: 'translateX(-50%)' },
+          '100%': { transform: 'translateX(0)' },
         },
       },
     },

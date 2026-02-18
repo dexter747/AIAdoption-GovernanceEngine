@@ -1,15 +1,10 @@
 "use client";
 
-import { useState, useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useState } from 'react';
 import { Calculator, TrendingUp, Clock, DollarSign, Users } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 
-gsap.registerPlugin(ScrollTrigger);
-
 export default function ROICalculator() {
-  const sectionRef = useRef<HTMLDivElement>(null);
   const [employees, setEmployees] = useState(50);
   const [hourlyRate, setHourlyRate] = useState(75);
   const [hoursPerWeek, setHoursPerWeek] = useState(10);
@@ -20,47 +15,8 @@ export default function ROICalculator() {
   const yearlySavings = monthlySavings * 12;
   const yearlyROI = ((yearlySavings - (49 * 12 * employees)) / (49 * 12 * employees)) * 100;
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from('.roi-header', {
-        scrollTrigger: {
-          trigger: '.roi-header',
-          start: 'top 80%',
-        },
-        opacity: 0,
-        y: 20,
-        duration: 0.6,
-        ease: 'power2.out',
-      });
-
-      gsap.from('.roi-calculator', {
-        scrollTrigger: {
-          trigger: '.roi-calculator',
-          start: 'top 80%',
-        },
-        opacity: 0,
-        x: -30,
-        duration: 0.6,
-        ease: 'power2.out',
-      });
-
-      gsap.from('.roi-results', {
-        scrollTrigger: {
-          trigger: '.roi-results',
-          start: 'top 80%',
-        },
-        opacity: 0,
-        x: 30,
-        duration: 0.6,
-        ease: 'power2.out',
-      });
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <section ref={sectionRef} className="py-20 bg-white dark:bg-black">
+    <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="roi-header text-center mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 mb-6">
@@ -165,10 +121,10 @@ export default function ROICalculator() {
               </CardHeader>
               <CardContent>
                 <div className="text-5xl font-medium text-blue-500 mb-2">
-                  ${yearlySavings.toLocaleString()}
+                  ${yearlySavings.toLocaleString('en-US')}
                 </div>
                 <p className="text-gray-600 dark:text-gray-400">
-                  ${monthlySavings.toLocaleString()}/month · ${weeklySavings.toLocaleString()}/week
+                  ${monthlySavings.toLocaleString('en-US')}/month · ${weeklySavings.toLocaleString('en-US')}/week
                 </p>
               </CardContent>
             </Card>
@@ -182,7 +138,7 @@ export default function ROICalculator() {
               </CardHeader>
               <CardContent>
                 <div className="text-5xl font-medium text-blue-500 mb-2">
-                  {(employees * hoursPerWeek * 52 * 0.7).toLocaleString()}h
+                  {(employees * hoursPerWeek * 52 * 0.7).toLocaleString('en-US')}h
                 </div>
                 <p className="text-gray-600 dark:text-gray-400">
                   Per year across your entire team

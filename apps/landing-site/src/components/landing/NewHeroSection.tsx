@@ -1,76 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from 'react';
-import { gsap } from 'gsap';
+import { useEffect, useState } from 'react';
 import { ArrowRight, Play, Sparkles, Zap, Shield, TrendingUp, CheckCircle2 } from 'lucide-react';
 import { Button } from '../ui/button';
 
 export default function HeroSection() {
-  const heroRef = useRef<HTMLDivElement>(null);
-  const [stats, setStats] = useState({ companies: 0, queries: 0, savings: 0, uptime: 0 });
+  const [stats, setStats] = useState({ companies: 2500, queries: 10000000, savings: 89, uptime: 99 });
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Animate hero elements on load
-      gsap.from('.hero-badge', {
-        opacity: 0,
-        y: -20,
-        duration: 0.5,
-        ease: 'power2.out',
-      });
-
-      gsap.from('.hero-title', {
-        opacity: 0,
-        y: 20,
-        duration: 0.6,
-        delay: 0.1,
-        ease: 'power2.out',
-      });
-
-      gsap.from('.hero-description', {
-        opacity: 0,
-        y: 15,
-        duration: 0.6,
-        delay: 0.2,
-        ease: 'power2.out',
-      });
-
-      gsap.from('.hero-cta', {
-        opacity: 0,
-        y: 15,
-        duration: 0.6,
-        delay: 0.3,
-        ease: 'power2.out',
-      });
-
-      gsap.from('.hero-stats', {
-        opacity: 0,
-        y: 20,
-        duration: 0.6,
-        delay: 0.4,
-        ease: 'power2.out',
-      });
-
-      gsap.from('.hero-visual', {
-        opacity: 0,
-        scale: 0.98,
-        duration: 0.7,
-        delay: 0.2,
-        ease: 'power2.out',
-      });
-
-      // Floating animation for visual elements
-      gsap.to('.float-element', {
-        y: -15,
-        duration: 2.5,
-        yoyo: true,
-        repeat: -1,
-        ease: 'power1.inOut',
-        stagger: 0.3,
-      });
-    }, heroRef);
-
-    // Animate stats counters
     const animateCounter = (target: number, key: 'companies' | 'queries' | 'savings' | 'uptime') => {
       let current = 0;
       const increment = target / 60;
@@ -88,16 +25,13 @@ export default function HeroSection() {
       animateCounter(2500, 'companies');
       animateCounter(10000000, 'queries');
       animateCounter(89, 'savings');
-      animateCounter(99.9, 'uptime');
-    }, 1000);
-
-    return () => ctx.revert();
+      animateCounter(99, 'uptime');
+    }, 500);
   }, []);
 
   return (
     <div
-      ref={heroRef}
-      className="relative min-h-[90vh] overflow-hidden bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-blue-950"
+      className="relative min-h-[90vh] overflow-hidden bg-gradient-to-br from-blue-50 via-white to-indigo-50"
     >
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
@@ -106,7 +40,7 @@ export default function HeroSection() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-purple-400/5 rounded-full blur-3xl float-element" style={{ animationDelay: '2s' }} />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-16">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left column - Content */}
           <div className="text-center lg:text-left">
@@ -223,7 +157,7 @@ export default function HeroSection() {
                     <TrendingUp className="w-5 h-5 text-blue-600" />
                   </div>
                   <div>
-                    <div className="text-2xl font-medium text-gray-900 dark:text-white">{stats.queries.toLocaleString()}+</div>
+                    <div className="text-2xl font-medium text-gray-900 dark:text-white">{stats.queries.toLocaleString('en-US')}+</div>
                     <div className="text-xs text-gray-600 dark:text-gray-400">Queries Processed</div>
                   </div>
                 </div>
@@ -250,7 +184,7 @@ export default function HeroSection() {
         <div className="hero-stats mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
           <div className="text-center">
             <div className="text-3xl sm:text-4xl font-medium text-gray-900 dark:text-white mb-1">
-              {stats.companies.toLocaleString()}+
+              {stats.companies.toLocaleString('en-US')}+
             </div>
             <div className="text-sm text-gray-600 dark:text-gray-400">Companies Trust Us</div>
           </div>
