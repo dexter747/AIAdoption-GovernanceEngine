@@ -1053,7 +1053,7 @@ export class MCPManager {
     });
 
     const client = new Client({
-      name: 'ai-nexus-desktop',
+      name: 'velanova-desktop',
       version: '1.0.0'
     }, {
       capabilities: {}

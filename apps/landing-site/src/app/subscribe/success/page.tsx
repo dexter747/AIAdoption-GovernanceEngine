@@ -60,7 +60,7 @@ function SuccessContent() {
             <CheckCircle className="w-10 h-10 text-green-500" />
           </div>
           <h1 className="text-4xl font-medium text-white mb-2">
-            Welcome to AI Nexus!
+            Welcome to Velanova!
           </h1>
           <p className="text-xl text-gray-400">
             Your subscription has been activated successfully.
@@ -171,7 +171,7 @@ function SuccessContent() {
 
         {/* Support */}
         <p className="text-center text-gray-500 text-sm mt-12">
-          Need help? <a href="mailto:support@ainexus.com" className="text-blue-400 hover:underline">Contact our support team</a>
+          Need help? <a href="mailto:support@velanova.com" className="text-blue-400 hover:underline">Contact our support team</a>
         </p>
       </div>
     </div>

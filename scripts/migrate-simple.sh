@@ -7,7 +7,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SCHEMA_FILE="$SCRIPT_DIR/../database/schema-v3-byok.sql"
 
 echo ""
-echo "🔄 AI Nexus - Database Migration"
+echo "🔄 Velanova - Database Migration"
 echo "=================================="
 echo ""
 

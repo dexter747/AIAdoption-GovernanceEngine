@@ -17,7 +17,7 @@ const getEncryptionKey = () => {
     throw new Error('ENCRYPTION_KEY environment variable is required');
   }
   // Ensure key is 32 bytes for AES-256
-  return crypto.scryptSync(key, 'ai-nexus-salt', 32);
+  return crypto.scryptSync(key, 'velanova-salt', 32);
 };
 
 /**

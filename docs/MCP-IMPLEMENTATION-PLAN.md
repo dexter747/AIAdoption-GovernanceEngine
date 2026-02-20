@@ -1,4 +1,4 @@
-# AI Nexus Complete MCP Implementation Plan
+# Velanova Complete MCP Implementation Plan
 **Leveraging Existing MCP Ecosystem + Building What's Missing**
 
 *Last Updated: January 19, 2026*
@@ -11,7 +11,7 @@
 
 1. **USE** existing MCP servers for databases and common systems (95% coverage)
 2. **BUILD** custom MCP servers only for unique enterprise systems (5%)
-3. **CREATE** AI Nexus MCP Server as the **aggregation + governance layer**
+3. **CREATE** Velanova MCP Server as the **aggregation + governance layer**
 4. **PACKAGE** everything into a cohesive, enterprise-ready platform
 
 **Time Savings**: 6+ months of development reduced to 6-8 weeks
@@ -100,7 +100,7 @@
                                     ↓
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                                                                              │
-│                  🌟 LAYER 1: AI NEXUS MCP SERVER 🌟                         │
+│                  🌟 LAYER 1: VELANOVA MCP SERVER 🌟                         │
 │                     (WE BUILD THIS - Aggregator)                             │
 │                                                                              │
 │  ┌─────────────────────────────────────────────────────────────────────┐   │
@@ -197,7 +197,7 @@ apps/
 
 packages/
 ├── shared/                       # Shared types (existing)
-└── ai-nexus-mcp-server/          # NEW: AI Nexus MCP Server
+└── velanova-mcp-server/          # NEW: Velanova MCP Server
     ├── src/
     │   ├── server.ts             # Main MCP server
     │   ├── tools/                # Tool implementations
@@ -404,12 +404,12 @@ services:
       - mcp-network
 
   # =====================================================
-  # AI NEXUS MCP SERVER (Aggregator)
+  # VELANOVA MCP SERVER (Aggregator)
   # =====================================================
   
-  ai-nexus-mcp:
+  velanova-mcp:
     build:
-      context: ../../packages/ai-nexus-mcp-server
+      context: ../../packages/velanova-mcp-server
       dockerfile: Dockerfile
     ports:
       - "3100:3100"  # SSE endpoint
@@ -440,9 +440,9 @@ networks:
 
 ---
 
-### Phase 2: AI Nexus MCP Server Implementation (Week 3-4)
+### Phase 2: Velanova MCP Server Implementation (Week 3-4)
 
-#### packages/ai-nexus-mcp-server/src/server.ts
+#### packages/velanova-mcp-server/src/server.ts
 
 ```typescript
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
@@ -462,7 +462,7 @@ import { LicenseValidator } from './governance/license.js';
 import { AuditLogger } from './governance/audit.js';
 import { CostTracker } from './governance/cost.js';
 
-class AINexusMCPServer {
+class VelanovaMCPServer {
   private server: Server;
   private aiRouter: AIRouter;
   private databaseAggregator: DatabaseAggregator;
@@ -471,7 +471,7 @@ class AINexusMCPServer {
 
   constructor() {
     this.server = new Server(
-      { name: 'ai-nexus-mcp', version: '1.0.0' },
+      { name: 'velanova-mcp', version: '1.0.0' },
       { capabilities: { tools: {}, resources: {}, prompts: {} } }
     );
 
@@ -733,25 +733,25 @@ class AINexusMCPServer {
     this.server.setRequestHandler(ListResourcesRequestSchema, async () => ({
       resources: [
         {
-          uri: 'ainexus://models',
+          uri: 'velanova://models',
           name: 'Available AI Models',
           description: 'List of all AI models with pricing and capabilities',
           mimeType: 'application/json'
         },
         {
-          uri: 'ainexus://databases',
+          uri: 'velanova://databases',
           name: 'Connected Databases',
           description: 'List of all connected database systems',
           mimeType: 'application/json'
         },
         {
-          uri: 'ainexus://enterprise-systems',
+          uri: 'velanova://enterprise-systems',
           name: 'Enterprise Systems',
           description: 'List of connected enterprise systems (SAP, Salesforce, etc.)',
           mimeType: 'application/json'
         },
         {
-          uri: 'ainexus://usage',
+          uri: 'velanova://usage',
           name: 'Usage Statistics',
           description: 'Current usage and cost data',
           mimeType: 'application/json'
@@ -763,18 +763,18 @@ class AINexusMCPServer {
   async runStdio() {
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
-    console.error('AI Nexus MCP Server running on stdio');
+    console.error('Velanova MCP Server running on stdio');
   }
 
   async runSSE(port: number = 3100) {
     const transport = new SSEServerTransport('/sse', response);
     await this.server.connect(transport);
-    console.log(`AI Nexus MCP Server running on SSE port ${port}`);
+    console.log(`Velanova MCP Server running on SSE port ${port}`);
   }
 }
 
 // Start server
-const server = new AINexusMCPServer();
+const server = new VelanovaMCPServer();
 server.runStdio().catch(console.error);
 ```
 
@@ -782,7 +782,7 @@ server.runStdio().catch(console.error);
 
 ### Phase 3: Database Aggregator (Week 3)
 
-#### packages/ai-nexus-mcp-server/src/aggregator/database.ts
+#### packages/velanova-mcp-server/src/aggregator/database.ts
 
 ```typescript
 import { Client as MCPClient } from '@modelcontextprotocol/sdk/client/index.js';
@@ -1275,12 +1275,12 @@ export class MCPConnectionManager {
   }
 
   /**
-   * Connect to the AI Nexus MCP Server (aggregator)
+   * Connect to the Velanova MCP Server (aggregator)
    * This single connection gives access to ALL systems
    */
   async connect(): Promise<void> {
     this.aiNexusClient = new MCPClient(
-      { name: 'ai-nexus-desktop', version: '1.0.0' },
+      { name: 'velanova-desktop', version: '1.0.0' },
       { capabilities: {} }
     );
 
@@ -1289,7 +1289,7 @@ export class MCPConnectionManager {
     );
 
     await this.aiNexusClient.connect(transport);
-    console.log('Connected to AI Nexus MCP Server');
+    console.log('Connected to Velanova MCP Server');
   }
 
   /**
@@ -1393,7 +1393,7 @@ export class MCPConnectionManager {
 | **Guidewire** | P2 | 2 | Insurance industry, no existing |
 | **FIS Core Banking** | P2 | 2-3 | Banking protocols, security |
 
-### 🌟 BUILD AI Nexus MCP Server (The Aggregator)
+### 🌟 BUILD Velanova MCP Server (The Aggregator)
 
 | Component | Purpose | Weeks |
 |-----------|---------|-------|
@@ -1409,7 +1409,7 @@ export class MCPConnectionManager {
 | Phase | Duration | Deliverables |
 |-------|----------|--------------|
 | **Phase 1**: MCP Farm Setup | Week 1-2 | 20+ existing MCP servers running via Docker |
-| **Phase 2**: AI Nexus MCP Server | Week 3-4 | Aggregator with governance layer |
+| **Phase 2**: Velanova MCP Server | Week 3-4 | Aggregator with governance layer |
 | **Phase 3**: Database Integration | Week 3 | All DB MCP servers connected to aggregator |
 | **Phase 4**: Custom MCP Servers | Week 5-8 | SAP, Epic, Workday, AS/400 |
 | **Phase 5**: Desktop App Integration | Week 6-7 | Updated mcp-manager.ts |
@@ -1424,7 +1424,7 @@ export class MCPConnectionManager {
 **The key insight**: We're not building 70 MCP servers. We're:
 1. **Configuring** 50+ existing MCP servers (zero development)
 2. **Building** 6-8 custom MCP servers (enterprise gaps)
-3. **Creating** 1 AI Nexus MCP Server (aggregation + governance)
+3. **Creating** 1 Velanova MCP Server (aggregation + governance)
 
 This approach gives us:
 - **300+ integrations** in 10 weeks

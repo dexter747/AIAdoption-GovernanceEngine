@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# AI Nexus - Quick Test Runner
+# Velanova - Quick Test Runner
 # This script runs all tests and provides a comprehensive validation report
 
 set -e
 
 echo "======================================"
-echo "AI Nexus - Comprehensive Test Suite"
+echo "Velanova - Comprehensive Test Suite"
 echo "======================================"
 echo ""
 

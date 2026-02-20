@@ -28,7 +28,7 @@ const downloads: DownloadInfo[] = [
     icon: Monitor,
     version: '1.2.0',
     size: '89 MB',
-    downloadUrl: 'https://res.cloudinary.com/ainexus/raw/upload/v1/releases/AINextus-Setup-1.2.0.exe',
+    downloadUrl: 'https://res.cloudinary.com/velanova/raw/upload/v1/releases/AINextus-Setup-1.2.0.exe',
     requirements: ['Windows 10 or later', '64-bit processor', '4 GB RAM minimum', '500 MB disk space'],
   },
   {
@@ -37,7 +37,7 @@ const downloads: DownloadInfo[] = [
     icon: Apple,
     version: '1.2.0',
     size: '95 MB',
-    downloadUrl: 'https://res.cloudinary.com/ainexus/raw/upload/v1/releases/AINextus-1.2.0.dmg',
+    downloadUrl: 'https://res.cloudinary.com/velanova/raw/upload/v1/releases/AINextus-1.2.0.dmg',
     requirements: ['macOS 11 (Big Sur) or later', 'Apple Silicon or Intel', '4 GB RAM minimum', '500 MB disk space'],
   },
   {
@@ -46,7 +46,7 @@ const downloads: DownloadInfo[] = [
     icon: Terminal,
     version: '1.2.0',
     size: '92 MB',
-    downloadUrl: 'https://res.cloudinary.com/ainexus/raw/upload/v1/releases/AINextus-1.2.0.AppImage',
+    downloadUrl: 'https://res.cloudinary.com/velanova/raw/upload/v1/releases/AINextus-1.2.0.AppImage',
     requirements: ['Ubuntu 20.04+, Fedora 34+, or similar', '64-bit processor', '4 GB RAM minimum', '500 MB disk space'],
   },
 ];
@@ -108,32 +108,32 @@ export default function DocsPage() {
   });
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-black">
       {/* Navbar */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100">
+      <nav className="sticky top-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/10">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex items-center justify-between h-20">
             <Link href="/" className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/25">
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-medium text-gray-900">AI Nexus</span>
+              <span className="text-xl font-medium text-white">Velanova</span>
             </Link>
 
             <div className="hidden md:flex items-center gap-1">
-              <Link href="/#features" className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-100/80 transition-all">
+              <Link href="/#features" className="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white rounded-lg hover:bg-black/10 transition-all">
                 Features
               </Link>
-              <Link href="/#pricing" className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-100/80 transition-all">
+              <Link href="/#pricing" className="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white rounded-lg hover:bg-black/10 transition-all">
                 Pricing
               </Link>
-              <Link href="/docs" className="px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg">
+              <Link href="/docs" className="px-4 py-2 text-sm font-medium text-blue-400 bg-blue-500/10 rounded-lg">
                 Docs
               </Link>
             </div>
 
             <div className="hidden md:flex items-center gap-3">
-              <Link href="/login" className="px-4 py-2.5 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors">
+              <Link href="/login" className="px-4 py-2.5 text-sm font-medium text-gray-400 hover:text-white transition-colors">
                 Sign In
               </Link>
               <Link href="/subscribe" className="px-5 py-2.5 text-sm font-medium bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl shadow-lg shadow-blue-500/25">
@@ -152,22 +152,22 @@ export default function DocsPage() {
         
         <div className="relative max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
-            <span className="inline-block px-4 py-2 rounded-full bg-blue-50 text-blue-600 text-sm font-medium mb-4">
+            <span className="inline-block px-4 py-2 rounded-full bg-blue-500/10 text-blue-400 text-sm font-medium mb-4">
               Documentation &amp; Downloads
             </span>
-            <h1 className="text-4xl lg:text-5xl font-medium text-gray-900 mb-6">
-              Get started with AI Nexus
+            <h1 className="text-4xl lg:text-5xl font-medium text-white mb-6">
+              Get started with Velanova
             </h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
               Download the app, connect your database, and start querying in minutes.
             </p>
           </div>
 
           {/* Download Section */}
           <div className="max-w-4xl mx-auto">
-            <div className="bg-white rounded-3xl border border-gray-200 shadow-xl overflow-hidden">
+            <div className="bg-black rounded-3xl border border-white/10 shadow-xl overflow-hidden">
               {/* OS Selector */}
-              <div className="flex border-b border-gray-100">
+              <div className="flex border-b border-white/10">
                 {downloads.map((download) => {
                   const Icon = download.icon;
                   const isSelected = selectedOS === download.os;
@@ -177,8 +177,8 @@ export default function DocsPage() {
                       onClick={() => setSelectedOS(download.os)}
                       className={`flex-1 px-6 py-4 flex items-center justify-center gap-3 transition-all ${
                         isSelected 
-                          ? 'bg-blue-50 text-blue-600 border-b-2 border-blue-500' 
-                          : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'
+                          ? 'bg-blue-500/10 text-blue-400 border-b-2 border-blue-500' 
+                          : 'text-gray-400 hover:text-white hover:bg-black/10'
                       }`}
                     >
                       <Icon className="w-5 h-5" />
@@ -197,10 +197,10 @@ export default function DocsPage() {
                         <selectedDownload.icon className="w-8 h-8 text-white" />
                       </div>
                       <div>
-                        <h2 className="text-2xl font-medium text-gray-900">
-                          AI Nexus for {selectedDownload.name}
+                        <h2 className="text-2xl font-medium text-white">
+                          Velanova for {selectedDownload.name}
                         </h2>
-                        <p className="text-gray-500">
+                        <p className="text-gray-400">
                           Version {selectedDownload.version} • {selectedDownload.size}
                         </p>
                       </div>
@@ -214,7 +214,7 @@ export default function DocsPage() {
                       Download for {selectedDownload.name}
                     </a>
 
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-gray-400">
                       By downloading, you agree to our{' '}
                       <Link href="/terms" className="text-blue-600 hover:underline">Terms of Service</Link>
                       {' '}and{' '}
@@ -222,11 +222,11 @@ export default function DocsPage() {
                     </p>
                   </div>
 
-                  <div className="w-full lg:w-72 bg-gray-50 rounded-2xl p-6">
-                    <h3 className="font-medium text-gray-900 mb-4">System Requirements</h3>
+                  <div className="w-full lg:w-72 bg-black/5 rounded-2xl p-6">
+                    <h3 className="font-medium text-white mb-4">System Requirements</h3>
                     <ul className="space-y-3">
                       {selectedDownload.requirements.map((req, index) => (
-                        <li key={index} className="flex items-start gap-3 text-sm text-gray-600">
+                        <li key={index} className="flex items-start gap-3 text-sm text-gray-400">
                           <CheckCircle2 className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
                           {req}
                         </li>
@@ -240,8 +240,8 @@ export default function DocsPage() {
             {/* Quick Links */}
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
               <a 
-                href="https://github.com/ainexus/releases" 
-                className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:text-gray-900 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                href="https://github.com/velanova/releases" 
+                className="flex items-center gap-2 px-4 py-2 text-sm text-gray-400 hover:text-white bg-black/5 rounded-lg hover:bg-black/10 transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -250,8 +250,8 @@ export default function DocsPage() {
                 <ExternalLink className="w-3 h-3" />
               </a>
               <a 
-                href="https://github.com/ainexus/releases/archive" 
-                className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:text-gray-900 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                href="https://github.com/velanova/releases/archive" 
+                className="flex items-center gap-2 px-4 py-2 text-sm text-gray-400 hover:text-white bg-black/5 rounded-lg hover:bg-black/10 transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -265,17 +265,17 @@ export default function DocsPage() {
       </section>
 
       {/* Documentation Section */}
-      <section className="py-24 bg-gray-50">
+      <section className="py-24 bg-black/5">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <span className="inline-block px-4 py-2 rounded-full bg-purple-50 text-purple-600 text-sm font-medium mb-4">
               Documentation
             </span>
-            <h2 className="text-4xl font-medium text-gray-900 mb-6">
-              Learn how to use AI Nexus
+            <h2 className="text-4xl font-medium text-white mb-6">
+              Learn how to use Velanova
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Comprehensive guides and references to help you get the most out of AI Nexus.
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+              Comprehensive guides and references to help you get the most out of Velanova.
             </p>
           </div>
 
@@ -285,18 +285,18 @@ export default function DocsPage() {
               return (
                 <div 
                   key={section.title}
-                  className="bg-white rounded-2xl p-6 border border-gray-100 hover:shadow-xl transition-all hover:-translate-y-1"
+                  className="bg-black rounded-2xl p-6 border border-white/10 hover:shadow-xl transition-all hover:-translate-y-1"
                 >
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center mb-4">
                     <Icon className="w-6 h-6 text-blue-600" />
                   </div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">{section.title}</h3>
+                  <h3 className="text-lg font-medium text-white mb-4">{section.title}</h3>
                   <ul className="space-y-2">
                     {section.links.map((link) => (
                       <li key={link.href}>
                         <Link 
                           href={link.href}
-                          className="flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600 transition-colors group"
+                          className="flex items-center gap-2 text-sm text-gray-400 hover:text-blue-600 transition-colors group"
                         >
                           <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-blue-500 group-hover:translate-x-0.5 transition-all" />
                           {link.title}
@@ -318,7 +318,7 @@ export default function DocsPage() {
             <span className="inline-block px-4 py-2 rounded-full bg-green-50 text-green-600 text-sm font-medium mb-4">
               Quick Start
             </span>
-            <h2 className="text-4xl font-medium text-gray-900 mb-6">
+            <h2 className="text-4xl font-medium text-white mb-6">
               Up and running in 3 steps
             </h2>
           </div>
@@ -328,7 +328,7 @@ export default function DocsPage() {
               {
                 step: '1',
                 title: 'Download & Install',
-                description: 'Download AI Nexus for your operating system and run the installer. The app will be ready in under a minute.',
+                description: 'Download Velanova for your operating system and run the installer. The app will be ready in under a minute.',
                 icon: Download,
               },
               {
@@ -348,17 +348,17 @@ export default function DocsPage() {
               return (
                 <div 
                   key={item.step}
-                  className="relative bg-white rounded-2xl p-8 border border-gray-100 hover:shadow-xl transition-all"
+                  className="relative bg-black rounded-2xl p-8 border border-white/10 hover:shadow-xl transition-all"
                 >
                   <div className="absolute -top-4 -left-4 w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-medium text-lg shadow-lg">
                     {item.step}
                   </div>
                   <div className="pt-4">
-                    <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center mb-4">
-                      <Icon className="w-6 h-6 text-gray-700" />
+                    <div className="w-12 h-12 rounded-xl bg-black/10 flex items-center justify-center mb-4">
+                      <Icon className="w-6 h-6 text-gray-300" />
                     </div>
-                    <h3 className="text-xl font-medium text-gray-900 mb-3">{item.title}</h3>
-                    <p className="text-gray-600">{item.description}</p>
+                    <h3 className="text-xl font-medium text-white mb-3">{item.title}</h3>
+                    <p className="text-gray-400">{item.description}</p>
                   </div>
                 </div>
               );
@@ -370,7 +370,7 @@ export default function DocsPage() {
       {/* Help Section */}
       <section className="py-24 bg-gradient-to-br from-blue-600 to-purple-700">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/10 mb-6">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-black/10 mb-6">
             <HelpCircle className="w-8 h-8 text-white" />
           </div>
           <h2 className="text-3xl lg:text-4xl font-medium text-white mb-6">
@@ -382,13 +382,13 @@ export default function DocsPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link 
               href="/faq" 
-              className="px-8 py-4 bg-white text-blue-600 rounded-2xl font-medium hover:bg-blue-50 transition-colors shadow-lg"
+              className="px-8 py-4 bg-black/10 text-blue-400 rounded-2xl font-medium hover:bg-black/20 transition-colors shadow-lg"
             >
               View FAQ
             </Link>
             <Link 
               href="/contact" 
-              className="px-8 py-4 bg-white/10 text-white rounded-2xl font-medium hover:bg-white/20 transition-colors border border-white/20"
+              className="px-8 py-4 bg-black/10 text-white rounded-2xl font-medium hover:bg-black/20 transition-colors border border-white/20"
             >
               Contact Support
             </Link>
@@ -397,19 +397,19 @@ export default function DocsPage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 bg-gray-50 border-t border-gray-100">
+      <footer className="py-12 bg-black border-t border-white/10">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
                 <Sparkles className="w-4 h-4 text-white" />
               </div>
-              <span className="font-medium text-gray-900">AI Nexus</span>
+              <span className="font-medium text-white">Velanova</span>
             </div>
-            <p className="text-gray-500 text-sm">
-              &copy; {new Date().getFullYear()} AI Nexus. All rights reserved.
+            <p className="text-gray-400 text-sm">
+              &copy; {new Date().getFullYear()} Velanova. All rights reserved.
             </p>
-            <div className="flex items-center gap-6 text-sm text-gray-500">
+            <div className="flex items-center gap-6 text-sm text-gray-400">
               <Link href="/privacy" className="hover:text-blue-600 transition-colors">Privacy</Link>
               <Link href="/terms" className="hover:text-blue-600 transition-colors">Terms</Link>
             </div>

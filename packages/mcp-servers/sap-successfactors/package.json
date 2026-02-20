@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-sap-successfactors",
+  "name": "@velanova/mcp-server-sap-successfactors",
   "version": "1.0.0",
   "description": "MCP server for SAP SuccessFactors",
   "type": "module",

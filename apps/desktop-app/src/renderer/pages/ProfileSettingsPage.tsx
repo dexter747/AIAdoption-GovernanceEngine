@@ -254,7 +254,7 @@ export default function ProfileSettingsPage() {
           <Card>
             <CardHeader>
               <CardTitle>Appearance</CardTitle>
-              <CardDescription>Customize how AI Nexus looks</CardDescription>
+              <CardDescription>Customize how Velanova looks</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
@@ -400,7 +400,7 @@ export default function ProfileSettingsPage() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 border rounded-lg">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center">
                       <Shield className="w-5 h-5 text-green-600" />
                     </div>
                     <div>

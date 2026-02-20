@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# AI Nexus - BYOK End-to-End Test Script
+# Velanova - BYOK End-to-End Test Script
 # Tests the complete Bring Your Own Key flow
 
 set -e
@@ -14,7 +14,7 @@ NC='\033[0m' # No Color
 
 echo ""
 echo -e "${BLUE}╔═══════════════════════════════════════════════════════╗${NC}"
-echo -e "${BLUE}║     AI Nexus - BYOK End-to-End Test Suite           ║${NC}"
+echo -e "${BLUE}║     Velanova - BYOK End-to-End Test Suite           ║${NC}"
 echo -e "${BLUE}╚═══════════════════════════════════════════════════════╝${NC}"
 echo ""
 

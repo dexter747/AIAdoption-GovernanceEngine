@@ -156,7 +156,7 @@ Usage logged to Supabase
 
 ### Local (electron-store)
 ```
-~/.config/ai-nexus/
+~/.config/velanova/
 ├── chat-history.json       # All conversations
 └── mcp-connections.json    # Database connections
 ```

@@ -1,4 +1,4 @@
-# AI Nexus Backend Architecture
+# Velanova Backend Architecture
 **Simplified, Production-Ready Design**
 
 *Last Updated: January 19, 2026*
@@ -29,7 +29,7 @@ Let me simplify:
 DEVELOPMENT (What you need NOW):
 ├── Express API (port 5500)         ← Already have
 ├── Supabase (cloud)                ← Already have  
-├── AI Nexus MCP Server (local)     ← New, runs as Node process
+├── Velanova MCP Server (local)     ← New, runs as Node process
 └── Desktop App (Electron)          ← Already have
 
 PRODUCTION (Later, when scaling):
@@ -67,7 +67,7 @@ Do you need SAP/Epic/AS400?
 │                         YOUR MACHINE (Local Dev)                     │
 │                                                                      │
 │  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐  │
-│  │  Express API     │  │  Desktop App     │  │  AI Nexus MCP    │  │
+│  │  Express API     │  │  Desktop App     │  │  Velanova MCP    │  │
 │  │  (port 5500)     │  │  (Electron)      │  │  (STDIO mode)    │  │
 │  │                  │  │                  │  │                  │  │
 │  │  - AI routing    │  │  - React UI      │  │  - Tool server   │  │
@@ -104,7 +104,7 @@ Do you need SAP/Epic/AS400?
 │  │     Vercel (Frontend)         │  │    Railway/Fly.io (Backend) ││
 │  │                               │  │                              ││
 │  │  - Landing Site (Next.js)     │  │  - Express API               ││
-│  │  - Admin Dashboard (Next.js)  │  │  - AI Nexus MCP (SSE mode)   ││
+│  │  - Admin Dashboard (Next.js)  │  │  - Velanova MCP (SSE mode)   ││
 │  │  - Cloud Backend (Next.js)    │  │  - Redis (optional cache)    ││
 │  │                               │  │                              ││
 │  └──────────────────────────────┘  └──────────────────────────────┘│
@@ -143,7 +143,7 @@ apps/
 │   └── src/
 │       ├── main/
 │       │   ├── ai/           # AI routing (calls Express API)
-│       │   ├── mcp/          # MCP client (connects to AI Nexus MCP)
+│       │   ├── mcp/          # MCP client (connects to Velanova MCP)
 │       │   └── license/      # License validation
 │       └── renderer/         # React UI
 │
@@ -159,7 +159,7 @@ apps/
 
 packages/
 ├── shared/                   # Shared types/utils
-└── ai-nexus-mcp-server/      # MCP Server (NEW - but simple)
+└── velanova-mcp-server/      # MCP Server (NEW - but simple)
     └── src/
         ├── server.ts         # Main MCP server
         ├── tools/            # AI routing tools
@@ -178,8 +178,8 @@ packages/
 cd apps/express-api
 pnpm dev
 
-# Terminal 2: AI Nexus MCP Server (optional, for MCP clients)
-cd packages/ai-nexus-mcp-server
+# Terminal 2: Velanova MCP Server (optional, for MCP clients)
+cd packages/velanova-mcp-server
 pnpm dev
 
 # Terminal 3: Desktop App
@@ -200,7 +200,7 @@ The Express API already handles AI routing at:
 - `POST http://localhost:5500/api/chat` - Chat with AI
 - `POST http://localhost:5500/api/generate` - Generate content
 
-The AI Nexus MCP Server is **optional** - only needed if you want external tools (Claude Desktop, Cursor) to access AI Nexus.
+The Velanova MCP Server is **optional** - only needed if you want external tools (Claude Desktop, Cursor) to access Velanova.
 
 ---
 

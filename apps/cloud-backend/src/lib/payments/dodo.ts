@@ -1,6 +1,6 @@
 /**
  * Dodo Payments Integration
- * Primary payment provider for AI Nexus
+ * Primary payment provider for Velanova
  */
 
 export interface DodoPaymentConfig {
@@ -72,7 +72,7 @@ export class DodoPaymentsClient {
             price_data: {
               currency: 'usd',
               product_data: {
-                name: `AI Nexus ${params.planType.charAt(0).toUpperCase() + params.planType.slice(1)} Plan`,
+                name: `Velanova ${params.planType.charAt(0).toUpperCase() + params.planType.slice(1)} Plan`,
                 description: `${params.billingCycle} subscription`,
               },
               unit_amount: planPrices[params.planType] * 100, // cents

@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-oracle-opera",
+  "name": "@velanova/mcp-server-oracle-opera",
   "version": "1.0.0",
   "description": "MCP server for Oracle OPERA PMS (Hospitality)",
   "type": "module",

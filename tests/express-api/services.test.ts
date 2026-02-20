@@ -21,7 +21,7 @@ describe('Encryption Service', () => {
   const AUTH_TAG_LENGTH = 16;
 
   function getTestKey(key: string): Buffer {
-    return crypto.scryptSync(key, 'ai-nexus-salt', 32);
+    return crypto.scryptSync(key, 'velanova-salt', 32);
   }
 
   function encrypt(plaintext: string, encryptionKey: string): string {

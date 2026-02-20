@@ -2,7 +2,7 @@
 
 # System Check - Verify all prerequisites are installed
 
-echo "🔍 AI Nexus - System Check"
+echo "🔍 Velanova - System Check"
 echo "==========================="
 echo ""
 

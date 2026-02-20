@@ -32,7 +32,7 @@ export async function GET() {
       JWT_SECRET,
       {
         expiresIn: '7d',
-        issuer: 'ai-nexus',
+        issuer: 'velanova',
         audience: 'desktop-app',
       }
     );

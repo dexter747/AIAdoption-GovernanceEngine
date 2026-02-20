@@ -24,7 +24,7 @@ async function initConnection() {
   const password = process.env.JDE_PASSWORD || '';
   const environment = process.env.JDE_ENVIRONMENT || 'JDV920';
 
-  const r = await axios.post(`${baseUrl}/tokenrequest`, { username, password, environment, deviceName: 'AINexusMCP' });
+  const r = await axios.post(`${baseUrl}/tokenrequest`, { username, password, environment, deviceName: 'VelanovaMCP' });
   authToken = r.data.userInfo?.token || '';
 
   api = axios.create({

@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-postgresql",
+  "name": "@velanova/mcp-server-postgresql",
   "version": "1.0.0",
   "description": "MCP server for PostgreSQL databases",
   "type": "module",

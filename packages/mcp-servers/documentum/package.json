@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-documentum",
+  "name": "@velanova/mcp-server-documentum",
   "version": "1.0.0",
   "description": "MCP server for OpenText Documentum",
   "type": "module",

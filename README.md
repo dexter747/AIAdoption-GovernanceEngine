@@ -1,6 +1,6 @@
-# AI Nexus - AI Adoption & Governance Engine
+# Velanova - AI Adoption & Governance Engine
 
-Transform your legacy systems with AI-powered insights. AI Nexus connects your existing databases and enterprise software to cutting-edge AI models, enabling natural language queries and intelligent automation.
+Transform your legacy systems with AI-powered insights. Velanova connects your existing databases and enterprise software to cutting-edge AI models, enabling natural language queries and intelligent automation.
 
 ---
 

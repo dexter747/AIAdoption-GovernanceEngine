@@ -6,8 +6,12 @@ import SessionProvider from '@/components/SessionProvider';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'AI Nexus Admin Dashboard',
-  description: 'Admin portal for AI Nexus management',
+  title: 'Velanova Admin Dashboard',
+  description: 'Admin portal for Velanova management',
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/logo.png',
+  },
 };
 
 export default function RootLayout({
@@ -16,8 +20,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="light">
-      <body className={`${inter.className} bg-white text-black`}>
+    <html lang="en" className="dark">
+      <body className={`${inter.className} bg-background text-foreground antialiased`}>
         <SessionProvider>
           {children}
         </SessionProvider>

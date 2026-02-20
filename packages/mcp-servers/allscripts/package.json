@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-allscripts",
+  "name": "@velanova/mcp-server-allscripts",
   "version": "1.0.0",
   "description": "MCP server for Allscripts/Veradigm EHR",
   "type": "module",

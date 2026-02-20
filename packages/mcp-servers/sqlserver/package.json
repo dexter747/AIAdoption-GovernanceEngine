@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-sqlserver",
+  "name": "@velanova/mcp-server-sqlserver",
   "version": "1.0.0",
   "description": "Model Context Protocol server for Microsoft SQL Server",
   "type": "module",

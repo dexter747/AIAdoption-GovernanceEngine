@@ -64,7 +64,7 @@ CORS_ORIGINS=http://localhost:3000,http://localhost:3001
 #### **Desktop App** (`apps/desktop-app/.env`):
 ```env
 API_BASE_URL=http://localhost:5500
-# For production: API_BASE_URL=https://api.ainexus.com
+# For production: API_BASE_URL=https://api.velanova.com
 ```
 
 ---
@@ -184,13 +184,13 @@ pnpm run build:all-platforms
 
 # This creates installers in:
 # dist/
-#   ├── AI-Nexus-1.0.0.dmg           # macOS
-#   ├── AI-Nexus-1.0.0-mac.zip       # macOS alternative
-#   ├── AI-Nexus-Setup-1.0.0.exe     # Windows installer
-#   ├── AI-Nexus-1.0.0-portable.exe  # Windows portable
-#   ├── AI-Nexus-1.0.0.AppImage      # Linux
-#   ├── AI-Nexus-1.0.0.deb           # Debian/Ubuntu
-#   └── AI-Nexus-1.0.0.rpm           # Fedora/RHEL
+#   ├── Velanova-1.0.0.dmg           # macOS
+#   ├── Velanova-1.0.0-mac.zip       # macOS alternative
+#   ├── Velanova-Setup-1.0.0.exe     # Windows installer
+#   ├── Velanova-1.0.0-portable.exe  # Windows portable
+#   ├── Velanova-1.0.0.AppImage      # Linux
+#   ├── Velanova-1.0.0.deb           # Debian/Ubuntu
+#   └── Velanova-1.0.0.rpm           # Fedora/RHEL
 ```
 
 ---

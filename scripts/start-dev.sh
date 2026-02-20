@@ -3,7 +3,7 @@
 # Development Environment Starter
 # Starts all services in separate terminal tabs/windows
 
-echo "🚀 AI Nexus - Starting Development Environment"
+echo "🚀 Velanova - Starting Development Environment"
 echo "=============================================="
 echo ""
 

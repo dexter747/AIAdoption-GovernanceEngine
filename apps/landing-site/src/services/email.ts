@@ -1,7 +1,7 @@
 import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const FROM_EMAIL = process.env.FROM_EMAIL || 'AI Nexus <noreply@ainexus.com>';
+const FROM_EMAIL = process.env.FROM_EMAIL || 'Velanova <noreply@velanova.com>';
 
 export interface EmailTemplate {
   to: string;
@@ -42,11 +42,11 @@ async function sendEmail(template: EmailTemplate) {
 export async function sendWelcomeEmail(email: string, name: string) {
   return sendEmail({
     to: email,
-    subject: 'Welcome to AI Nexus! 🎉',
+    subject: 'Welcome to Velanova! 🎉',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h1 style="color: #6366f1;">Welcome to AI Nexus, ${name}!</h1>
-        <p>Thank you for joining AI Nexus - your AI adoption & governance platform.</p>
+        <h1 style="color: #6366f1;">Welcome to Velanova, ${name}!</h1>
+        <p>Thank you for joining Velanova - your AI adoption & governance platform.</p>
         
         <h2>Getting Started</h2>
         <ol>
@@ -65,7 +65,7 @@ export async function sendWelcomeEmail(email: string, name: string) {
 
         <p>Need help? Visit our <a href="${process.env.NEXT_PUBLIC_APP_URL}/docs">documentation</a> or reply to this email.</p>
         
-        <p>Best regards,<br>The AI Nexus Team</p>
+        <p>Best regards,<br>The Velanova Team</p>
       </div>
     `,
   });
@@ -81,11 +81,11 @@ export async function sendLicenseEmail(
 ) {
   return sendEmail({
     to: email,
-    subject: 'Your AI Nexus License Key 🔑',
+    subject: 'Your Velanova License Key 🔑',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h1 style="color: #6366f1;">Your License Key is Ready!</h1>
-        <p>Thank you for subscribing to AI Nexus ${planType} plan.</p>
+        <p>Thank you for subscribing to Velanova ${planType} plan.</p>
         
         <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
           <h3>Your License Key:</h3>
@@ -99,7 +99,7 @@ export async function sendLicenseEmail(
 
         <h2>Activation Instructions:</h2>
         <ol>
-          <li>Open the AI Nexus Desktop App</li>
+          <li>Open the Velanova Desktop App</li>
           <li>Click "Activate License"</li>
           <li>Paste your license key above</li>
           <li>Click "Activate"</li>
@@ -114,7 +114,7 @@ export async function sendLicenseEmail(
 
         <p><strong>Important:</strong> Your license can be activated on up to 3 devices simultaneously.</p>
         
-        <p>Questions? Contact us at support@ainexus.com</p>
+        <p>Questions? Contact us at support@velanova.com</p>
       </div>
     `,
   });
@@ -133,7 +133,7 @@ export async function sendPaymentConfirmationEmail(
   
   return sendEmail({
     to: email,
-    subject: 'Payment Confirmation - AI Nexus',
+    subject: 'Payment Confirmation - Velanova',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h1 style="color: #10b981;">Payment Successful! ✓</h1>
@@ -261,11 +261,11 @@ export async function sendUsageAlertEmail(
 export async function sendCancellationEmail(email: string, endDate: string) {
   return sendEmail({
     to: email,
-    subject: 'Subscription Cancelled - AI Nexus',
+    subject: 'Subscription Cancelled - Velanova',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h1 style="color: #6366f1;">Subscription Cancelled</h1>
-        <p>Your AI Nexus subscription has been cancelled successfully.</p>
+        <p>Your Velanova subscription has been cancelled successfully.</p>
         
         <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
           <p><strong>What happens next:</strong></p>
@@ -298,7 +298,7 @@ export async function sendPasswordResetEmail(email: string, resetToken: string) 
   
   return sendEmail({
     to: email,
-    subject: 'Reset Your Password - AI Nexus',
+    subject: 'Reset Your Password - Velanova',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h1 style="color: #6366f1;">Reset Your Password</h1>

@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-shopify",
+  "name": "@velanova/mcp-server-shopify",
   "version": "1.0.0",
   "description": "MCP server for Shopify Commerce",
   "type": "module",

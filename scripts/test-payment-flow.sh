@@ -5,7 +5,7 @@
 
 set -e
 
-echo "🧪 AI Nexus - Payment Flow Test"
+echo "🧪 Velanova - Payment Flow Test"
 echo "================================="
 echo ""
 

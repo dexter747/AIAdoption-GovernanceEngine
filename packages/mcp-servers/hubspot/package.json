@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-hubspot",
+  "name": "@velanova/mcp-server-hubspot",
   "version": "1.0.0",
   "description": "MCP server for HubSpot CRM",
   "type": "module",

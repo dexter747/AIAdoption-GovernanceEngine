@@ -745,7 +745,7 @@ ipcMain.handle('payments:create-checkout', async (_event, params) => {
     const isDev = process.env.NODE_ENV !== 'production' || !app.isPackaged;
     const baseUrl = isDev 
       ? (process.env.LANDING_SITE_URL || 'http://localhost:3000')
-      : (process.env.LANDING_SITE_URL || 'https://ainexus.com');
+      : (process.env.LANDING_SITE_URL || 'https://velanova.com');
     const checkoutUrl = `${baseUrl}/subscribe?plan=${params.plan}`;
     shell.openExternal(checkoutUrl);
     return { success: true, checkoutUrl };

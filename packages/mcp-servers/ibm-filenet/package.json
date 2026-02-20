@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-ibm-filenet",
+  "name": "@velanova/mcp-server-ibm-filenet",
   "version": "1.0.0",
   "description": "MCP server for IBM FileNet P8",
   "type": "module",

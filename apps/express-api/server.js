@@ -9,8 +9,8 @@ const app = express();
 const PORT = process.env.PORT || 5500;
 
 // JWT Configuration
-const JWT_SECRET = process.env.JWT_SECRET || 'ai-nexus-jwt-secret-change-in-production';
-const JWT_ISSUER = 'ai-nexus';
+const JWT_SECRET = process.env.JWT_SECRET || 'velanova-jwt-secret-change-in-production';
+const JWT_ISSUER = 'velanova';
 
 // JWT Helper Functions
 function base64UrlDecode(str) {
@@ -94,7 +94,7 @@ app.get('/health', (req, res) => {
 // API Routes
 app.get('/api/status', (req, res) => {
   res.json({
-    service: 'AI Nexus API',
+    service: 'Velanova API',
     version: '1.0.0',
     status: 'running',
   });
@@ -143,7 +143,7 @@ app.get('/api/avatar/proxy', async (req, res) => {
     }
 
     const resp = await fetch(url, {
-      headers: { 'User-Agent': 'AI-Nexus/1.0' },
+      headers: { 'User-Agent': 'Velanova/1.0' },
     });
     if (!resp.ok) {
       return res.status(resp.status).json({ error: 'Upstream error' });

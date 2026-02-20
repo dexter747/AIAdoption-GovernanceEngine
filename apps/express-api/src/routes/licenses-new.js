@@ -16,7 +16,7 @@ function getSupabase() {
   return _supabase;
 }
 
-const JWT_SECRET = process.env.JWT_SECRET || 'ai-nexus-jwt-secret-change-in-production';
+const JWT_SECRET = process.env.JWT_SECRET || 'velanova-jwt-secret-change-in-production';
 
 /**
  * POST /api/licenses/validate - Validate license key

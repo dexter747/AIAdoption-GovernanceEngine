@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-oracle-peoplesoft",
+  "name": "@velanova/mcp-server-oracle-peoplesoft",
   "version": "1.0.0",
   "description": "MCP server for Oracle PeopleSoft",
   "type": "module",

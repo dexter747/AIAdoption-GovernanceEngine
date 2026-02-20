@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# Environment Setup Script for AI Nexus
+# Environment Setup Script for Velanova
 # This script creates .env files from templates
 
 set -e
 
-echo "🔧 AI Nexus - Environment Setup"
+echo "🔧 Velanova - Environment Setup"
 echo "================================"
 echo ""
 
@@ -154,7 +154,7 @@ API_BASE_URL=http://localhost:5500
 NODE_ENV=development
 
 # Update Server (for production)
-UPDATE_SERVER_URL=https://releases.ainexus.com
+UPDATE_SERVER_URL=https://releases.velanova.com
 EOF
     
     echo -e "${GREEN}✅ Created apps/desktop-app/.env${NC}"

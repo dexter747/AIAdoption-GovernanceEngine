@@ -94,7 +94,7 @@ Desktop App → Opens Browser → Landing Site (/login?desktop=true)
                                      ↓
                         Redirects to /auth/desktop-callback
                                      ↓
-                   Deep link back to desktop app (ainexus://)
+                   Deep link back to desktop app (velanova://)
 ```
 
 ## Quick Test (Without Desktop App)

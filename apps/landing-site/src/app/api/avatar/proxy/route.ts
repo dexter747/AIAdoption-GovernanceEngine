@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const resp = await fetch(url, {
-      headers: { 'User-Agent': 'AI-Nexus/1.0' },
+      headers: { 'User-Agent': 'Velanova/1.0' },
     });
 
     if (!resp.ok) {

@@ -1,6 +1,6 @@
 # AI Model API Keys Setup Guide
 
-This guide explains all the AI model providers integrated into the AI Nexus backend and how to get API keys for each.
+This guide explains all the AI model providers integrated into the Velanova backend and how to get API keys for each.
 
 ## 📋 Overview
 

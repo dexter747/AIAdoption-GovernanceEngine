@@ -5,13 +5,13 @@ import { Sparkles, ArrowRight, Calendar, Clock, User } from 'lucide-react';
 
 const posts = [
   {
-    slug: 'introducing-ai-nexus-2',
-    title: 'Introducing AI Nexus 2.0: The Future of Database Intelligence',
-    excerpt: 'Today we\'re excited to announce AI Nexus 2.0, featuring support for 10+ AI providers, 20+ database connectors, and a completely redesigned interface.',
+    slug: 'introducing-velanova-2',
+    title: 'Introducing Velanova 2.0: The Future of Database Intelligence',
+    excerpt: 'Today we\'re excited to announce Velanova 2.0, featuring support for 10+ AI providers, 20+ database connectors, and a completely redesigned interface.',
     date: 'January 15, 2025',
     readTime: '5 min read',
-    author: 'AI Nexus Team',
-    image: '/blog/ai-nexus-2.jpg',
+    author: 'Velanova Team',
+    image: '/blog/velanova-2.jpg',
     category: 'Product',
   },
   {
@@ -37,10 +37,10 @@ const posts = [
   {
     slug: 'ai-database-best-practices',
     title: 'Best Practices for AI-Powered Database Queries',
-    excerpt: 'Tips and tricks for getting the most out of AI Nexus, from writing better prompts to optimizing your query results.',
+    excerpt: 'Tips and tricks for getting the most out of Velanova, from writing better prompts to optimizing your query results.',
     date: 'December 28, 2024',
     readTime: '7 min read',
-    author: 'AI Nexus Team',
+    author: 'Velanova Team',
     image: '/blog/best-practices.jpg',
     category: 'Tutorial',
   },
@@ -52,16 +52,16 @@ export default function BlogPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       {/* Header */}
-      <header className="border-b border-gray-100 bg-white/80 backdrop-blur-xl sticky top-0 z-50">
+      <header className="border-b border-white/10 bg-black/80 backdrop-blur-xl sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
               <Sparkles className="w-4 h-4 text-white" />
             </div>
-            <span className="font-medium text-gray-900">AI Nexus</span>
+            <span className="font-medium text-white">Velanova</span>
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/download" className="text-sm text-gray-600 hover:text-gray-900 font-medium">
+            <Link href="/download" className="text-sm text-gray-400 hover:text-white font-medium">
               Download
             </Link>
             <Link
@@ -82,18 +82,18 @@ export default function BlogPage() {
 
         <div className="container relative mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl sm:text-5xl font-medium text-gray-900 mb-4">
+            <h1 className="text-4xl sm:text-5xl font-medium text-white mb-4">
               Blog
             </h1>
             <p className="text-lg text-gray-500 max-w-2xl mx-auto">
-              News, tutorials, and insights about AI Nexus, database intelligence, and the future of data analytics.
+              News, tutorials, and insights about Velanova, database intelligence, and the future of data analytics.
             </p>
           </div>
         </div>
       </section>
 
       {/* Categories */}
-      <section className="border-b border-gray-100 bg-white">
+      <section className="border-b border-white/10 bg-black">
         <div className="container mx-auto px-6">
           <div className="flex items-center gap-2 py-4 overflow-x-auto">
             {categories.map((category) => (
@@ -102,7 +102,7 @@ export default function BlogPage() {
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap ${
                   category === 'All'
                     ? 'bg-gray-900 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    : 'bg-black/10 text-gray-400 hover:bg-black/20'
                 }`}
               >
                 {category}
@@ -121,7 +121,7 @@ export default function BlogPage() {
                 <Link
                   key={post.slug}
                   href={`/blog/${post.slug}`}
-                  className="group bg-white rounded-2xl border border-gray-200 overflow-hidden hover:border-blue-300 hover:shadow-xl transition-all"
+                  className="group bg-black rounded-2xl border border-white/10 overflow-hidden hover:border-blue-300 hover:shadow-xl transition-all"
                 >
                   {/* Image placeholder */}
                   <div className="aspect-video bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center">
@@ -132,12 +132,12 @@ export default function BlogPage() {
 
                   <div className="p-6">
                     <div className="flex items-center gap-3 mb-3">
-                      <span className="px-2.5 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">
+                      <span className="px-2.5 py-1 bg-blue-500/10 text-blue-400 text-xs font-medium rounded-full">
                         {post.category}
                       </span>
                     </div>
 
-                    <h2 className="text-xl font-medium text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                    <h2 className="text-xl font-medium text-white mb-2 group-hover:text-blue-600 transition-colors">
                       {post.title}
                     </h2>
                     <p className="text-gray-500 text-sm mb-4 line-clamp-2">
@@ -161,7 +161,7 @@ export default function BlogPage() {
 
             {/* Load More */}
             <div className="text-center mt-12">
-              <button className="px-8 py-3 bg-gray-100 text-gray-700 font-medium rounded-xl hover:bg-gray-200 transition-colors">
+              <button className="px-8 py-3 bg-black/10 text-gray-300 font-medium rounded-xl hover:bg-black/20 transition-colors">
                 Load More Posts
               </button>
             </div>
@@ -183,11 +183,11 @@ export default function BlogPage() {
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="flex-1 px-4 py-3 rounded-xl border-0 focus:ring-2 focus:ring-white/50 text-gray-900"
+                className="flex-1 px-4 py-3 rounded-xl border-0 focus:ring-2 focus:ring-white/50 text-white"
               />
               <button
                 type="submit"
-                className="px-6 py-3 bg-white text-blue-600 font-medium rounded-xl hover:bg-gray-100 transition-colors flex items-center justify-center gap-2"
+                className="px-6 py-3 bg-black/10 text-blue-400 font-medium rounded-xl hover:bg-black/10 transition-colors flex items-center justify-center gap-2"
               >
                 Subscribe
                 <ArrowRight className="w-4 h-4" />
@@ -198,13 +198,13 @@ export default function BlogPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-gray-100 py-8 bg-white">
+      <footer className="border-t border-white/10 py-8 bg-black">
         <div className="container mx-auto px-6 text-center">
-          <p className="text-sm text-gray-400">© 2025 AI Nexus. All rights reserved.</p>
+          <p className="text-sm text-gray-400">© 2025 Velanova. All rights reserved.</p>
           <div className="flex justify-center gap-6 mt-4">
-            <Link href="/privacy" className="text-sm text-gray-400 hover:text-gray-600">Privacy</Link>
-            <Link href="/terms" className="text-sm text-gray-400 hover:text-gray-600">Terms</Link>
-            <Link href="/contact" className="text-sm text-gray-400 hover:text-gray-600">Contact</Link>
+            <Link href="/privacy" className="text-sm text-gray-400 hover:text-gray-400">Privacy</Link>
+            <Link href="/terms" className="text-sm text-gray-400 hover:text-gray-400">Terms</Link>
+            <Link href="/contact" className="text-sm text-gray-400 hover:text-gray-400">Contact</Link>
           </div>
         </div>
       </footer>

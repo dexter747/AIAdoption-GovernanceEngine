@@ -7,7 +7,7 @@
 ```bash
 # Tested endpoints:
 ✅ GET  /health              → {"status":"ok"}
-✅ GET  /api/status          → {"service":"AI Nexus API","version":"1.0.0","status":"running"}
+✅ GET  /api/status          → {"service":"Velanova API","version":"1.0.0","status":"running"}
 ✅ GET  /api/ai/providers    → {"providers":[]} (empty - needs API keys)
 ✅ POST /api/licenses/validate
 ✅ POST /api/ai/query
@@ -139,7 +139,7 @@ curl -X POST http://localhost:5500/api/ai/query \
 
 1. `apps/express-api/src/server.js` - Fixed dotenv loading order, made Supabase conditional
 2. `apps/express-api/src/providers/ai-router.js` - Made Supabase optional
-3. `packages/ai-nexus-mcp-server/` - Created new MCP server package (for future use)
+3. `packages/velanova-mcp-server/` - Created new MCP server package (for future use)
 4. `docs/BACKEND-ARCHITECTURE.md` - Simplified architecture documentation
 5. `docs/MCP-IMPLEMENTATION-PLAN.md` - Comprehensive MCP strategy (for future)
 

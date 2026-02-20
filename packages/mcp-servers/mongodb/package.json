@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-mongodb",
+  "name": "@velanova/mcp-server-mongodb",
   "version": "1.0.0",
   "description": "Model Context Protocol server for MongoDB",
   "type": "module",

@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-mariadb",
+  "name": "@velanova/mcp-server-mariadb",
   "version": "1.0.0",
   "type": "module",
   "main": "dist/index.js",

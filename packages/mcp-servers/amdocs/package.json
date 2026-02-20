@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-amdocs",
+  "name": "@velanova/mcp-server-amdocs",
   "version": "1.0.0",
   "description": "MCP server for Amdocs BSS/OSS",
   "type": "module",

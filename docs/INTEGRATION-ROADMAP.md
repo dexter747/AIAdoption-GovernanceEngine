@@ -1,4 +1,4 @@
-# AI Nexus Integration Roadmap
+# Velanova Integration Roadmap
 **Strategic AI Models & Legacy Systems Integration Priority**
 
 *Last Updated: January 19, 2026*
@@ -7,7 +7,7 @@
 
 ## Executive Summary
 
-This document defines the integration roadmap for AI Nexus, prioritizing **67 AI models** and **60+ legacy enterprise systems** across 4 phases over 18 months. The strategy focuses on maximizing market coverage while building defensible competitive moats.
+This document defines the integration roadmap for Velanova, prioritizing **67 AI models** and **60+ legacy enterprise systems** across 4 phases over 18 months. The strategy focuses on maximizing market coverage while building defensible competitive moats.
 
 **Key Insight**: The platform that masters **SAP S/4HANA + Claude 3.5 Sonnet** (long-context financial analysis) while simultaneously supporting **AS/400 + Llama 3.1** (air-gapped banking) becomes undisplaceable in enterprise markets.
 
@@ -279,7 +279,7 @@ apps/express-api/src/integrations/
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                     AI Nexus Platform                        │
+│                     Velanova Platform                        │
 ├─────────────────────────────────────────────────────────────┤
 │                                                               │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
@@ -550,7 +550,7 @@ Month | AI Models                    | Legacy Systems              | Team Size
 
 ## Conclusion: The Undisplaceable Platform
 
-By executing this roadmap, AI Nexus becomes:
+By executing this roadmap, Velanova becomes:
 
 1. **Technically Undisplaceable**: Replicating 70 integrations = 4-5 years for competitors
 2. **Economically Undisplaceable**: Switching cost = $5M-$10M for enterprise customers  

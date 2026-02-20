@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-netsuite",
+  "name": "@velanova/mcp-server-netsuite",
   "version": "1.0.0",
   "description": "MCP server for Oracle NetSuite",
   "type": "module",

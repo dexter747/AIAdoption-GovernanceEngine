@@ -4,7 +4,7 @@
 
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
 2. Click "Select a project" → "New Project"
-3. Name: `AI Nexus` (or your app name)
+3. Name: `Velanova` (or your app name)
 4. Click "Create"
 
 ## Step 2: Enable Google+ API
@@ -22,7 +22,7 @@
 ### Fill in the form:
 
 **App Information:**
-- App name: `AI Nexus`
+- App name: `Velanova`
 - User support email: `your-email@domain.com`
 - App logo: (Optional) Upload your logo
 
@@ -56,7 +56,7 @@
 1. Go to: **APIs & Services** → **Credentials**
 2. Click: **+ Create Credentials** → **OAuth client ID**
 3. Application type: **Web application**
-4. Name: `AI Nexus Web Client`
+4. Name: `Velanova Web Client`
 
 ### Authorized JavaScript origins:
 ```

@@ -10,7 +10,7 @@ function LoadingFallback() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
       <div className="text-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-        <p className="text-gray-600">Loading subscription plans...</p>
+        <p className="text-gray-400">Loading subscription plans...</p>
       </div>
     </div>
   );
@@ -75,7 +75,7 @@ function SubscribeContent() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <header className="border-b bg-white/80 backdrop-blur-sm">
+      <header className="border-b bg-black/80 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4">
           <Link href="/" className="text-2xl font-medium">
             ← Back to Home
@@ -86,19 +86,19 @@ function SubscribeContent() {
       <main className="container mx-auto px-4 py-20">
         <div className="max-w-6xl mx-auto">
           <h1 className="text-5xl font-medium mb-6 text-center">Choose Your Plan</h1>
-          <p className="text-xl text-gray-600 mb-12 text-center">
+          <p className="text-xl text-gray-400 mb-12 text-center">
             Start with a 14-day free trial. No credit card required.
           </p>
 
           {/* Billing Toggle */}
           <div className="flex justify-center mb-12">
-            <div className="bg-white rounded-full p-1 border-2 inline-flex">
+            <div className="bg-gray-900 rounded-full p-1 border-2 border-gray-700 inline-flex">
               <button
                 onClick={() => setBillingPeriod('monthly')}
                 className={`px-6 py-2 rounded-full font-medium transition-all ${
                   billingPeriod === 'monthly'
                     ? 'bg-blue-600 text-white'
-                    : 'text-gray-600 hover:text-gray-900'
+                    : 'text-gray-400 hover:text-white'
                 }`}
               >
                 Monthly
@@ -108,11 +108,11 @@ function SubscribeContent() {
                 className={`px-6 py-2 rounded-full font-medium transition-all ${
                   billingPeriod === 'yearly'
                     ? 'bg-blue-600 text-white'
-                    : 'text-gray-600 hover:text-gray-900'
+                    : 'text-gray-400 hover:text-white'
                 }`}
               >
                 Yearly
-                <span className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
+                <span className="ml-2 text-xs bg-green-500/10 text-green-400 px-2 py-1 rounded">
                   Save 20%
                 </span>
               </button>
@@ -129,7 +129,7 @@ function SubscribeContent() {
               return (
                 <div
                   key={key}
-                  className={`bg-white rounded-2xl p-8 shadow-lg ${
+                  className={`bg-card rounded-2xl p-8 border border-border ${
                     key === 'professional' ? 'border-4 border-blue-600 relative' : ''
                   }`}
                 >
@@ -146,12 +146,12 @@ function SubscribeContent() {
                     {isEnterprise ? (
                       <div>
                         <span className="text-4xl font-medium">Custom</span>
-                        <p className="text-gray-600 mt-2">Contact us for pricing</p>
+                        <p className="text-gray-400 mt-2">Contact us for pricing</p>
                       </div>
                     ) : (
                       <div>
                         <span className="text-5xl font-medium">${price}</span>
-                        <span className="text-gray-600">
+                        <span className="text-gray-400">
                           /{billingPeriod === 'monthly' ? 'month' : 'year'}
                         </span>
                       </div>
@@ -162,7 +162,7 @@ function SubscribeContent() {
                     {plan.features.map((feature, i) => (
                       <li key={i} className="flex items-start gap-3">
                         <Check className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-700">{feature}</span>
+                        <span className="text-gray-300">{feature}</span>
                       </li>
                     ))}
                   </ul>
@@ -172,14 +172,14 @@ function SubscribeContent() {
                     className={`w-full py-3 rounded-lg font-medium transition-all ${
                       key === 'professional'
                         ? 'bg-blue-600 text-white hover:bg-blue-700'
-                        : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+                        : 'bg-white/10 text-white hover:bg-white/20'
                     }`}
                   >
                     {isEnterprise ? 'Contact Sales' : 'Subscribe Now'}
                   </button>
 
                   {!isEnterprise && (
-                    <p className="text-center text-sm text-gray-500 mt-4">
+                    <p className="text-center text-sm text-gray-400 mt-4">
                       14-day free trial included
                     </p>
                   )}
@@ -192,29 +192,29 @@ function SubscribeContent() {
           <div className="mt-20">
             <h2 className="text-3xl font-medium text-center mb-12">Frequently Asked Questions</h2>
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-              <div className="bg-white p-6 rounded-xl">
+              <div className="bg-card p-6 rounded-xl border border-border">
                 <h3 className="font-medium mb-2">Can I change plans later?</h3>
-                <p className="text-gray-600 text-sm">
+                <p className="text-gray-400 text-sm">
                   Yes! You can upgrade or downgrade your plan at any time. Changes take effect
                   immediately.
                 </p>
               </div>
-              <div className="bg-white p-6 rounded-xl">
+              <div className="bg-card p-6 rounded-xl border border-border">
                 <h3 className="font-medium mb-2">What payment methods do you accept?</h3>
-                <p className="text-gray-600 text-sm">
+                <p className="text-gray-400 text-sm">
                   We accept PayPal globally, and Razorpay for India (UPI, cards, net banking).
                 </p>
               </div>
-              <div className="bg-white p-6 rounded-xl">
+              <div className="bg-card p-6 rounded-xl border border-border">
                 <h3 className="font-medium mb-2">Is my data secure?</h3>
-                <p className="text-gray-600 text-sm">
+                <p className="text-gray-400 text-sm">
                   Yes! Your data stays on your infrastructure. We only receive anonymized usage
                   metadata.
                 </p>
               </div>
-              <div className="bg-white p-6 rounded-xl">
+              <div className="bg-card p-6 rounded-xl border border-border">
                 <h3 className="font-medium mb-2">Can I cancel anytime?</h3>
-                <p className="text-gray-600 text-sm">
+                <p className="text-gray-400 text-sm">
                   Absolutely. Cancel anytime from your account dashboard. No questions asked.
                 </p>
               </div>

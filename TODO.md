@@ -1,4 +1,4 @@
-# AI Nexus - Complete Implementation Roadmap
+# Velanova - Complete Implementation Roadmap
 
 **Last Updated:** January 22, 2026  
 **Project Status:** 70-75% Complete - BYOK Phase Complete, Testing Phase
@@ -7,7 +7,7 @@
 
 ## 📊 Project Overview
 
-**AI Nexus** is an enterprise AI adoption & governance platform that connects:
+**Velanova** is an enterprise AI adoption & governance platform that connects:
 - **15 AI Providers** (OpenAI, Anthropic, Google, Groq, etc.) via user's own API keys
 - **10+ Database Types** (PostgreSQL, MySQL, Oracle, SAP HANA, MongoDB) via MCP servers
 - **10+ Enterprise SaaS** (Salesforce, ServiceNow, Jira, Zendesk) via custom MCP wrappers
@@ -17,7 +17,7 @@
 - **Admin Dashboard** (Next.js @ port 3001) - Internal management portal
 - **Desktop App** (Electron) - Native app for database + AI integration  
 - **Express API** (Node.js @ port 5500) - Backend for license validation & AI routing ✅ RUNNING
-- **AI Nexus MCP Server** - Aggregation layer for external tools (Claude Desktop, Cursor)
+- **Velanova MCP Server** - Aggregation layer for external tools (Claude Desktop, Cursor)
 
 ---
 

@@ -73,7 +73,7 @@ Transformed the landing page into a **premium, conversion-optimized sales master
 
 ### 6. FAQ Section (`FAQSection.tsx`) - 160+ lines
 **12 Comprehensive Questions**:
-1. How does AI Nexus connect to my systems?
+1. How does Velanova connect to my systems?
 2. Is my data secure? (BYOK, AES-256-GCM)
 3. How long does implementation take? (24-48 hours)
 4. What AI models are supported? (GPT-4, Claude, Gemini, etc.)

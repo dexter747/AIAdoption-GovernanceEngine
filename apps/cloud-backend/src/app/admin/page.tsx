@@ -16,18 +16,18 @@ export default function AdminPage() {
   const [activeTab, setActiveTab] = useState('users');
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white border-b">
+      <header className="bg-background border-b">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div>
             <Link href="/" className="text-2xl font-medium">
-              AI Nexus Admin
+              Velanova Admin
             </Link>
           </div>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600">admin@ainexus.com</span>
-            <button className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+            <span className="text-sm text-gray-400">admin@velanova.com</span>
+            <button className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:bg-white/10 rounded-lg">
               <LogOut className="w-4 h-4" />
               Logout
             </button>
@@ -37,7 +37,7 @@ export default function AdminPage() {
 
       <div className="flex h-[calc(100vh-73px)]">
         {/* Sidebar */}
-        <aside className="w-64 bg-white border-r">
+        <aside className="w-64 bg-background border-r">
           <nav className="p-4 space-y-2">
             <NavItem
               icon={<Users />}
@@ -108,8 +108,8 @@ function NavItem({
       onClick={onClick}
       className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
         active
-          ? 'bg-blue-50 text-blue-600'
-          : 'text-gray-700 hover:bg-gray-100'
+          ? 'bg-blue-500/10 text-blue-400'
+          : 'text-gray-300 hover:bg-white/10'
       }`}
     >
       <span className="w-5 h-5">{icon}</span>
@@ -147,7 +147,7 @@ function UsersPanel() {
         </button>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border">
+      <div className="bg-card rounded-xl border border-border">
         <table className="w-full">
           <thead className="border-b">
             <tr>
@@ -165,16 +165,16 @@ function UsersPanel() {
                 <td className="p-4">{user.email}</td>
                 <td className="p-4">{user.name}</td>
                 <td className="p-4">
-                  <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-sm">
+                  <span className="px-2 py-1 bg-blue-500/10 text-blue-400 rounded text-sm">
                     {user.plan}
                   </span>
                 </td>
                 <td className="p-4">
-                  <span className="px-2 py-1 bg-green-100 text-green-700 rounded text-sm">
+                  <span className="px-2 py-1 bg-green-500/10 text-green-400 rounded text-sm">
                     {user.status}
                   </span>
                 </td>
-                <td className="p-4 text-gray-600">{user.joinedAt}</td>
+                <td className="p-4 text-gray-400">{user.joinedAt}</td>
                 <td className="p-4">
                   <button className="text-blue-600 hover:underline">View</button>
                 </td>
@@ -197,7 +197,7 @@ function LicensesPanel() {
         <StatCard title="Expired" value="8" color="red" />
         <StatCard title="Trial" value="6" color="yellow" />
       </div>
-      <div className="bg-white rounded-xl shadow-sm border p-8 text-center text-gray-500">
+      <div className="bg-card rounded-xl border border-border p-8 text-center text-gray-400">
         License management table coming soon...
       </div>
     </div>
@@ -214,7 +214,7 @@ function SubscriptionsPanel() {
         <StatCard title="Churned" value="3" color="red" />
         <StatCard title="Trial→Paid" value="78%" color="green" />
       </div>
-      <div className="bg-white rounded-xl shadow-sm border p-8 text-center text-gray-500">
+      <div className="bg-card rounded-xl border border-border p-8 text-center text-gray-400">
         Subscription details table coming soon...
       </div>
     </div>
@@ -231,7 +231,7 @@ function AnalyticsPanel() {
         <StatCard title="Most Used AI" value="GPT-4o" />
         <StatCard title="Active Users" value="142" color="green" />
       </div>
-      <div className="bg-white rounded-xl shadow-sm border p-8 text-center text-gray-500">
+      <div className="bg-card rounded-xl border border-border p-8 text-center text-gray-400">
         Charts and analytics coming soon...
       </div>
     </div>
@@ -243,36 +243,36 @@ function DatabasePanel() {
     <div>
       <h1 className="text-3xl font-medium mb-6">Database Management</h1>
       <div className="space-y-6">
-        <div className="bg-white rounded-xl shadow-sm border p-6">
+        <div className="bg-card rounded-xl border border-border p-6">
           <h3 className="font-medium mb-4">PostgreSQL</h3>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-gray-600">Connection Status:</span>
+              <span className="text-gray-400">Connection Status:</span>
               <span className="text-green-600 font-medium">Connected</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Total Users:</span>
+              <span className="text-gray-400">Total Users:</span>
               <span>156</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Total Licenses:</span>
+              <span className="text-gray-400">Total Licenses:</span>
               <span>156</span>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl shadow-sm border p-6">
+        <div className="bg-card rounded-xl border border-border p-6">
           <h3 className="font-medium mb-4">MongoDB</h3>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-gray-600">Connection Status:</span>
+              <span className="text-gray-400">Connection Status:</span>
               <span className="text-green-600 font-medium">Connected</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Total Logs:</span>
+              <span className="text-gray-400">Total Logs:</span>
               <span>1.2M documents</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Storage Used:</span>
+              <span className="text-gray-400">Storage Used:</span>
               <span>4.5 GB</span>
             </div>
           </div>
@@ -286,7 +286,7 @@ function SettingsPanel() {
   return (
     <div>
       <h1 className="text-3xl font-medium mb-6">Settings</h1>
-      <div className="bg-white rounded-xl shadow-sm border p-6 space-y-6">
+      <div className="bg-card rounded-xl border border-border p-6 space-y-6">
         <div>
           <h3 className="font-medium mb-2">Payment Providers</h3>
           <div className="space-y-2">
@@ -306,9 +306,9 @@ function SettingsPanel() {
         </div>
         <div>
           <h3 className="font-medium mb-2">Email Settings</h3>
-          <div className="space-y-2 text-sm text-gray-600">
+          <div className="space-y-2 text-sm text-gray-400">
             <p>SMTP Host: smtp.gmail.com</p>
-            <p>From Address: noreply@ainexus.com</p>
+            <p>From Address: noreply@velanova.com</p>
           </div>
         </div>
       </div>
@@ -333,8 +333,8 @@ function StatCard({
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border p-6">
-      <h3 className="text-gray-600 text-sm mb-2">{title}</h3>
+    <div className="bg-card rounded-xl border border-border p-6">
+      <h3 className="text-gray-400 text-sm mb-2">{title}</h3>
       <p className={`text-3xl font-medium ${colorClasses[color]}`}>{value}</p>
     </div>
   );

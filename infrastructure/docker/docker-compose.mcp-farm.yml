@@ -1,16 +1,16 @@
 version: '3.8'
 
-# AI Nexus MCP Server Farm
+# Velanova MCP Server Farm
 # This docker-compose runs ALL MCP servers as a unified backend
-# The AI Nexus MCP Server aggregates them into a single interface
+# The Velanova MCP Server aggregates them into a single interface
 
 services:
   # ============================================================================
-  # AI NEXUS MCP SERVER (Aggregator) - The main entry point
+  # VELANOVA MCP SERVER (Aggregator) - The main entry point
   # ============================================================================
-  ai-nexus-mcp:
+  velanova-mcp:
     build:
-      context: ../../packages/ai-nexus-mcp-server
+      context: ../../packages/velanova-mcp-server
       dockerfile: Dockerfile
     ports:
       - "3100:3100"    # SSE endpoint

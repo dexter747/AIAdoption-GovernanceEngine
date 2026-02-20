@@ -23,18 +23,18 @@ export default function DownloadPage() {
 
   const downloads = {
     windows: {
-      installer: 'AI-Nexus-Setup-1.0.0.exe',
-      msi: 'AI-Nexus-1.0.0.msi',
-      portable: 'AI-Nexus-1.0.0-win.zip',
+      installer: 'Velanova-Setup-1.0.0.exe',
+      msi: 'Velanova-1.0.0.msi',
+      portable: 'Velanova-1.0.0-win.zip',
     },
     mac: {
-      dmg: 'AI-Nexus-1.0.0.dmg',
-      zip: 'AI-Nexus-1.0.0-mac.zip',
+      dmg: 'Velanova-1.0.0.dmg',
+      zip: 'Velanova-1.0.0-mac.zip',
     },
     linux: {
-      appimage: 'AI-Nexus-1.0.0.AppImage',
-      deb: 'ai-nexus_1.0.0_amd64.deb',
-      rpm: 'ai-nexus-1.0.0.x86_64.rpm',
+      appimage: 'Velanova-1.0.0.AppImage',
+      deb: 'velanova_1.0.0_amd64.deb',
+      rpm: 'velanova-1.0.0.x86_64.rpm',
     },
   };
 
@@ -50,7 +50,7 @@ export default function DownloadPage() {
 
       <main className="container mx-auto px-4 py-20">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-5xl font-medium mb-6 text-center">Download AI Nexus</h1>
+          <h1 className="text-5xl font-medium mb-6 text-center">Download Velanova</h1>
           <p className="text-xl text-gray-600 mb-12 text-center">
             Choose your platform and get started in minutes
           </p>
@@ -166,7 +166,7 @@ export default function DownloadPage() {
                 <div className="mt-6 p-4 bg-blue-50 rounded-lg text-blue-900 text-sm">
                   <strong>AppImage usage:</strong> Make it executable with{' '}
                   <code className="bg-blue-100 px-2 py-1 rounded">
-                    chmod +x AI-Nexus-*.AppImage
+                    chmod +x Velanova-*.AppImage
                   </code>
                 </div>
               </div>
@@ -212,7 +212,7 @@ export default function DownloadPage() {
                 <div className="text-3xl mb-2">1️⃣</div>
                 <h3 className="font-medium mb-2">Install & Launch</h3>
                 <p className="text-sm text-gray-600">
-                  Download and install AI Nexus. Launch the app and start your 14-day free trial.
+                  Download and install Velanova. Launch the app and start your 14-day free trial.
                 </p>
               </div>
               <div className="bg-white p-6 rounded-xl shadow-sm">
@@ -250,7 +250,7 @@ function DownloadButton({
 }) {
   const handleDownload = () => {
     // In production, this would point to actual download URLs (GitHub releases, CDN, etc.)
-    window.open(`https://releases.ainexus.com/${filename}`, '_blank');
+    window.open(`https://releases.velanova.com/${filename}`, '_blank');
   };
 
   return (

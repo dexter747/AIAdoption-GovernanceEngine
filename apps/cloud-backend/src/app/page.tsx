@@ -5,20 +5,20 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
-      <header className="border-b bg-white/80 backdrop-blur-sm">
+      <header className="border-b bg-card/80 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-8 h-8 text-blue-600" />
-            <h1 className="text-2xl font-medium">AI Nexus</h1>
+            <img src="/logo.png" alt="Velanova" className="w-8 h-8 rounded-lg" />
+            <h1 className="text-2xl font-medium">Velanova</h1>
           </div>
           <nav className="flex items-center gap-6">
-            <Link href="#features" className="text-gray-600 hover:text-gray-900">
+            <Link href="#features" className="text-gray-400 hover:text-white">
               Features
             </Link>
-            <Link href="#pricing" className="text-gray-600 hover:text-gray-900">
+            <Link href="#pricing" className="text-gray-400 hover:text-white">
               Pricing
             </Link>
-            <Link href="/download" className="text-gray-600 hover:text-gray-900">
+            <Link href="/download" className="text-gray-400 hover:text-white">
               Download
             </Link>
             <Link
@@ -33,10 +33,10 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20 text-center">
-        <h2 className="text-5xl font-medium mb-6 text-gray-900">
+        <h2 className="text-5xl font-medium mb-6 text-white">
           Bring AI to Your Legacy Software
         </h2>
-        <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+        <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
           Connect your existing databases and enterprise systems to powerful AI models.
           Query your data in natural language, automate tasks, and gain insights instantly.
         </p>
@@ -50,19 +50,19 @@ export default function Home() {
           </Link>
           <Link
             href="/subscribe"
-            className="px-8 py-4 bg-white text-blue-600 border-2 border-blue-600 rounded-lg hover:bg-blue-50 text-lg font-medium"
+            className="px-8 py-4 bg-card/10 text-blue-400 border-2 border-blue-500 rounded-lg hover:bg-card/20 text-lg font-medium"
           >
             View Pricing
           </Link>
         </div>
-        <p className="text-sm text-gray-500 mt-4">
+        <p className="text-sm text-gray-400 mt-4">
           14-day free trial • No credit card required • Windows, macOS & Linux
         </p>
       </section>
 
       {/* Features */}
       <section id="features" className="container mx-auto px-4 py-20">
-        <h3 className="text-3xl font-medium text-center mb-12">Why AI Nexus?</h3>
+        <h3 className="text-3xl font-medium text-center mb-12">Why Velanova?</h3>
         <div className="grid md:grid-cols-3 gap-8">
           <FeatureCard
             icon={<Database className="w-12 h-12 text-blue-600" />}
@@ -98,7 +98,7 @@ export default function Home() {
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="container mx-auto px-4 py-20 bg-white rounded-3xl my-20">
+      <section id="pricing" className="container mx-auto px-4 py-20 bg-card rounded-3xl border border-border my-20">
         <h3 className="text-3xl font-medium text-center mb-12">Simple, Transparent Pricing</h3>
         <div className="grid md:grid-cols-4 gap-6">
           <PricingCard
@@ -155,8 +155,8 @@ export default function Home() {
       {/* CTA */}
       <section className="container mx-auto px-4 py-20 text-center">
         <h3 className="text-4xl font-medium mb-6">Ready to Get Started?</h3>
-        <p className="text-xl text-gray-600 mb-8">
-          Download AI Nexus now and transform how you interact with your data.
+        <p className="text-xl text-gray-400 mb-8">
+          Download Velanova now and transform how you interact with your data.
         </p>
         <Link
           href="/download"
@@ -168,12 +168,12 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t bg-white py-12">
+      <footer className="border-t bg-background py-12">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
               <h4 className="font-medium mb-4">Product</h4>
-              <ul className="space-y-2 text-gray-600">
+              <ul className="space-y-2 text-gray-400">
                 <li>
                   <Link href="/features">Features</Link>
                 </li>
@@ -187,7 +187,7 @@ export default function Home() {
             </div>
             <div>
               <h4 className="font-medium mb-4">Resources</h4>
-              <ul className="space-y-2 text-gray-600">
+              <ul className="space-y-2 text-gray-400">
                 <li>
                   <Link href="/docs">Documentation</Link>
                 </li>
@@ -201,7 +201,7 @@ export default function Home() {
             </div>
             <div>
               <h4 className="font-medium mb-4">Company</h4>
-              <ul className="space-y-2 text-gray-600">
+              <ul className="space-y-2 text-gray-400">
                 <li>
                   <Link href="/about">About</Link>
                 </li>
@@ -215,7 +215,7 @@ export default function Home() {
             </div>
             <div>
               <h4 className="font-medium mb-4">Legal</h4>
-              <ul className="space-y-2 text-gray-600">
+              <ul className="space-y-2 text-gray-400">
                 <li>
                   <Link href="/privacy">Privacy Policy</Link>
                 </li>
@@ -225,8 +225,8 @@ export default function Home() {
               </ul>
             </div>
           </div>
-          <div className="border-t mt-8 pt-8 text-center text-gray-600">
-            <p>&copy; 2026 AI Nexus. All rights reserved.</p>
+          <div className="border-t mt-8 pt-8 text-center text-gray-400">
+            <p>&copy; 2026 Velanova. All rights reserved.</p>
           </div>
         </div>
       </footer>
@@ -244,10 +244,10 @@ function FeatureCard({
   description: string;
 }) {
   return (
-    <div className="bg-white p-6 rounded-xl shadow-sm border">
+    <div className="bg-card p-6 rounded-xl border border-border">
       <div className="mb-4">{icon}</div>
       <h4 className="text-xl font-medium mb-2">{title}</h4>
-      <p className="text-gray-600">{description}</p>
+      <p className="text-gray-400">{description}</p>
     </div>
   );
 }
@@ -272,19 +272,19 @@ function PricingCard({
   return (
     <div
       className={`p-6 rounded-xl border-2 ${
-        highlighted ? 'border-blue-600 bg-blue-50' : 'border-gray-200 bg-white'
+        highlighted ? 'border-blue-500 bg-blue-500/10' : 'border-white/10 bg-card/5'
       }`}
     >
       <h4 className="text-xl font-medium mb-2">{name}</h4>
       <div className="mb-4">
         <span className="text-4xl font-medium">{price}</span>
-        <span className="text-gray-600">/{period}</span>
+        <span className="text-gray-400">/{period}</span>
       </div>
       <ul className="space-y-3 mb-6">
         {features.map((feature, i) => (
           <li key={i} className="flex items-start gap-2">
             <span className="text-green-600 mt-1">✓</span>
-            <span className="text-gray-700">{feature}</span>
+            <span className="text-gray-300">{feature}</span>
           </li>
         ))}
       </ul>
@@ -293,7 +293,7 @@ function PricingCard({
         className={`block text-center py-3 rounded-lg font-medium ${
           highlighted
             ? 'bg-blue-600 text-white hover:bg-blue-700'
-            : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+            : 'bg-gray-100 text-white hover:bg-gray-200'
         }`}
       >
         {cta}

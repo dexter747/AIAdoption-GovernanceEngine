@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-duck-creek",
+  "name": "@velanova/mcp-server-duck-creek",
   "version": "1.0.0",
   "description": "MCP server for Duck Creek Technologies",
   "type": "module",

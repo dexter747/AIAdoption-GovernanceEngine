@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-oracle",
+  "name": "@velanova/mcp-server-oracle",
   "version": "1.0.0",
   "description": "Model Context Protocol server for Oracle Database",
   "type": "module",

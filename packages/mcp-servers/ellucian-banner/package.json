@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-ellucian-banner",
+  "name": "@velanova/mcp-server-ellucian-banner",
   "version": "1.0.0",
   "description": "MCP server for Ellucian Banner (Higher Education)",
   "type": "module",

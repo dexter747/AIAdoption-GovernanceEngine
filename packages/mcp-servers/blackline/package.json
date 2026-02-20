@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-blackline",
+  "name": "@velanova/mcp-server-blackline",
   "version": "1.0.0",
   "description": "MCP server for BlackLine Financial Close",
   "type": "module",

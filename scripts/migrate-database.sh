@@ -5,7 +5,7 @@
 
 set -e
 
-echo "🗄️  AI Nexus - Database Migration"
+echo "🗄️  Velanova - Database Migration"
 echo "=================================="
 echo ""
 

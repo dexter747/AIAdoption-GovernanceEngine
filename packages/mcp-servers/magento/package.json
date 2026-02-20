@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-magento",
+  "name": "@velanova/mcp-server-magento",
   "version": "1.0.0",
   "description": "MCP server for Adobe Commerce (Magento)",
   "type": "module",

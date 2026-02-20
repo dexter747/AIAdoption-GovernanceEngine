@@ -1,4 +1,4 @@
-# AI Nexus - AI Adoption & Governance Engine
+# Velanova - AI Adoption & Governance Engine
 
 A comprehensive desktop application with cloud backend for integrating AI into legacy software systems.
 
@@ -7,7 +7,7 @@ A comprehensive desktop application with cloud backend for integrating AI into l
 This is a **pnpm monorepo** with Turborepo for build optimization.
 
 ```
-ai-nexus-monorepo/
+velanova-monorepo/
 ├── apps/
 │   ├── desktop-app/          # Electron + React + TypeScript
 │   └── cloud-backend/         # Next.js 14 + Prisma + MongoDB
@@ -120,9 +120,9 @@ pnpm build:linux
 
 ```bash
 # Using Docker
-docker run --name ainexus-postgres \
+docker run --name velanova-postgres \
   -e POSTGRES_PASSWORD=yourpassword \
-  -e POSTGRES_DB=ainexus \
+  -e POSTGRES_DB=velanova \
   -p 5432:5432 \
   -d postgres:16
 
@@ -133,7 +133,7 @@ docker run --name ainexus-postgres \
 
 ```bash
 # Using Docker
-docker run --name ainexus-mongo \
+docker run --name velanova-mongo \
   -p 27017:27017 \
   -d mongo:7
 
@@ -161,8 +161,8 @@ pnpm format
 ### Cloud Backend (.env)
 
 ```env
-DATABASE_URL="postgresql://user:pass@localhost:5432/ainexus"
-MONGODB_URI="mongodb://localhost:27017/ainexus"
+DATABASE_URL="postgresql://user:pass@localhost:5432/velanova"
+MONGODB_URI="mongodb://localhost:27017/velanova"
 NEXTAUTH_URL="http://localhost:3001"
 NEXTAUTH_SECRET="your-secret"
 JWT_SECRET="your-jwt-secret"
@@ -224,5 +224,5 @@ Proprietary - All rights reserved
 ## 🆘 Support
 
 For issues and questions:
-- Email: support@ainexus.com
-- Documentation: https://docs.ainexus.com
+- Email: support@velanova.com
+- Documentation: https://docs.velanova.com

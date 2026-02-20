@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-cgi-momentum",
+  "name": "@velanova/mcp-server-cgi-momentum",
   "version": "1.0.0",
   "description": "MCP server for CGI Advantage/Momentum (Government ERP)",
   "type": "module",

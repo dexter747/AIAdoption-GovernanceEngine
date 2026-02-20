@@ -3,8 +3,8 @@
  * Pure JWT implementation - no NextAuth, no Supabase
  */
 
-const JWT_SECRET = process.env.JWT_SECRET || 'ai-nexus-jwt-secret-change-in-production';
-const JWT_ISSUER = 'ai-nexus';
+const JWT_SECRET = process.env.JWT_SECRET || 'velanova-jwt-secret-change-in-production';
+const JWT_ISSUER = 'velanova';
 
 // Only allow specific admin emails
 export const ADMIN_EMAILS = [

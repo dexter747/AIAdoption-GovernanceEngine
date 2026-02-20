@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-descartes",
+  "name": "@velanova/mcp-server-descartes",
   "version": "1.0.0",
   "description": "MCP server for Descartes Logistics",
   "type": "module",

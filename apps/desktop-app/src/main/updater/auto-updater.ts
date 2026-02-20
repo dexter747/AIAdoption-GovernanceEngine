@@ -25,7 +25,7 @@ export class AutoUpdaterManager {
     if (process.env.NODE_ENV === 'production') {
       autoUpdater.setFeedURL({
         provider: 'generic',
-        url: 'https://releases.ainexus.com',
+        url: 'https://releases.velanova.com',
         channel: 'latest',
       } as any);
     }

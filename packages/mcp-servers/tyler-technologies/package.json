@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-tyler-technologies",
+  "name": "@velanova/mcp-server-tyler-technologies",
   "version": "1.0.0",
   "description": "MCP server for Tyler Technologies (Government)",
   "type": "module",

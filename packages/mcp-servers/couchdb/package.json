@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-couchdb",
+  "name": "@velanova/mcp-server-couchdb",
   "version": "1.0.0",
   "description": "MCP server for Apache CouchDB",
   "type": "module",

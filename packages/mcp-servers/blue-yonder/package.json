@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-blue-yonder",
+  "name": "@velanova/mcp-server-blue-yonder",
   "version": "1.0.0",
   "description": "MCP server for Blue Yonder Supply Chain",
   "type": "module",

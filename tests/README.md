@@ -1,4 +1,4 @@
-# AI Nexus - Comprehensive Test Suite
+# Velanova - Comprehensive Test Suite
 
 ## Overview
 

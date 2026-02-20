@@ -6,9 +6,9 @@
 // Re-export from shared package for convenience
 // In production, import directly from @shared/types
 
-const JWT_SECRET = process.env.JWT_SECRET || 'ai-nexus-jwt-secret-change-in-production';
-const JWT_ISSUER = 'ai-nexus';
-const JWT_AUDIENCE = 'ai-nexus-apps';
+const JWT_SECRET = process.env.JWT_SECRET || 'velanova-jwt-secret-change-in-production';
+const JWT_ISSUER = 'velanova';
+const JWT_AUDIENCE = 'velanova-apps';
 
 export interface JWTPayload {
   sub: string;

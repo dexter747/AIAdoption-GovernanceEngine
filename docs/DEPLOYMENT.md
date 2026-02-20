@@ -2,7 +2,7 @@
 
 ## Architecture Overview
 
-The AI Nexus platform consists of three independent deployable applications:
+The Velanova platform consists of three independent deployable applications:
 
 1. **Landing Site** → domain.com
 2. **Admin Dashboard** → admin.domain.com
@@ -186,8 +186,8 @@ Add to `apps/desktop-app/package.json`:
 ```json
 {
   "build": {
-    "appId": "com.ainexus.desktop",
-    "productName": "AI Nexus",
+    "appId": "com.velanova.desktop",
+    "productName": "Velanova",
     "directories": {
       "output": "dist/installers"
     },
@@ -221,10 +221,10 @@ Add to `apps/desktop-app/package.json`:
 ```bash
 # Create release
 gh release create v1.0.0 \\
-  dist/installers/AI-Nexus-Setup-1.0.0.exe \\
-  dist/installers/AI-Nexus-1.0.0.dmg \\
-  dist/installers/AI-Nexus-1.0.0.AppImage \\
-  --title "AI Nexus v1.0.0" \\
+  dist/installers/Velanova-Setup-1.0.0.exe \\
+  dist/installers/Velanova-1.0.0.dmg \\
+  dist/installers/Velanova-1.0.0.AppImage \\
+  --title "Velanova v1.0.0" \\
   --notes "Initial release"
 ```
 
@@ -232,13 +232,13 @@ Update landing site download links:
 ```typescript
 const downloads = {
   windows: {
-    installer: 'https://github.com/yourorg/ai-nexus/releases/download/v1.0.0/AI-Nexus-Setup-1.0.0.exe',
+    installer: 'https://github.com/yourorg/velanova/releases/download/v1.0.0/Velanova-Setup-1.0.0.exe',
   },
   mac: {
-    dmg: 'https://github.com/yourorg/ai-nexus/releases/download/v1.0.0/AI-Nexus-1.0.0.dmg',
+    dmg: 'https://github.com/yourorg/velanova/releases/download/v1.0.0/Velanova-1.0.0.dmg',
   },
   linux: {
-    appimage: 'https://github.com/yourorg/ai-nexus/releases/download/v1.0.0/AI-Nexus-1.0.0.AppImage',
+    appimage: 'https://github.com/yourorg/velanova/releases/download/v1.0.0/Velanova-1.0.0.AppImage',
   },
 };
 ```
@@ -262,7 +262,7 @@ import { autoUpdater } from 'electron-updater';
 autoUpdater.setFeedURL({
   provider: 'github',
   owner: 'yourorg',
-  repo: 'ai-nexus',
+  repo: 'velanova',
 });
 
 autoUpdater.checkForUpdatesAndNotify();

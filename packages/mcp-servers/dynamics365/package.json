@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-dynamics365",
+  "name": "@velanova/mcp-server-dynamics365",
   "version": "1.0.0",
   "description": "MCP server for Microsoft Dynamics 365",
   "type": "module",

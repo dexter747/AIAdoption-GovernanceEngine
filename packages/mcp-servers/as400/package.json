@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-as400",
+  "name": "@velanova/mcp-server-as400",
   "version": "1.0.0",
   "description": "MCP server for IBM AS/400 (IBM i)",
   "type": "module",

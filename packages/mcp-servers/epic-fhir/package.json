@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-epic-fhir",
+  "name": "@velanova/mcp-server-epic-fhir",
   "version": "1.0.0",
   "description": "MCP server for Epic Systems (FHIR R4)",
   "type": "module",

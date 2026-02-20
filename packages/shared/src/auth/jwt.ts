@@ -7,9 +7,9 @@
 import * as crypto from 'crypto';
 
 // JWT Configuration
-const JWT_SECRET = process.env.JWT_SECRET || 'ai-nexus-jwt-secret-change-in-production';
-const JWT_ISSUER = 'ai-nexus';
-const JWT_AUDIENCE = 'ai-nexus-apps';
+const JWT_SECRET = process.env.JWT_SECRET || 'velanova-jwt-secret-change-in-production';
+const JWT_ISSUER = 'velanova';
+const JWT_AUDIENCE = 'velanova-apps';
 const ACCESS_TOKEN_EXPIRY = '1h';
 const REFRESH_TOKEN_EXPIRY = '7d';
 

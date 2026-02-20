@@ -9,7 +9,7 @@ export default function Home() {
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Sparkles className="w-8 h-8 text-blue-600" />
-            <h1 className="text-2xl font-medium">AI Nexus</h1>
+            <h1 className="text-2xl font-medium">Velanova</h1>
           </div>
           <nav className="flex items-center gap-6">
             <Link href="#features" className="text-gray-600 hover:text-gray-900">
@@ -62,7 +62,7 @@ export default function Home() {
 
       {/* Features */}
       <section id="features" className="container mx-auto px-4 py-20">
-        <h3 className="text-3xl font-medium text-center mb-12">Why AI Nexus?</h3>
+        <h3 className="text-3xl font-medium text-center mb-12">Why Velanova?</h3>
         <div className="grid md:grid-cols-3 gap-8">
           <FeatureCard
             icon={<Database className="w-12 h-12 text-blue-600" />}
@@ -156,7 +156,7 @@ export default function Home() {
       <section className="container mx-auto px-4 py-20 text-center">
         <h3 className="text-4xl font-medium mb-6">Ready to Get Started?</h3>
         <p className="text-xl text-gray-600 mb-8">
-          Download AI Nexus now and transform how you interact with your data.
+          Download Velanova now and transform how you interact with your data.
         </p>
         <Link
           href="/download"
@@ -226,7 +226,7 @@ export default function Home() {
             </div>
           </div>
           <div className="border-t mt-8 pt-8 text-center text-gray-600">
-            <p>&copy; 2026 AI Nexus. All rights reserved.</p>
+            <p>&copy; 2026 Velanova. All rights reserved.</p>
           </div>
         </div>
       </footer>

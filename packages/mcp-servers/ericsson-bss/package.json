@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-ericsson-bss",
+  "name": "@velanova/mcp-server-ericsson-bss",
   "version": "1.0.0",
   "description": "MCP server for Ericsson BSS (Charging/Billing)",
   "type": "module",

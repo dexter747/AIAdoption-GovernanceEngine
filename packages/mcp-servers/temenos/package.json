@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-temenos",
+  "name": "@velanova/mcp-server-temenos",
   "version": "1.0.0",
   "description": "MCP server for Temenos T24 Core Banking",
   "type": "module",

@@ -55,7 +55,7 @@ app.get('/health', (req, res) => {
 
 app.get('/api/status', (req, res) => {
   res.json({
-    service: 'AI Nexus API',
+    service: 'Velanova API',
     version: '1.0.0',
     status: 'running',
     timestamp: new Date().toISOString(),
@@ -654,7 +654,7 @@ app.use(errorHandler);
 // =============================================================================
 
 app.listen(PORT, () => {
-  console.log(`\n🚀 AI Nexus API Server running on port ${PORT}`);
+  console.log(`\n🚀 Velanova API Server running on port ${PORT}`);
   console.log(`📊 Environment: ${process.env.NODE_ENV}`);
   console.log(`🔗 Supabase URL: ${process.env.SUPABASE_URL}`);
   console.log(`✅ Health check: http://localhost:${PORT}/health\n`);

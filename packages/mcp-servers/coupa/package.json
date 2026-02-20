@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-coupa",
+  "name": "@velanova/mcp-server-coupa",
   "version": "1.0.0",
   "description": "MCP server for Coupa Procurement",
   "type": "module",

@@ -16,7 +16,7 @@ import IntegrationsSection from '@/components/landing/IntegrationsSection';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-black">
       <Navbar />
       <NewHeroSection />
       <LogosSection />

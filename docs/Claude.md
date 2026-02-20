@@ -1,4 +1,4 @@
-# AI Nexus - Architecture Clarifications
+# Velanova - Architecture Clarifications
 
 ## 1. Online/Cloud Legacy Software Support - YES!
 
@@ -108,7 +108,7 @@ const transporter = nodemailer.createTransport({
 // Send email function
 async function sendEmail({ to, subject, html, text }) {
   const info = await transporter.sendMail({
-    from: '"AI Nexus" <noreply@ainexus.com>',
+    from: '"Velanova" <noreply@velanova.com>',
     to,
     subject,
     text,  // plain text version

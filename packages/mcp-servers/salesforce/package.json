@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-salesforce",
+  "name": "@velanova/mcp-server-salesforce",
   "version": "1.0.0",
   "description": "Model Context Protocol server for Salesforce",
   "type": "module",

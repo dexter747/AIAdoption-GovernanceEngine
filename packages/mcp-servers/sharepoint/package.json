@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-sharepoint",
+  "name": "@velanova/mcp-server-sharepoint",
   "version": "1.0.0",
   "description": "MCP server for Microsoft SharePoint (via Graph API)",
   "type": "module",

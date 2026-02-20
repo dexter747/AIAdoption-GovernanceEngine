@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-workday",
+  "name": "@velanova/mcp-server-workday",
   "version": "1.0.0",
   "type": "module",
   "main": "dist/index.js",

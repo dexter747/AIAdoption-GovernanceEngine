@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-epicor",
+  "name": "@velanova/mcp-server-epicor",
   "version": "1.0.0",
   "description": "MCP server for Epicor ERP",
   "type": "module",

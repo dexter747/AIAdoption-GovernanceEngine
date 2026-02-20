@@ -231,9 +231,9 @@ window.electron.context.getStats();
 ## Storage Location
 
 Contexts are stored in the Electron user data directory:
-- **macOS**: `~/Library/Application Support/ai-nexus/llm-contexts.json`
-- **Windows**: `%APPDATA%/ai-nexus/llm-contexts.json`
-- **Linux**: `~/.config/ai-nexus/llm-contexts.json`
+- **macOS**: `~/Library/Application Support/velanova/llm-contexts.json`
+- **Windows**: `%APPDATA%/velanova/llm-contexts.json`
+- **Linux**: `~/.config/velanova/llm-contexts.json`
 
 Knowledge base files are stored in:
 - `<userData>/knowledge-base/`

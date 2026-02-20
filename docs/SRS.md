@@ -1,4 +1,4 @@
-# AI Nexus Platform - Software Requirements Specification (SRS)
+# Velanova Platform - Software Requirements Specification (SRS)
 
 **Version:** 2.0  
 **Date:** January 16, 2026  
@@ -9,10 +9,10 @@
 ## 1. Introduction
 
 ### 1.1 Purpose
-This document specifies the functional and non-functional requirements for AI Nexus, an enterprise AI adoption and governance platform delivered as a **cross-platform desktop application** that connects local legacy systems with modern AI services while maintaining data privacy and security.
+This document specifies the functional and non-functional requirements for Velanova, an enterprise AI adoption and governance platform delivered as a **cross-platform desktop application** that connects local legacy systems with modern AI services while maintaining data privacy and security.
 
 ### 1.2 Scope
-AI Nexus provides:
+Velanova provides:
 - **Desktop application** (Windows, macOS, Linux) for local legacy system integration
 - Multi-provider AI model routing and optimization
 - Real-time cost tracking and ROI attribution
@@ -37,7 +37,7 @@ AI Nexus provides:
 ┌──────────────────────────────────────────────────────────────────┐
 │                    Customer's Infrastructure                      │
 │  ┌────────────────────────────────────────────────────────────┐  │
-│  │              AI Nexus Desktop Application                  │  │
+│  │              Velanova Desktop Application                  │  │
 │  │                    (Electron-based)                        │  │
 │  │  ┌──────────────────────────────────────────────────────┐  │  │
 │  │  │  UI Layer (React)                                    │  │  │
@@ -81,7 +81,7 @@ AI Nexus provides:
     └──────┬───────────────────────────────────┬──────────────┘
            │                                   │
     ┌──────▼──────────┐               ┌────────▼──────────┐
-    │   AI Providers  │               │  AI Nexus Cloud   │
+    │   AI Providers  │               │  Velanova Cloud   │
     │   - OpenAI      │               │    Backend        │
     │   - Anthropic   │               │  ┌──────────────┐ │
     │   - Google AI   │               │  │ Auth API     │ │
@@ -1032,7 +1032,7 @@ failed_payment:queue → List
 - **Requirement:** Actionable error messages with solutions
 - **Examples:**
   - "Connection failed: Check that database is running on localhost:5432"
-  - "License expired: Renew at https://app.ainexus.com/billing"
+  - "License expired: Renew at https://app.velanova.com/billing"
   - "PII detected: Review and mask before sending to AI"
 
 ---
@@ -1149,8 +1149,8 @@ async function createSubscription(userId, planId) {
       name: { given_name: user.full_name }
     },
     application_context: {
-      return_url: 'https://app.ainexus.com/payment/success',
-      cancel_url: 'https://app.ainexus.com/payment/cancel'
+      return_url: 'https://app.velanova.com/payment/success',
+      cancel_url: 'https://app.velanova.com/payment/cancel'
     }
   });
   
@@ -1291,12 +1291,12 @@ resource "aws_instance" "api_server" {
   EOF
   
   tags = {
-    Name = "ai-nexus-api-${count.index}"
+    Name = "velanova-api-${count.index}"
   }
 }
 
 resource "aws_db_instance" "postgres" {
-  identifier           = "ai-nexus-postgres"
+  identifier           = "velanova-postgres"
   engine               = "postgres"
   engine_version       = "16.1"
   instance_class       = "db.t3.medium"
@@ -1305,13 +1305,13 @@ resource "aws_db_instance" "postgres" {
   multi_az             = true
   backup_retention_period = 30
   
-  db_name  = "ainexus"
+  db_name  = "velanova"
   username = "admin"
   password = var.db_password
 }
 
 resource "aws_elasticache_cluster" "redis" {
-  cluster_id           = "ai-nexus-redis"
+  cluster_id           = "velanova-redis"
   engine               = "redis"
   node_type            = "cache.t3.micro"
   num_cache_nodes      = 1
@@ -1320,7 +1320,7 @@ resource "aws_elasticache_cluster" "redis" {
 }
 
 resource "aws_docdb_cluster" "mongodb" {
-  cluster_identifier      = "ai-nexus-docdb"
+  cluster_identifier      = "velanova-docdb"
   engine                  = "docdb"
   master_username         = "admin"
   master_password         = var.mongodb_password
@@ -1330,12 +1330,12 @@ resource "aws_docdb_cluster" "mongodb" {
 }
 
 resource "aws_lb" "main" {
-  name               = "ai-nexus-alb"
+  name               = "velanova-alb"
   load_balancer_type = "application"
   subnets            = aws_subnet.public[*].id
   
   tags = {
-    Name = "ai-nexus-load-balancer"
+    Name = "velanova-load-balancer"
   }
 }
 ```
@@ -1385,7 +1385,7 @@ services:
     ports:
       - "3001:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=https://api.ainexus.com
+      - NEXT_PUBLIC_API_URL=https://api.velanova.com
     restart: always
 
   redis:
@@ -1434,14 +1434,14 @@ jobs:
       
       - name: Build Docker images
         run: |
-          docker build -t ainexus/api:${{ github.sha }} ./backend/api
-          docker build -t ainexus/worker:${{ github.sha }} ./backend/worker
+          docker build -t velanova/api:${{ github.sha }} ./backend/api
+          docker build -t velanova/worker:${{ github.sha }} ./backend/worker
       
       - name: Push to Docker Hub
         run: |
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-          docker push ainexus/api:${{ github.sha }}
-          docker push ainexus/worker:${{ github.sha }}
+          docker push velanova/api:${{ github.sha }}
+          docker push velanova/worker:${{ github.sha }}
       
       - name: Deploy to production
         uses: appleboy/ssh-action@master
@@ -1450,7 +1450,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /opt/ainexus
+            cd /opt/velanova
             docker-compose pull
             docker-compose up -d --force-recreate
             docker system prune -af
@@ -1464,9 +1464,9 @@ jobs:
 
 ```javascript
 // electron-builder.yml
-appId: com.ainexus.app
-productName: AI Nexus
-copyright: Copyright © 2026 AI Nexus Inc.
+appId: com.velanova.app
+productName: Velanova
+copyright: Copyright © 2026 Velanova Inc.
 
 directories:
   output: dist
@@ -1505,7 +1505,7 @@ win:
     - nsis
     - portable
   icon: build/icon.ico
-  certificateSubjectName: "AI Nexus Inc"
+  certificateSubjectName: "Velanova Inc"
   signingHashAlgorithms:
     - sha256
 
@@ -1524,7 +1524,7 @@ linux:
 
 publish:
   provider: github
-  owner: ai-nexus
+  owner: velanova
   repo: desktop-app
   private: true
 ```
@@ -1537,7 +1537,7 @@ const { autoUpdater } = require('electron-updater');
 
 autoUpdater.setFeedURL({
   provider: 'github',
-  owner: 'ai-nexus',
+  owner: 'velanova',
   repo: 'desktop-app',
   private: true,
   token: process.env.GH_TOKEN
@@ -1705,7 +1705,7 @@ export const options = {
 };
 
 export default function() {
-  const response = http.post('https://api.ainexus.com/api/licenses/validate', 
+  const response = http.post('https://api.velanova.com/api/licenses/validate', 
     JSON.stringify({
       license_key: __ENV.TEST_LICENSE_KEY
     }),
@@ -1733,7 +1733,7 @@ export default function() {
 // Desktop app: Send telemetry to backend
 const analytics = {
   async track(event, properties) {
-    await fetch('https://api.ainexus.com/api/telemetry', {
+    await fetch('https://api.velanova.com/api/telemetry', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${getLicenseKey()}`,

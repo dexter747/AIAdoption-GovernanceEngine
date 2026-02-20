@@ -393,7 +393,7 @@ export class MCPClientManager extends EventEmitter {
       instance.transport = transport;
 
       const client = new Client({
-        name: `ai-nexus-${type}-client`,
+        name: `velanova-${type}-client`,
         version: '1.0.0'
       }, {
         capabilities: {}

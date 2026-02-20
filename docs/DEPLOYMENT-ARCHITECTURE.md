@@ -68,7 +68,7 @@ Your desktop app has **unique requirements** that don't fit traditional serverle
 ┌─────────────────────┐
 │   User's Computer   │  ← Desktop App (Electron)
 │                     │     - Downloads from Cloudinary
-│   AI Nexus Desktop  │     - Authenticates with Vercel
+│   Velanova Desktop  │     - Authenticates with Vercel
 │                     │     - Makes API calls to Railway
 │                     │     - Connects to user's databases
 └─────────────────────┘
@@ -99,8 +99,8 @@ Your desktop app has **unique requirements** that don't fit traditional serverle
 
 **URL Structure:**
 ```
-https://ainexus.com          → Landing site
-https://admin.ainexus.com    → Admin dashboard
+https://velanova.com          → Landing site
+https://admin.velanova.com    → Admin dashboard
 ```
 
 ---
@@ -133,7 +133,7 @@ https://admin.ainexus.com    → Admin dashboard
 
 **URL:**
 ```
-https://api.ainexus.com → Express API
+https://api.velanova.com → Express API
 ```
 
 **Alternative Options:**
@@ -189,8 +189,8 @@ const supabase = createClient(
 
 **URL structure:**
 ```
-https://res.cloudinary.com/ainexus/raw/upload/v1/releases/windows/AI-Nexus-Setup-1.0.0.exe
-https://res.cloudinary.com/ainexus/raw/upload/v1/releases/macos/AI-Nexus-1.0.0.dmg
+https://res.cloudinary.com/velanova/raw/upload/v1/releases/windows/Velanova-Setup-1.0.0.exe
+https://res.cloudinary.com/velanova/raw/upload/v1/releases/macos/Velanova-1.0.0.dmg
 ```
 
 ---
@@ -331,7 +331,7 @@ const store = new Store();
 export async function activateLicense(licenseKey: string) {
   try {
     // Validate with Express API
-    const response = await fetch('https://api.ainexus.com/api/licenses/validate', {
+    const response = await fetch('https://api.velanova.com/api/licenses/validate', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -364,7 +364,7 @@ export async function checkLicenseValid() {
   if (!licenseKey) return false;
   
   try {
-    const response = await fetch('https://api.ainexus.com/api/licenses/check', {
+    const response = await fetch('https://api.velanova.com/api/licenses/check', {
       headers: { 'Authorization': `Bearer ${licenseKey}` }
     });
     return response.ok;
@@ -473,7 +473,7 @@ export async function POST(req: Request) {
   await sendLicenseEmail({
     to: email,
     licenseKey: licenseKey,
-    downloadUrl: 'https://ainexus.com/download',
+    downloadUrl: 'https://velanova.com/download',
     plan: plan
   });
   

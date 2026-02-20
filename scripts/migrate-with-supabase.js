@@ -24,7 +24,7 @@ envContent.split('\n').forEach(line => {
 const SUPABASE_URL = env.SUPABASE_URL || process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_KEY;
 
-console.log('\n🔄 AI Nexus - Database Migration Tool\n');
+console.log('\n🔄 Velanova - Database Migration Tool\n');
 console.log('📍 Supabase URL:', SUPABASE_URL);
 
 if (!SUPABASE_URL) {

@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-cassandra",
+  "name": "@velanova/mcp-server-cassandra",
   "version": "1.0.0",
   "description": "MCP server for Apache Cassandra",
   "type": "module",

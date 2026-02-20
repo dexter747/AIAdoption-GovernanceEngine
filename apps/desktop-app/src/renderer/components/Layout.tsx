@@ -16,7 +16,7 @@ export default function Layout({ children }: LayoutProps) {
       {/* Sidebar */}
       <aside className="w-64 border-r border-border bg-secondary/50">
         <div className="flex h-16 items-center px-6 border-b border-border">
-          <h1 className="text-xl font-medium">AI Nexus</h1>
+          <h1 className="text-xl font-medium">Velanova</h1>
         </div>
         <nav className="p-4 space-y-2">
           <NavLink to="/" icon={<LayoutDashboard size={20} />} active={isActive('/')}>

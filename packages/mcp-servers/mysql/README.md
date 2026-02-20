@@ -33,7 +33,7 @@ MYSQL_SSL=false
 node dist/index.js
 ```
 
-### In AI Nexus Desktop App
+### In Velanova Desktop App
 
 The desktop app will spawn this MCP server as a child process when a MySQL connection is activated.
 

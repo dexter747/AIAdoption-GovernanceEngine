@@ -3,7 +3,7 @@ import * as keytar from 'keytar';
 import crypto from 'crypto';
 import axios from 'axios';
 
-const SERVICE_NAME = 'ai-nexus-desktop';
+const SERVICE_NAME = 'velanova-desktop';
 const ACCOUNT_NAME = 'license-key';
 const API_URL = process.env.API_URL || 'http://localhost:5500';
 

@@ -72,7 +72,7 @@ export default function PricingPage() {
 
   const handleSubscribe = async (planName: string) => {
     if (planName === 'Enterprise') {
-      window.location.href = 'mailto:sales@ainexus.com?subject=Enterprise Plan Inquiry';
+      window.location.href = 'mailto:sales@velanova.com?subject=Enterprise Plan Inquiry';
       return;
     }
 

@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-elasticsearch",
+  "name": "@velanova/mcp-server-elasticsearch",
   "version": "1.0.0",
   "type": "module",
   "main": "dist/index.js",

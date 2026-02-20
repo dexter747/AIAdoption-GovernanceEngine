@@ -104,7 +104,7 @@ window.electron.mcp.* ← IPC → MCP Connection Manager (Docker/npm)
    - Total cost/tokens updated
 
 4. **Conversation persisted**:
-   - All data stored locally in `~/.config/ai-nexus/chat-history.json`
+   - All data stored locally in `~/.config/velanova/chat-history.json`
    - Survives app restarts
    - Searchable, pin-able, archive-able
 

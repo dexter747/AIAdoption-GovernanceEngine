@@ -1,6 +1,6 @@
-# Express API Server - AI Nexus
+# Express API Server - Velanova
 
-Backend API for AI Nexus: License management, AI query routing, payment processing, and usage tracking.
+Backend API for Velanova: License management, AI query routing, payment processing, and usage tracking.
 
 ## 🚀 Quick Start
 

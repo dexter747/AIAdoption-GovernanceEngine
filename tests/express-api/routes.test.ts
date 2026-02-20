@@ -15,12 +15,12 @@ describe('Health Routes', () => {
       const mockResponse = {
         status: 'healthy',
         timestamp: expect.any(String),
-        service: 'AI Nexus API',
+        service: 'Velanova API',
         version: expect.any(String),
       };
 
       expect(mockResponse.status).toBe('healthy');
-      expect(mockResponse.service).toBe('AI Nexus API');
+      expect(mockResponse.service).toBe('Velanova API');
     });
 
     it('should include uptime in response', () => {

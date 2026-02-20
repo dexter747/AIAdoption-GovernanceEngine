@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-ukg-kronos",
+  "name": "@velanova/mcp-server-ukg-kronos",
   "version": "1.0.0",
   "description": "MCP server for UKG/Kronos Workforce Management",
   "type": "module",

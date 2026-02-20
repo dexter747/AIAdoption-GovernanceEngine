@@ -1,5 +1,5 @@
 /**
- * AI Nexus Express API - Entry Point
+ * Velanova Express API - Entry Point
  * Production-ready backend server with WebSocket support
  */
 
@@ -40,11 +40,11 @@ const server = app.listen(config.port, () => {
     env: config.env,
     supabase: config.supabase.url ? 'connected' : 'not configured',
     websocket: 'enabled'
-  }, '🚀 AI Nexus API Server started');
+  }, '🚀 Velanova API Server started');
   
   console.log(`
 ╔═══════════════════════════════════════════════════════════╗
-║           AI Nexus API Server v${config.version}                   ║
+║           Velanova API Server v${config.version}                   ║
 ╠═══════════════════════════════════════════════════════════╣
 ║  Port:        ${config.port}                                        ║
 ║  Environment: ${config.env.padEnd(41)}║

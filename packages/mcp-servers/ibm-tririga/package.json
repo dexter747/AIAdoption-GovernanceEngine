@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-ibm-tririga",
+  "name": "@velanova/mcp-server-ibm-tririga",
   "version": "1.0.0",
   "description": "MCP server for IBM TRIRIGA Facility Management",
   "type": "module",

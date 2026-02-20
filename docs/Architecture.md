@@ -1,4 +1,4 @@
-# AI Nexus Platform - Architecture Documentation
+# Velanova Platform - Architecture Documentation
 
 **Version:** 2.0  
 **Date:** January 16, 2026  
@@ -24,7 +24,7 @@
 
 ### 1.1 Architecture Philosophy
 
-AI Nexus is built on a **local-first, privacy-preserving architecture** where sensitive data never leaves the customer's infrastructure. The platform consists of two main components:
+Velanova is built on a **local-first, privacy-preserving architecture** where sensitive data never leaves the customer's infrastructure. The platform consists of two main components:
 
 1. **Desktop Application (Electron):** Runs on customer's machines/servers, handles all legacy data processing and AI interactions locally
 2. **Cloud Backend (Next.js):** Lightweight web application managing authentication, licensing, payments, and admin functions
@@ -74,7 +74,7 @@ AI Nexus is built on a **local-first, privacy-preserving architecture** where se
                              │ HTTPS/API                 │ HTTPS/API
                              │                           │
 ┌────────────────────────────┼───────────────────────────┼─────────────────┐
-│                 AI Nexus Platform                      │                 │
+│                 Velanova Platform                      │                 │
 │                                                        │                 │
 │  ┌───────────────────────────────────────────────────┐│                 │
 │  │         Desktop Application (Electron)            ││                 │

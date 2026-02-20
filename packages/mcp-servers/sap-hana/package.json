@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-sap-hana",
+  "name": "@velanova/mcp-server-sap-hana",
   "version": "1.0.0",
   "description": "Model Context Protocol server for SAP HANA",
   "type": "module",

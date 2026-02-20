@@ -1,10 +1,10 @@
-# AI Nexus MCP Server
+# Velanova MCP Server
 
 > The aggregation layer that unifies 67+ AI models and 60+ enterprise systems into a single MCP interface.
 
 ## Overview
 
-The AI Nexus MCP Server exposes the full AI Nexus platform via the Model Context Protocol (MCP), allowing any MCP-compatible tool (Claude Desktop, Cursor, Windsurf, etc.) to leverage:
+The Velanova MCP Server exposes the full Velanova platform via the Model Context Protocol (MCP), allowing any MCP-compatible tool (Claude Desktop, Cursor, Windsurf, etc.) to leverage:
 
 - **67+ AI Models**: GPT-4o, Claude, Gemini, Llama, Mistral, and more
 - **Database Systems**: PostgreSQL, MySQL, MongoDB, SQL Server, Oracle, Redis
@@ -33,13 +33,13 @@ npm start
 
 ```bash
 # Build the image
-docker build -t ai-nexus-mcp-server .
+docker build -t velanova-mcp-server .
 
 # Run the container
 docker run -it --rm \
   -e OPENAI_API_KEY=sk-... \
   -e ANTHROPIC_API_KEY=sk-ant-... \
-  ai-nexus-mcp-server
+  velanova-mcp-server
 ```
 
 ## Configuration
@@ -62,9 +62,9 @@ Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_
 ```json
 {
   "mcpServers": {
-    "ai-nexus": {
+    "velanova": {
       "command": "node",
-      "args": ["/path/to/ai-nexus-mcp-server/dist/server.js"],
+      "args": ["/path/to/velanova-mcp-server/dist/server.js"],
       "env": {
         "OPENAI_API_KEY": "sk-...",
         "ANTHROPIC_API_KEY": "sk-ant-..."
@@ -81,9 +81,9 @@ Add to your Cursor MCP config:
 ```json
 {
   "mcpServers": {
-    "ai-nexus": {
+    "velanova": {
       "command": "node",
-      "args": ["/path/to/ai-nexus-mcp-server/dist/server.js"]
+      "args": ["/path/to/velanova-mcp-server/dist/server.js"]
     }
   }
 }
@@ -129,7 +129,7 @@ Add to your Cursor MCP config:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    AI Nexus MCP Server                       │
+│                    Velanova MCP Server                       │
 ├─────────────────────────────────────────────────────────────┤
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐         │
 │  │  AI Router  │  │  Database   │  │ Enterprise  │         │
@@ -148,4 +148,4 @@ Add to your Cursor MCP config:
 
 ## License
 
-MIT License - AI Nexus
+MIT License - Velanova

@@ -64,31 +64,31 @@ export default function DownloadPage() {
     windows: {
       name: 'Windows',
       icon: <Monitor className="w-6 h-6" />,
-      recommended: { name: 'Installer (.exe)', file: `AI-Nexus-Setup-${currentVersion}.exe`, size: '124 MB' },
+      recommended: { name: 'Installer (.exe)', file: `Velanova-Setup-${currentVersion}.exe`, size: '124 MB' },
       options: [
-        { name: 'MSI Package', file: `AI-Nexus-${currentVersion}.msi`, size: '122 MB' },
-        { name: 'Portable (.zip)', file: `AI-Nexus-${currentVersion}-win.zip`, size: '145 MB' },
+        { name: 'MSI Package', file: `Velanova-${currentVersion}.msi`, size: '122 MB' },
+        { name: 'Portable (.zip)', file: `Velanova-${currentVersion}-win.zip`, size: '145 MB' },
       ],
       requirements: 'Windows 10/11 (64-bit)',
     },
     mac: {
       name: 'macOS',
       icon: <Apple className="w-6 h-6" />,
-      recommended: { name: 'Universal DMG', file: `AI-Nexus-${currentVersion}-universal.dmg`, size: '156 MB' },
+      recommended: { name: 'Universal DMG', file: `Velanova-${currentVersion}-universal.dmg`, size: '156 MB' },
       options: [
-        { name: 'Intel DMG', file: `AI-Nexus-${currentVersion}-x64.dmg`, size: '148 MB' },
-        { name: 'Apple Silicon DMG', file: `AI-Nexus-${currentVersion}-arm64.dmg`, size: '142 MB' },
+        { name: 'Intel DMG', file: `Velanova-${currentVersion}-x64.dmg`, size: '148 MB' },
+        { name: 'Apple Silicon DMG', file: `Velanova-${currentVersion}-arm64.dmg`, size: '142 MB' },
       ],
       requirements: 'macOS 12 Monterey or later',
     },
     linux: {
       name: 'Linux',
       icon: <Terminal className="w-6 h-6" />,
-      recommended: { name: 'AppImage', file: `AI-Nexus-${currentVersion}.AppImage`, size: '138 MB' },
+      recommended: { name: 'AppImage', file: `Velanova-${currentVersion}.AppImage`, size: '138 MB' },
       options: [
-        { name: 'Debian (.deb)', file: `ai-nexus_${currentVersion}_amd64.deb`, size: '132 MB' },
-        { name: 'Red Hat (.rpm)', file: `ai-nexus-${currentVersion}.x86_64.rpm`, size: '134 MB' },
-        { name: 'Tarball (.tar.gz)', file: `ai-nexus-${currentVersion}-linux.tar.gz`, size: '140 MB' },
+        { name: 'Debian (.deb)', file: `velanova_${currentVersion}_amd64.deb`, size: '132 MB' },
+        { name: 'Red Hat (.rpm)', file: `velanova-${currentVersion}.x86_64.rpm`, size: '134 MB' },
+        { name: 'Tarball (.tar.gz)', file: `velanova-${currentVersion}-linux.tar.gz`, size: '140 MB' },
       ],
       requirements: 'Ubuntu 20.04+, Fedora 35+, or equivalent',
     },
@@ -108,7 +108,7 @@ export default function DownloadPage() {
       <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="w-8 h-8 animate-spin text-blue-500 mx-auto mb-4" />
-          <p className="text-gray-500">Loading...</p>
+          <p className="text-gray-400">Loading...</p>
         </div>
       </div>
     );
@@ -119,13 +119,13 @@ export default function DownloadPage() {
     return (
       <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
         {/* Simple header */}
-        <header className="border-b border-gray-100 bg-white/80 backdrop-blur-xl">
+        <header className="border-b border-white/10 bg-black/80 backdrop-blur-xl">
           <div className="max-w-7xl mx-auto px-6 h-16 flex items-center">
             <Link href="/" className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
                 <Sparkles className="w-4 h-4 text-white" />
               </div>
-              <span className="font-medium text-gray-900">AI Nexus</span>
+              <span className="font-medium text-white">Velanova</span>
             </Link>
           </div>
         </header>
@@ -137,13 +137,13 @@ export default function DownloadPage() {
               <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center mx-auto mb-6 shadow-xl shadow-blue-500/25">
                 <Lock className="w-10 h-10 text-white" />
               </div>
-              <h1 className="text-3xl font-medium text-gray-900 mb-3">Sign in to Download</h1>
-              <p className="text-gray-500 text-lg">
-                Create a free account to download AI Nexus and unlock all features.
+              <h1 className="text-3xl font-medium text-white mb-3">Sign in to Download</h1>
+              <p className="text-gray-400 text-lg">
+                Create a free account to download Velanova and unlock all features.
               </p>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
+            <div className="bg-white/5 rounded-2xl shadow-xl border border-white/10 p-8">
               <Link
                 href="/login?callbackUrl=/download"
                 className="flex items-center justify-center gap-3 w-full py-3.5 px-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all shadow-lg shadow-blue-500/25"
@@ -152,9 +152,9 @@ export default function DownloadPage() {
                 <ArrowRight className="w-5 h-5" />
               </Link>
 
-              <div className="mt-6 pt-6 border-t border-gray-100">
-                <h3 className="font-medium text-gray-900 mb-3">Why create an account?</h3>
-                <ul className="space-y-2 text-sm text-gray-600">
+              <div className="mt-6 pt-6 border-t border-white/10">
+                <h3 className="font-medium text-white mb-3">Why create an account?</h3>
+                <ul className="space-y-2 text-sm text-gray-400">
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-green-500 flex-shrink-0" />
                     Free 14-day trial with all Pro features
@@ -175,7 +175,7 @@ export default function DownloadPage() {
               </div>
             </div>
 
-            <p className="text-center mt-6 text-sm text-gray-500">
+            <p className="text-center mt-6 text-sm text-gray-400">
               Already have the app?{' '}
               <Link href="/login" className="text-blue-600 hover:underline font-medium">
                 Sign in
@@ -191,20 +191,20 @@ export default function DownloadPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       {/* Header */}
-      <header className="border-b border-gray-100 bg-white/80 backdrop-blur-xl sticky top-0 z-50">
+      <header className="border-b border-white/10 bg-black/80 backdrop-blur-xl sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
               <Sparkles className="w-4 h-4 text-white" />
             </div>
-            <span className="font-medium text-gray-900">AI Nexus</span>
+            <span className="font-medium text-white">Velanova</span>
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/" className="text-sm text-gray-500 hover:text-gray-900 flex items-center gap-1">
+            <Link href="/" className="text-sm text-gray-400 hover:text-white flex items-center gap-1">
               <ArrowLeft className="w-4 h-4" />
               Back to Home
             </Link>
-            <div className="flex items-center gap-2 pl-4 border-l border-gray-200">
+            <div className="flex items-center gap-2 pl-4 border-l border-white/10">
               {user.image ? (
                 <img 
                   src={user.image.includes('googleusercontent.com') ? `/api/avatar/proxy?url=${encodeURIComponent(user.image)}` : user.image} 
@@ -216,7 +216,7 @@ export default function DownloadPage() {
                   {user.name?.charAt(0) || user.email.charAt(0).toUpperCase()}
                 </div>
               )}
-              <span className="text-sm font-medium text-gray-900 hidden sm:inline">{user.name}</span>
+              <span className="text-sm font-medium text-white hidden sm:inline">{user.name}</span>
             </div>
           </div>
         </div>
@@ -232,14 +232,14 @@ export default function DownloadPage() {
 
         <div className="container relative mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-medium mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-green-500/10 text-green-400 rounded-full text-sm font-medium mb-6">
               <CheckCircle2 className="w-4 h-4" />
               Signed in as {user.email}
             </div>
-            <h1 className="text-4xl sm:text-5xl font-medium text-gray-900 mb-4">
-              Download AI Nexus
+            <h1 className="text-4xl sm:text-5xl font-medium text-white mb-4">
+              Download Velanova
             </h1>
-            <p className="text-lg text-gray-500">
+            <p className="text-lg text-gray-400">
               Get started in minutes. Your {user.plan === 'trial' ? '14-day free trial' : user.plan} is ready.
             </p>
           </div>
@@ -254,7 +254,7 @@ export default function DownloadPage() {
                   'px-5 py-3 rounded-xl font-medium flex items-center gap-2 transition-all',
                   platform === key
                     ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/25'
-                    : 'bg-white text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-300'
+                    : 'bg-white/5 text-gray-400 hover:text-white border border-white/10 hover:border-white/20'
                 )}
               >
                 {data.icon}
@@ -264,20 +264,20 @@ export default function DownloadPage() {
           </div>
 
           {detected && (
-            <p className="text-center text-sm text-gray-500 mb-8">
+            <p className="text-center text-sm text-gray-400 mb-8">
               <CheckCircle2 className="w-4 h-4 inline mr-1 text-green-500" />
-              We detected you&apos;re on <strong className="text-gray-700">{current.name}</strong>
+              We detected you&apos;re on <strong className="text-gray-300">{current.name}</strong>
             </p>
           )}
 
           {/* Main Download Card */}
           <div className="max-w-2xl mx-auto">
-            <div className="bg-white rounded-2xl overflow-hidden shadow-xl border border-gray-100">
+            <div className="bg-white/5 rounded-2xl overflow-hidden shadow-xl border border-white/10">
               {/* Header */}
               <div className="bg-gradient-to-r from-blue-500 via-blue-600 to-purple-600 px-8 py-6 text-white">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h2 className="text-xl font-medium mb-1">AI Nexus for {current.name}</h2>
+                    <h2 className="text-xl font-medium mb-1">Velanova for {current.name}</h2>
                     <p className="text-white/80 text-sm">Version {currentVersion} • Released {releaseDate}</p>
                   </div>
                   <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center backdrop-blur-sm">
@@ -291,7 +291,7 @@ export default function DownloadPage() {
                 {/* Recommended Download */}
                 <div className="mb-6">
                   <div className="flex items-center gap-2 mb-4">
-                    <span className="px-2.5 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">
+                    <span className="px-2.5 py-1 bg-green-500/10 text-green-400 text-xs font-medium rounded-full">
                       RECOMMENDED
                     </span>
                   </div>
@@ -304,8 +304,8 @@ export default function DownloadPage() {
                         <Download className="w-6 h-6" />
                       </div>
                       <div>
-                        <p className="font-medium text-gray-900">{current.recommended.name}</p>
-                        <p className="text-sm text-gray-500">{current.recommended.size}</p>
+                        <p className="font-medium text-white">{current.recommended.name}</p>
+                        <p className="text-sm text-gray-400">{current.recommended.size}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 text-blue-600 font-medium">
@@ -318,7 +318,7 @@ export default function DownloadPage() {
                 {/* Other Options */}
                 <button
                   onClick={() => setShowAllVersions(!showAllVersions)}
-                  className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 mb-4"
+                  className="flex items-center gap-2 text-sm text-gray-400 hover:text-white mb-4"
                 >
                   <span>Other download options</span>
                   <ChevronDown className={cn('w-4 h-4 transition-transform', showAllVersions && 'rotate-180')} />
@@ -330,11 +330,11 @@ export default function DownloadPage() {
                       <a
                         key={i}
                         href={`/downloads/${option.file}`}
-                        className="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50/50 transition-all group"
+                        className="flex items-center justify-between p-3 bg-white/5 border border-white/10 rounded-lg hover:border-blue-300 hover:bg-blue-500/10 transition-all group"
                       >
                         <div className="flex items-center gap-3">
                           <Download className="w-4 h-4 text-gray-400 group-hover:text-blue-500" />
-                          <span className="text-gray-700">{option.name}</span>
+                          <span className="text-gray-300">{option.name}</span>
                         </div>
                         <span className="text-sm text-gray-400">{option.size}</span>
                       </a>
@@ -343,9 +343,9 @@ export default function DownloadPage() {
                 )}
 
                 {/* System Requirements */}
-                <div className="pt-6 border-t border-gray-100">
-                  <p className="text-sm text-gray-500">
-                    <strong className="text-gray-700">System requirements:</strong> {current.requirements}
+                <div className="pt-6 border-t border-white/10">
+                  <p className="text-sm text-gray-400">
+                    <strong className="text-gray-300">System requirements:</strong> {current.requirements}
                   </p>
                 </div>
               </div>
@@ -354,9 +354,9 @@ export default function DownloadPage() {
             {/* Features */}
             <div className="flex flex-wrap justify-center gap-6 mt-8">
               {features.map((feature, i) => (
-                <div key={i} className="flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-gray-200 shadow-sm">
+                <div key={i} className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-full border border-white/10 shadow-sm">
                   <span className="text-blue-500">{feature.icon}</span>
-                  <span className="text-sm text-gray-600">{feature.text}</span>
+                  <span className="text-sm text-gray-400">{feature.text}</span>
                 </div>
               ))}
             </div>
@@ -365,10 +365,10 @@ export default function DownloadPage() {
       </section>
 
       {/* Installation Guide */}
-      <section className="py-16 bg-white border-t border-gray-100">
+      <section className="py-16 bg-white/5 border-t border-white/10">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-2xl font-medium text-gray-900 text-center mb-12">Quick Installation</h2>
+            <h2 className="text-2xl font-medium text-white text-center mb-12">Quick Installation</h2>
             
             <div className="grid md:grid-cols-3 gap-8">
               {[
@@ -380,8 +380,8 @@ export default function DownloadPage() {
                   <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 text-white font-medium text-xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/25">
                     {item.step}
                   </div>
-                  <h3 className="font-medium text-gray-900 mb-2">{item.title}</h3>
-                  <p className="text-gray-500 text-sm">{item.desc}</p>
+                  <h3 className="font-medium text-white mb-2">{item.title}</h3>
+                  <p className="text-gray-400 text-sm">{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -390,11 +390,11 @@ export default function DownloadPage() {
       </section>
 
       {/* Previous Releases */}
-      <section className="py-16 border-t border-gray-100">
+      <section className="py-16 border-t border-white/10">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center justify-between mb-8">
-              <h2 className="text-2xl font-medium text-gray-900">Previous Releases</h2>
+              <h2 className="text-2xl font-medium text-white">Previous Releases</h2>
               <Link href="/changelog" className="text-sm text-blue-600 hover:text-blue-700 flex items-center gap-1 font-medium">
                 View changelog <ExternalLink className="w-4 h-4" />
               </Link>
@@ -406,10 +406,10 @@ export default function DownloadPage() {
                 { version: '1.1.0', date: 'December 15, 2024', notes: 'Added Claude 3.5 and Gemini 2.0 support' },
                 { version: '1.0.0', date: 'November 30, 2024', notes: 'Initial stable release' },
               ].map((release, i) => (
-                <div key={i} className="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-xl hover:border-gray-300 transition-colors">
+                <div key={i} className="flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-xl hover:border-white/20 transition-colors">
                   <div>
-                    <p className="font-medium text-gray-900">Version {release.version}</p>
-                    <p className="text-sm text-gray-500">{release.date} • {release.notes}</p>
+                    <p className="font-medium text-white">Version {release.version}</p>
+                    <p className="text-sm text-gray-400">{release.date} • {release.notes}</p>
                   </div>
                   <Link href={`/downloads/archive/${release.version}`} className="text-sm text-blue-600 hover:text-blue-700 font-medium">
                     Download
@@ -429,7 +429,7 @@ export default function DownloadPage() {
             <p className="text-white/80 mb-8">Upgrade to Pro for unlimited queries, all AI providers, and priority support.</p>
             <Link 
               href="/pricing" 
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-blue-600 rounded-xl hover:bg-gray-50 transition-all font-medium shadow-lg"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-white/10 text-blue-400 rounded-xl hover:bg-white/10 transition-all font-medium shadow-lg"
             >
               View Pricing <ArrowRight className="w-5 h-5" />
             </Link>
@@ -438,13 +438,13 @@ export default function DownloadPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-gray-100 py-8 bg-white">
+      <footer className="border-t border-white/10 py-8 bg-white/5">
         <div className="container mx-auto px-6 text-center">
-          <p className="text-sm text-gray-400">© 2025 AI Nexus. All rights reserved.</p>
+          <p className="text-sm text-gray-400">© 2025 Velanova. All rights reserved.</p>
           <div className="flex justify-center gap-6 mt-4">
-            <Link href="/privacy" className="text-sm text-gray-400 hover:text-gray-600">Privacy</Link>
-            <Link href="/terms" className="text-sm text-gray-400 hover:text-gray-600">Terms</Link>
-            <Link href="/contact" className="text-sm text-gray-400 hover:text-gray-600">Contact</Link>
+            <Link href="/privacy" className="text-sm text-gray-400 hover:text-gray-400">Privacy</Link>
+            <Link href="/terms" className="text-sm text-gray-400 hover:text-gray-400">Terms</Link>
+            <Link href="/contact" className="text-sm text-gray-400 hover:text-gray-400">Contact</Link>
           </div>
         </div>
       </footer>

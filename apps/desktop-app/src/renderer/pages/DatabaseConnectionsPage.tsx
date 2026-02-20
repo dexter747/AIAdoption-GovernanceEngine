@@ -330,7 +330,7 @@ export default function DatabaseConnectionsPage() {
                 mcpIntegration.getStatus().backendConnected ? 'bg-green-500' : 'bg-red-500'
               }`}></div>
               <span className="text-slate-300 text-sm">
-                {mcpIntegration.getStatus().backendConnected ? 'Connected to AI Nexus' : 'Disconnected'}
+                {mcpIntegration.getStatus().backendConnected ? 'Connected to Velanova' : 'Disconnected'}
               </span>
             </div>
             <div className="h-4 w-px bg-slate-600"></div>
@@ -455,7 +455,7 @@ export default function DatabaseConnectionsPage() {
             <div className="w-10 h-10 rounded-full bg-indigo-600/20 text-indigo-400 flex items-center justify-center mx-auto mb-3">
               2
             </div>
-            <p className="text-slate-300 text-sm">AI Nexus discovers your schema</p>
+            <p className="text-slate-300 text-sm">Velanova discovers your schema</p>
           </div>
           <div className="text-center">
             <div className="w-10 h-10 rounded-full bg-indigo-600/20 text-indigo-400 flex items-center justify-center mx-auto mb-3">

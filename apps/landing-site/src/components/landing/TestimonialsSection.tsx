@@ -15,7 +15,7 @@ interface Testimonial {
 
 const testimonials: Testimonial[] = [
   {
-    quote: 'AI Nexus transformed how our team accesses data. What used to take days now takes minutes. The ROI was immediate - we saved 40 hours per week in the first month alone.',
+    quote: 'Velanova transformed how our team accesses data. What used to take days now takes minutes. The ROI was immediate - we saved 40 hours per week in the first month alone.',
     author: 'Sarah Chen',
     role: 'VP of Engineering',
     company: 'TechCorp Global',
@@ -76,7 +76,7 @@ const row2 = [...testimonials.slice(3, 6), ...testimonials.slice(0, 3)];
 
 function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
   return (
-    <div className="flex-shrink-0 w-[340px] mx-3 bg-white border border-gray-200/80 rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-blue-300 transition-all duration-300">
+    <div className="flex-shrink-0 w-[340px] mx-3 bg-black/5 border border-white/10 rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-blue-300 transition-all duration-300">
       {/* Quote icon */}
       <Quote className="w-7 h-7 text-blue-400/30 mb-3" />
 
@@ -88,25 +88,25 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
       </div>
 
       {/* Quote */}
-      <p className="text-gray-600 text-sm leading-relaxed mb-4 italic line-clamp-4">
+      <p className="text-gray-400 text-sm leading-relaxed mb-4 italic line-clamp-4">
         &quot;{testimonial.quote}&quot;
       </p>
 
       {/* Results badge */}
       {testimonial.results && (
-        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50 text-blue-600 text-xs font-medium mb-4">
+        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-400 text-xs font-medium mb-4">
           <div className="w-1.5 h-1.5 rounded-full bg-blue-500 flex-shrink-0" />
           {testimonial.results}
         </div>
       )}
 
       {/* Author */}
-      <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
+      <div className="flex items-center gap-3 pt-4 border-t border-white/10">
         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center flex-shrink-0 shadow-sm">
           <span className="text-white text-xs font-semibold">{testimonial.avatar}</span>
         </div>
         <div className="min-w-0">
-          <div className="font-semibold text-gray-900 text-sm truncate">{testimonial.author}</div>
+          <div className="font-semibold text-white text-sm truncate">{testimonial.author}</div>
           <div className="text-xs text-gray-500 truncate">{testimonial.role}</div>
           <div className="text-xs text-gray-400 truncate">{testimonial.company}</div>
         </div>
@@ -141,7 +141,7 @@ function MarqueeRow({
 
 export function TestimonialsSection() {
   return (
-    <section className="relative py-24 bg-white overflow-hidden">
+    <section className="relative py-24 bg-black overflow-hidden">
       {/* Subtle dot grid */}
       <div
         className="absolute inset-0 opacity-[0.025]"
@@ -154,16 +154,16 @@ export function TestimonialsSection() {
       {/* Header */}
       <div className="relative max-w-7xl mx-auto px-6">
         <div className="text-center max-w-2xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-sm font-medium mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 text-sm font-medium mb-4">
             <Star className="w-3.5 h-3.5 fill-current" />
             Customer Stories
           </div>
-          <h2 className="text-4xl md:text-5xl font-medium text-gray-900 mb-4">
+          <h2 className="text-4xl md:text-5xl font-medium text-white mb-4">
             Trusted by{' '}
             <span className="text-blue-500">2,500+ enterprises</span>
           </h2>
           <p className="text-lg text-gray-500">
-            See how teams are transforming their legacy systems with AI Nexus
+            See how teams are transforming their legacy systems with Velanova
           </p>
         </div>
       </div>
@@ -184,22 +184,22 @@ export function TestimonialsSection() {
       <div className="relative max-w-7xl mx-auto px-6">
         <div className="mt-14 flex flex-wrap items-center justify-center gap-8">
           <div className="text-center">
-            <div className="text-2xl font-semibold text-gray-900">4.9/5</div>
+            <div className="text-2xl font-semibold text-white">4.9/5</div>
             <div className="text-xs text-gray-500 mt-0.5">Average Rating</div>
           </div>
-          <div className="w-px h-10 bg-gray-200" />
+          <div className="w-px h-10 bg-black/10" />
           <div className="text-center">
-            <div className="text-2xl font-semibold text-gray-900">2,500+</div>
+            <div className="text-2xl font-semibold text-white">2,500+</div>
             <div className="text-xs text-gray-500 mt-0.5">Enterprise Customers</div>
           </div>
-          <div className="w-px h-10 bg-gray-200" />
+          <div className="w-px h-10 bg-black/10" />
           <div className="text-center">
-            <div className="text-2xl font-semibold text-gray-900">98%</div>
+            <div className="text-2xl font-semibold text-white">98%</div>
             <div className="text-xs text-gray-500 mt-0.5">Customer Satisfaction</div>
           </div>
-          <div className="w-px h-10 bg-gray-200" />
+          <div className="w-px h-10 bg-black/10" />
           <div className="text-center">
-            <div className="text-2xl font-semibold text-gray-900">10M+</div>
+            <div className="text-2xl font-semibold text-white">10M+</div>
             <div className="text-xs text-gray-500 mt-0.5">Queries Processed</div>
           </div>
         </div>

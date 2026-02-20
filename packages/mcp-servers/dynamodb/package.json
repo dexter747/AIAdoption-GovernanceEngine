@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-dynamodb",
+  "name": "@velanova/mcp-server-dynamodb",
   "version": "1.0.0",
   "description": "MCP server for Amazon DynamoDB",
   "type": "module",

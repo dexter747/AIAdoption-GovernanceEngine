@@ -1,14 +1,14 @@
 /**
- * AI Nexus MCP Server
+ * Velanova MCP Server
  * 
  * The aggregation layer that unifies:
  * - 67+ AI models (GPT-4, Claude, Gemini, Llama, etc.)
  * - 60+ enterprise systems via MCP farm
  * - Governance: licensing, audit, cost tracking, RBAC
  * 
- * This server exposes AI Nexus capabilities via MCP protocol,
+ * This server exposes Velanova capabilities via MCP protocol,
  * allowing any MCP-compatible tool (Claude Desktop, Cursor, etc.)
- * to leverage the full AI Nexus platform.
+ * to leverage the full Velanova platform.
  */
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
@@ -29,9 +29,9 @@ import { GovernanceLayer } from './governance/index.js';
 import { createLogger } from './utils/logger.js';
 import { parseArgs } from './utils/args.js';
 
-const logger = createLogger('ai-nexus-mcp');
+const logger = createLogger('velanova-mcp');
 
-class AINexusMCPServer {
+class VelanovaMCPServer {
   private server: Server;
   private aiRouter: AIRouter;
   private databaseAggregator: DatabaseAggregator;
@@ -41,7 +41,7 @@ class AINexusMCPServer {
   constructor() {
     this.server = new Server(
       { 
-        name: 'ai-nexus-mcp', 
+        name: 'velanova-mcp', 
         version: '1.0.0' 
       },
       { 
@@ -63,7 +63,7 @@ class AINexusMCPServer {
     this.setupResourceHandlers();
     this.setupErrorHandler();
 
-    logger.info('AI Nexus MCP Server initialized');
+    logger.info('Velanova MCP Server initialized');
   }
 
   private setupToolHandlers() {
@@ -531,31 +531,31 @@ class AINexusMCPServer {
       return {
         resources: [
           {
-            uri: 'ainexus://models',
+            uri: 'velanova://models',
             name: 'AI Models Registry',
             description: 'Complete list of all 67+ AI models with pricing, capabilities, and status',
             mimeType: 'application/json'
           },
           {
-            uri: 'ainexus://databases',
+            uri: 'velanova://databases',
             name: 'Connected Databases',
             description: 'All connected database systems and their schemas',
             mimeType: 'application/json'
           },
           {
-            uri: 'ainexus://enterprise-systems',
+            uri: 'velanova://enterprise-systems',
             name: 'Enterprise Systems',
             description: 'Connected enterprise systems (SAP, Salesforce, Epic, ServiceNow, etc.)',
             mimeType: 'application/json'
           },
           {
-            uri: 'ainexus://usage/current',
+            uri: 'velanova://usage/current',
             name: 'Current Usage',
             description: 'Real-time usage statistics and costs',
             mimeType: 'application/json'
           },
           {
-            uri: 'ainexus://health',
+            uri: 'velanova://health',
             name: 'System Health',
             description: 'Health status of all connected systems',
             mimeType: 'application/json'
@@ -571,23 +571,23 @@ class AINexusMCPServer {
       let content: unknown;
 
       switch (uri) {
-        case 'ainexus://models':
+        case 'velanova://models':
           content = await this.aiRouter.listModels();
           break;
 
-        case 'ainexus://databases':
+        case 'velanova://databases':
           content = await this.databaseAggregator.listDatabases();
           break;
 
-        case 'ainexus://enterprise-systems':
+        case 'velanova://enterprise-systems':
           content = await this.enterpriseAggregator.listSystems();
           break;
 
-        case 'ainexus://usage/current':
+        case 'velanova://usage/current':
           content = await this.governance.getUsageStats('system', 'month');
           break;
 
-        case 'ainexus://health':
+        case 'velanova://health':
           content = await this.getHealthStatus();
           break;
 
@@ -633,19 +633,19 @@ class AINexusMCPServer {
   async runStdio(): Promise<void> {
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
-    logger.info('AI Nexus MCP Server running on STDIO');
+    logger.info('Velanova MCP Server running on STDIO');
   }
 
   async close(): Promise<void> {
     await this.server.close();
-    logger.info('AI Nexus MCP Server closed');
+    logger.info('Velanova MCP Server closed');
   }
 }
 
 // Main entry point
 async function main() {
   const args = parseArgs(process.argv.slice(2));
-  const server = new AINexusMCPServer();
+  const server = new VelanovaMCPServer();
 
   // Handle shutdown
   process.on('SIGINT', async () => {
@@ -673,4 +673,4 @@ main().catch((error) => {
   process.exit(1);
 });
 
-export { AINexusMCPServer };
+export { VelanovaMCPServer };

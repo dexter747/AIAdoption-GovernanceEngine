@@ -112,21 +112,21 @@ jobs:
       - name: Generate Release Notes
         id: notes
         run: |
-          echo "# AI Nexus Desktop v${{ steps.version.outputs.version }}" > release_notes.md
+          echo "# Velanova Desktop v${{ steps.version.outputs.version }}" > release_notes.md
           echo "" >> release_notes.md
           echo "## What's New" >> release_notes.md
           echo "- Desktop application release" >> release_notes.md
           echo "" >> release_notes.md
           echo "## Downloads" >> release_notes.md
-          echo "- **macOS**: AI-Nexus-${{ steps.version.outputs.version }}.dmg" >> release_notes.md
-          echo "- **Windows**: AI-Nexus-Setup-${{ steps.version.outputs.version }}.exe" >> release_notes.md
-          echo "- **Linux**: AI-Nexus-${{ steps.version.outputs.version }}.AppImage or .deb" >> release_notes.md
+          echo "- **macOS**: Velanova-${{ steps.version.outputs.version }}.dmg" >> release_notes.md
+          echo "- **Windows**: Velanova-Setup-${{ steps.version.outputs.version }}.exe" >> release_notes.md
+          echo "- **Linux**: Velanova-${{ steps.version.outputs.version }}.AppImage or .deb" >> release_notes.md
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ steps.version.outputs.version }}
-          name: AI Nexus Desktop v${{ steps.version.outputs.version }}
+          name: Velanova Desktop v${{ steps.version.outputs.version }}
           body_path: release_notes.md
           files: |
             desktop-macos-latest/*.dmg

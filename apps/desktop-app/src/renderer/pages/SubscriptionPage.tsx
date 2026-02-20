@@ -31,19 +31,19 @@ const PLAN_DETAILS = {
     name: 'Trial',
     features: ['14 days', '100 queries', 'Basic support'],
     color: 'text-gray-500',
-    bg: 'bg-gray-100',
+    bg: 'bg-gray-500/10',
   },
   professional: {
     name: 'Professional',
     features: ['Unlimited queries', 'All AI models', 'Priority support', '5 databases'],
     color: 'text-blue-500',
-    bg: 'bg-blue-100',
+    bg: 'bg-blue-500/10',
   },
   team: {
     name: 'Team',
     features: ['Everything in Pro', '10 team members', 'Advanced analytics', 'Unlimited databases'],
     color: 'text-purple-500',
-    bg: 'bg-purple-100',
+    bg: 'bg-purple-500/10',
   },
   enterprise: {
     name: 'Enterprise',
@@ -312,9 +312,9 @@ export default function SubscriptionPage() {
                   <div className="flex items-center gap-4">
                     <div className={cn(
                       'w-10 h-10 rounded-full flex items-center justify-center',
-                      payment.status === 'succeeded' ? 'bg-green-100 text-green-600' :
-                      payment.status === 'failed' ? 'bg-red-100 text-red-600' :
-                      'bg-yellow-100 text-yellow-600'
+                      payment.status === 'succeeded' ? 'bg-green-500/10 text-green-400' :
+                      payment.status === 'failed' ? 'bg-red-500/10 text-red-400' :
+                      'bg-yellow-500/10 text-yellow-400'
                     )}>
                       <CreditCard className="w-5 h-5" />
                     </div>

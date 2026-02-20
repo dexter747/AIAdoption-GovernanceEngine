@@ -22,13 +22,13 @@ pnpm dev
 
 2. **Click "Sign in with Browser"** button
 
-3. **Browser opens** - You'll be redirected to `http://localhost:3000/login?desktop=true&callback=ainexus://auth/callback`
+3. **Browser opens** - You'll be redirected to `http://localhost:3000/login?desktop=true&callback=velanova://auth/callback`
 
 4. **Sign in with Google** - Click the "Continue with Google" button
 
 5. **Google OAuth flow** - Complete Google authentication
 
-6. **Desktop callback** - Browser shows "Authentication Successful" and attempts to redirect to `ainexus://auth/callback`
+6. **Desktop callback** - Browser shows "Authentication Successful" and attempts to redirect to `velanova://auth/callback`
 
 7. **Desktop app receives auth** - The deep link should be caught by the desktop app and you should be logged in
 
@@ -61,7 +61,7 @@ lsof -ti:5199 | xargs kill -9
 
 ## Development Mode Limitations
 
-In development, the deep link protocol (`ainexus://`) may not work perfectly on all platforms:
+In development, the deep link protocol (`velanova://`) may not work perfectly on all platforms:
 
 - **macOS**: Should work with `app.setAsDefaultProtocolClient()`
 - **Windows/Linux**: May require building and installing the app

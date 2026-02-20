@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-infor-cloudsuite",
+  "name": "@velanova/mcp-server-infor-cloudsuite",
   "version": "1.0.0",
   "description": "MCP server for Infor CloudSuite",
   "type": "module",

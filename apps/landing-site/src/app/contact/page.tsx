@@ -30,7 +30,7 @@ export default function ContactPage() {
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="flex items-center gap-2">
               <Sparkles className="w-8 h-8 text-primary" />
-              <span className="text-xl font-medium bg-gradient-to-r from-primary to-indigo-600 bg-clip-text text-transparent">AI Nexus</span>
+              <span className="text-xl font-medium bg-gradient-to-r from-primary to-indigo-600 bg-clip-text text-transparent">Velanova</span>
             </Link>
             <Link href="/" className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-2">
               <ArrowLeft className="w-4 h-4" /> Back to Home
@@ -55,7 +55,7 @@ export default function ContactPage() {
               </div>
               <h3 className="font-medium text-foreground mb-2">Email Us</h3>
               <p className="text-muted-foreground text-sm mb-4">For general inquiries and support</p>
-              <a href="mailto:hello@ainexus.io" className="text-primary hover:underline">hello@ainexus.io</a>
+              <a href="mailto:hello@velanova.io" className="text-primary hover:underline">hello@velanova.io</a>
             </div>
 
             <div className="bg-muted/30 border border-border rounded-2xl p-6 text-center hover:border-primary/50 transition-colors">
@@ -73,7 +73,7 @@ export default function ContactPage() {
               </div>
               <h3 className="font-medium text-foreground mb-2">Sales</h3>
               <p className="text-muted-foreground text-sm mb-4">For enterprise and partnership inquiries</p>
-              <a href="mailto:sales@ainexus.io" className="text-primary hover:underline">sales@ainexus.io</a>
+              <a href="mailto:sales@velanova.io" className="text-primary hover:underline">sales@velanova.io</a>
             </div>
           </div>
 
@@ -222,7 +222,7 @@ export default function ContactPage() {
       {/* Footer */}
       <footer className="border-t border-border py-8 mt-16">
         <div className="container mx-auto px-4 text-center">
-          <p className="text-sm text-muted-foreground">© 2025 AI Nexus. All rights reserved.</p>
+          <p className="text-sm text-muted-foreground">© 2025 Velanova. All rights reserved.</p>
           <div className="flex justify-center gap-6 mt-4">
             <Link href="/privacy" className="text-sm text-muted-foreground hover:text-foreground">Privacy Policy</Link>
             <Link href="/terms" className="text-sm text-muted-foreground hover:text-foreground">Terms of Service</Link>

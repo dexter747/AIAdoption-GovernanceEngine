@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "main": "./electron.js",
-  "description": "AI Nexus Desktop Application - Electron + React + TypeScript",
-  "author": "AI Nexus Team",
+  "description": "Velanova Desktop Application - Electron + React + TypeScript",
+  "author": "Velanova Team",
   "scripts": {
     "dev": "pnpm run build:preload && concurrently \"pnpm run dev:renderer\" \"pnpm run dev:electron\"",
     "dev:renderer": "vite --port 5199",
@@ -91,8 +91,8 @@
     "wait-on": "^9.0.3"
   },
   "build": {
-    "appId": "com.ainexus.desktop",
-    "productName": "AI Nexus",
+    "appId": "com.velanova.desktop",
+    "productName": "Velanova",
     "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
     "directories": {
       "output": "release",
@@ -112,15 +112,15 @@
     ],
     "protocols": [
       {
-        "name": "AI Nexus Protocol",
+        "name": "Velanova Protocol",
         "schemes": [
-          "ainexus"
+          "velanova"
         ]
       }
     ],
     "publish": {
       "provider": "github",
-      "owner": "ainexus",
+      "owner": "velanova",
       "repo": "desktop-app"
     },
     "mac": {
@@ -143,9 +143,9 @@
       "extendInfo": {
         "CFBundleURLTypes": [
           {
-            "CFBundleURLName": "AI Nexus Protocol",
+            "CFBundleURLName": "Velanova Protocol",
             "CFBundleURLSchemes": [
-              "ainexus"
+              "velanova"
             ]
           }
         ]
@@ -177,7 +177,7 @@
         }
       ],
       "icon": "build/icon.ico",
-      "publisherName": "AI Nexus Inc.",
+      "publisherName": "Velanova Inc.",
       "verifyUpdateCodeSignature": false
     },
     "linux": {
@@ -198,7 +198,7 @@
       "category": "Development",
       "icon": "build/icon.png",
       "mimeTypes": [
-        "x-scheme-handler/ainexus"
+        "x-scheme-handler/velanova"
       ],
       "desktop": {
         "StartupNotify": "true",

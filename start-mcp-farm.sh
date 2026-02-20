@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# AI Nexus MCP Farm Startup Script
+# Velanova MCP Farm Startup Script
 # This script starts the MCP server farm using Docker Compose
 
 set -e
@@ -15,7 +15,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 echo -e "${GREEN}╔═══════════════════════════════════════════╗${NC}"
-echo -e "${GREEN}║     AI Nexus MCP Server Farm Launcher      ║${NC}"
+echo -e "${GREEN}║     Velanova MCP Server Farm Launcher      ║${NC}"
 echo -e "${GREEN}╚═══════════════════════════════════════════╝${NC}"
 echo ""
 
@@ -95,7 +95,7 @@ case $ACTION in
         echo "Services:"
         docker compose -f docker-compose.mcp-farm.yml ${PROFILE} ps --format "table {{.Name}}\t{{.Status}}\t{{.Ports}}"
         echo ""
-        echo -e "AI Nexus MCP Server: ${GREEN}http://localhost:3100${NC}"
+        echo -e "Velanova MCP Server: ${GREEN}http://localhost:3100${NC}"
         echo ""
         echo "To view logs: ./start-mcp-farm.sh logs"
         echo "To stop: ./start-mcp-farm.sh down"

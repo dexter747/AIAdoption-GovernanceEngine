@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "private": true,
-  "description": "AI Nexus Cloud Backend - Next.js 14 + TypeScript",
+  "description": "Velanova Cloud Backend - Next.js 14 + TypeScript",
   "scripts": {
     "dev": "next dev -p 3001",
     "build": "prisma generate && next build",

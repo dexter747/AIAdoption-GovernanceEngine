@@ -23,24 +23,24 @@ export default function DownloadPage() {
 
   const downloads = {
     windows: {
-      installer: 'AI-Nexus-Setup-1.0.0.exe',
-      msi: 'AI-Nexus-1.0.0.msi',
-      portable: 'AI-Nexus-1.0.0-win.zip',
+      installer: 'Velanova-Setup-1.0.0.exe',
+      msi: 'Velanova-1.0.0.msi',
+      portable: 'Velanova-1.0.0-win.zip',
     },
     mac: {
-      dmg: 'AI-Nexus-1.0.0.dmg',
-      zip: 'AI-Nexus-1.0.0-mac.zip',
+      dmg: 'Velanova-1.0.0.dmg',
+      zip: 'Velanova-1.0.0-mac.zip',
     },
     linux: {
-      appimage: 'AI-Nexus-1.0.0.AppImage',
-      deb: 'ai-nexus_1.0.0_amd64.deb',
-      rpm: 'ai-nexus-1.0.0.x86_64.rpm',
+      appimage: 'Velanova-1.0.0.AppImage',
+      deb: 'velanova_1.0.0_amd64.deb',
+      rpm: 'velanova-1.0.0.x86_64.rpm',
     },
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <header className="border-b bg-white/80 backdrop-blur-sm">
+      <header className="border-b bg-black/80 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4">
           <Link href="/" className="text-2xl font-medium">
             ← Back to Home
@@ -50,8 +50,8 @@ export default function DownloadPage() {
 
       <main className="container mx-auto px-4 py-20">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-5xl font-medium mb-6 text-center">Download AI Nexus</h1>
-          <p className="text-xl text-gray-600 mb-12 text-center">
+          <h1 className="text-5xl font-medium mb-6 text-center">Download Velanova</h1>
+          <p className="text-xl text-gray-400 mb-12 text-center">
             Choose your platform and get started in minutes
           </p>
 
@@ -62,7 +62,7 @@ export default function DownloadPage() {
               className={`px-8 py-4 rounded-lg font-medium flex items-center gap-2 ${
                 platform === 'windows'
                   ? 'bg-blue-600 text-white'
-                  : 'bg-white text-gray-900 border-2'
+                  : 'bg-white/5 text-white border-2 border-white/10'
               }`}
             >
               <MonitorDown className="w-5 h-5" />
@@ -73,7 +73,7 @@ export default function DownloadPage() {
               className={`px-8 py-4 rounded-lg font-medium flex items-center gap-2 ${
                 platform === 'mac'
                   ? 'bg-blue-600 text-white'
-                  : 'bg-white text-gray-900 border-2'
+                  : 'bg-white/5 text-white border-2 border-white/10'
               }`}
             >
               <Apple className="w-5 h-5" />
@@ -84,7 +84,7 @@ export default function DownloadPage() {
               className={`px-8 py-4 rounded-lg font-medium flex items-center gap-2 ${
                 platform === 'linux'
                   ? 'bg-blue-600 text-white'
-                  : 'bg-white text-gray-900 border-2'
+                  : 'bg-white/5 text-white border-2 border-white/10'
               }`}
             >
               <Download className="w-5 h-5" />
@@ -93,9 +93,9 @@ export default function DownloadPage() {
           </div>
 
           {/* Download Options */}
-          <div className="bg-white rounded-2xl p-8 shadow-lg">
+          <div className="bg-card rounded-2xl p-8 border border-border">
             {detected && (
-              <div className="mb-6 p-4 bg-blue-50 rounded-lg text-blue-900">
+              <div className="mb-6 p-4 bg-blue-500/10 rounded-lg text-blue-400">
                 We detected you&apos;re using{' '}
                 <strong>
                   {platform === 'mac' ? 'macOS' : platform === 'linux' ? 'Linux' : 'Windows'}
@@ -163,10 +163,10 @@ export default function DownloadPage() {
                   subtitle="For Fedora, RHEL, CentOS, openSUSE"
                   filename={downloads.linux.rpm}
                 />
-                <div className="mt-6 p-4 bg-blue-50 rounded-lg text-blue-900 text-sm">
+                <div className="mt-6 p-4 bg-blue-500/10 rounded-lg text-blue-400 text-sm">
                   <strong>AppImage usage:</strong> Make it executable with{' '}
-                  <code className="bg-blue-100 px-2 py-1 rounded">
-                    chmod +x AI-Nexus-*.AppImage
+                  <code className="bg-blue-500/10 px-2 py-1 rounded">
+                    chmod +x Velanova-*.AppImage
                   </code>
                 </div>
               </div>
@@ -174,12 +174,12 @@ export default function DownloadPage() {
           </div>
 
           {/* System Requirements */}
-          <div className="mt-12 bg-white rounded-2xl p-8 shadow-lg">
+          <div className="mt-12 bg-card rounded-2xl p-8 border border-border">
             <h2 className="text-2xl font-medium mb-4">System Requirements</h2>
             <div className="grid md:grid-cols-3 gap-6">
               <div>
                 <h3 className="font-medium mb-2">Windows</h3>
-                <ul className="text-sm text-gray-600 space-y-1">
+                <ul className="text-sm text-gray-400 space-y-1">
                   <li>Windows 10/11 (64-bit)</li>
                   <li>4GB RAM minimum</li>
                   <li>500MB disk space</li>
@@ -187,7 +187,7 @@ export default function DownloadPage() {
               </div>
               <div>
                 <h3 className="font-medium mb-2">macOS</h3>
-                <ul className="text-sm text-gray-600 space-y-1">
+                <ul className="text-sm text-gray-400 space-y-1">
                   <li>macOS 10.15+ (Catalina)</li>
                   <li>4GB RAM minimum</li>
                   <li>500MB disk space</li>
@@ -195,7 +195,7 @@ export default function DownloadPage() {
               </div>
               <div>
                 <h3 className="font-medium mb-2">Linux</h3>
-                <ul className="text-sm text-gray-600 space-y-1">
+                <ul className="text-sm text-gray-400 space-y-1">
                   <li>Ubuntu 20.04+, Fedora 35+</li>
                   <li>4GB RAM minimum</li>
                   <li>500MB disk space</li>
@@ -208,24 +208,24 @@ export default function DownloadPage() {
           <div className="mt-12 text-center">
             <h2 className="text-2xl font-medium mb-4">What&apos;s Next?</h2>
             <div className="grid md:grid-cols-3 gap-6 text-left">
-              <div className="bg-white p-6 rounded-xl shadow-sm">
+              <div className="bg-card p-6 rounded-xl border border-border">
                 <div className="text-3xl mb-2">1️⃣</div>
                 <h3 className="font-medium mb-2">Install & Launch</h3>
-                <p className="text-sm text-gray-600">
-                  Download and install AI Nexus. Launch the app and start your 14-day free trial.
+                <p className="text-sm text-gray-400">
+                  Download and install Velanova. Launch the app and start your 14-day free trial.
                 </p>
               </div>
-              <div className="bg-white p-6 rounded-xl shadow-sm">
+              <div className="bg-card p-6 rounded-xl border border-border">
                 <div className="text-3xl mb-2">2️⃣</div>
                 <h3 className="font-medium mb-2">Connect Your Data</h3>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-400">
                   Add connections to your databases or SaaS platforms. Your data stays secure.
                 </p>
               </div>
-              <div className="bg-white p-6 rounded-xl shadow-sm">
+              <div className="bg-card p-6 rounded-xl border border-border">
                 <div className="text-3xl mb-2">3️⃣</div>
                 <h3 className="font-medium mb-2">Query with AI</h3>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-400">
                   Ask questions in natural language and get instant insights from your data.
                 </p>
               </div>
@@ -250,20 +250,20 @@ function DownloadButton({
 }) {
   const handleDownload = () => {
     // In production, this would point to actual download URLs (GitHub releases, CDN, etc.)
-    window.open(`https://releases.ainexus.com/${filename}`, '_blank');
+    window.open(`https://releases.velanova.com/${filename}`, '_blank');
   };
 
   return (
     <button
       onClick={handleDownload}
       className={`w-full p-4 rounded-lg border-2 text-left hover:shadow-md transition-all ${
-        primary ? 'border-blue-600 bg-blue-50' : 'border-gray-200 bg-white'
+        primary ? 'border-blue-500 bg-blue-500/10' : 'border-white/10 bg-white/5'
       }`}
     >
       <div className="flex items-center justify-between">
         <div>
           <h3 className="font-medium text-lg">{title}</h3>
-          <p className="text-sm text-gray-600">{subtitle}</p>
+          <p className="text-sm text-gray-400">{subtitle}</p>
           <p className="text-xs text-gray-400 mt-1">{filename}</p>
         </div>
         <Download className={`w-6 h-6 ${primary ? 'text-blue-600' : 'text-gray-400'}`} />

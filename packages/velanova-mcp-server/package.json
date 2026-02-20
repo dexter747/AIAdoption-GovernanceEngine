@@ -1,7 +1,7 @@
 {
-  "name": "@ai-nexus/mcp-server",
+  "name": "@velanova/mcp-server",
   "version": "1.0.0",
-  "description": "AI Nexus MCP Server - Aggregates 67 AI models + 60+ enterprise systems into a unified MCP interface",
+  "description": "Velanova MCP Server - Aggregates 67 AI models + 60+ enterprise systems into a unified MCP interface",
   "type": "module",
   "main": "dist/server.js",
   "scripts": {
@@ -21,7 +21,7 @@
     "enterprise",
     "integration"
   ],
-  "author": "AI Nexus",
+  "author": "Velanova",
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",

@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-applied-epic",
+  "name": "@velanova/mcp-server-applied-epic",
   "version": "1.0.0",
   "description": "MCP server for Applied Epic (Insurance Agency Management)",
   "type": "module",

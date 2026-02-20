@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-sage-intacct",
+  "name": "@velanova/mcp-server-sage-intacct",
   "version": "1.0.0",
   "description": "MCP server for Sage Intacct",
   "type": "module",

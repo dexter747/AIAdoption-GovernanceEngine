@@ -1,4 +1,4 @@
-# 🚀 AI Nexus - Latest Implementation Summary
+# 🚀 Velanova - Latest Implementation Summary
 ## February 11, 2026
 
 ---
@@ -182,7 +182,7 @@ Created automated build script for all 64 MCP servers:
 
    **Desktop App (.env):**
    ```env
-   API_BASE_URL=https://api.ainexus.com  # or http://localhost:5500 for dev
+   API_BASE_URL=https://api.velanova.com  # or http://localhost:5500 for dev
    ```
 
 3. **Build All MCP Servers**

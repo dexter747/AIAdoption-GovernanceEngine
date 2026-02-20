@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# AI Nexus Desktop App Build Script
+# Velanova Desktop App Build Script
 # This script builds the desktop application for all platforms
 
 set -e
@@ -9,7 +9,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 APP_DIR="$ROOT_DIR/apps/desktop-app"
 
-echo "🚀 AI Nexus Desktop App Build Script"
+echo "🚀 Velanova Desktop App Build Script"
 echo "======================================"
 echo ""
 

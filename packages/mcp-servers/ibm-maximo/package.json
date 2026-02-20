@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-ibm-maximo",
+  "name": "@velanova/mcp-server-ibm-maximo",
   "version": "1.0.0",
   "description": "MCP server for IBM Maximo Asset Management",
   "type": "module",

@@ -106,7 +106,7 @@ export function createApp() {
   // Legacy compatibility routes
   app.get('/api/status', (req, res) => {
     res.json({
-      service: 'AI Nexus API',
+      service: 'Velanova API',
       version: config.version,
       status: 'running',
       timestamp: new Date().toISOString(),

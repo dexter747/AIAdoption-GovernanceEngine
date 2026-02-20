@@ -19,7 +19,7 @@ const safeLog = (...args: any[]) => {
 
 const store = new Store({
   name: 'auth',
-  encryptionKey: 'ai-nexus-secure-key-2024',
+  encryptionKey: 'velanova-secure-key-2024',
 });
 
 let mainWindow: BrowserWindow | null = null;
@@ -200,7 +200,7 @@ function stopCallbackServer() {
   }
 }
 
-const PROTOCOL = 'ainexus';
+const PROTOCOL = 'velanova';
 
 if (process.defaultApp) {
   if (process.argv.length >= 2) {

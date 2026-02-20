@@ -341,9 +341,9 @@ await window.electron.mcp.getAllConnections()
 ### Check Local Storage
 
 **Chat History Location**:
-- macOS: `~/Library/Application Support/ai-nexus/chat-history.json`
-- Windows: `%APPDATA%/ai-nexus/chat-history.json`
-- Linux: `~/.config/ai-nexus/chat-history.json`
+- macOS: `~/Library/Application Support/velanova/chat-history.json`
+- Windows: `%APPDATA%/velanova/chat-history.json`
+- Linux: `~/.config/velanova/chat-history.json`
 
 **MCP Connections Location**:
 - Same directory, `mcp-connections.json`

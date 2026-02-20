@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-fis",
+  "name": "@velanova/mcp-server-fis",
   "version": "1.0.0",
   "description": "MCP server for FIS Banking/Payments",
   "type": "module",

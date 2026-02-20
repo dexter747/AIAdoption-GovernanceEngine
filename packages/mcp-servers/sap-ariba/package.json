@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-sap-ariba",
+  "name": "@velanova/mcp-server-sap-ariba",
   "version": "1.0.0",
   "description": "MCP server for SAP Ariba Procurement",
   "type": "module",

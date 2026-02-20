@@ -1,5 +1,5 @@
 -- =============================================================================
--- AI Nexus - Unified Database Schema
+-- Velanova - Unified Database Schema
 -- =============================================================================
 -- Single migration file for a fresh Supabase database.
 -- Merges: schema.sql, schema-v2, schema-v3-byok, schema-v4-payments,
@@ -900,7 +900,7 @@ COMMENT ON TABLE public.audit_log IS 'Admin audit trail - no RLS, service_role o
 -- =============================================================================
 DO $$
 BEGIN
-  RAISE NOTICE '✅ AI Nexus unified schema created successfully!';
+  RAISE NOTICE '✅ Velanova unified schema created successfully!';
   RAISE NOTICE 'Tables: users, subscriptions, licenses, license_activations, payment_sessions,';
   RAISE NOTICE '        payments, invoices, usage_records, usage_logs, api_keys,';
   RAISE NOTICE '        user_provider_keys, user_connections, chat_sessions, chat_messages,';

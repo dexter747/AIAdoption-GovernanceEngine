@@ -1,5 +1,5 @@
-# AI Nexus MCP Server Strategy
-**The Platform Play: Why AI Nexus Needs Its Own MCP Server**
+# Velanova MCP Server Strategy
+**The Platform Play: Why Velanova Needs Its Own MCP Server**
 
 *Last Updated: January 19, 2026*
 
@@ -7,12 +7,12 @@
 
 ## Executive Summary
 
-**Critical Insight**: AI Nexus should operate on **two MCP layers**:
+**Critical Insight**: Velanova should operate on **two MCP layers**:
 
 1. **Layer 1 (Consumer)**: Desktop app consumes external MCP servers (PostgreSQL, Oracle, SAP, etc.) ✅ *Already planned*
-2. **Layer 2 (Provider)**: AI Nexus exposes its own MCP server to the world 🆕 *Strategic multiplier*
+2. **Layer 2 (Provider)**: Velanova exposes its own MCP server to the world 🆕 *Strategic multiplier*
 
-**Why This Matters**: Building an **AI Nexus MCP Server** transforms the product from "yet another AI tool" into **critical enterprise infrastructure** that other AI assistants depend on.
+**Why This Matters**: Building an **Velanova MCP Server** transforms the product from "yet another AI tool" into **critical enterprise infrastructure** that other AI assistants depend on.
 
 ---
 
@@ -27,7 +27,7 @@
                                  │ MCP Protocol
                                  ↓
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                    🌟 AI NEXUS MCP SERVER 🌟                             │
+│                    🌟 VELANOVA MCP SERVER 🌟                             │
 │                  (The Platform Layer We Build)                           │
 │                                                                           │
 │  Exposes unified access to:                                              │
@@ -52,7 +52,7 @@
                                  │ Internal APIs
                                  ↓
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                      AI NEXUS CORE PLATFORM                              │
+│                      VELANOVA CORE PLATFORM                              │
 │                    (Express API + Desktop App)                           │
 │                                                                           │
 │  Consumes external MCP servers:                                         │
@@ -66,41 +66,41 @@
 
 ---
 
-## Why AI Nexus Needs Its Own MCP Server
+## Why Velanova Needs Its Own MCP Server
 
 ### 1. **Platform Network Effects**
 
-**Without AI Nexus MCP**:
-- AI Nexus is just another SaaS tool
+**Without Velanova MCP**:
+- Velanova is just another SaaS tool
 - Users must log into our UI to use it
 - Competes with every other AI platform
 
-**With AI Nexus MCP**:
-- AI Nexus becomes **infrastructure**
-- Claude Desktop users can query SAP through AI Nexus
-- GitHub Copilot can access Epic FHIR through AI Nexus
-- Cursor IDE can route AI queries through AI Nexus
+**With Velanova MCP**:
+- Velanova becomes **infrastructure**
+- Claude Desktop users can query SAP through Velanova
+- GitHub Copilot can access Epic FHIR through Velanova
+- Cursor IDE can route AI queries through Velanova
 - **Every AI tool becomes a distribution channel**
 
-**Business Impact**: 10x increase in usage because users access AI Nexus through their preferred tools.
+**Business Impact**: 10x increase in usage because users access Velanova through their preferred tools.
 
 ---
 
 ### 2. **The "Stripe for Enterprise AI" Play**
 
-Just as Stripe doesn't force you to use their UI (you integrate via API), AI Nexus shouldn't either.
+Just as Stripe doesn't force you to use their UI (you integrate via API), Velanova shouldn't either.
 
 **Traditional SaaS Model**:
 ```
-User → AI Nexus Web UI → AI Models + Legacy Systems
+User → Velanova Web UI → AI Models + Legacy Systems
 ```
 
 **Platform Model (with MCP)**:
 ```
-User → Claude Desktop → AI Nexus MCP Server → AI Models + Legacy Systems
-User → ChatGPT → AI Nexus MCP Server → AI Models + Legacy Systems
-User → Cursor IDE → AI Nexus MCP Server → AI Models + Legacy Systems
-User → Custom Script → AI Nexus MCP Server → AI Models + Legacy Systems
+User → Claude Desktop → Velanova MCP Server → AI Models + Legacy Systems
+User → ChatGPT → Velanova MCP Server → AI Models + Legacy Systems
+User → Cursor IDE → Velanova MCP Server → AI Models + Legacy Systems
+User → Custom Script → Velanova MCP Server → AI Models + Legacy Systems
 ```
 
 **Revenue Model**: Every API call through the MCP server = billable usage, regardless of which UI the customer uses.
@@ -111,7 +111,7 @@ User → Custom Script → AI Nexus MCP Server → AI Models + Legacy Systems
 
 **The Lock-In Sequence**:
 
-1. **Day 1**: Customer connects Claude Desktop to AI Nexus MCP
+1. **Day 1**: Customer connects Claude Desktop to Velanova MCP
 2. **Week 1**: They configure SAP + Oracle + Salesforce integrations
 3. **Month 1**: Their entire team's workflows depend on it
 4. **Month 6**: They've built custom automations using the MCP protocol
@@ -123,17 +123,17 @@ User → Custom Script → AI Nexus MCP Server → AI Models + Legacy Systems
 
 ### 4. **The Enterprise Governance Layer**
 
-**Critical differentiator**: Other MCP servers (PostgreSQL, MongoDB) are just data access. **AI Nexus MCP adds governance**.
+**Critical differentiator**: Other MCP servers (PostgreSQL, MongoDB) are just data access. **Velanova MCP adds governance**.
 
 ```typescript
-// Without AI Nexus MCP
+// Without Velanova MCP
 const result = await postgresClient.query("SELECT * FROM customer_data");
 // ❌ No audit trail
 // ❌ No cost tracking
 // ❌ No compliance checks
 // ❌ No rate limiting
 
-// With AI Nexus MCP
+// With Velanova MCP
 const result = await aiNexusClient.query_sap_system({
   query: "Get all customer invoices",
   user: "john@acme.com",
@@ -150,7 +150,7 @@ const result = await aiNexusClient.query_sap_system({
 
 ---
 
-## What the AI Nexus MCP Server Exposes
+## What the Velanova MCP Server Exposes
 
 ### Core Tools/Resources
 
@@ -182,7 +182,7 @@ const result = await aiNexusClient.query_sap_system({
 ```
 User: "Analyze this 100-page SAP financial report, EU data only, budget $2"
 
-Claude → AI Nexus MCP → Mistral Large (EU hosted) + Claude 3.5 Sonnet (long context)
+Claude → Velanova MCP → Mistral Large (EU hosted) + Claude 3.5 Sonnet (long context)
 ```
 
 #### 2. **Legacy System Integration**
@@ -207,9 +207,9 @@ Claude → AI Nexus MCP → Mistral Large (EU hosted) + Claude 3.5 Sonnet (long 
 # Developer writing code in Cursor IDE
 # Types comment: "Fetch last month's purchase orders from SAP"
 
-# Cursor uses AI Nexus MCP to:
+# Cursor uses Velanova MCP to:
 # 1. Translate intent to SAP RFC calls
-# 2. Execute query through AI Nexus
+# 2. Execute query through Velanova
 # 3. Return structured data
 # 4. Generate Python code to process it
 ```
@@ -257,7 +257,7 @@ Claude → AI Nexus MCP → Mistral Large (EU hosted) + Claude 3.5 Sonnet (long 
 ## Competitive Advantages
 
 ### vs. Direct MCP Servers (PostgreSQL MCP, MongoDB MCP)
-| Feature | Direct MCP | AI Nexus MCP |
+| Feature | Direct MCP | Velanova MCP |
 |---------|-----------|--------------|
 | Data access | ✅ Yes | ✅ Yes |
 | AI model routing | ❌ No | ✅ Yes (67 models) |
@@ -269,7 +269,7 @@ Claude → AI Nexus MCP → Mistral Large (EU hosted) + Claude 3.5 Sonnet (long 
 | Legacy systems (AS/400) | ❌ No | ✅ Yes |
 
 ### vs. AI Platform Competitors (Dust.tt, Glean, etc.)
-| Feature | Competitors | AI Nexus MCP |
+| Feature | Competitors | Velanova MCP |
 |---------|-------------|--------------|
 | Must use their UI | ✅ Yes (lock-in) | ❌ No (protocol-first) |
 | Custom integrations | ❌ Hard | ✅ Easy (MCP plugins) |
@@ -286,7 +286,7 @@ Claude → AI Nexus MCP → Mistral Large (EU hosted) + Claude 3.5 Sonnet (long 
 ### Technology Stack
 
 ```typescript
-// packages/ai-nexus-mcp-server/
+// packages/velanova-mcp-server/
 ├── src/
 │   ├── server.ts              // MCP protocol server
 │   ├── tools/
@@ -314,8 +314,8 @@ Claude → AI Nexus MCP → Mistral Large (EU hosted) + Claude 3.5 Sonnet (long 
 #### 1. **Cloud-Hosted MCP Server** (SaaS)
 ```bash
 # Customer connects to hosted endpoint
-npx ai-nexus-mcp-client connect \
-  --endpoint wss://mcp.ainexus.com \
+npx velanova-mcp-client connect \
+  --endpoint wss://mcp.velanova.com \
   --license-key xxxx-yyyy-zzzz
 ```
 
@@ -335,7 +335,7 @@ docker run -d \
   -p 3000:3000 \
   -e LICENSE_KEY=xxxx \
   -v /path/to/config:/config \
-  ainexus/mcp-server:latest
+  velanova/mcp-server:latest
 ```
 
 **Pros**:
@@ -351,7 +351,7 @@ docker run -d \
 ```
 ┌─────────────────────────────────────────────────┐
 │  Customer Premise (Air-Gapped)                  │
-│  ├─ AI Nexus MCP Server (on-premise)           │
+│  ├─ Velanova MCP Server (on-premise)           │
 │  ├─ SAP S/4HANA integration                    │
 │  ├─ Oracle ERP integration                     │
 │  ├─ AS/400 integration                         │
@@ -361,7 +361,7 @@ docker run -d \
                   │ Encrypted tunnel (only metadata)
                   ↓
 ┌─────────────────────────────────────────────────┐
-│  AI Nexus Cloud (SaaS)                          │
+│  Velanova Cloud (SaaS)                          │
 │  ├─ OpenAI GPT-4 (cloud AI)                    │
 │  ├─ Claude 3.5 Sonnet                          │
 │  ├─ Google Gemini                              │
@@ -403,12 +403,12 @@ Response:
 }
 ```
 
-### Custom AI Nexus Extensions
+### Custom Velanova Extensions
 
 ```json
 {
   "jsonrpc": "2.0",
-  "method": "ainexus/get_cost_estimate",
+  "method": "velanova/get_cost_estimate",
   "params": {
     "operations": [
       {"tool": "query_ai_model", "provider": "claude-3.5-sonnet"},
@@ -458,7 +458,7 @@ Response:
 ## Go-To-Market Strategy
 
 ### Phase 1: Developer Evangelism (Months 1-3)
-**Goal**: Get AI Nexus MCP into Claude Desktop, Cursor, Windsurf
+**Goal**: Get Velanova MCP into Claude Desktop, Cursor, Windsurf
 
 **Tactics**:
 1. Publish open-source MCP client examples
@@ -484,11 +484,11 @@ Response:
 ---
 
 ### Phase 3: Platform Ecosystem (Months 10-18)
-**Goal**: Third-party developers build on AI Nexus MCP
+**Goal**: Third-party developers build on Velanova MCP
 
 **Tactics**:
-1. Launch AI Nexus MCP Plugin Marketplace
-2. Revenue share: 70% developer, 30% AI Nexus
+1. Launch Velanova MCP Plugin Marketplace
+2. Revenue share: 70% developer, 30% Velanova
 3. Certification program for plugin developers
 4. Annual developer conference
 
@@ -501,10 +501,10 @@ Response:
 ### The Pitch
 
 **To Developers**:
-> "Stop building the same SAP integration 100 times. Use AI Nexus MCP and query SAP from any AI tool—Claude Desktop, Cursor, ChatGPT, or your own scripts. One integration, infinite possibilities."
+> "Stop building the same SAP integration 100 times. Use Velanova MCP and query SAP from any AI tool—Claude Desktop, Cursor, ChatGPT, or your own scripts. One integration, infinite possibilities."
 
 **To Enterprises**:
-> "Your team uses 10 different AI tools. AI Nexus MCP adds governance, compliance, and cost control across all of them—without forcing anyone to switch tools."
+> "Your team uses 10 different AI tools. Velanova MCP adds governance, compliance, and cost control across all of them—without forcing anyone to switch tools."
 
 **To Investors**:
 > "We're building the Stripe of enterprise AI. Every AI query in the enterprise goes through our MCP server. At scale, that's a $10B+ revenue opportunity."
@@ -589,7 +589,7 @@ Response:
 
 ## Conclusion: The Strategic Imperative
 
-Building an AI Nexus MCP Server is not optional—it's **existential**.
+Building an Velanova MCP Server is not optional—it's **existential**.
 
 **Why**:
 1. **Distribution**: Every AI tool becomes a distribution channel
@@ -600,17 +600,17 @@ Building an AI Nexus MCP Server is not optional—it's **existential**.
 
 **The Analogy**:
 - **2005**: Everyone built their own payment forms → Stripe abstracted payments
-- **2026**: Everyone builds their own AI integrations → AI Nexus abstracts enterprise AI
+- **2026**: Everyone builds their own AI integrations → Velanova abstracts enterprise AI
 
 **The Outcome**:
-In 3 years, when a developer types in Claude Desktop: "Show me SAP financials for Q4," they're unknowingly using AI Nexus MCP infrastructure. That's 100M+ knowledge workers × $50-$100/year = **$5B-$10B market**.
+In 3 years, when a developer types in Claude Desktop: "Show me SAP financials for Q4," they're unknowingly using Velanova MCP infrastructure. That's 100M+ knowledge workers × $50-$100/year = **$5B-$10B market**.
 
 ---
 
 **Next Actions**:
 1. ✅ Document strategy (this file)
 2. [ ] Prototype basic MCP server (1 week)
-3. [ ] Demo video: Claude Desktop → AI Nexus MCP → SAP query
+3. [ ] Demo video: Claude Desktop → Velanova MCP → SAP query
 4. [ ] Pitch to early design partners (3 F500 companies)
 5. [ ] Launch public beta (3 months)
 
@@ -618,4 +618,4 @@ In 3 years, when a developer types in Claude Desktop: "Show me SAP financials fo
 **Review Cadence**: Monthly  
 **Next Review**: February 2026
 
-*This is the most important architectural decision for AI Nexus. Get this right, and we become infrastructure. Get it wrong, and we're just another SaaS tool.*
+*This is the most important architectural decision for Velanova. Get this right, and we become infrastructure. Get it wrong, and we're just another SaaS tool.*

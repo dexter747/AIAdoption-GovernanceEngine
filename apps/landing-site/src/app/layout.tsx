@@ -7,8 +7,12 @@ import { SessionProvider } from '@/components/SessionProvider';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'AI Nexus - Bring AI to Your Legacy Software',
+  title: 'Velanova - Bring AI to Your Legacy Software',
   description: 'Connect your databases and enterprise systems to powerful AI models',
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/logo.png',
+  },
 };
 
 export default function RootLayout({
@@ -17,8 +21,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning className="light">
-      <body className={`${inter.className} bg-white text-black`}>
+    <html lang="en" className="dark">
+      <body className={`${inter.className} bg-background text-foreground antialiased`}>
         <SessionProvider>
           <ThemeProvider>
             {children}

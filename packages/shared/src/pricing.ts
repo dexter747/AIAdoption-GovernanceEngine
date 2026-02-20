@@ -1,5 +1,5 @@
 /**
- * AI Nexus - Pricing Configuration
+ * Velanova - Pricing Configuration
  * Centralized pricing structure for all applications
  */
 

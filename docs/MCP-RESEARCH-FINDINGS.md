@@ -222,7 +222,7 @@
 ### 3. **Docker Strategy**
 - Dockerize all MCP servers for consistency
 - Use Docker Compose for multi-server orchestration
-- Publish to Docker Hub: `ainexus/mcp-postgres`, `ainexus/mcp-saphana`, etc.
+- Publish to Docker Hub: `velanova/mcp-postgres`, `velanova/mcp-saphana`, etc.
 
 ### 4. **Desktop App Integration**
 ```typescript

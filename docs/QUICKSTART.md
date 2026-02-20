@@ -66,7 +66,7 @@ pnpm prisma studio
 
 **Cloud Backend:**
 - Open http://localhost:3001
-- Should see "AI Nexus Cloud Backend" page
+- Should see "Velanova Cloud Backend" page
 
 **Desktop App:**
 - Electron window should open automatically

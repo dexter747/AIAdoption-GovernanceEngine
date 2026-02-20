@@ -1,5 +1,5 @@
 #!/bin/bash
-# Database Migration Script for AI Nexus
+# Database Migration Script for Velanova
 # Runs schema-v3-byok.sql against Supabase PostgreSQL
 
 set -e
@@ -11,7 +11,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 echo -e "${GREEN}╔════════════════════════════════════════════════════════════╗${NC}"
-echo -e "${GREEN}║        AI Nexus Database Migration Script                  ║${NC}"
+echo -e "${GREEN}║        Velanova Database Migration Script                  ║${NC}"
 echo -e "${GREEN}╚════════════════════════════════════════════════════════════╝${NC}"
 echo ""
 

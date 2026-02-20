@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-adp",
+  "name": "@velanova/mcp-server-adp",
   "version": "1.0.0",
   "description": "MCP server for ADP Workforce",
   "type": "module",

@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-finastra",
+  "name": "@velanova/mcp-server-finastra",
   "version": "1.0.0",
   "description": "MCP server for Finastra Financial Services",
   "type": "module",

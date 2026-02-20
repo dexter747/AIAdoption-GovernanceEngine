@@ -20,8 +20,8 @@ export class OpenRouterProvider {
       apiKey: config.apiKey,
       baseURL: 'https://openrouter.ai/api/v1',
       defaultHeaders: {
-        'HTTP-Referer': 'https://ainexus.com',
-        'X-Title': 'AI Nexus',
+        'HTTP-Referer': 'https://velanova.com',
+        'X-Title': 'Velanova',
       },
     });
   }

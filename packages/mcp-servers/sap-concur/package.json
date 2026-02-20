@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-sap-concur",
+  "name": "@velanova/mcp-server-sap-concur",
   "version": "1.0.0",
   "description": "MCP server for SAP Concur (Travel & Expense)",
   "type": "module",

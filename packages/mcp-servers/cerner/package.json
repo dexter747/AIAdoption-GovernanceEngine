@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-cerner",
+  "name": "@velanova/mcp-server-cerner",
   "version": "1.0.0",
   "description": "MCP server for Cerner/Oracle Health (FHIR R4)",
   "type": "module",

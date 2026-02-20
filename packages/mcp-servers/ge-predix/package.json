@@ -1,5 +1,5 @@
 {
-  "name": "@ai-nexus/mcp-server-ge-predix",
+  "name": "@velanova/mcp-server-ge-predix",
   "version": "1.0.0",
   "description": "MCP server for GE Digital/Predix (Industrial IoT)",
   "type": "module",
