@@ -35,15 +35,15 @@ export function Footer() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.from(".footer-brand", {
-        opacity: 0, y: 20, duration: 0.6,
+        opacity: 0, y: 20, duration: 0.6, immediateRender: false,
         scrollTrigger: { trigger: ref.current, start: "top 90%", once: true },
       });
       gsap.from(".footer-col", {
-        opacity: 0, y: 20, duration: 0.5, stagger: 0.08,
+        opacity: 0, y: 20, duration: 0.5, stagger: 0.08, immediateRender: false,
         scrollTrigger: { trigger: ref.current, start: "top 90%", once: true },
       });
       gsap.from(".footer-bottom", {
-        opacity: 0, duration: 0.5, delay: 0.3,
+        opacity: 0, duration: 0.5, delay: 0.3, immediateRender: false,
         scrollTrigger: { trigger: ref.current, start: "top 90%", once: true },
       });
     }, ref);

@@ -43,7 +43,7 @@ export default function AnalyticsPage() {
  <div className="p-8 flex items-center justify-center min-h-screen">
  <div className="text-center">
  <RefreshCw className="w-8 h-8 text-zinc-300 animate-spin mx-auto mb-4" />
- <p className="text-muted-foreground">Loading analytics...</p>
+ <p className="text-zinc-500">Loading analytics...</p>
  </div>
  </div>
  );
@@ -55,11 +55,11 @@ export default function AnalyticsPage() {
  <div className="flex items-center justify-between mb-8">
  <div>
  <h1 className="font-medium text-white">Analytics</h1>
- <p className="text-muted-foreground mt-1">30-day platform performance overview</p>
+ <p className="text-zinc-500 mt-1">30-day platform performance overview</p>
  </div>
  <button
  onClick={fetchAnalytics}
- className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground rounded-lg hover:text-white border-zinc-800"
+ className="flex items-center gap-2 px-4 py-2 text-sm text-zinc-500 rounded-lg hover:text-white border-white/[0.06]"
  >
  <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
  Refresh
@@ -68,7 +68,7 @@ export default function AnalyticsPage() {
 
  <div className="grid gap-6">
  {/* User Signups */}
- <div className="rounded-xl p-6 bg-black border-zinc-800">
+ <div className="rounded-xl p-6 border border-white/[0.06] bg-white/[0.02]">
  <div className="flex items-center gap-2 mb-6">
  <Users className="w-5 h-5 text-zinc-300" />
  <h2 className="font-medium text-white">Daily User Signups</h2>
@@ -92,7 +92,7 @@ export default function AnalyticsPage() {
  </div>
 
  {/* Revenue */}
- <div className="rounded-xl p-6 bg-black border-zinc-800">
+ <div className="rounded-xl p-6 border border-white/[0.06] bg-white/[0.02]">
  <div className="flex items-center gap-2 mb-6">
  <DollarSign className="w-5 h-5 text-zinc-400" />
  <h2 className="font-medium text-white">Daily Revenue (USD)</h2>
@@ -111,7 +111,7 @@ export default function AnalyticsPage() {
  {/* Activations + Plan Distribution */}
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
  {/* License Activations */}
- <div className="rounded-xl p-6 bg-black border-zinc-800">
+ <div className="rounded-xl p-6 border border-white/[0.06] bg-white/[0.02]">
  <div className="flex items-center gap-2 mb-6">
  <Activity className="w-5 h-5 text-zinc-300" />
  <h2 className="font-medium text-white">Daily Activations</h2>
@@ -135,7 +135,7 @@ export default function AnalyticsPage() {
  </div>
 
  {/* Plan Distribution */}
- <div className="rounded-xl p-6 bg-black border-zinc-800">
+ <div className="rounded-xl p-6 border border-white/[0.06] bg-white/[0.02]">
  <div className="flex items-center gap-2 mb-6">
  <TrendingUp className="w-5 h-5 text-zinc-400" />
  <h2 className="font-medium text-white">Plan Distribution</h2>
@@ -163,7 +163,7 @@ export default function AnalyticsPage() {
  </div>
 
  {/* Platform Distribution */}
- <div className="rounded-xl p-6 bg-black border-zinc-800">
+ <div className="rounded-xl p-6 border border-white/[0.06] bg-white/[0.02]">
  <h2 className="font-medium mb-6 text-white">Platform Distribution</h2>
  <ResponsiveContainer width="100%" height={200}>
  <BarChart data={data?.platformChartData || []} layout="vertical">

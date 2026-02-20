@@ -21,15 +21,15 @@ export default function ROICalculator() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.from(".roi-header > *", {
-        opacity: 0, y: 30, duration: 0.7, stagger: 0.12,
+        opacity: 0, y: 30, duration: 0.7, stagger: 0.12, immediateRender: false,
         scrollTrigger: { trigger: ".roi-header", start: "top 85%", once: true },
       });
       gsap.from(".roi-calc-card", {
-        opacity: 0, x: -40, duration: 0.8, ease: "power3.out",
+        opacity: 0, x: -40, duration: 0.8, ease: "power3.out", immediateRender: false,
         scrollTrigger: { trigger: ".roi-grid", start: "top 85%", once: true },
       });
       gsap.from(".roi-result", {
-        opacity: 0, x: 40, duration: 0.8, stagger: 0.12, ease: "power3.out",
+        opacity: 0, x: 40, duration: 0.8, stagger: 0.12, ease: "power3.out", immediateRender: false,
         scrollTrigger: { trigger: ".roi-grid", start: "top 85%", once: true },
       });
     }, ref);
@@ -37,9 +37,9 @@ export default function ROICalculator() {
   }, []);
 
   return (
-    <section ref={ref} className="py-28 bg-black">
+    <section ref={ref} className="py-16 bg-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="roi-header text-center mb-16">
+        <div className="roi-header text-center mb-10">
           <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border mb-5 bg-white/[0.03] border-white/[0.08]">
             <Calculator className="w-4 h-4 text-zinc-500" />
             <span className="text-sm font-medium text-zinc-500">ROI Calculator</span>

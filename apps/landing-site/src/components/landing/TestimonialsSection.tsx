@@ -84,15 +84,15 @@ export function TestimonialsSection() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.from(".test-header > *", {
-        opacity: 0, y: 30, duration: 0.7, stagger: 0.12,
+        opacity: 0, y: 30, duration: 0.7, stagger: 0.12, immediateRender: false,
         scrollTrigger: { trigger: ".test-header", start: "top 85%", once: true },
       });
       gsap.from(".test-marquee", {
-        opacity: 0, duration: 1,
+        opacity: 0, duration: 1, immediateRender: false,
         scrollTrigger: { trigger: ".test-marquee", start: "top 90%", once: true },
       });
       gsap.from(".test-stat", {
-        opacity: 0, y: 20, duration: 0.5, stagger: 0.1,
+        opacity: 0, y: 20, duration: 0.5, stagger: 0.1, immediateRender: false,
         scrollTrigger: { trigger: ".test-stats", start: "top 90%", once: true },
       });
     }, ref);
@@ -100,11 +100,11 @@ export function TestimonialsSection() {
   }, []);
 
   return (
-    <section ref={ref} className="relative py-28 bg-black overflow-hidden">
+    <section ref={ref} className="relative py-16 bg-black overflow-hidden">
       <div className="absolute inset-0 dot-grid opacity-20" />
 
       <div className="relative max-w-7xl mx-auto px-6">
-        <div className="test-header text-center max-w-2xl mx-auto mb-16">
+        <div className="test-header text-center max-w-2xl mx-auto mb-10">
           <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/[0.03] border border-white/[0.08] text-sm font-medium text-zinc-400 mb-5">
             <Star className="w-3.5 h-3.5 fill-current" />
             Customer Stories

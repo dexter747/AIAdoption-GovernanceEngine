@@ -51,27 +51,27 @@ export function PricingSection() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.from(".price-header > *", {
-        opacity: 0, y: 30, duration: 0.7, stagger: 0.12,
-        scrollTrigger: { trigger: ".price-header", start: "top 85%", once: true },
+        opacity: 0, y: 30, duration: 0.7, stagger: 0.12, immediateRender: false,
+        scrollTrigger: { trigger: ".price-header", start: "top 88%", once: true },
       });
       gsap.from(".price-card", {
-        opacity: 0, y: 50, scale: 0.95, duration: 0.7, stagger: 0.15, ease: "power3.out",
-        scrollTrigger: { trigger: ".price-grid", start: "top 85%", once: true },
+        opacity: 0, y: 40, duration: 0.6, stagger: 0.12, ease: "power2.out", immediateRender: false,
+        scrollTrigger: { trigger: ".price-grid", start: "top 92%", once: true },
       });
       gsap.from(".price-footer > *", {
-        opacity: 0, y: 15, duration: 0.5, stagger: 0.1,
-        scrollTrigger: { trigger: ".price-footer", start: "top 90%", once: true },
+        opacity: 0, y: 15, duration: 0.5, stagger: 0.1, immediateRender: false,
+        scrollTrigger: { trigger: ".price-footer", start: "top 92%", once: true },
       });
     }, ref);
     return () => ctx.revert();
   }, []);
 
   return (
-    <section id="pricing" ref={ref} className="relative py-28 bg-black">
+    <section id="pricing" ref={ref} className="relative py-16 bg-black">
       <div className="absolute inset-0 dot-grid opacity-20" />
 
       <div className="relative max-w-7xl mx-auto px-6">
-        <div className="price-header text-center max-w-3xl mx-auto mb-20">
+        <div className="price-header text-center max-w-3xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border mb-5 bg-white/[0.03] border-white/[0.08]">
             <Sparkles className="w-4 h-4 text-zinc-500" />
             <span className="text-sm font-medium text-zinc-500">Simple, Transparent Pricing</span>
@@ -93,7 +93,7 @@ export function PricingSection() {
                 className={cn(
                   "price-card relative p-8 rounded-2xl border transition-all duration-500",
                   tier.highlighted
-                    ? "border-white/20 bg-white/[0.05] shadow-2xl shadow-white/[0.05] ring-1 ring-white/10"
+                    ? "border-white/30 bg-white/[0.09] shadow-2xl shadow-white/[0.08] ring-1 ring-white/20"
                     : "border-white/[0.06] bg-white/[0.02] hover:border-white/[0.12] card-hover"
                 )}
               >

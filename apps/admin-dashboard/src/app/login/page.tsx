@@ -42,47 +42,56 @@ export default function AdminLoginPage() {
  };
 
  return (
- <div className="min-h-screen bg-background flex items-center justify-center p-4">
- <div className="w-full max-w-sm">
+ <div className="min-h-screen bg-black flex items-center justify-center p-4 relative overflow-hidden">
+ {/* Background grid */}
+ <div className="absolute inset-0 dot-grid opacity-30" />
+ <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/[0.015] rounded-full blur-[120px] pointer-events-none" />
+
+ <div className="relative w-full max-w-sm">
  {/* Logo */}
  <div className="text-center mb-8">
- <div className="flex items-center justify-center gap-2 mb-4">
- <img src="/logo.png" alt="Velanova" className="w-14 h-14 rounded-2xl" />
- <span className="text-2xl font-medium tracking-tight text-foreground">Velanova</span>
+ <div className="flex items-center justify-center gap-2.5 mb-5">
+ <img src="/logo.png" alt="Velanova" className="w-10 h-10 rounded-xl" />
+ <span className="text-xl font-medium tracking-tight text-white">Velanova</span>
  </div>
- <h1 className="text-xl font-medium text-foreground mb-2">Admin Portal</h1>
- <p className="text-sm text-muted-foreground">Sign in with your admin credentials</p>
+ <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/[0.08] bg-white/[0.03] mb-4">
+ <div className="w-1.5 h-1.5 rounded-full bg-zinc-500" />
+ <span className="text-xs font-medium text-zinc-500">Admin Portal</span>
+ </div>
+ <h1 className="text-2xl font-medium text-white mb-2">Welcome back</h1>
+ <p className="text-sm text-zinc-500">Sign in with your admin credentials</p>
  </div>
 
  {/* Form */}
+ <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6">
  <form onSubmit={handleSignIn} className="space-y-4">
  {/* Email */}
  <div>
- <label htmlFor="email" className="block text-sm font-medium text-muted-foreground mb-1">
+ <label htmlFor="email" className="block text-xs font-medium text-zinc-500 mb-1.5 uppercase tracking-wide">
  Email
  </label>
  <div className="relative">
- <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+ <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600" />
  <input
  id="email"
  type="email"
  value={email}
  onChange={(e) => setEmail(e.target.value)}
- placeholder="admin@gmail.com"
+ placeholder="admin@velanova.com"
  required
  autoComplete="email"
- className="w-full pl-10 pr-4 py-2.5 border border-border rounded-lg text-sm text-foreground placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-600 focus:border-transparent"
+ className="w-full pl-10 pr-4 py-2.5 border border-white/[0.08] rounded-xl text-sm text-white placeholder-zinc-600 bg-white/[0.03] focus:outline-none focus:border-white/20 focus:bg-white/[0.05] transition-all"
  />
  </div>
  </div>
 
  {/* Password */}
  <div>
- <label htmlFor="password" className="block text-sm font-medium text-muted-foreground mb-1">
+ <label htmlFor="password" className="block text-xs font-medium text-zinc-500 mb-1.5 uppercase tracking-wide">
  Password
  </label>
  <div className="relative">
- <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+ <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600" />
  <input
  id="password"
  type={showPassword ? 'text' : 'password'}
@@ -91,12 +100,12 @@ export default function AdminLoginPage() {
  placeholder="••••••••"
  required
  autoComplete="current-password"
- className="w-full pl-10 pr-10 py-2.5 border border-border rounded-lg text-sm text-foreground placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-600 focus:border-transparent"
+ className="w-full pl-10 pr-10 py-2.5 border border-white/[0.08] rounded-xl text-sm text-white placeholder-zinc-600 bg-white/[0.03] focus:outline-none focus:border-white/20 focus:bg-white/[0.05] transition-all"
  />
  <button
  type="button"
  onClick={() => setShowPassword(!showPassword)}
- className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-muted-foreground"
+ className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-600 hover:text-zinc-400 transition-colors"
  >
  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
  </button>
@@ -105,7 +114,7 @@ export default function AdminLoginPage() {
 
  {/* Error */}
  {error && (
- <div className="p-3 bg-zinc-950 border border-zinc-800 rounded-lg text-sm text-zinc-400">
+ <div className="p-3 bg-zinc-950 border border-white/[0.06] rounded-xl text-sm text-zinc-400">
  {error}
  </div>
  )}
@@ -114,13 +123,14 @@ export default function AdminLoginPage() {
  <button
  type="submit"
  disabled={isLoading}
- className="w-full py-2.5 bg-white hover:bg-zinc-200 disabled:opacity-60 text-black font-medium rounded-lg transition-colors"
+ className="w-full py-2.5 bg-white hover:bg-zinc-200 disabled:opacity-50 text-black font-medium rounded-xl transition-colors text-sm mt-2"
  >
  {isLoading ? 'Signing in...' : 'Sign in'}
  </button>
  </form>
+ </div>
 
- <p className="mt-6 text-center text-xs text-muted-foreground">
+ <p className="mt-5 text-center text-xs text-zinc-600">
  Only authorized admin accounts can access this portal.
  </p>
  </div>

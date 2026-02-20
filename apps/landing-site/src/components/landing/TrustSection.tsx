@@ -33,19 +33,19 @@ export function TrustSection() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.from(".trust-header > *", {
-        opacity: 0, y: 30, duration: 0.7, stagger: 0.12,
+        opacity: 0, y: 30, duration: 0.7, stagger: 0.12, immediateRender: false,
         scrollTrigger: { trigger: ".trust-header", start: "top 85%", once: true },
       });
       gsap.from(".trust-badge-card", {
-        opacity: 0, y: 30, scale: 0.95, duration: 0.5, stagger: 0.08, ease: "power3.out",
+        opacity: 0, y: 30, duration: 0.5, stagger: 0.08, ease: "power3.out", immediateRender: false,
         scrollTrigger: { trigger: ".trust-grid", start: "top 85%", once: true },
       });
       gsap.from(".company-item", {
-        opacity: 0, duration: 0.4, stagger: 0.06,
+        opacity: 0, duration: 0.4, stagger: 0.06, immediateRender: false,
         scrollTrigger: { trigger: ".companies-grid", start: "top 90%", once: true },
       });
       gsap.from(".security-banner", {
-        opacity: 0, y: 20, duration: 0.6,
+        opacity: 0, y: 20, duration: 0.6, immediateRender: false,
         scrollTrigger: { trigger: ".security-banner", start: "top 90%", once: true },
       });
     }, ref);
@@ -53,11 +53,11 @@ export function TrustSection() {
   }, []);
 
   return (
-    <section ref={ref} className="relative py-28 bg-zinc-950/50">
+    <section ref={ref} className="relative py-16 bg-zinc-950/50">
       <div className="absolute inset-0 dot-grid opacity-20" />
 
       <div className="relative max-w-7xl mx-auto px-6">
-        <div className="trust-header text-center mb-16">
+        <div className="trust-header text-center mb-10">
           <h2 className="text-3xl md:text-5xl font-medium tracking-tight text-white mb-4">
             Enterprise-grade{" "}
             <span className="text-shimmer">security by design</span>
@@ -67,7 +67,7 @@ export function TrustSection() {
           </p>
         </div>
 
-        <div className="trust-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-20">
+        <div className="trust-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-12">
           {trustBadges.map((badge) => {
             const Icon = badge.icon;
             return (
@@ -85,7 +85,7 @@ export function TrustSection() {
           })}
         </div>
 
-        <div className="mb-16">
+        <div className="mb-10">
           <p className="text-xs font-medium uppercase tracking-[0.2em] text-center mb-8 text-zinc-600">
             Trusted by leading enterprises
           </p>

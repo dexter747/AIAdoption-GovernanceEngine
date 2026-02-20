@@ -38,17 +38,17 @@ export function FeaturesSection() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.from(".feat-header > *", {
-        opacity: 0, y: 30, duration: 0.7, stagger: 0.12, ease: "power3.out",
+        opacity: 0, y: 30, duration: 0.7, stagger: 0.12, ease: "power3.out", immediateRender: false,
         scrollTrigger: { trigger: ".feat-header", start: "top 85%", once: true },
       });
 
       gsap.from(".feat-card", {
-        opacity: 0, y: 40, scale: 0.97, duration: 0.6, stagger: 0.06, ease: "power3.out",
+        opacity: 0, y: 40, duration: 0.6, stagger: 0.06, ease: "power3.out", immediateRender: false,
         scrollTrigger: { trigger: ".feat-grid", start: "top 85%", once: true },
       });
 
       gsap.from(".feat-cta", {
-        opacity: 0, y: 20, duration: 0.6, ease: "power3.out",
+        opacity: 0, y: 20, duration: 0.6, ease: "power3.out", immediateRender: false,
         scrollTrigger: { trigger: ".feat-cta", start: "top 90%", once: true },
       });
     }, ref);
@@ -56,12 +56,12 @@ export function FeaturesSection() {
   }, []);
 
   return (
-    <section id="features" ref={ref} className="relative py-28 bg-black">
+    <section id="features" ref={ref} className="relative py-16 bg-black">
       {/* Subtle dot grid */}
       <div className="absolute inset-0 dot-grid opacity-30" />
 
       <div className="relative max-w-7xl mx-auto px-6">
-        <div className="feat-header text-center max-w-3xl mx-auto mb-20">
+        <div className="feat-header text-center max-w-3xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border mb-5 bg-white/[0.03] border-white/[0.08]">
             <Zap className="w-4 h-4 text-zinc-500" />
             <span className="text-sm font-medium text-zinc-500">Enterprise Features</span>

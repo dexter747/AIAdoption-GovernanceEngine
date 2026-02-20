@@ -19,15 +19,15 @@ export function HowItWorksSection() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.from(".hiw-header > *", {
-        opacity: 0, y: 30, duration: 0.7, stagger: 0.12,
+        opacity: 0, y: 30, duration: 0.7, stagger: 0.12, immediateRender: false,
         scrollTrigger: { trigger: ".hiw-header", start: "top 85%", once: true },
       });
       gsap.from(".hiw-step", {
-        opacity: 0, y: 40, duration: 0.7, stagger: 0.2, ease: "power3.out",
+        opacity: 0, y: 40, duration: 0.7, stagger: 0.2, ease: "power3.out", immediateRender: false,
         scrollTrigger: { trigger: ".hiw-grid", start: "top 85%", once: true },
       });
       gsap.from(".hiw-connector", {
-        scaleX: 0, duration: 0.8, stagger: 0.3, ease: "power2.out",
+        scaleX: 0, duration: 0.8, stagger: 0.3, ease: "power2.out", immediateRender: false,
         scrollTrigger: { trigger: ".hiw-grid", start: "top 80%", once: true },
       });
     }, ref);
@@ -35,7 +35,7 @@ export function HowItWorksSection() {
   }, []);
 
   return (
-    <section ref={ref} className="py-28 bg-black relative">
+    <section ref={ref} className="py-16 bg-black relative">
       <div className="max-w-6xl mx-auto px-6">
         <div className="hiw-header text-center mb-20">
           <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border mb-5 bg-white/[0.03] border-white/[0.08]">

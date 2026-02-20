@@ -47,7 +47,7 @@ export function LLMParallaxSection() {
     const ctx = gsap.context(() => {
       // Header entrance
       gsap.from(headerRef.current, {
-        opacity: 0, y: 40, duration: 0.8, ease: "power3.out",
+        opacity: 0, y: 40, duration: 0.8, ease: "power3.out", immediateRender: false,
         scrollTrigger: { trigger: headerRef.current, start: "top 85%", once: true },
       });
 
@@ -88,13 +88,13 @@ export function LLMParallaxSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative py-24 bg-zinc-950/70 overflow-hidden">
+    <section ref={sectionRef} className="relative py-14 bg-zinc-950/70 overflow-hidden">
       {/* Fade edges */}
       <div className="absolute inset-y-0 left-0 w-32 z-10 bg-gradient-to-r from-zinc-950 to-transparent pointer-events-none" />
       <div className="absolute inset-y-0 right-0 w-32 z-10 bg-gradient-to-l from-zinc-950 to-transparent pointer-events-none" />
 
       {/* Header */}
-      <div ref={headerRef} className="relative z-10 text-center mb-16 px-6">
+      <div ref={headerRef} className="relative z-10 text-center mb-10 px-6">
         <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border mb-5 bg-white/[0.03] border-white/[0.08]">
           <Cpu className="w-4 h-4 text-zinc-500" />
           <span className="text-sm font-medium text-zinc-500">Universal AI Integration</span>

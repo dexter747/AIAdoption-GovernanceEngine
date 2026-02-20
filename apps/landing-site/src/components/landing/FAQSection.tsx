@@ -29,25 +29,25 @@ export default function FAQSection() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.from(".faq-header > *", {
-        opacity: 0, y: 30, duration: 0.7, stagger: 0.12,
-        scrollTrigger: { trigger: ".faq-header", start: "top 85%", once: true },
+        opacity: 0, y: 20, duration: 0.5, stagger: 0.1, immediateRender: false,
+        scrollTrigger: { trigger: ".faq-header", start: "top 88%", once: true },
       });
-      gsap.from(".faq-item", {
-        opacity: 0, y: 20, duration: 0.5, stagger: 0.06, ease: "power3.out",
-        scrollTrigger: { trigger: ".faq-container", start: "top 85%", once: true },
+      gsap.from(".faq-container", {
+        opacity: 0, y: 15, duration: 0.5, immediateRender: false,
+        scrollTrigger: { trigger: ".faq-container", start: "top 88%", once: true },
       });
       gsap.from(".faq-cta-box", {
-        opacity: 0, y: 20, duration: 0.6,
-        scrollTrigger: { trigger: ".faq-cta-box", start: "top 90%", once: true },
+        opacity: 0, y: 15, duration: 0.5, immediateRender: false,
+        scrollTrigger: { trigger: ".faq-cta-box", start: "top 92%", once: true },
       });
     }, ref);
     return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={ref} className="py-28 bg-zinc-950/50">
+    <section ref={ref} className="py-16 bg-zinc-950/50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="faq-header text-center mb-16">
+        <div className="faq-header text-center mb-10">
           <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border mb-5 bg-white/[0.03] border-white/[0.08]">
             <HelpCircle className="w-4 h-4 text-zinc-500" />
             <span className="text-sm font-medium text-zinc-500">FAQ</span>

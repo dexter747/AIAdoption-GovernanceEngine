@@ -28,30 +28,34 @@ export function Sidebar() {
  };
 
  return (
- <aside className="w-64 border-r min-h-screen flex flex-col bg-background border-border">
+ <aside className="w-64 border-r min-h-screen flex flex-col bg-black border-white/[0.06]">
  {/* Logo */}
- <div className="h-16 flex items-center px-6 border-b border-border">
- <Link href="/dashboard" className="flex items-center gap-2">
- <img src="/logo.png" alt="Velanova" className="w-10 h-10 rounded-xl" />
- <span className="text-base font-medium tracking-tight text-foreground">Admin</span>
+ <div className="h-16 flex items-center px-6 border-b border-white/[0.06]">
+ <Link href="/dashboard" className="flex items-center gap-2.5">
+ <img src="/logo.png" alt="Velanova" className="w-8 h-8 rounded-lg" />
+ <span className="text-sm font-medium tracking-tight text-white">Velanova</span>
+ <span className="text-xs px-1.5 py-0.5 rounded bg-white/[0.06] text-zinc-500 font-medium">Admin</span>
  </Link>
  </div>
 
  {/* Navigation */}
- <nav className="flex-1 px-4 py-6">
- <ul className="space-y-1">
+ <nav className="flex-1 px-3 py-5">
+ <p className="px-3 mb-2 text-[10px] font-medium uppercase tracking-widest text-zinc-600">Navigation</p>
+ <ul className="space-y-0.5">
  {navigation.map((item) => {
- const isActive = pathname === item.href || 
+ const isActive = pathname === item.href ||
  (item.href !== '/dashboard' && pathname?.startsWith(item.href));
  return (
  <li key={item.name}>
  <Link
  href={item.href}
- className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
- isActive ? 'bg-zinc-800 text-white' : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
+ className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${
+ isActive
+ ? 'bg-white/[0.08] text-white'
+ : 'text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.04]'
  }`}
  >
- <item.icon className="w-5 h-5" />
+ <item.icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-zinc-600'}`} />
  {item.name}
  </Link>
  </li>
@@ -61,20 +65,20 @@ export function Sidebar() {
  </nav>
 
  {/* User & Logout */}
- <div className="px-4 py-4 border-t border-border">
- <div className="flex items-center gap-3 px-3 py-2">
- <div className="w-8 h-8 bg-zinc-800 rounded-full flex items-center justify-center">
- <span className="text-white text-sm font-medium">A</span>
+ <div className="px-3 py-4 border-t border-white/[0.06]">
+ <div className="flex items-center gap-3 px-3 py-2 mb-1">
+ <div className="w-7 h-7 bg-white/[0.08] rounded-full flex items-center justify-center flex-shrink-0">
+ <span className="text-zinc-300 text-xs font-medium">A</span>
  </div>
  <div className="flex-1 min-w-0">
- <p className="font-medium truncate text-foreground">Admin</p>
- <p className="text-xs text-muted-foreground truncate">admin@gmail.com</p>
+ <p className="text-sm font-medium truncate text-white">Admin</p>
+ <p className="text-xs text-zinc-600 truncate">admin@velanova.com</p>
  </div>
  </div>
  <button
  onClick={handleSignOut}
- className="w-full mt-2 flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-zinc-400 transition-colors hover:bg-zinc-950">
- <LogOut className="w-5 h-5" />
+ className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.04] transition-all duration-150">
+ <LogOut className="w-4 h-4" />
  Sign Out
  </button>
  </div>

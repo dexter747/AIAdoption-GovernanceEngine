@@ -73,7 +73,7 @@ export default function PaymentsPage() {
  case 'failed':
  return <XCircle className="w-4 h-4 text-zinc-400" />;
  case 'refunded':
- return <RefreshCw className="w-4 h-4 text-muted-foreground" />;
+ return <RefreshCw className="w-4 h-4 text-zinc-500" />;
  default:
  return null;
  }
@@ -84,7 +84,7 @@ export default function PaymentsPage() {
  <div className="p-8 flex items-center justify-center min-h-screen">
  <div className="text-center">
  <RefreshCw className="w-8 h-8 text-zinc-300 animate-spin mx-auto mb-4" />
- <p className="text-muted-foreground">Loading payments...</p>
+ <p className="text-zinc-500">Loading payments...</p>
  </div>
  </div>
  );
@@ -96,11 +96,11 @@ export default function PaymentsPage() {
  <div className="flex items-center justify-between mb-8">
  <div>
  <h1 className="font-medium text-white">Payments</h1>
- <p className="text-muted-foreground mt-1">Manage all payment transactions</p>
+ <p className="text-zinc-500 mt-1">Manage all payment transactions</p>
  </div>
  <button
  onClick={fetchPayments}
- className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground rounded-lg hover:text-white border-zinc-800"
+ className="flex items-center gap-2 px-4 py-2 text-sm text-zinc-500 rounded-lg hover:text-white border-white/[0.06]"
  >
  <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
  Refresh
@@ -110,19 +110,19 @@ export default function PaymentsPage() {
  {/* Filters */}
  <div className="flex flex-col sm:flex-row gap-4 mb-6">
  <div className="relative flex-1">
- <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+ <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
  <input
  type="text"
  placeholder="Search by user..."
  value={searchQuery}
  onChange={(e) => setSearchQuery(e.target.value)}
- className="w-full pl-10 pr-4 py-2 rounded-lg placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-600 bg-black border-zinc-800 text-white"
+ className="w-full pl-10 pr-4 py-2 rounded-lg placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-white/20 border border-white/[0.08] bg-black text-white"
  />
  </div>
  <select
  value={filterStatus}
  onChange={(e) => setFilterStatus(e.target.value)}
- className="px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-600 bg-black border-zinc-800 text-white"
+ className="px-4 py-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-white/20 border border-white/[0.08] bg-black text-white"
  >
  <option value="all">All Status</option>
  <option value="Completed">Completed</option>
@@ -133,7 +133,7 @@ export default function PaymentsPage() {
  <select
  value={filterPlan}
  onChange={(e) => setFilterPlan(e.target.value)}
- className="px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-600 bg-black border-zinc-800 text-white"
+ className="px-4 py-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-white/20 border border-white/[0.08] bg-black text-white"
  >
  <option value="all">All Plans</option>
  <option value="Pro">Pro</option>
@@ -143,57 +143,57 @@ export default function PaymentsPage() {
 
  {/* Stats */}
  <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
- <div className="rounded-lg p-4 bg-black border-zinc-800">
+ <div className="rounded-lg p-4 border border-white/[0.06] bg-white/[0.02]">
  <div className="flex items-center gap-2">
  <DollarSign className="w-5 h-5 text-zinc-400" />
  <p className="text-2xl font-medium text-zinc-400">${summary.totalRevenue.toFixed(2)}</p>
  </div>
- <p className="text-sm text-muted-foreground">Total Revenue</p>
+ <p className="text-sm text-zinc-500">Total Revenue</p>
  </div>
- <div className="rounded-lg p-4 bg-black border-zinc-800">
+ <div className="rounded-lg p-4 border border-white/[0.06] bg-white/[0.02]">
  <p className="font-medium text-white">{total}</p>
- <p className="text-sm text-muted-foreground">Total Transactions</p>
+ <p className="text-sm text-zinc-500">Total Transactions</p>
  </div>
- <div className="rounded-lg p-4 bg-black border-zinc-800">
+ <div className="rounded-lg p-4 border border-white/[0.06] bg-white/[0.02]">
  <div className="flex items-center gap-2">
  <Clock className="w-5 h-5 text-zinc-400" />
  <p className="text-2xl font-medium text-zinc-400">${summary.pendingAmount.toFixed(2)}</p>
  </div>
- <p className="text-sm text-muted-foreground">Pending</p>
+ <p className="text-sm text-zinc-500">Pending</p>
  </div>
- <div className="rounded-lg p-4 bg-black border-zinc-800">
+ <div className="rounded-lg p-4 border border-white/[0.06] bg-white/[0.02]">
  <div className="flex items-center gap-2">
- <RefreshCw className="w-5 h-5 text-muted-foreground" />
- <p className="text-2xl font-medium text-muted-foreground">${summary.refundedAmount.toFixed(2)}</p>
+ <RefreshCw className="w-5 h-5 text-zinc-500" />
+ <p className="text-2xl font-medium text-zinc-500">${summary.refundedAmount.toFixed(2)}</p>
  </div>
- <p className="text-sm text-muted-foreground">Refunded</p>
+ <p className="text-sm text-zinc-500">Refunded</p>
  </div>
  </div>
 
  {/* Payments Table */}
- <div className="rounded-xl overflow-hidden bg-black border-zinc-800">
+ <div className="rounded-xl overflow-hidden border border-white/[0.06] bg-white/[0.02]">
  <div className="overflow-x-auto">
  <table className="w-full">
  <thead>
- <tr className="border-b border-zinc-800 bg-zinc-950/50">
- <th className="text-left px-6 py-3 text-xs font-medium text-muted-foreground uppercase">User</th>
- <th className="text-left px-6 py-3 text-xs font-medium text-muted-foreground uppercase">Amount</th>
- <th className="text-left px-6 py-3 text-xs font-medium text-muted-foreground uppercase">Plan</th>
- <th className="text-left px-6 py-3 text-xs font-medium text-muted-foreground uppercase">Method</th>
- <th className="text-left px-6 py-3 text-xs font-medium text-muted-foreground uppercase">Status</th>
- <th className="text-left px-6 py-3 text-xs font-medium text-muted-foreground uppercase">Date</th>
+ <tr className="border-b border-white/[0.06] bg-white/[0.02]">
+ <th className="text-left px-6 py-3 text-xs font-medium text-zinc-500 uppercase">User</th>
+ <th className="text-left px-6 py-3 text-xs font-medium text-zinc-500 uppercase">Amount</th>
+ <th className="text-left px-6 py-3 text-xs font-medium text-zinc-500 uppercase">Plan</th>
+ <th className="text-left px-6 py-3 text-xs font-medium text-zinc-500 uppercase">Method</th>
+ <th className="text-left px-6 py-3 text-xs font-medium text-zinc-500 uppercase">Status</th>
+ <th className="text-left px-6 py-3 text-xs font-medium text-zinc-500 uppercase">Date</th>
  </tr>
  </thead>
  <tbody>
  {payments.length === 0 ? (
  <tr>
- <td colSpan={6} className="px-6 py-12 text-center text-muted-foreground">
+ <td colSpan={6} className="px-6 py-12 text-center text-zinc-500">
  No payments found
  </td>
  </tr>
  ) : (
  payments.map((payment) => (
- <tr key={payment.id} className="border-b last:border-0 border-zinc-900 hover:bg-zinc-950/50">
+ <tr key={payment.id} className="border-b last:border-0 border-white/[0.04] hover:bg-white/[0.02]">
  <td className="px-6 py-4">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 bg-zinc-800 rounded-full flex items-center justify-center">
@@ -201,7 +201,7 @@ export default function PaymentsPage() {
  </div>
  <div>
  <p className="font-medium text-white">{payment.user}</p>
- <p className="text-xs text-muted-foreground">{payment.email}</p>
+ <p className="text-xs text-zinc-500">{payment.email}</p>
  </div>
  </div>
  </td>
@@ -209,21 +209,21 @@ export default function PaymentsPage() {
  <span className="font-medium text-white">${payment.amount.toFixed(2)}</span>
  </td>
  <td className="px-6 py-4">
- <span className={`px-2 py-1 font-medium rounded-full ${ payment.plan === 'Enterprise' ? 'bg-zinc-900/40 text-zinc-400' : 'bg-zinc-900/40 text-zinc-400' }`}>
+ <span className={`px-2 py-1 font-medium rounded-full ${ payment.plan === 'Enterprise' ? 'bg-white/[0.05] text-zinc-400' : 'bg-white/[0.05] text-zinc-400' }`}>
  {payment.plan}
  </span>
  </td>
  <td className="px-6 py-4">
- <span className="text-sm text-muted-foreground">{payment.method}</span>
+ <span className="text-sm text-zinc-500">{payment.method}</span>
  </td>
  <td className="px-6 py-4">
- <span className={`inline-flex items-center gap-1.5 px-2 py-1 font-medium rounded-full ${ payment.status.toLowerCase() === 'completed' ? 'bg-zinc-900/40 text-zinc-400' : payment.status.toLowerCase() === 'pending' ? 'bg-zinc-900/40 text-zinc-400' : payment.status.toLowerCase() === 'failed' ? 'bg-zinc-900/40 text-zinc-400' : 'bg-secondary text-muted-foreground' }`}>
+ <span className={`inline-flex items-center gap-1.5 px-2 py-1 font-medium rounded-full ${ payment.status.toLowerCase() === 'completed' ? 'bg-white/[0.05] text-zinc-400' : payment.status.toLowerCase() === 'pending' ? 'bg-white/[0.05] text-zinc-400' : payment.status.toLowerCase() === 'failed' ? 'bg-white/[0.05] text-zinc-400' : 'bg-white/[0.04] text-zinc-500' }`}>
  {statusIcon(payment.status)}
  {payment.status}
  </span>
  </td>
  <td className="px-6 py-4">
- <span className="text-sm text-muted-foreground">{payment.date}</span>
+ <span className="text-sm text-zinc-500">{payment.date}</span>
  </td>
  </tr>
  ))
@@ -233,22 +233,22 @@ export default function PaymentsPage() {
  </div>
  
  {/* Pagination */}
- <div className="px-6 py-4 border-t flex items-center justify-between border-zinc-800">
- <p className="text-sm text-muted-foreground">
+ <div className="px-6 py-4 border-t flex items-center justify-between border-white/[0.06]">
+ <p className="text-sm text-zinc-500">
  Showing <span className="font-medium text-white">{payments.length}</span> of <span className="font-medium text-white">{total}</span> payments
  </p>
  <div className="flex gap-2">
  <button 
  onClick={() => setPage(p => Math.max(1, p - 1))}
  disabled={page === 1}
- className="px-3 py-1.5 text-sm font-medium text-muted-foreground rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:text-white border-zinc-800"
+ className="px-3 py-1.5 text-sm font-medium text-zinc-500 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:text-white border-white/[0.06]"
  >
  Previous
  </button>
  <button 
  onClick={() => setPage(p => p + 1)}
  disabled={payments.length < 10}
- className="px-3 py-1.5 text-sm font-medium text-muted-foreground rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:text-white border-zinc-800"
+ className="px-3 py-1.5 text-sm font-medium text-zinc-500 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:text-white border-white/[0.06]"
  >
  Next
  </button>
