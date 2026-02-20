@@ -252,9 +252,12 @@ export default function ModernChatPage() {
 
  const loadSessions = async () => {
  try {
+ // Try electron IPC first (main process electron-store)
  const chatSessions = await window.electron.chat?.getAllConversations?.() || [];
  const result = chatSessions as any;
  const sessionsArray = Array.isArray(result) ? result : result?.data || [];
+ 
+ if (sessionsArray.length > 0) {
  setSessions(sessionsArray.map((s: any) => ({
  id: s.id,
  title: s.title || 'Untitled',
@@ -267,10 +270,57 @@ export default function ModernChatPage() {
  pinned: s.pinned,
  archived: s.archived
  })));
+ return;
+ }
+ 
+ // Fallback to localStorage
+ const stored = localStorage.getItem('velanova_chat_sessions');
+ if (stored) {
+ const parsed = JSON.parse(stored);
+ if (Array.isArray(parsed) && parsed.length > 0) {
+ setSessions(parsed.map((s: any) => ({
+ ...s,
+ createdAt: new Date(s.createdAt),
+ updatedAt: new Date(s.updatedAt),
+ messages: (s.messages || []).map((m: any) => ({ ...m, timestamp: new Date(m.timestamp) })),
+ })));
+ }
+ }
  } catch (error) {
  console.error('Failed to load sessions:', error);
+ // Last resort: localStorage
+ try {
+ const stored = localStorage.getItem('velanova_chat_sessions');
+ if (stored) {
+ const parsed = JSON.parse(stored);
+ setSessions(parsed.map((s: any) => ({
+ ...s,
+ createdAt: new Date(s.createdAt),
+ updatedAt: new Date(s.updatedAt),
+ messages: (s.messages || []).map((m: any) => ({ ...m, timestamp: new Date(m.timestamp) })),
+ })));
+ }
+ } catch { /* ignore */ }
  setSessions([]);
  }
+ };
+
+ // Persist sessions to both electron-store and localStorage
+ const persistSessions = async (allSessions: ChatSession[], updatedSession: ChatSession) => {
+ try {
+ // Save to localStorage immediately (synchronous fallback)
+ const toStore = allSessions.map(s => ({ ...s, messages: s.messages || [] }));
+ localStorage.setItem('velanova_chat_sessions', JSON.stringify(toStore));
+ 
+ // Save full session to electron-store via IPC
+ await window.electron.api?.saveChatSession?.({
+ id: updatedSession.id,
+ title: updatedSession.title,
+ messages: updatedSession.messages,
+ createdAt: updatedSession.createdAt,
+ updatedAt: updatedSession.updatedAt,
+ });
+ } catch { /* ignore persistence errors, don't block UI */ }
  };
 
  const createNewSession = useCallback(() => {
@@ -281,17 +331,28 @@ export default function ModernChatPage() {
  createdAt: new Date(),
  updatedAt: new Date(),
  };
- setSessions(prev => [newSession, ...prev]);
+ setSessions(prev => {
+ const updated = [newSession, ...prev];
+ // Persist the session list
+ localStorage.setItem('velanova_chat_sessions', JSON.stringify(updated));
+ return updated;
+ });
  setCurrentSession(newSession);
  setInput('');
  textareaRef.current?.focus();
  }, []);
 
  const deleteSession = useCallback((sessionId: string) => {
- setSessions(prev => prev.filter(s => s.id !== sessionId));
+ setSessions(prev => {
+ const updated = prev.filter(s => s.id !== sessionId);
+ localStorage.setItem('velanova_chat_sessions', JSON.stringify(updated));
+ return updated;
+ });
  if (currentSession?.id === sessionId) {
  setCurrentSession(null);
  }
+ // Also delete from electron-store
+ window.electron.chat?.deleteConversation?.(sessionId).catch(() => {});
  }, [currentSession]);
 
  // File attachment handlers
@@ -525,10 +586,10 @@ export default function ModernChatPage() {
  }
 
  try {
- await window.electron.chat?.updateConversation?.(session.id, {
- title: finalSession.title,
- updatedAt: finalSession.updatedAt
- });
+ await persistSessions(
+ sessions.map(s => s.id === session!.id ? finalSession : s),
+ finalSession
+ );
  } catch {
  // Ignore save errors
  }
@@ -588,75 +649,82 @@ export default function ModernChatPage() {
  {sidebarOpen && (
  <motion.div 
  initial={{ width: 0, opacity: 0 }}
- animate={{ width: 280, opacity: 1 }}
+ animate={{ width: 264, opacity: 1 }}
  exit={{ width: 0, opacity: 0 }}
  transition={{ duration: 0.2 }}
- className="flex flex-col border-r bg-zinc-950 border-zinc-800"
+ className="flex flex-col flex-shrink-0 border-r bg-[#080808] border-white/[0.06] overflow-hidden"
+ style={{ width: 264 }}
  >
- {/* New Chat Button */}
- <div className="p-4">
- <Button
+ {/* Header with New Chat */}
+ <div className="h-12 flex items-center justify-between px-3 border-b border-white/[0.06]">
+ <span className="text-[12px] font-medium text-zinc-500 uppercase tracking-widest">History</span>
+ <button
  onClick={createNewSession}
- className="w-full bg-white hover:bg-zinc-200 text-white border-0 rounded-xl h-11"
+ className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white text-black text-[12px] font-medium hover:bg-zinc-100 transition-colors"
  >
- <Plus className="w-4 h-4 mr-2" />
+ <Plus className="w-3.5 h-3.5" />
  New Chat
- </Button>
+ </button>
  </div>
 
  {/* Search */}
- <div className="px-4 pb-4">
+ <div className="px-3 py-2.5">
  <div className="relative">
- <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+ <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-600" />
  <input
  type="text"
- placeholder="Search conversations..."
+ placeholder="Search conversations…"
  value={searchQuery}
  onChange={(e) => setSearchQuery(e.target.value)}
- className="w-full rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-zinc-600 bg-zinc-900 border-zinc-800 text-white placeholder:text-muted-foreground"
+ className="w-full rounded-lg border border-white/[0.06] bg-white/[0.03] pl-8 pr-3 py-2 text-[13px] focus:outline-none focus:border-white/[0.12] text-zinc-300 placeholder:text-zinc-600 transition-colors"
  />
  </div>
  </div>
 
  {/* Chat History List */}
- <div className="flex-1 overflow-y-auto px-3">
+ <div className="flex-1 overflow-y-auto px-2 pb-2">
  {filteredSessions.length === 0 ? (
- <div className="py-8 text-muted-foreground">
- {searchQuery ? 'No chats found' : 'No conversations yet'}
+ <div className="py-10 text-center">
+ <MessageSquare className="w-8 h-8 text-zinc-800 mx-auto mb-2" />
+ <p className="text-[12px] text-zinc-600">{searchQuery ? 'No chats found' : 'No conversations yet'}</p>
  </div>
  ) : (
- <div className="space-y-1">
+ <div className="space-y-0.5">
  {filteredSessions.map(session => (
  <motion.div
  key={session.id}
- initial={{ opacity: 0, x: -10 }}
+ initial={{ opacity: 0, x: -8 }}
  animate={{ opacity: 1, x: 0 }}
  className={cn(
- 'group relative flex items-center gap-3 px-3 py-3 rounded-xl cursor-pointer transition-colors',
+ 'group relative flex items-center gap-2.5 px-2.5 py-2.5 rounded-lg cursor-pointer transition-all',
  currentSession?.id === session.id
- ? 'bg-zinc-900'
- : 'hover:bg-zinc-900/50'
+ ? 'bg-white/[0.07] border border-white/[0.07]'
+ : 'hover:bg-white/[0.04] border border-transparent'
  )}
  onClick={() => setCurrentSession(session)}
  >
- <MessageSquare className="w-4 h-4 flex-shrink-0 text-muted-foreground" />
+ <MessageSquare className={cn(
+ 'w-3.5 h-3.5 flex-shrink-0',
+ currentSession?.id === session.id ? 'text-zinc-300' : 'text-zinc-600'
+ )} />
  <div className="flex-1 min-w-0">
- <p className="truncate text-zinc-100">{session.title}</p>
- <p className="mt-0.5 text-muted-foreground">
- {session.messages.length} messages
+ <p className={cn(
+ 'truncate text-[13px] leading-tight',
+ currentSession?.id === session.id ? 'text-zinc-100' : 'text-zinc-400'
+ )}>{session.title}</p>
+ <p className="text-[11px] text-zinc-700 mt-0.5">
+ {session.messages.length} msg{session.messages.length !== 1 ? 's' : ''}
  </p>
  </div>
- <Button
- variant="ghost"
- size="icon"
- className="opacity-0 group-hover:opacity-100 h-7 w-7 hover:text-zinc-400 text-muted-foreground hover:bg-white/5"
+ <button
+ className="opacity-0 group-hover:opacity-100 w-6 h-6 rounded-md flex items-center justify-center text-zinc-600 hover:text-red-400 hover:bg-white/[0.05] transition-all"
  onClick={(e) => {
  e.stopPropagation();
  deleteSession(session.id);
  }}
  >
- <Trash2 className="w-3.5 h-3.5" />
- </Button>
+ <Trash2 className="w-3 h-3" />
+ </button>
  </motion.div>
  ))}
  </div>
@@ -664,16 +732,14 @@ export default function ModernChatPage() {
  </div>
 
  {/* Collapse Button */}
- <div className="p-3 border-t border-zinc-800">
- <Button
- variant="ghost"
- size="sm"
- className="w-full text-muted-foreground hover:text-white hover:bg-zinc-900"
+ <div className="p-2.5 border-t border-white/[0.06]">
+ <button
+ className="w-full flex items-center justify-center gap-2 py-2 rounded-lg text-[12px] text-zinc-600 hover:text-zinc-400 hover:bg-white/[0.04] transition-all"
  onClick={() => setSidebarOpen(false)}
  >
- <PanelLeftClose className="w-4 h-4 mr-2" />
- Close Sidebar
- </Button>
+ <PanelLeftClose className="w-3.5 h-3.5" />
+ Close
+ </button>
  </div>
  </motion.div>
  )}
@@ -682,7 +748,7 @@ export default function ModernChatPage() {
  {/* Main Chat Area */}
  <div className="flex-1 flex flex-col min-w-0">
  {/* Top Bar */}
- <div className="h-12 flex items-center justify-between px-4 border-b border-zinc-800">
+ <div className="h-12 flex items-center justify-between px-4 border-b border-white/[0.06]">
  <div className="flex items-center gap-2">
  {!sidebarOpen && (
  <Button
@@ -753,7 +819,7 @@ export default function ModernChatPage() {
  </div>
  )}
  
- <div className="relative rounded-2xl focus-within:border-zinc-700 transition-colors shadow-sm bg-zinc-950 border-zinc-800">
+ <div className="relative rounded-2xl border border-white/[0.08] focus-within:border-white/[0.16] transition-colors shadow-sm bg-[#0d0d0d]">
  {/* Hidden file input */}
  <input
  ref={fileInputRef}
@@ -769,8 +835,8 @@ export default function ModernChatPage() {
  value={input}
  onChange={(e) => setInput(e.target.value)}
  onKeyDown={handleKeyDown}
- placeholder="Ask me anything..."
- className="w-full bg-transparent resize-none px-5 py-4 pr-28 focus:outline-none min-h-[56px] max-h-[200px] text-white placeholder:text-muted-foreground"
+ placeholder="Ask me anything…"
+ className="w-full bg-transparent resize-none px-5 py-4 pr-28 focus:outline-none min-h-[56px] max-h-[200px] text-white placeholder:text-zinc-600"
  rows={1}
  disabled={isLoading}
  />
@@ -798,7 +864,7 @@ export default function ModernChatPage() {
  className="flex items-center gap-2 transition-colors text-muted-foreground hover:text-zinc-300"
  >
  {selectedModelInfo.hasIcon ? (
- <img src={selectedModelInfo.icon} alt={selectedModelInfo.name} className="w-4 h-4" />
+ <img src={selectedModelInfo.icon} alt={selectedModelInfo.name} className={cn("w-4 h-4", (selectedModelInfo as any).needsInvert && "invert")} />
  ) : (
  <span className="text-base">{selectedModelInfo.logo}</span>
  )}
@@ -812,10 +878,10 @@ export default function ModernChatPage() {
  <AnimatePresence>
  {showModelDropdown && (
  <motion.div
- initial={{ opacity: 0, y: -10, scale: 0.95 }}
+ initial={{ opacity: 0, y: -8, scale: 0.97 }}
  animate={{ opacity: 1, y: 0, scale: 1 }}
- exit={{ opacity: 0, y: -10, scale: 0.95 }}
- className="absolute top-full right-0 mt-2 rounded-xl shadow-2xl overflow-hidden z-50 w-64 bg-zinc-950 border-zinc-800"
+ exit={{ opacity: 0, y: -8, scale: 0.97 }}
+ className="absolute top-full right-0 mt-2 rounded-xl shadow-2xl overflow-hidden z-50 w-64 bg-[#0e0e0e] border border-white/[0.08]"
  >
  <div className="py-2 max-h-[400px] overflow-y-auto">
  {LLM_MODELS.map(model => (
@@ -864,14 +930,14 @@ export default function ModernChatPage() {
  className={cn(
  "w-8 h-8 rounded-full flex items-center justify-center transition-all",
  input.trim() 
- ? "bg-white hover:bg-zinc-200 text-white" 
- : "bg-zinc-800 text-muted-foreground"
+ ? "bg-white hover:bg-zinc-100 text-black" 
+ : "bg-white/[0.05] text-zinc-600 cursor-not-allowed"
  )}
  >
  {isLoading ? (
- <Loader2 className="w-4 h-4 animate-spin" />
+ <Loader2 className="w-3.5 h-3.5 animate-spin" />
  ) : (
- <Send className="w-4 h-4" />
+ <Send className="w-3.5 h-3.5" />
  )}
  </button>
  </div>
@@ -880,16 +946,14 @@ export default function ModernChatPage() {
  </div>
 
  {/* Quick Actions */}
- <div className="flex items-center gap-3 flex-wrap justify-center">
+ <div className="flex items-center gap-2 flex-wrap justify-center">
  {QUICK_ACTIONS.map((action) => (
  <button
  key={action.label}
  onClick={() => handleQuickAction(action.prompt)}
- className={cn(
- "flex items-center gap-2 px-4 py-2 rounded-full transition-all hover:border-zinc-700 bg-zinc-950 border-zinc-800 text-zinc-400 hover:text-zinc-400 hover:bg-white/5"
- )}
+ className="flex items-center gap-2 px-3.5 py-2 rounded-full border border-white/[0.07] bg-white/[0.02] text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.05] hover:border-white/[0.12] transition-all text-[13px]"
  >
- <action.icon className="w-4 h-4" />
+ <action.icon className="w-3.5 h-3.5" />
  {action.label}
  </button>
  ))}
@@ -943,8 +1007,8 @@ export default function ModernChatPage() {
  <div className={cn(
  'rounded-2xl px-4 py-3',
  message.role === 'user'
- ? 'bg-white text-white'
- : 'bg-zinc-900 text-zinc-100'
+ ? 'bg-white text-black'
+ : 'bg-white/[0.05] border border-white/[0.07] text-zinc-100'
  )}>
  {message.role === 'assistant' ? (
  <div className="prose prose-sm prose-invert max-w-none">
@@ -1070,28 +1134,26 @@ export default function ModernChatPage() {
  </div>
  )}
  
- <div className="relative rounded-2xl focus-within:border-zinc-700 transition-colors shadow-sm bg-zinc-950 border-zinc-800">
+ <div className="relative rounded-2xl border border-white/[0.08] focus-within:border-white/[0.16] transition-colors bg-[#0d0d0d]">
  <textarea
  value={input}
  onChange={(e) => setInput(e.target.value)}
  onKeyDown={handleKeyDown}
- placeholder="Reply to Velanova..."
- className="w-full bg-transparent resize-none px-5 py-4 pr-20 focus:outline-none min-h-[56px] max-h-[200px] text-white placeholder:text-muted-foreground"
+ placeholder="Reply to Velanova…"
+ className="w-full bg-transparent resize-none px-5 py-4 pr-20 focus:outline-none min-h-[56px] max-h-[200px] text-white placeholder:text-zinc-600"
  rows={1}
  disabled={isLoading}
  />
  
  <div className="absolute right-3 bottom-3 flex items-center gap-2">
- {/* Attach file button */}
  <button
  onClick={() => fileInputRef.current?.click()}
  title="Attach files"
- className="p-1.5 rounded-lg transition-colors text-muted-foreground hover:text-zinc-400"
+ className="p-1.5 rounded-lg transition-colors text-zinc-600 hover:text-zinc-400 hover:bg-white/[0.05]"
  >
- <Paperclip className="w-4 h-4" />
+ <Paperclip className="w-3.5 h-3.5" />
  </button>
- {/* Model indicator */}
- <span className="mr-2 text-muted-foreground">{selectedModelInfo.name}</span>
+ <span className="text-[11px] text-zinc-700">{selectedModelInfo.name}</span>
  
  <button
  onClick={sendMessage}
@@ -1099,20 +1161,20 @@ export default function ModernChatPage() {
  className={cn(
  "w-8 h-8 rounded-full flex items-center justify-center transition-all",
  input.trim() 
- ? "bg-white hover:bg-zinc-200 text-white" 
- : "bg-zinc-800 text-muted-foreground"
+ ? "bg-white hover:bg-zinc-100 text-black" 
+ : "bg-white/[0.05] text-zinc-600 cursor-not-allowed"
  )}
  >
  {isLoading ? (
- <Loader2 className="w-4 h-4 animate-spin" />
+ <Loader2 className="w-3.5 h-3.5 animate-spin" />
  ) : (
- <Send className="w-4 h-4" />
+ <Send className="w-3.5 h-3.5" />
  )}
  </button>
  </div>
  </div>
- <p className="mt-2 text-muted-foreground">
- Press Enter to send • Shift+Enter for new line
+ <p className="mt-2 text-[11px] text-zinc-700 text-center">
+ Enter to send · Shift+Enter for new line
  </p>
  </div>
  </div>

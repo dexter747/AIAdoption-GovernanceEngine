@@ -7,43 +7,46 @@ import { Sparkles, ArrowLeft, CheckCircle2, Zap, Users, Building2, ChevronDown }
 
 function SubscribeContent() {
   const searchParams = useSearchParams();
-  const initialPlan = searchParams.get('plan') || 'pro';
+  // normalize incoming ?plan= value — 'pro' and 'professional' both map to 'professional'
+  const rawPlan = searchParams.get('plan') || 'professional';
+  const PLAN_ALIASES: Record<string, string> = { pro: 'professional', starter: 'trial', free: 'trial' };
+  const initialPlan = PLAN_ALIASES[rawPlan] ?? (rawPlan in { trial: 1, professional: 1, team: 1, enterprise: 1 } ? rawPlan : 'professional');
   const [selectedPlan, setSelectedPlan] = useState(initialPlan);
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('annual');
   const [showFAQ, setShowFAQ] = useState<string | null>(null);
 
   const plans = {
-    free: {
-      name: 'Free',
+    trial: {
+      name: 'Free Trial',
       icon: <Zap className="w-6 h-6" />,
       monthlyPrice: 0,
       annualPrice: 0,
-      description: 'Try Velanova risk-free',
+      description: '14 days, no card required',
       features: [
         '1 data source connection',
         '100 queries per month',
-        '1 AI provider (GPT-3.5)',
+        'GPT-4o Mini & Groq models',
         'Community support',
         'Basic documentation',
       ],
       cta: 'Download Free',
       popular: false,
     },
-    pro: {
-      name: 'Pro',
+    professional: {
+      name: 'Professional',
       icon: <Sparkles className="w-6 h-6" />,
       monthlyPrice: 49,
       annualPrice: 39,
-      description: 'For professionals and power users',
+      description: 'For individuals and power users',
       features: [
-        '5 data source connections',
+        'Unlimited data source connections',
         'Unlimited queries',
-        'All AI providers',
+        'All AI providers — GPT-5, Claude, Gemini, Grok',
+        'BYOK — bring your own API keys',
         'Priority email support',
-        'API access',
+        'Full chat & query history',
         'Export to CSV/JSON',
-        'Query history (30 days)',
-        'Custom prompts',
+        'Custom AI prompts',
       ],
       cta: 'Start 14-Day Trial',
       popular: true,
@@ -55,16 +58,14 @@ function SubscribeContent() {
       annualPrice: 159,
       description: 'For growing teams',
       features: [
-        '15 data source connections',
-        'Unlimited queries',
-        '5 team members',
-        'All AI providers',
-        'Priority support',
-        'Advanced analytics',
+        'Everything in Professional',
+        'Up to 10 team members',
+        'Shared connections & contexts',
+        'Team analytics dashboard',
+        'Admin controls & permissions',
         'SSO support',
-        'Shared query library',
-        'Team permissions',
-        'Query history (1 year)',
+        'Dedicated Slack support',
+        'Query history (unlimited)',
       ],
       cta: 'Start 14-Day Trial',
       popular: false,
@@ -122,6 +123,11 @@ function SubscribeContent() {
   ];
 
   const currentPlan = plans[selectedPlan as keyof typeof plans];
+  // guard: if somehow selectedPlan is still unmapped, fall back to professional
+  if (!currentPlan) {
+    setSelectedPlan('professional');
+    return null;
+  }
   const price = billingCycle === 'annual' ? currentPlan.annualPrice : currentPlan.monthlyPrice;
   const savings = billingCycle === 'annual' && currentPlan.monthlyPrice 
     ? Math.round((1 - (currentPlan.annualPrice! / currentPlan.monthlyPrice)) * 100)
@@ -239,17 +245,17 @@ function SubscribeContent() {
               )}
 
               <Link
-                href={selectedPlan === 'enterprise' ? '/contact' : selectedPlan === 'free' ? '/download' : '/login'}
+                href={selectedPlan === 'enterprise' ? '/contact' : selectedPlan === 'trial' ? '/download' : '/login'}
                 className="inline-flex items-center justify-center w-full lg:w-auto px-8 py-4 bg-primary text-white rounded-xl hover:bg-primary/90 transition-colors font-medium text-lg"
               >
                 {currentPlan.cta}
               </Link>
 
               <p className="text-sm text-muted-foreground mt-4">
-                {selectedPlan === 'free' 
+                {selectedPlan === 'trial' 
                   ? 'No credit card required' 
                   : selectedPlan === 'enterprise'
-                  ? 'We\'ll get back to you within 24 hours'
+                  ? "We'll get back to you within 24 hours"
                   : 'No credit card required for trial'}
               </p>
             </div>

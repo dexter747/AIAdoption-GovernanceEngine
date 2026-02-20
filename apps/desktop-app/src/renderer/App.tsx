@@ -24,18 +24,26 @@ import MyConnectionsPage from './pages/MyConnectionsPage';
 import ContextManager from './components/ContextManager';
 import { useState, useEffect } from 'react';
 
+function LoadingScreen({ label = 'Loading…' }: { label?: string }) {
+  return (
+    <div className="min-h-screen bg-[#030303] flex flex-col items-center justify-center gap-5">
+      <div className="relative">
+        <div className="absolute inset-0 rounded-xl bg-white/10 blur-lg scale-125 animate-pulse" />
+        <img src="/logo.png" alt="Velanova" className="relative w-10 h-10 rounded-xl object-cover opacity-90" />
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <div className="w-5 h-5 border border-white/20 border-t-white/70 rounded-full animate-spin" />
+        <p className="text-[12px] text-zinc-600 tracking-wide">{label}</p>
+      </div>
+    </div>
+  );
+}
+
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-8 h-8 border-2 border-zinc-700 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-muted-foreground">Loading...</p>
-        </div>
-      </div>
-    );
+    return <LoadingScreen label="Loading…" />;
   }
 
   if (!isAuthenticated) {
@@ -56,9 +64,9 @@ function AppLayout({ children }: { children: React.ReactNode }) {
   }, [sidebarCollapsed]);
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen bg-[#080808]">
       <Sidebar collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} />
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-auto bg-[#0a0a0a]">
         {children}
       </main>
     </div>
@@ -69,14 +77,7 @@ function AppRoutes() {
   const { isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-8 h-8 border-2 border-zinc-700 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-muted-foreground">Checking authentication...</p>
-        </div>
-      </div>
-    );
+    return <LoadingScreen label="Checking authentication…" />;
   }
 
   return (

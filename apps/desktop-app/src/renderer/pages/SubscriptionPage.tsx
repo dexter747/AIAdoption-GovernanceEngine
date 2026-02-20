@@ -1,376 +1,506 @@
 import { useState, useEffect } from 'react';
-import { CreditCard, TrendingUp, Calendar, Check, X, Loader2, ExternalLink } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
-import { Button } from '../components/ui/button';
-import { cn, formatCurrency, formatDate } from '../lib/utils';
-import { motion } from 'framer-motion';
+import {
+  Check, X, Loader2, ExternalLink, Zap, Users, Building2,
+  CreditCard, Calendar, ArrowRight, Star, RefreshCw,
+} from 'lucide-react';
+import { cn } from '../lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
 
-interface Subscription {
-  id: string;
-  plan: 'trial' | 'professional' | 'team' | 'enterprise';
-  status: 'active' | 'past_due' | 'canceled' | 'unpaid';
-  billingCycle: 'monthly' | 'yearly';
-  currentPeriodStart: Date;
-  currentPeriodEnd: Date;
-  cancelAtPeriodEnd: boolean;
-  amount: number;
-  currency: string;
-}
-
-interface Payment {
-  id: string;
-  amount: number;
-  currency: string;
-  status: 'succeeded' | 'failed' | 'pending';
-  createdAt: Date;
-  invoiceUrl?: string;
-}
-
-const PLAN_DETAILS = {
-  trial: {
-    name: 'Trial',
-    features: ['14 days', '100 queries', 'Basic support'],
-    color: 'text-zinc-500',
-    bg: 'bg-zinc-800/20',
+// ─── Pricing Plans ────────────────────────────────────────────────────────────
+const PLANS = [
+  {
+    id: 'trial',
+    name: 'Free Trial',
+    Icon: Star,
+    price: { monthly: 0, yearly: 0 },
+    description: '14 days full access, no card required',
+    cta: 'Current Plan',
+    highlight: false,
+    features: [
+      '100 AI queries / month',
+      '2 database connections',
+      'GPT-4o Mini & Groq models',
+      'Chat history (7 days)',
+      'Community support',
+    ],
+    missing: [
+      'All AI models (GPT-5, Claude, Gemini)',
+      'Unlimited connections',
+      'Priority support',
+      'BYOK — bring your own keys',
+    ],
   },
-  professional: {
+  {
+    id: 'professional',
     name: 'Professional',
-    features: ['Unlimited queries', 'All AI models', 'Priority support', '5 databases'],
-    color: 'text-zinc-300',
-    bg: 'bg-white/5',
+    Icon: Zap,
+    price: { monthly: 49, yearly: 468 },
+    description: 'For individuals and power users',
+    cta: 'Start Professional',
+    highlight: true,
+    features: [
+      'Unlimited AI queries',
+      'Unlimited DB connections',
+      'All AI models — GPT-5, Claude, Gemini, Grok',
+      'BYOK — bring your own API keys',
+      'Full chat history',
+      'File attachments & context',
+      'Priority email support',
+      'Early feature access',
+    ],
+    missing: [
+      'Team collaboration',
+      'Admin dashboard',
+      'SSO / SAML',
+    ],
+  },
+  {
+    id: 'team',
+    name: 'Team',
+    Icon: Users,
+    price: { monthly: 199, yearly: 1908 },
+    description: 'Everything in Pro plus team features',
+    cta: 'Start Team',
+    highlight: false,
+    features: [
+      'Everything in Professional',
+      'Up to 10 team members',
+      'Shared connections & contexts',
+      'Team chat history',
+      'Usage analytics',
+      'Admin controls & permissions',
+      'Dedicated Slack support',
+      'Custom AI system prompts',
+    ],
+    missing: [
+      'Unlimited team members',
+      'SSO / SAML',
+      'Dedicated account manager',
+    ],
+  },
+  {
+    id: 'enterprise',
+    name: 'Enterprise',
+    Icon: Building2,
+    price: { monthly: 0, yearly: 0 },
+    description: 'Custom pricing for large orgs',
+    cta: 'Contact Sales',
+    highlight: false,
+    features: [
+      'Unlimited members & connections',
+      'SSO / SAML / LDAP',
+      'On-premise deployment',
+      '99.9% uptime SLA',
+      'Dedicated account manager',
+      'Custom AI fine-tuning',
+      'Audit logs & compliance',
+      'Custom integrations & API',
+    ],
+    missing: [],
+  },
+] as const;
+
+type PlanId = typeof PLANS[number]['id'];
+
+const CHECKOUT_URLS: Record<string, Record<'monthly' | 'yearly', string>> = {
+  professional: {
+    monthly: 'https://checkout.velanova.ai/professional-monthly',
+    yearly: 'https://checkout.velanova.ai/professional-yearly',
   },
   team: {
-    name: 'Team',
-    features: ['Everything in Pro', '10 team members', 'Advanced analytics', 'Unlimited databases'],
-    color: 'text-zinc-300',
-    bg: 'bg-white/5',
+    monthly: 'https://checkout.velanova.ai/team-monthly',
+    yearly: 'https://checkout.velanova.ai/team-yearly',
   },
   enterprise: {
-    name: 'Enterprise',
-    features: ['Everything in Team', 'Unlimited users', 'Dedicated support', 'SLA', 'Custom integrations'],
-    color: 'text-gold-500',
-    bg: 'bg-gold-100',
+    monthly: 'https://velanova.ai/contact',
+    yearly: 'https://velanova.ai/contact',
   },
 };
 
+// ─── Plan Card ────────────────────────────────────────────────────────────────
+function PlanCard({
+  plan,
+  billing,
+  currentPlan,
+  isLoading,
+  onSelect,
+}: {
+  plan: (typeof PLANS)[number];
+  billing: 'monthly' | 'yearly';
+  currentPlan: PlanId | null;
+  isLoading: string | null;
+  onSelect: (id: string) => void;
+}) {
+  const price = plan.price[billing];
+  const isCurrent = currentPlan === plan.id;
+  const isEnterprise = plan.id === 'enterprise';
+  const yearlySaving =
+    !isEnterprise && plan.price.monthly > 0
+      ? Math.round((1 - plan.price.yearly / (plan.price.monthly * 12)) * 100)
+      : 0;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      className={cn(
+        'relative flex flex-col rounded-2xl border p-5 transition-all duration-200',
+        plan.highlight
+          ? 'bg-white/[0.04] border-white/[0.18] shadow-[0_0_60px_-12px_rgba(255,255,255,0.08)]'
+          : 'bg-white/[0.015] border-white/[0.06] hover:border-white/[0.10] hover:bg-white/[0.025]',
+        isCurrent && 'border-white/[0.14]',
+      )}
+    >
+      {plan.highlight && (
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white text-black text-[11px] font-semibold tracking-wide whitespace-nowrap shadow">
+          Most Popular
+        </div>
+      )}
+
+      <div className="mb-4">
+        <div className="flex items-center gap-2.5 mb-3">
+          <div className={cn(
+            'w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0',
+            plan.highlight ? 'bg-white/10' : 'bg-white/[0.06]',
+          )}>
+            <plan.Icon className="w-4 h-4 text-zinc-300" strokeWidth={1.6} />
+          </div>
+          <div>
+            <h3 className="text-[14px] font-semibold text-white">{plan.name}</h3>
+            <p className="text-[11px] text-zinc-600 leading-tight">{plan.description}</p>
+          </div>
+        </div>
+
+        <div className="flex items-end gap-1">
+          {isEnterprise ? (
+            <span className="text-2xl font-bold text-white">Custom</span>
+          ) : price === 0 ? (
+            <span className="text-2xl font-bold text-white">Free</span>
+          ) : (
+            <>
+              <span className="text-2xl font-bold text-white">${price}</span>
+              <span className="text-zinc-600 mb-0.5 text-[13px]">
+                /{billing === 'monthly' ? 'mo' : 'yr'}
+              </span>
+            </>
+          )}
+        </div>
+        {billing === 'yearly' && yearlySaving > 0 && (
+          <p className="text-[11px] text-emerald-400 mt-0.5">Save {yearlySaving}% vs monthly</p>
+        )}
+      </div>
+
+      <button
+        onClick={() => onSelect(plan.id)}
+        disabled={isCurrent || isLoading === plan.id}
+        className={cn(
+          'w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-medium transition-all duration-200 mb-4',
+          isCurrent
+            ? 'bg-white/[0.04] text-zinc-600 border border-white/[0.06] cursor-default'
+            : plan.highlight
+            ? 'bg-white text-black hover:bg-zinc-100 shadow-[0_2px_20px_-4px_rgba(255,255,255,0.15)]'
+            : 'border border-white/[0.10] text-white hover:bg-white/[0.06] hover:border-white/[0.18]',
+        )}
+      >
+        {isLoading === plan.id ? (
+          <Loader2 className="w-4 h-4 animate-spin" />
+        ) : isCurrent ? (
+          <><Check className="w-3.5 h-3.5" /> Current Plan</>
+        ) : (
+          <>{plan.cta}<ArrowRight className="w-3.5 h-3.5" /></>
+        )}
+      </button>
+
+      <div className="h-px bg-white/[0.05] mb-3.5" />
+
+      <div className="flex-1 space-y-2">
+        {plan.features.map((f) => (
+          <div key={f} className="flex items-start gap-2 text-[12px]">
+            <Check className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0 mt-0.5" />
+            <span className="text-zinc-400 leading-snug">{f}</span>
+          </div>
+        ))}
+        {plan.missing.map((f) => (
+          <div key={f} className="flex items-start gap-2 text-[12px]">
+            <X className="w-3.5 h-3.5 text-zinc-800 flex-shrink-0 mt-0.5" />
+            <span className="text-zinc-700 leading-snug">{f}</span>
+          </div>
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
+// ─── Main Page ────────────────────────────────────────────────────────────────
 export default function SubscriptionPage() {
-  const [subscription, setSubscription] = useState<Subscription | null>(null);
-  const [payments, setPayments] = useState<Payment[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isUpgrading, setIsUpgrading] = useState(false);
-  const [isCanceling, setIsCanceling] = useState(false);
+  const [billing, setBilling] = useState<'monthly' | 'yearly'>('monthly');
+  const [currentPlan, setCurrentPlan] = useState<PlanId | null>(null);
+  const [isLoading, setIsLoading] = useState<string | null>(null);
+  const [pageLoading, setPageLoading] = useState(true);
+  const [payments, setPayments] = useState<any[]>([]);
+  const [toast, setToast] = useState<{ type: 'success' | 'error'; msg: string } | null>(null);
+  const [cancelConfirm, setCancelConfirm] = useState(false);
 
   useEffect(() => {
-    loadSubscription();
-    loadPayments();
+    loadData();
+    const search = window.location.search + window.location.hash;
+    if (search.includes('checkout=success') || search.includes('checkout_success')) {
+      showToast('success', 'Payment successful! Your plan has been upgraded.');
+    }
   }, []);
 
-  const loadSubscription = async () => {
+  const showToast = (type: 'success' | 'error', msg: string) => {
+    setToast({ type, msg });
+    setTimeout(() => setToast(null), 5500);
+  };
+
+  const loadData = async () => {
     try {
-      setIsLoading(true);
-      // Use api namespace - these are optional subscription features
-      const sub = await window.electron.api?.getSubscription?.();
-      if (sub) {
-        // Ensure amount has a default value to prevent NaN
-        setSubscription({
-          ...sub,
-          amount: sub.amount ?? 0,
-          currency: sub.currency ?? 'USD',
-        });
+      setPageLoading(true);
+      const [subResult, pyResult] = await Promise.allSettled([
+        (window.electron as any).api?.getSubscription?.(),
+        (window.electron as any).api?.getPaymentHistory?.(),
+      ]);
+      if (subResult.status === 'fulfilled' && subResult.value) {
+        setCurrentPlan((subResult.value.plan as PlanId) ?? 'trial');
       } else {
-        // Default trial subscription for logged in users without subscription data
-        setSubscription({
-          id: 'trial',
-          plan: 'trial',
-          status: 'active',
-          billingCycle: 'monthly',
-          currentPeriodStart: new Date(),
-          currentPeriodEnd: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
-          cancelAtPeriodEnd: false,
-          amount: 0,
-          currency: 'USD',
-        });
+        setCurrentPlan('trial');
       }
-    } catch (error) {
-      console.error('Failed to load subscription:', error);
-      // Default to trial on error
-      setSubscription({
-        id: 'trial',
-        plan: 'trial',
-        status: 'active',
-        billingCycle: 'monthly',
-        currentPeriodStart: new Date(),
-        currentPeriodEnd: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
-        cancelAtPeriodEnd: false,
-        amount: 0,
-        currency: 'USD',
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const loadPayments = async () => {
-    try {
-      const pymts = await window.electron.api?.getPaymentHistory?.();
-      setPayments(pymts || []);
-    } catch (error) {
-      console.error('Failed to load payments:', error);
-      // Non-critical error
-    }
-  };
-
-  const handleUpgrade = async (plan: string) => {
-    try {
-      setIsUpgrading(true);
-      const result = await window.electron.api?.createCheckout?.({ plan });
-      if (result?.checkoutUrl) {
-        window.electron.system?.openExternal?.(result.checkoutUrl);
+      if (pyResult.status === 'fulfilled' && Array.isArray(pyResult.value)) {
+        setPayments(pyResult.value);
       }
-    } catch (error) {
-      console.error('Failed to upgrade:', error);
+    } catch {
+      setCurrentPlan('trial');
     } finally {
-      setIsUpgrading(false);
+      setPageLoading(false);
     }
   };
 
-  const handleCancelSubscription = async () => {
-    if (!confirm('Are you sure you want to cancel your subscription? You\'ll have access until the end of your billing period.')) {
-      return;
-    }
-
+  const handleSelect = async (planId: string) => {
+    if (planId === currentPlan) return;
+    setIsLoading(planId);
     try {
-      setIsCanceling(true);
-      await window.electron.api?.cancelSubscription?.();
-      await loadSubscription();
-    } catch (error) {
-      console.error('Failed to cancel:', error);
+      let url: string | null = null;
+      try {
+        const r = await (window.electron as any).api?.createCheckout?.({ plan: planId, billing });
+        url = r?.checkoutUrl ?? r?.url ?? null;
+      } catch { /* fall through */ }
+      if (!url) {
+        url = CHECKOUT_URLS[planId]?.[billing] ?? 'https://velanova.ai/pricing';
+      }
+      await (window.electron as any).system?.openExternal?.(url);
+      showToast('success', 'Checkout opened in your browser. Return here after payment completes.');
+    } catch (err: any) {
+      showToast('error', err?.message ?? 'Could not open checkout. Please try again.');
     } finally {
-      setIsCanceling(false);
+      setIsLoading(null);
     }
   };
 
-  const handleReactivate = async () => {
+  const handleCancel = async () => {
+    if (!cancelConfirm) { setCancelConfirm(true); return; }
+    setCancelConfirm(false);
     try {
-      await window.electron.api?.reactivateSubscription?.();
-      await loadSubscription();
-    } catch (error) {
-      console.error('Failed to reactivate:', error);
+      await (window.electron as any).api?.cancelSubscription?.();
+      showToast('success', 'Subscription cancelled. Access continues until period end.');
+      loadData();
+    } catch (err: any) {
+      showToast('error', err?.message ?? 'Failed to cancel. Please contact support.');
     }
   };
 
-  if (isLoading) {
+  if (pageLoading) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      <div className="flex items-center justify-center h-full bg-[#0a0a0a]">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-5 h-5 border border-white/20 border-t-white/70 rounded-full animate-spin" />
+          <p className="text-[12px] text-zinc-600">Loading subscription...</p>
+        </div>
       </div>
     );
   }
 
-  const planDetails = subscription ? PLAN_DETAILS[subscription.plan] : null;
-
   return (
-    <div className="p-8 space-y-8 max-w-7xl mx-auto">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-medium">Subscription & Billing</h1>
-        <p className="text-muted-foreground mt-2">
-          Manage your subscription, view invoices, and upgrade your plan
-        </p>
-      </div>
+    <div className="min-h-full bg-[#0a0a0a] overflow-y-auto">
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: -14 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -14 }}
+            className={cn(
+              'fixed top-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-4 py-3 rounded-xl border shadow-2xl text-[13px] font-medium max-w-sm w-full',
+              toast.type === 'success'
+                ? 'bg-[#0e0e0e] border-emerald-500/30 text-emerald-300'
+                : 'bg-[#0e0e0e] border-red-500/30 text-red-300',
+            )}
+          >
+            {toast.type === 'success'
+              ? <Check className="w-4 h-4 flex-shrink-0" />
+              : <X className="w-4 h-4 flex-shrink-0" />}
+            {toast.msg}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* Current Plan */}
-      {subscription && planDetails && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <Card className="border-2">
-            <CardHeader>
-              <div className="flex items-center justify-between">
+      <div className="max-w-5xl mx-auto px-6 py-10">
+        <div className="text-center mb-10">
+          <h1 className="text-2xl font-semibold text-white mb-2">Plans &amp; Billing</h1>
+          <p className="text-[14px] text-zinc-500">
+            Upgrade to unlock unlimited queries, all AI models, and BYOK support
+          </p>
+          <div className="inline-flex items-center gap-1 mt-6 p-1 rounded-xl border border-white/[0.07] bg-white/[0.02]">
+            {(['monthly', 'yearly'] as const).map((b) => (
+              <button
+                key={b}
+                onClick={() => setBilling(b)}
+                className={cn(
+                  'px-5 py-1.5 rounded-lg text-[13px] font-medium transition-all duration-200',
+                  billing === b ? 'bg-white text-black shadow' : 'text-zinc-600 hover:text-zinc-300',
+                )}
+              >
+                {b === 'monthly' ? 'Monthly' : 'Annual'}
+                {b === 'yearly' && (
+                  <span className="ml-1.5 text-[10px] text-emerald-400 font-semibold">-20%</span>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+          {PLANS.map((plan) => (
+            <PlanCard
+              key={plan.id}
+              plan={plan}
+              billing={billing}
+              currentPlan={currentPlan}
+              isLoading={isLoading}
+              onSelect={handleSelect}
+            />
+          ))}
+        </div>
+
+        {currentPlan && currentPlan !== 'trial' && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mb-8 rounded-2xl border border-white/[0.06] bg-white/[0.015] p-5"
+          >
+            <div className="flex items-center justify-between flex-wrap gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-white/[0.06] flex items-center justify-center">
+                  <CreditCard className="w-5 h-5 text-zinc-400" />
+                </div>
                 <div>
-                  <CardTitle className="text-2xl">{planDetails.name} Plan</CardTitle>
-                  <CardDescription className="mt-2">
-                    {subscription.status === 'active' ? (
-                      <span className="flex items-center gap-2 text-zinc-300">
-                        <Check className="w-4 h-4" />
-                        Active subscription
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-2 text-zinc-300">
-                        <X className="w-4 h-4" />
-                        {subscription.status}
-                      </span>
-                    )}
-                  </CardDescription>
-                </div>
-                <div className={cn('px-4 py-2 rounded-lg', planDetails.bg)}>
-                  <p className={cn('text-2xl font-medium', planDetails.color)}>
-                    {subscription.plan === 'trial' ? 'Free' : formatCurrency((subscription.amount ?? 0) / 100)}
+                  <p className="text-[14px] font-semibold text-white">
+                    {PLANS.find((p) => p.id === currentPlan)?.name} — Active
                   </p>
-                  <p className="text-sm text-muted-foreground">
-                    {subscription.plan === 'trial' ? '14 day trial' : `per ${subscription.billingCycle === 'monthly' ? 'month' : 'year'}`}
-                  </p>
+                  <p className="text-[12px] text-zinc-600">Renews automatically each billing period</p>
                 </div>
               </div>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Features */}
-              <div>
-                <h3 className="font-medium mb-3">Plan Features</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  {planDetails.features.map((feature, index) => (
-                    <div key={index} className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-zinc-300" />
-                      <span className="text-sm">{feature}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Billing Period */}
-              <div className="flex items-center justify-between p-4 bg-accent rounded-lg">
-                <div className="flex items-center gap-3">
-                  <Calendar className="w-5 h-5 text-muted-foreground" />
-                  <div>
-                    <p className="font-medium">Current billing period</p>
-                    <p className="text-sm text-muted-foreground">
-                      {formatDate(subscription.currentPeriodStart)} - {formatDate(subscription.currentPeriodEnd)}
-                    </p>
-                  </div>
-                </div>
-                {subscription.cancelAtPeriodEnd && (
-                  <div className="text-zinc-300 text-sm font-medium">
-                    Cancels on {formatDate(subscription.currentPeriodEnd)}
-                  </div>
-                )}
-              </div>
-
-              {/* Actions */}
-              <div className="flex gap-3 pt-4 border-t">
-                {subscription.plan !== 'enterprise' && (
-                  <Button onClick={() => handleUpgrade('professional')} disabled={isUpgrading}>
-                    <TrendingUp className="w-4 h-4 mr-2" />
-                    Upgrade Plan
-                  </Button>
-                )}
-                {subscription.cancelAtPeriodEnd ? (
-                  <Button variant="outline" onClick={handleReactivate}>
-                    Reactivate Subscription
-                  </Button>
-                ) : (
-                  <Button 
-                    variant="destructive" 
-                    onClick={handleCancelSubscription}
-                    disabled={isCanceling}
-                  >
-                    {isCanceling ? (
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    ) : (
-                      <X className="w-4 h-4 mr-2" />
-                    )}
-                    Cancel Subscription
-                  </Button>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      )}
-
-      {/* No Subscription */}
-      {!subscription && (
-        <Card>
-          <CardHeader>
-            <CardTitle>No Active Subscription</CardTitle>
-            <CardDescription>Choose a plan to get started</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button onClick={() => handleUpgrade('professional')}>
-              View Plans
-            </Button>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Payment History */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Payment History</CardTitle>
-          <CardDescription>View all your past transactions</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {payments.length > 0 ? (
-            <div className="space-y-3">
-              {payments.map((payment) => (
-                <motion.div
-                  key={payment.id}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent transition-colors"
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={loadData}
+                  title="Refresh status"
+                  className="p-2 rounded-lg text-zinc-700 hover:text-zinc-400 hover:bg-white/[0.05] transition-all"
                 >
-                  <div className="flex items-center gap-4">
-                    <div className={cn(
-                      'w-10 h-10 rounded-full flex items-center justify-center',
-                      payment.status === 'succeeded' ? 'bg-white/5 text-zinc-400' :
-                      payment.status === 'failed' ? 'bg-white/5 text-zinc-400' :
-                      'bg-white/5 text-zinc-400'
-                    )}>
-                      <CreditCard className="w-5 h-5" />
+                  <RefreshCw className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={handleCancel}
+                  className={cn(
+                    'px-4 py-2 rounded-xl text-[13px] font-medium border transition-all',
+                    cancelConfirm
+                      ? 'border-red-500/40 text-red-400 hover:bg-red-500/10'
+                      : 'border-white/[0.07] text-zinc-500 hover:border-white/[0.14] hover:text-zinc-300',
+                  )}
+                >
+                  {cancelConfirm ? 'Confirm cancel?' : 'Cancel Subscription'}
+                </button>
+                {cancelConfirm && (
+                  <button
+                    onClick={() => setCancelConfirm(false)}
+                    className="px-3 py-2 text-[13px] text-zinc-700 hover:text-zinc-400 transition-colors"
+                  >
+                    Never mind
+                  </button>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.015] overflow-hidden mb-8">
+          <div className="px-5 py-4 border-b border-white/[0.05] flex items-center justify-between">
+            <div>
+              <h2 className="text-[14px] font-semibold text-white">Payment History</h2>
+              <p className="text-[12px] text-zinc-600 mt-0.5">Your invoices and transactions</p>
+            </div>
+            <Calendar className="w-4 h-4 text-zinc-700" />
+          </div>
+          {payments.length > 0 ? (
+            <div className="divide-y divide-white/[0.03]">
+              {payments.map((p, i) => (
+                <div key={p.id ?? i} className="flex items-center justify-between px-5 py-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-white/[0.05] flex items-center justify-center">
+                      <CreditCard className="w-3.5 h-3.5 text-zinc-600" />
                     </div>
                     <div>
-                      <p className="font-medium">
-                        {formatCurrency(payment.amount / 100, payment.currency.toUpperCase())}
+                      <p className="text-[13px] text-white">
+                        ${((p.amount ?? 0) / 100).toFixed(2)}{' '}
+                        <span className="text-zinc-600">{(p.currency ?? 'USD').toUpperCase()}</span>
                       </p>
-                      <p className="text-sm text-muted-foreground">
-                        {formatDate(payment.createdAt)} • {payment.status}
+                      <p className="text-[11px] text-zinc-600">
+                        {p.createdAt ? new Date(p.createdAt).toLocaleDateString() : '—'}
+                        {' · '}
+                        <span className={p.status === 'succeeded' ? 'text-emerald-500' : 'text-red-400'}>
+                          {p.status ?? 'unknown'}
+                        </span>
                       </p>
                     </div>
                   </div>
-                  {payment.invoiceUrl && (
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      onClick={() => window.electron.system?.openExternal?.(payment.invoiceUrl!)}
+                  {p.invoiceUrl && (
+                    <button
+                      onClick={() => (window.electron as any).system?.openExternal?.(p.invoiceUrl)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/[0.07] text-[12px] text-zinc-500 hover:text-zinc-300 hover:border-white/[0.14] transition-all"
                     >
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      Invoice
-                    </Button>
+                      <ExternalLink className="w-3 h-3" /> Invoice
+                    </button>
                   )}
-                </motion.div>
+                </div>
               ))}
             </div>
           ) : (
-            <p className="text-center text-muted-foreground py-8">
-              No payment history yet
-            </p>
+            <div className="flex flex-col items-center justify-center py-14 px-6 text-center">
+              <CreditCard className="w-8 h-8 text-zinc-800 mb-2.5" />
+              <p className="text-[13px] text-zinc-600">No payments yet</p>
+              <p className="text-[11px] text-zinc-700 mt-1">Invoices appear here once you upgrade</p>
+            </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
 
-      {/* Usage Stats (if available) */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Usage This Month</CardTitle>
-          <CardDescription>Track your API usage and costs</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-3 gap-4">
-            <div className="text-center p-4 border rounded-lg">
-              <p className="text-3xl font-medium text-primary">1,234</p>
-              <p className="text-sm text-muted-foreground mt-1">Queries</p>
-            </div>
-            <div className="text-center p-4 border rounded-lg">
-              <p className="text-3xl font-medium text-zinc-300">45.2K</p>
-              <p className="text-sm text-muted-foreground mt-1">Tokens</p>
-            </div>
-            <div className="text-center p-4 border rounded-lg">
-              <p className="text-3xl font-medium text-zinc-300">$12.45</p>
-              <p className="text-sm text-muted-foreground mt-1">Cost</p>
-            </div>
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.015] px-5 py-5 flex items-start gap-4">
+          <div className="w-9 h-9 rounded-xl bg-white/[0.06] flex items-center justify-center flex-shrink-0">
+            <Zap className="w-4 h-4 text-zinc-400" />
           </div>
-        </CardContent>
-      </Card>
+          <div>
+            <p className="text-[14px] font-semibold text-white mb-1">Bring Your Own API Keys (BYOK)</p>
+            <p className="text-[13px] text-zinc-500 leading-relaxed">
+              On Professional and above you can add your own OpenAI, Anthropic, Google, Groq, and more
+              API keys. Keys are AES-encrypted and stored locally — we never see them. Costs go
+              directly to your provider account.
+            </p>
+            <button
+              onClick={() => { window.location.hash = '#/settings/api-keys'; }}
+              className="mt-3 flex items-center gap-1.5 text-[13px] text-zinc-300 hover:text-white transition-colors"
+            >
+              Manage API Keys <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

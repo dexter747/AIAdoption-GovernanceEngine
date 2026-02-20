@@ -383,7 +383,24 @@ export default function DashboardPage() {
  { name: 'Google', models: ['Gemini 2.0', 'Gemini 1.5 Pro'], logo: '🔵', configured: false },
  { name: 'Groq', models: ['Llama 3.3', 'Mixtral'], logo: '🦙', configured: true },
  { name: 'Mistral', models: ['Mistral Large', 'Codestral'], logo: '🟠', configured: false },
- { name: 'xAI', models: ['Grok 2'], logo: '⚫', configured: false }, ].map((provider) => ( <div key={provider.name} className={cn( "p-4 rounded-xl transition-all", provider.configured ? "bg-background : "bg-secondary opacity-60" )} > <div className="flex items-center gap-2 mb-2"> <span className="text-xl">{provider.logo}</span> <span className="font-medium text-white">{provider.name}</span> {provider.configured && <Star className="w-3 h-3 text-zinc-400 ml-auto" />} </div> <p className="truncate text-white/40"> {provider.models.join( bg-background/[0.02] border-white/10', ')}
+ { name: 'xAI', models: ['Grok 2'], logo: '⚫', configured: false },
+ ].map((provider) => (
+ <div
+ key={provider.name}
+ className={cn(
+ "p-4 rounded-xl border transition-all",
+ provider.configured
+ ? "bg-white/[0.02] border-white/[0.08]"
+ : "bg-white/[0.01] border-white/[0.04] opacity-60"
+ )}
+ >
+ <div className="flex items-center gap-2 mb-2">
+ <span className="text-xl">{provider.logo}</span>
+ <span className="font-medium text-white text-sm">{provider.name}</span>
+ {provider.configured && <Star className="w-3 h-3 text-zinc-400 ml-auto" />}
+ </div>
+ <p className="text-xs truncate text-white/40">
+ {provider.models.join(', ')}
  </p>
  </div>
  ))}

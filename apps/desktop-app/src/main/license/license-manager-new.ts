@@ -138,7 +138,7 @@ class LicenseManager {
           lastValidatedAt: new Date().toISOString(),
         };
         await this.storeLicense(licenseKey);
-        return { valid: true, license: this.license };
+        return { valid: true, license: this.license ?? undefined };
       }
 
       return { valid: false, error: response.data.error || 'Invalid license' };

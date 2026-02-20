@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
-import { 
+import {
  Search, Grid3x3, List, Plus, Check,
- Database, Server, HardDrive, Warehouse, Headphones,
- Loader2, Zap
+ Database, HardDrive, Warehouse, Zap, Loader2,
+ Building2, Briefcase, Users, Heart, Shield, Truck,
+ Banknote, ShoppingCart, Radio, FileText, Landmark,
+ GraduationCap, Wrench, ShoppingBag, Monitor,
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { cn } from '../lib/utils';
@@ -11,27 +13,27 @@ import { useNavigate } from 'react-router-dom';
 import { CONNECTION_LIBRARY } from '../config/connection-types';
 
 const CATEGORIES = [
- { id: 'all', name: 'All', icon: Grid3x3 },
- { id: 'database', name: 'Databases', icon: Database },
- { id: 'nosql', name: 'NoSQL', icon: HardDrive },
- { id: 'enterprise', name: 'Enterprise', icon: Server },
- { id: 'erp', name: 'ERP', icon: Server },
- { id: 'crm', name: 'CRM & Sales', icon: Headphones },
- { id: 'hcm', name: 'HCM & HR', icon: Server },
- { id: 'healthcare', name: 'Healthcare', icon: Server },
- { id: 'insurance', name: 'Insurance', icon: Server },
- { id: 'supply-chain', name: 'Supply Chain', icon: Warehouse },
- { id: 'finance', name: 'Finance', icon: Server },
- { id: 'commerce', name: 'Commerce', icon: Server },
- { id: 'telecom', name: 'Telecom', icon: Server },
- { id: 'document', name: 'Documents', icon: Server },
- { id: 'government', name: 'Government', icon: Server },
- { id: 'education', name: 'Education', icon: Server },
- { id: 'asset', name: 'Assets', icon: Server },
- { id: 'procurement', name: 'Procurement', icon: Server },
- { id: 'legacy', name: 'Legacy', icon: Server },
- { id: 'warehouse', name: 'Data Warehouse', icon: Warehouse },
- { id: 'mcp', name: 'MCP & APIs', icon: Zap },
+  { id: 'all',          name: 'All',           icon: Grid3x3 },
+  { id: 'database',     name: 'Databases',     icon: Database },
+  { id: 'nosql',        name: 'NoSQL',         icon: HardDrive },
+  { id: 'enterprise',   name: 'Enterprise',    icon: Building2 },
+  { id: 'erp',          name: 'ERP',           icon: Briefcase },
+  { id: 'crm',          name: 'CRM & Sales',   icon: Users },
+  { id: 'hcm',          name: 'HCM & HR',      icon: Heart },
+  { id: 'healthcare',   name: 'Healthcare',    icon: Heart },
+  { id: 'insurance',    name: 'Insurance',     icon: Shield },
+  { id: 'supply-chain', name: 'Supply Chain',  icon: Truck },
+  { id: 'finance',      name: 'Finance',       icon: Banknote },
+  { id: 'commerce',     name: 'Commerce',      icon: ShoppingCart },
+  { id: 'telecom',      name: 'Telecom',       icon: Radio },
+  { id: 'document',     name: 'Documents',     icon: FileText },
+  { id: 'government',   name: 'Government',    icon: Landmark },
+  { id: 'education',    name: 'Education',     icon: GraduationCap },
+  { id: 'asset',        name: 'Assets',        icon: Wrench },
+  { id: 'procurement',  name: 'Procurement',   icon: ShoppingBag },
+  { id: 'legacy',       name: 'Mainframe',     icon: Monitor },
+  { id: 'warehouse',    name: 'Data Warehouse',icon: Warehouse },
+  { id: 'mcp',          name: 'MCP & APIs',    icon: Zap },
 ];
 
 interface ConnectionConfig {

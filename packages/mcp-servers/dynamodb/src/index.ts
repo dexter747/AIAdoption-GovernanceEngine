@@ -3,9 +3,8 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { CallToolRequestSchema, ListToolsRequestSchema, Tool } from '@modelcontextprotocol/sdk/types.js';
-import { DynamoDBClient, ListTablesCommand, DescribeTableCommand, ScanCommand, QueryCommand, PutItemCommand, DeleteItemCommand, GetItemCommand } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
-import { unmarshall, marshall } from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient, ListTablesCommand, DescribeTableCommand } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient, ScanCommand, QueryCommand, GetCommand, PutCommand } from '@aws-sdk/lib-dynamodb';
 
 let docClient: DynamoDBDocumentClient | null = null;
 let rawClient: DynamoDBClient | null = null;
@@ -51,22 +50,19 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         return { content: [{ type: 'text' as const, text: JSON.stringify(r.Table, null, 2) }] };
       }
       case 'scan': {
-        const r = await rawClient.send(new ScanCommand({ TableName: (args as any).table, FilterExpression: (args as any).filter, Limit: (args as any).limit || 25 }));
-        const items = r.Items?.map(i => unmarshall(i)) || [];
-        return { content: [{ type: 'text' as const, text: JSON.stringify({ items, count: r.Count, scannedCount: r.ScannedCount }, null, 2) }] };
+        const r = await docClient!.send(new ScanCommand({ TableName: (args as any).table, FilterExpression: (args as any).filter, Limit: (args as any).limit || 25 }));
+        return { content: [{ type: 'text' as const, text: JSON.stringify({ items: r.Items, count: r.Count, scannedCount: r.ScannedCount }, null, 2) }] };
       }
       case 'query': {
-        const exprValues = (args as any).expressionValues ? marshall((args as any).expressionValues) : undefined;
-        const r = await rawClient.send(new QueryCommand({ TableName: (args as any).table, KeyConditionExpression: (args as any).keyCondition, ExpressionAttributeValues: exprValues, Limit: (args as any).limit || 25 }));
-        const items = r.Items?.map(i => unmarshall(i)) || [];
-        return { content: [{ type: 'text' as const, text: JSON.stringify({ items, count: r.Count }, null, 2) }] };
+        const r = await docClient!.send(new QueryCommand({ TableName: (args as any).table, KeyConditionExpression: (args as any).keyCondition, ExpressionAttributeValues: (args as any).expressionValues, Limit: (args as any).limit || 25 }));
+        return { content: [{ type: 'text' as const, text: JSON.stringify({ items: r.Items, count: r.Count }, null, 2) }] };
       }
       case 'get_item': {
-        const r = await rawClient.send(new GetItemCommand({ TableName: (args as any).table, Key: marshall((args as any).key) }));
-        return { content: [{ type: 'text' as const, text: JSON.stringify(r.Item ? unmarshall(r.Item) : null, null, 2) }] };
+        const r = await docClient!.send(new GetCommand({ TableName: (args as any).table, Key: (args as any).key }));
+        return { content: [{ type: 'text' as const, text: JSON.stringify(r.Item ?? null, null, 2) }] };
       }
       case 'put_item': {
-        await rawClient.send(new PutItemCommand({ TableName: (args as any).table, Item: marshall((args as any).item) }));
+        await docClient!.send(new PutCommand({ TableName: (args as any).table, Item: (args as any).item }));
         return { content: [{ type: 'text' as const, text: 'Item created successfully' }] };
       }
       default: throw new Error(`Unknown tool: ${name}`);

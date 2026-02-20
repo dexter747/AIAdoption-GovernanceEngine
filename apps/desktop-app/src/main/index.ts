@@ -56,11 +56,15 @@ function getStoredAuth(): AuthData | null {
 
 function createWindow() {
   console.log('[createWindow] Creating BrowserWindow...');
+  const iconFile = process.platform === 'darwin' ? 'icon.icns' : 'icon.png';
+  const iconPath = path.join(app.getAppPath(), 'build', iconFile);
+
   mainWindow = new BrowserWindow({
     width: 1400,
     height: 900,
     minWidth: 1024,
     minHeight: 768,
+    icon: iconPath,
     webPreferences: {
       preload: path.join(__dirname, '../../dist/main/preload.js'),
       nodeIntegration: false,
@@ -318,6 +322,12 @@ function handleDeepLink(url: string) {
 
 app.whenReady().then(() => {
   console.log('[main] app.whenReady() triggered');
+
+  // Set dock icon on macOS (required in dev mode — packaged builds use the .icns in the bundle)
+  if (process.platform === 'darwin' && app.dock) {
+    app.dock.setIcon(path.join(app.getAppPath(), 'build', 'icon.png'));
+  }
+
   // Initialize express client with stored auth token on startup
   const storedAuth = getStoredAuth();
   if (storedAuth?.accessToken) {

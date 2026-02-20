@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import { 
- Database, Plus, Edit2, Trash2, PowerOff, 
+import {
+ Database, Plus, Edit2, Trash2, PowerOff,
  CheckCircle, XCircle, Loader2, RefreshCw,
  Search, Grid3x3, List, Shield,
- Server, Zap, HardDrive, Warehouse, Headphones
+ Zap, HardDrive, Warehouse,
+ Building2, Briefcase, Users, Heart, Truck,
+ Banknote, ShoppingCart, Radio, FileText, Landmark, Monitor,
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { cn } from '../lib/utils';
@@ -24,12 +26,24 @@ interface DatabaseConnection {
 }
 
 const CATEGORIES = [
- { id: 'all', name: 'All', icon: Grid3x3 },
- { id: 'database', name: 'Databases', icon: Database },
- { id: 'nosql', name: 'NoSQL', icon: HardDrive },
- { id: 'enterprise', name: 'Enterprise', icon: Server },
- { id: 'crm', name: 'CRM & Support', icon: Headphones },
- { id: 'warehouse', name: 'Data Warehouse', icon: Warehouse },
+  { id: 'all',          name: 'All',           icon: Grid3x3 },
+  { id: 'database',     name: 'Databases',     icon: Database },
+  { id: 'nosql',        name: 'NoSQL',         icon: HardDrive },
+  { id: 'enterprise',   name: 'Enterprise',    icon: Building2 },
+  { id: 'erp',          name: 'ERP',           icon: Briefcase },
+  { id: 'crm',          name: 'CRM & Sales',   icon: Users },
+  { id: 'hcm',          name: 'HCM & HR',      icon: Heart },
+  { id: 'healthcare',   name: 'Healthcare',    icon: Heart },
+  { id: 'insurance',    name: 'Insurance',     icon: Shield },
+  { id: 'supply-chain', name: 'Supply Chain',  icon: Truck },
+  { id: 'finance',      name: 'Finance',       icon: Banknote },
+  { id: 'commerce',     name: 'Commerce',      icon: ShoppingCart },
+  { id: 'telecom',      name: 'Telecom',       icon: Radio },
+  { id: 'document',     name: 'Documents',     icon: FileText },
+  { id: 'government',   name: 'Government',    icon: Landmark },
+  { id: 'legacy',       name: 'Mainframe',     icon: Monitor },
+  { id: 'warehouse',    name: 'Data Warehouse',icon: Warehouse },
+  { id: 'mcp',          name: 'MCP & APIs',    icon: Zap },
 ];
 
 export default function ConnectionsDashboard() {

@@ -524,7 +524,7 @@ export const CONNECTION_CATEGORIES = [
   { id: 'education', name: 'Education' },
   { id: 'asset', name: 'Assets' },
   { id: 'procurement', name: 'Procurement' },
-  { id: 'legacy', name: 'Legacy' },
+  { id: 'legacy', name: 'Mainframe' },
   { id: 'warehouse', name: 'Data Warehouse' },
   { id: 'mcp', name: 'MCP & APIs' },
 ] as const;
