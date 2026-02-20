@@ -15,7 +15,7 @@ interface AnalyticsData {
  planChartData: Array<{ name: string; value: number }>;
 }
 
-const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+const COLORS = ['#d4d4d8', '#a1a1aa', '#a1a1aa', '#71717a', '#a1a1aa'];
 
 export default function AnalyticsPage() {
  const [data, setData] = useState<AnalyticsData | null>(null);
@@ -42,7 +42,7 @@ export default function AnalyticsPage() {
  return (
  <div className="p-8 flex items-center justify-center min-h-screen">
  <div className="text-center">
- <RefreshCw className="w-8 h-8 text-blue-500 animate-spin mx-auto mb-4" />
+ <RefreshCw className="w-8 h-8 text-zinc-300 animate-spin mx-auto mb-4" />
  <p className="text-muted-foreground">Loading analytics...</p>
  </div>
  </div>
@@ -59,7 +59,7 @@ export default function AnalyticsPage() {
  </div>
  <button
  onClick={fetchAnalytics}
- className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground rounded-lg hover:text-white border-gray-800"
+ className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground rounded-lg hover:text-white border-zinc-800"
  >
  <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
  Refresh
@@ -68,9 +68,9 @@ export default function AnalyticsPage() {
 
  <div className="grid gap-6">
  {/* User Signups */}
- <div className="rounded-xl p-6 bg-black border-gray-800">
+ <div className="rounded-xl p-6 bg-black border-zinc-800">
  <div className="flex items-center gap-2 mb-6">
- <Users className="w-5 h-5 text-blue-500" />
+ <Users className="w-5 h-5 text-zinc-300" />
  <h2 className="font-medium text-white">Daily User Signups</h2>
  </div>
  <ResponsiveContainer width="100%" height={240}>
@@ -82,7 +82,7 @@ export default function AnalyticsPage() {
  <Line
  type="monotone"
  dataKey="users"
- stroke="#3b82f6"
+ stroke="#d4d4d8"
  strokeWidth={2}
  dot={false}
  name="Users"
@@ -92,9 +92,9 @@ export default function AnalyticsPage() {
  </div>
 
  {/* Revenue */}
- <div className="rounded-xl p-6 bg-black border-gray-800">
+ <div className="rounded-xl p-6 bg-black border-zinc-800">
  <div className="flex items-center gap-2 mb-6">
- <DollarSign className="w-5 h-5 text-green-500" />
+ <DollarSign className="w-5 h-5 text-zinc-400" />
  <h2 className="font-medium text-white">Daily Revenue (USD)</h2>
  </div>
  <ResponsiveContainer width="100%" height={240}>
@@ -103,7 +103,7 @@ export default function AnalyticsPage() {
  <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#a1a1aa' }} />
  <YAxis tick={{ fontSize: 11, fill: '#a1a1aa' }} tickFormatter={(v) => `$${v}`} />
  <Tooltip formatter={(v: number) => [`$${v.toFixed(2)}`, 'Revenue']} />
- <Bar dataKey="revenue" fill="#10b981" radius={[4, 4, 0, 0]} name="Revenue" />
+ <Bar dataKey="revenue" fill="#a1a1aa" radius={[4, 4, 0, 0]} name="Revenue" />
  </BarChart>
  </ResponsiveContainer>
  </div>
@@ -111,9 +111,9 @@ export default function AnalyticsPage() {
  {/* Activations + Plan Distribution */}
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
  {/* License Activations */}
- <div className="rounded-xl p-6 bg-black border-gray-800">
+ <div className="rounded-xl p-6 bg-black border-zinc-800">
  <div className="flex items-center gap-2 mb-6">
- <Activity className="w-5 h-5 text-purple-500" />
+ <Activity className="w-5 h-5 text-zinc-300" />
  <h2 className="font-medium text-white">Daily Activations</h2>
  </div>
  <ResponsiveContainer width="100%" height={200}>
@@ -125,7 +125,7 @@ export default function AnalyticsPage() {
  <Line
  type="monotone"
  dataKey="downloads"
- stroke="#8b5cf6"
+ stroke="#a1a1aa"
  strokeWidth={2}
  dot={false}
  name="Activations"
@@ -135,9 +135,9 @@ export default function AnalyticsPage() {
  </div>
 
  {/* Plan Distribution */}
- <div className="rounded-xl p-6 bg-black border-gray-800">
+ <div className="rounded-xl p-6 bg-black border-zinc-800">
  <div className="flex items-center gap-2 mb-6">
- <TrendingUp className="w-5 h-5 text-orange-500" />
+ <TrendingUp className="w-5 h-5 text-zinc-400" />
  <h2 className="font-medium text-white">Plan Distribution</h2>
  </div>
  <ResponsiveContainer width="100%" height={200}>
@@ -163,7 +163,7 @@ export default function AnalyticsPage() {
  </div>
 
  {/* Platform Distribution */}
- <div className="rounded-xl p-6 bg-black border-gray-800">
+ <div className="rounded-xl p-6 bg-black border-zinc-800">
  <h2 className="font-medium mb-6 text-white">Platform Distribution</h2>
  <ResponsiveContainer width="100%" height={200}>
  <BarChart data={data?.platformChartData || []} layout="vertical">
@@ -171,7 +171,7 @@ export default function AnalyticsPage() {
  <XAxis type="number" tick={{ fontSize: 11, fill: '#a1a1aa' }} />
  <YAxis type="category" dataKey="name" tick={{ fontSize: 11, fill: '#a1a1aa' }} width={70} />
  <Tooltip />
- <Bar dataKey="value" fill="#3b82f6" radius={[0, 4, 4, 0]} name="Activations" />
+ <Bar dataKey="value" fill="#d4d4d8" radius={[0, 4, 4, 0]} name="Activations" />
  </BarChart>
  </ResponsiveContainer>
  </div>

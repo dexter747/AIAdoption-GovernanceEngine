@@ -135,7 +135,7 @@ function DesktopCallbackContent() {
  return (
  <div className="min-h-screen flex items-center justify-center bg-black">
  <div className="text-center">
- <Loader2 className="w-8 h-8 text-blue-500 animate-spin mx-auto mb-4" />
+ <Loader2 className="w-8 h-8 text-zinc-300 animate-spin mx-auto mb-4" />
  <p className="text-muted-foreground">Completing authentication...</p>
  </div>
  </div>
@@ -146,14 +146,14 @@ function DesktopCallbackContent() {
  return (
  <div className="min-h-screen flex items-center justify-center bg-black">
  <div className="text-center max-w-md px-4">
- <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-6 bg-red-900/30">
- <AlertCircle className="w-8 h-8 text-red-500" />
+ <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-6 bg-zinc-900/40">
+ <AlertCircle className="w-8 h-8 text-zinc-400" />
  </div>
  <h1 className="font-medium mb-2 text-white">Authentication Required</h1>
  <p className="text-muted-foreground mb-6">{error}</p>
  <a 
  href="/login?desktop=true"
- className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
+ className="inline-flex items-center gap-2 px-4 py-2 bg-white text-black rounded-lg hover:bg-zinc-200 transition-colors font-medium"
  >
  Sign In
  </a>
@@ -165,8 +165,8 @@ function DesktopCallbackContent() {
  return (
  <div className="min-h-screen flex items-center justify-center bg-black">
  <div className="text-center max-w-md px-4">
- <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-6 bg-green-900/30">
- <CheckCircle className="w-8 h-8 text-green-500" />
+ <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-6 bg-zinc-900/40">
+ <CheckCircle className="w-8 h-8 text-zinc-400" />
  </div>
  <h1 className="font-medium mb-2 text-white">Authentication Successful!</h1>
  <p className="text-muted-foreground mb-6">
@@ -181,7 +181,7 @@ function DesktopCallbackContent() {
  <div className="space-y-3">
  <button 
  onClick={handleManualRedirect}
- className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
+ className="w-full px-4 py-2 bg-white text-black rounded-lg hover:bg-zinc-200 transition-colors font-medium"
  >
  Open Desktop App Manually
  </button>
@@ -199,7 +199,7 @@ function LoadingFallback() {
  return (
  <div className="min-h-screen flex items-center justify-center bg-black">
  <div className="text-center">
- <Loader2 className="w-8 h-8 text-blue-500 animate-spin mx-auto mb-4" />
+ <Loader2 className="w-8 h-8 text-zinc-300 animate-spin mx-auto mb-4" />
  <p className="text-muted-foreground">Loading...</p>
  </div>
  </div>

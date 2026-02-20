@@ -44,14 +44,14 @@ export default function QueriesPage() {
  </div>
 
  {/* Query Input */}
- <div className="rounded-xl p-6 mb-6 bg-black border-gray-800">
+ <div className="rounded-xl p-6 mb-6 bg-black border-zinc-800">
  <form onSubmit={handleSubmit}>
  <div className="flex items-center gap-4 mb-4">
  <label className="text-sm font-medium text-muted-foreground">Database:</label>
  <select
  value={selectedDb}
  onChange={(e) => setSelectedDb(e.target.value)}
- className="px-3 py-1.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 border-gray-800 text-white"
+ className="px-3 py-1.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-600 bg-zinc-950 border-zinc-800 text-white"
  >
  {databases.map(db => (
  <option key={db.id} value={db.id}>{db.name}</option>
@@ -64,12 +64,12 @@ export default function QueriesPage() {
  onChange={(e) => setQuery(e.target.value)}
  placeholder="Ask a question about your data in plain English..."
  rows={3}
- className="w-full px-4 py-3 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none bg-gray-900 border-gray-800 text-white"
+ className="w-full px-4 py-3 rounded-xl placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-600 resize-none bg-zinc-950 border-zinc-800 text-white"
  />
  <button
  type="submit"
  disabled={isLoading || !query.trim()}
- className="absolute bottom-3 right-3 p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+ className="absolute bottom-3 right-3 p-2 bg-white text-black rounded-lg hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
  >
  {isLoading ? (
  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -88,7 +88,7 @@ export default function QueriesPage() {
  <button
  key={i}
  onClick={() => setQuery(example)}
- className="px-3 py-1.5 rounded-lg transition-colors bg-gray-900 text-muted-foreground hover:bg-gray-800"
+ className="px-3 py-1.5 rounded-lg transition-colors bg-zinc-950 text-muted-foreground hover:bg-zinc-900"
  >
  {example}
  </button>
@@ -98,22 +98,22 @@ export default function QueriesPage() {
  </div>
 
  {/* Sample Result */}
- <div className="flex-1 rounded-xl overflow-hidden bg-black border-gray-800">
- <div className="px-6 py-4 border-b flex items-center justify-between border-gray-800">
+ <div className="flex-1 rounded-xl overflow-hidden bg-black border-zinc-800">
+ <div className="px-6 py-4 border-b flex items-center justify-between border-zinc-800">
  <div className="flex items-center gap-2">
- <Sparkles className="w-5 h-5 text-blue-500" />
+ <Sparkles className="w-5 h-5 text-zinc-300" />
  <h2 className="font-medium text-white">Generated Query</h2>
  </div>
  <button
  onClick={handleCopy}
  className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-white"
  >
- {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+ {copied ? <Check className="w-4 h-4 text-zinc-400" /> : <Copy className="w-4 h-4" />}
  {copied ? 'Copied!' : 'Copy'}
  </button>
  </div>
  <div className="p-6">
- <div className="rounded-lg p-4 font-mono bg-gray-900 text-white">
+ <div className="rounded-lg p-4 font-mono bg-zinc-950 text-white">
  <pre className="whitespace-pre-wrap">
 {`SELECT 
  id,

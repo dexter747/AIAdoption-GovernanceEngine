@@ -63,16 +63,16 @@ export default function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
           <img
             src="/logo.png"
             alt="Velanova"
-            className="w-6 h-6 rounded-md flex-shrink-0"
+            className="w-9 h-9 rounded-lg flex-shrink-0"
           />
           {!collapsed && (
-            <span className="font-medium text-white">Velanova</span>
+            <span className="text-base font-medium tracking-tight text-white">Velanova</span>
           )}
         </div>
         {onToggle && !collapsed && (
           <button
             onClick={onToggle}
-            className="p-1.5 rounded-md text-muted-foreground app-region-no-drag hover:bg-gray-800"
+            className="p-1.5 rounded-md text-muted-foreground app-region-no-drag hover:bg-zinc-900"
             title="Collapse sidebar"
           >
             <PanelLeftClose className="w-4 h-4" />
@@ -85,7 +85,7 @@ export default function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
         <div className="px-2 py-2">
           <button
             onClick={onToggle}
-            className="w-full p-2 rounded-md text-muted-foreground flex items-center justify-center hover:bg-gray-800"
+            className="w-full p-2 rounded-md text-muted-foreground flex items-center justify-center hover:bg-zinc-900"
             title="Expand sidebar"
           >
             <PanelLeft className="w-4 h-4" />
@@ -107,8 +107,8 @@ export default function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
                     "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
                     collapsed && "justify-center px-2",
                     isActive
-                      ? "bg-blue-500 text-white"
-                      : "text-muted-foreground hover:text-white hover:bg-gray-900"
+                      ? "bg-zinc-800 text-white"
+                      : "text-muted-foreground hover:text-white hover:bg-zinc-950"
                   )}
                 >
                   <item.icon className="w-5 h-5 flex-shrink-0" />
@@ -121,10 +121,10 @@ export default function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
       </nav>
 
  {/* User & Logout */}
- <div className={cn("px-2 py-3 border-t relative border-gray-800", collapsed && "px-1")} ref={profileMenuRef}>
+ <div className={cn("px-2 py-3 border-t relative border-zinc-800", collapsed && "px-1")} ref={profileMenuRef}>
  {/* Profile Menu Popup */}
  {profileMenuOpen && !collapsed && (
- <div className="absolute bottom-full left-2 right-2 mb-2 rounded-xl shadow-2xl overflow-hidden z-50 bg-zinc-900 border-gray-800">
+ <div className="absolute bottom-full left-2 right-2 mb-2 rounded-xl shadow-2xl overflow-hidden z-50 bg-zinc-900 border-zinc-800">
  <div className="py-2">
  {profileMenuItems.map((item) => {
  const isActive = location.pathname === item.href;
@@ -136,8 +136,8 @@ export default function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
  className={cn(
  "flex items-center gap-3 px-4 py-2 text-sm font-medium transition-colors",
  isActive
- ? 'text-blue-500 bg-blue-500/10'
- : 'text-gray-300 hover:bg-background/5'
+ ? 'text-zinc-300 bg-white/5'
+ : 'text-zinc-400 hover:bg-background/5'
  )}
  >
  <item.icon className="w-4 h-4" />
@@ -153,13 +153,13 @@ export default function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
  {collapsed ? (
  <Link
  to="/profile-settings"
- className="w-full p-2 rounded-lg transition-colors flex items-center justify-center hover:bg-gray-900"
+ className="w-full p-2 rounded-lg transition-colors flex items-center justify-center hover:bg-zinc-950"
  title={user?.name || 'Profile'}
  >
  {user?.image ? (
  <img src={user.image} alt={user.name} className="w-8 h-8 rounded-full" />
  ) : (
- <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+ <div className="w-8 h-8 bg-zinc-800 rounded-full flex items-center justify-center">
  <span className="text-white text-sm font-medium">
  {user?.name?.charAt(0) || 'U'}
  </span>
@@ -169,12 +169,12 @@ export default function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
  ) : (
  <button
  onClick={() => setProfileMenuOpen(!profileMenuOpen)}
- className="w-full flex items-center gap-3 px-2 py-2 rounded-lg transition-colors hover:bg-gray-900"
+ className="w-full flex items-center gap-3 px-2 py-2 rounded-lg transition-colors hover:bg-zinc-950"
  >
  {user?.image ? (
  <img src={user.image} alt={user.name} className="w-8 h-8 rounded-full" />
  ) : (
- <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+ <div className="w-8 h-8 bg-zinc-800 rounded-full flex items-center justify-center flex-shrink-0">
  <span className="text-white text-sm font-medium">
  {user?.name?.charAt(0) || 'U'}
  </span>
@@ -199,7 +199,7 @@ export default function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
           onClick={logout}
           title="Sign Out"
           className={cn(
-            "w-full mt-2 flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-red-500 hover:bg-red-950 transition-colors",
+            "w-full mt-2 flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-zinc-400 hover:bg-zinc-950 transition-colors",
             collapsed && "justify-center px-2"
           )}
         >

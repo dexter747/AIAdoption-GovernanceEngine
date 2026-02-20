@@ -122,8 +122,8 @@ export default function ConnectionsDashboard() {
  switch (status) {
  case 'connected':
  return (
- <span className="flex items-center gap-1.5 text-green-400 text-xs">
- <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+ <span className="flex items-center gap-1.5 text-zinc-400 text-xs">
+ <span className="w-2 h-2 bg-zinc-700 rounded-full animate-pulse" />
  Connected
  </span>
  );
@@ -136,15 +136,15 @@ export default function ConnectionsDashboard() {
  );
  case 'connecting':
  return (
- <span className="flex items-center gap-1.5 text-blue-400 text-xs">
+ <span className="flex items-center gap-1.5 text-zinc-400 text-xs">
  <Loader2 className="w-3 h-3 animate-spin" />
  Connecting
  </span>
  );
  case 'error':
  return (
- <span className="flex items-center gap-1.5 text-red-400 text-xs">
- <span className="w-2 h-2 bg-red-400 rounded-full" />
+ <span className="flex items-center gap-1.5 text-zinc-400 text-xs">
+ <span className="w-2 h-2 bg-zinc-700 rounded-full" />
  Error
  </span>
  );
@@ -188,8 +188,8 @@ export default function ConnectionsDashboard() {
  <p className="text-white/50">Total Connections</p>
  <p className="font-medium mt-1 text-white">{connections.length}</p>
  </div>
- <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
- <Database className="w-6 h-6 text-blue-400" />
+ <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
+ <Database className="w-6 h-6 text-zinc-400" />
  </div>
  </div>
  </motion.div>
@@ -203,12 +203,12 @@ export default function ConnectionsDashboard() {
  <div className="flex items-center justify-between">
  <div>
  <p className="text-white/50">Active</p>
- <p className="text-3xl font-medium mt-1 text-green-500">
+ <p className="text-3xl font-medium mt-1 text-zinc-400">
  {connections.filter(c => c.status === 'connected').length}
  </p>
  </div>
- <div className="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
- <CheckCircle className="w-6 h-6 text-green-400" />
+ <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
+ <CheckCircle className="w-6 h-6 text-zinc-400" />
  </div>
  </div>
  </motion.div>
@@ -241,12 +241,12 @@ export default function ConnectionsDashboard() {
  <div className="flex items-center justify-between">
  <div>
  <p className="text-white/50">Errors</p>
- <p className="text-3xl font-medium mt-1 text-red-500">
+ <p className="text-3xl font-medium mt-1 text-zinc-400">
  {connections.filter(c => c.status === 'error').length}
  </p>
  </div>
- <div className="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center">
- <XCircle className="w-6 h-6 text-red-400" />
+ <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
+ <XCircle className="w-6 h-6 text-zinc-400" />
  </div>
  </div>
  </motion.div>
@@ -263,7 +263,7 @@ export default function ConnectionsDashboard() {
  className={cn(
  'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap',
  selectedCategory === category.id
- ? 'bg-blue-500 text-white'
+ ? 'bg-zinc-800 text-white'
  : 'bg-background/5 text-white/60 hover:bg-background/10 hover:text-white'
  )}
  >
@@ -283,7 +283,7 @@ export default function ConnectionsDashboard() {
  placeholder="Search connections..."
  value={searchQuery}
  onChange={(e) => setSearchQuery(e.target.value)}
- className="w-full rounded-xl pl-11 pr-4 py-3 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 bg-background/5 border-white/10 text-white placeholder:text-white/40"
+ className="w-full rounded-xl pl-11 pr-4 py-3 focus:outline-none focus:border-zinc-700 focus:ring-2 focus:ring-zinc-600/30 bg-background/5 border-white/10 text-white placeholder:text-white/40"
  />
  </div>
  <div className="flex gap-1 rounded-xl p-1 bg-background/5 border-white/10">
@@ -309,7 +309,7 @@ export default function ConnectionsDashboard() {
  {/* Existing Connections */}
  {isLoading ? (
  <div className="flex items-center justify-center py-20">
- <Loader2 className="w-8 h-8 animate-spin text-blue-400" />
+ <Loader2 className="w-8 h-8 animate-spin text-zinc-400" />
  </div>
  ) : filteredConnections.length > 0 ? (
  <div>
@@ -390,7 +390,7 @@ export default function ConnectionsDashboard() {
  <Button
  variant="ghost"
  size="sm"
- className="text-white/60 hover:text-red-400 hover:bg-red-500/10"
+ className="text-white/60 hover:text-zinc-400 hover:bg-white/5"
  onClick={() => deleteConnection(connection.id)}
  >
  <Trash2 className="w-3 h-3" />
@@ -426,7 +426,7 @@ export default function ConnectionsDashboard() {
  onClick={() => setSelectedType(key)}
  className={cn(
  'group relative p-4 bg-background/5 border border-white/10 rounded-xl hover:border-white/20 transition-all text-left',
- selectedType === key && 'border-blue-500 bg-blue-500/10'
+ selectedType === key && 'border-zinc-700 bg-white/5'
  )}
  >
  <div className={cn(
@@ -450,29 +450,29 @@ export default function ConnectionsDashboard() {
  initial={{ opacity: 0, y: 20 }}
  animate={{ opacity: 1, y: 0 }}
  transition={{ delay: 0.5 }}
- className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6"
+ className="bg-gradient-to-r from-white/5 to-white/5 border border-zinc-700/30 rounded-xl p-6"
  >
  <div className="flex items-start gap-4">
- <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center flex-shrink-0">
- <Zap className="w-6 h-6 text-blue-400" />
+ <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
+ <Zap className="w-6 h-6 text-zinc-400" />
  </div>
  <div>
  <h3 className="font-medium text-lg mb-2">Quick Setup Guide</h3>
  <div className="space-y-2 text-white/70 text-sm">
  <p className="flex items-center gap-2">
- <span className="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 text-xs flex items-center justify-center">1</span>
+ <span className="w-5 h-5 rounded-full bg-white/10 text-zinc-400 text-xs flex items-center justify-center">1</span>
  Select a connection type above
  </p>
  <p className="flex items-center gap-2">
- <span className="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 text-xs flex items-center justify-center">2</span>
+ <span className="w-5 h-5 rounded-full bg-white/10 text-zinc-400 text-xs flex items-center justify-center">2</span>
  Enter your database credentials
  </p>
  <p className="flex items-center gap-2">
- <span className="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 text-xs flex items-center justify-center">3</span>
+ <span className="w-5 h-5 rounded-full bg-white/10 text-zinc-400 text-xs flex items-center justify-center">3</span>
  Test the connection
  </p>
  <p className="flex items-center gap-2">
- <span className="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 text-xs flex items-center justify-center">4</span>
+ <span className="w-5 h-5 rounded-full bg-white/10 text-zinc-400 text-xs flex items-center justify-center">4</span>
  Start querying with natural language!
  </p>
  </div>
@@ -483,7 +483,7 @@ export default function ConnectionsDashboard() {
 
  {/* Security Note */}
  <div className="flex items-center gap-3 p-4 bg-background/5 border border-white/10 rounded-xl">
- <Shield className="w-5 h-5 text-green-400 flex-shrink-0" />
+ <Shield className="w-5 h-5 text-zinc-400 flex-shrink-0" />
  <p className="text-sm text-white/60">
  All connections are encrypted and stored securely on your local device. 
  Your credentials never leave your machine.

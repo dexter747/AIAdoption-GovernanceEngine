@@ -32,8 +32,8 @@ export function Sidebar() {
  {/* Logo */}
  <div className="h-16 flex items-center px-6 border-b border-border">
  <Link href="/dashboard" className="flex items-center gap-2">
- <img src="/logo.png" alt="Velanova" className="w-7 h-7 rounded-lg" />
- <span className="font-medium text-foreground">Admin</span>
+ <img src="/logo.png" alt="Velanova" className="w-10 h-10 rounded-xl" />
+ <span className="text-base font-medium tracking-tight text-foreground">Admin</span>
  </Link>
  </div>
 
@@ -48,7 +48,7 @@ export function Sidebar() {
  <Link
  href={item.href}
  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
- isActive ? 'bg-blue-500 text-white' : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
+ isActive ? 'bg-zinc-800 text-white' : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
  }`}
  >
  <item.icon className="w-5 h-5" />
@@ -63,7 +63,7 @@ export function Sidebar() {
  {/* User & Logout */}
  <div className="px-4 py-4 border-t border-border">
  <div className="flex items-center gap-3 px-3 py-2">
- <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+ <div className="w-8 h-8 bg-zinc-800 rounded-full flex items-center justify-center">
  <span className="text-white text-sm font-medium">A</span>
  </div>
  <div className="flex-1 min-w-0">
@@ -73,7 +73,7 @@ export function Sidebar() {
  </div>
  <button
  onClick={handleSignOut}
- className="w-full mt-2 flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-red-500 transition-colors hover:bg-red-950">
+ className="w-full mt-2 flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-zinc-400 transition-colors hover:bg-zinc-950">
  <LogOut className="w-5 h-5" />
  Sign Out
  </button>

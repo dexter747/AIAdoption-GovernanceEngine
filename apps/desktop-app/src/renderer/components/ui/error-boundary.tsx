@@ -71,8 +71,8 @@ export function ErrorDisplay({
  
  return (
  <div className={`flex flex-col items-center justify-center p-8 ${className}`}>
- <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4 bg-red-900/30">
- <AlertTriangle className="w-8 h-8 text-red-500" />
+ <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4 bg-zinc-900/40">
+ <AlertTriangle className="w-8 h-8 text-zinc-400" />
  </div>
  <h2 className="font-medium mb-2 text-white">
  {title}
@@ -97,12 +97,12 @@ interface ErrorCardProps {
 
 export function ErrorCard({ error, className = '' }: ErrorCardProps) {
  return (
- <div className={`border rounded-lg p-4 ${className} bg-red-900/20 border-red-800`}>
+ <div className={`border rounded-lg p-4 ${className} bg-zinc-900/30 border-zinc-800`}>
  <div className="flex items-start gap-3">
- <AlertTriangle className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" />
+ <AlertTriangle className="w-5 h-5 text-zinc-400 mt-0.5 flex-shrink-0" />
  <div>
- <p className="font-medium text-red-200">Error</p>
- <p className="mt-1 text-red-300">{error}</p>
+ <p className="font-medium text-zinc-500">Error</p>
+ <p className="mt-1 text-zinc-400">{error}</p>
  </div>
  </div>
  </div>
@@ -127,7 +127,7 @@ export function EmptyState({
  return (
  <div className={`flex flex-col items-center justify-center p-8 text-center ${className}`}>
  {icon && (
- <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4 bg-gray-800">
+ <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4 bg-zinc-900">
  {icon}
  </div>
  )}

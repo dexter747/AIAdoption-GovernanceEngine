@@ -50,23 +50,21 @@ const categories = ['All', 'Product', 'Engineering', 'Security', 'Tutorial'];
 
 export default function BlogPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-white/10 bg-black/80 backdrop-blur-xl sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-              <Sparkles className="w-4 h-4 text-white" />
-            </div>
+            <img src="/logo.png" alt="Velanova" className="w-10 h-10 rounded-xl" />
             <span className="font-medium text-white">Velanova</span>
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/download" className="text-sm text-gray-400 hover:text-white font-medium">
+            <Link href="/download" className="text-sm text-zinc-500 hover:text-white font-medium">
               Download
             </Link>
             <Link
               href="/login"
-              className="px-4 py-2 text-sm font-medium bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all"
+              className="px-4 py-2 text-sm font-medium bg-gradient-to-r from-zinc-400 to-zinc-600 text-white rounded-lg hover:from-zinc-300 hover:to-zinc-700 transition-all"
             >
               Sign In
             </Link>
@@ -77,7 +75,7 @@ export default function BlogPage() {
       {/* Hero */}
       <section className="relative overflow-hidden py-16 lg:py-24">
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-gradient-to-br from-blue-200/40 to-purple-200/40 rounded-full blur-[100px]" />
+          <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-gradient-to-br from-white/5 to-white/5 rounded-full blur-[100px]" />
         </div>
 
         <div className="container relative mx-auto px-6">
@@ -85,7 +83,7 @@ export default function BlogPage() {
             <h1 className="text-4xl sm:text-5xl font-medium text-white mb-4">
               Blog
             </h1>
-            <p className="text-lg text-gray-500 max-w-2xl mx-auto">
+            <p className="text-lg text-zinc-500 max-w-2xl mx-auto">
               News, tutorials, and insights about Velanova, database intelligence, and the future of data analytics.
             </p>
           </div>
@@ -101,8 +99,8 @@ export default function BlogPage() {
                 key={category}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap ${
                   category === 'All'
-                    ? 'bg-gray-900 text-white'
-                    : 'bg-black/10 text-gray-400 hover:bg-black/20'
+                    ? 'bg-zinc-950 text-white'
+                    : 'bg-black/10 text-zinc-500 hover:bg-black/20'
                 }`}
               >
                 {category}
@@ -121,30 +119,30 @@ export default function BlogPage() {
                 <Link
                   key={post.slug}
                   href={`/blog/${post.slug}`}
-                  className="group bg-black rounded-2xl border border-white/10 overflow-hidden hover:border-blue-300 hover:shadow-xl transition-all"
+                  className="group bg-black rounded-2xl border border-white/10 overflow-hidden hover:border-zinc-700/60 hover:shadow-xl transition-all"
                 >
                   {/* Image placeholder */}
-                  <div className="aspect-video bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center">
-                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                  <div className="aspect-video bg-gradient-to-br from-zinc-900/40 to-zinc-900/40 flex items-center justify-center">
+                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-zinc-400 to-zinc-600 flex items-center justify-center">
                       <Sparkles className="w-8 h-8 text-white" />
                     </div>
                   </div>
 
                   <div className="p-6">
                     <div className="flex items-center gap-3 mb-3">
-                      <span className="px-2.5 py-1 bg-blue-500/10 text-blue-400 text-xs font-medium rounded-full">
+                      <span className="px-2.5 py-1 bg-white/5 text-zinc-400 text-xs font-medium rounded-full">
                         {post.category}
                       </span>
                     </div>
 
-                    <h2 className="text-xl font-medium text-white mb-2 group-hover:text-blue-600 transition-colors">
+                    <h2 className="text-xl font-medium text-white mb-2 group-hover:text-zinc-400 transition-colors">
                       {post.title}
                     </h2>
-                    <p className="text-gray-500 text-sm mb-4 line-clamp-2">
+                    <p className="text-zinc-500 text-sm mb-4 line-clamp-2">
                       {post.excerpt}
                     </p>
 
-                    <div className="flex items-center gap-4 text-sm text-gray-400">
+                    <div className="flex items-center gap-4 text-sm text-zinc-500">
                       <span className="flex items-center gap-1">
                         <Calendar className="w-4 h-4" />
                         {post.date}
@@ -161,7 +159,7 @@ export default function BlogPage() {
 
             {/* Load More */}
             <div className="text-center mt-12">
-              <button className="px-8 py-3 bg-black/10 text-gray-300 font-medium rounded-xl hover:bg-black/20 transition-colors">
+              <button className="px-8 py-3 bg-black/10 text-zinc-400 font-medium rounded-xl hover:bg-black/20 transition-colors">
                 Load More Posts
               </button>
             </div>
@@ -170,7 +168,7 @@ export default function BlogPage() {
       </section>
 
       {/* Newsletter */}
-      <section className="py-16 bg-gradient-to-r from-blue-500 to-purple-600">
+      <section className="py-16 bg-gradient-to-r from-zinc-400 to-zinc-600">
         <div className="container mx-auto px-6">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-2xl sm:text-3xl font-medium text-white mb-4">
@@ -187,7 +185,7 @@ export default function BlogPage() {
               />
               <button
                 type="submit"
-                className="px-6 py-3 bg-black/10 text-blue-400 font-medium rounded-xl hover:bg-black/10 transition-colors flex items-center justify-center gap-2"
+                className="px-6 py-3 bg-black/10 text-zinc-400 font-medium rounded-xl hover:bg-black/10 transition-colors flex items-center justify-center gap-2"
               >
                 Subscribe
                 <ArrowRight className="w-4 h-4" />
@@ -200,11 +198,11 @@ export default function BlogPage() {
       {/* Footer */}
       <footer className="border-t border-white/10 py-8 bg-black">
         <div className="container mx-auto px-6 text-center">
-          <p className="text-sm text-gray-400">© 2025 Velanova. All rights reserved.</p>
+          <p className="text-sm text-zinc-500">© 2025 Velanova. All rights reserved.</p>
           <div className="flex justify-center gap-6 mt-4">
-            <Link href="/privacy" className="text-sm text-gray-400 hover:text-gray-400">Privacy</Link>
-            <Link href="/terms" className="text-sm text-gray-400 hover:text-gray-400">Terms</Link>
-            <Link href="/contact" className="text-sm text-gray-400 hover:text-gray-400">Contact</Link>
+            <Link href="/privacy" className="text-sm text-zinc-500 hover:text-zinc-500">Privacy</Link>
+            <Link href="/terms" className="text-sm text-zinc-500 hover:text-zinc-500">Terms</Link>
+            <Link href="/contact" className="text-sm text-zinc-500 hover:text-zinc-500">Contact</Link>
           </div>
         </div>
       </footer>

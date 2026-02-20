@@ -47,7 +47,7 @@ export default function ConnectionsPage() {
  </div>
  <button 
  onClick={() => setShowAddModal(true)}
- className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+ className="flex items-center gap-2 px-4 py-2 bg-white text-black rounded-lg hover:bg-zinc-200 transition-colors"
  >
  <Plus className="w-4 h-4" />
  Add Connection
@@ -59,7 +59,7 @@ export default function ConnectionsPage() {
  <h2 className="text-sm font-medium text-muted-foreground mb-4">Supported Databases</h2>
  <div className="flex flex-wrap gap-3">
  {['PostgreSQL', 'MySQL', 'Oracle', 'SQL Server', 'MongoDB', 'Salesforce', 'SAP HANA', 'SQLite'].map((db) => (
- <span key={db} className="px-3 py-1.5 rounded-lg bg-gray-900 text-muted-foreground">
+ <span key={db} className="px-3 py-1.5 rounded-lg bg-zinc-950 text-muted-foreground">
  {db}
  </span>
  ))}
@@ -71,19 +71,19 @@ export default function ConnectionsPage() {
  {connections.map((conn) => (
  <div 
  key={conn.id}
- className="rounded-xl p-6 bg-black border-gray-800"
+ className="rounded-xl p-6 bg-black border-zinc-800"
  >
  <div className="flex items-start justify-between">
  <div className="flex items-start gap-4">
- <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${ conn.status === 'connected' ? 'bg-green-500/10' : 'bg-secondary'}`}>
+ <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${ conn.status === 'connected' ? 'bg-white/5' : 'bg-secondary'}`}>
  <Database className={`w-6 h-6 ${
- conn.status === 'connected' ? 'text-green-500' : 'text-muted-foreground'
+ conn.status === 'connected' ? 'text-zinc-400' : 'text-muted-foreground'
  }`} />
  </div>
  <div>
  <div className="flex items-center gap-2">
  <h3 className="font-medium text-white">{conn.name}</h3>
- <span className={`px-2 py-0.5 font-medium rounded-full ${ conn.status === 'connected' ? 'bg-green-500/10 text-green-400' : 'bg-secondary text-muted-foreground'}`}>
+ <span className={`px-2 py-0.5 font-medium rounded-full ${ conn.status === 'connected' ? 'bg-white/5 text-zinc-400' : 'bg-secondary text-muted-foreground'}`}>
  {conn.status}
  </span>
  </div>
@@ -96,13 +96,13 @@ export default function ConnectionsPage() {
  </div>
  </div>
  <div className="flex items-center gap-2">
- <button className="p-2 text-muted-foreground hover:text-blue-500 rounded-lg transition-colors hover:bg-blue-950">
+ <button className="p-2 text-muted-foreground hover:text-zinc-300 rounded-lg transition-colors hover:bg-zinc-950">
  <Play className="w-4 h-4" />
  </button>
- <button className="p-2 text-muted-foreground rounded-lg transition-colors hover:text-gray-300 hover:bg-gray-900">
+ <button className="p-2 text-muted-foreground rounded-lg transition-colors hover:text-zinc-400 hover:bg-zinc-950">
  <Settings className="w-4 h-4" />
  </button>
- <button className="p-2 text-muted-foreground hover:text-red-500 rounded-lg transition-colors hover:bg-red-950">
+ <button className="p-2 text-muted-foreground hover:text-zinc-400 rounded-lg transition-colors hover:bg-zinc-950">
  <Trash2 className="w-4 h-4" />
  </button>
  </div>
@@ -113,13 +113,13 @@ export default function ConnectionsPage() {
 
  {/* Empty State */}
  {connections.length === 0 && (
- <div className="rounded-xl p-12 text-center bg-gray-900 border-gray-700">
- <Database className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+ <div className="rounded-xl p-12 text-center bg-zinc-950 border-zinc-800">
+ <Database className="w-12 h-12 text-zinc-400 mx-auto mb-4" />
  <h3 className="font-medium mb-2 text-white">No connections yet</h3>
  <p className="text-muted-foreground mb-4">Add your first database connection to get started.</p>
  <button 
  onClick={() => setShowAddModal(true)}
- className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+ className="inline-flex items-center gap-2 px-4 py-2 bg-white text-black rounded-lg hover:bg-zinc-200 transition-colors"
  >
  <Plus className="w-4 h-4" />
  Add Connection

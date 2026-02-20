@@ -400,15 +400,15 @@ export default function ProfileSettingsPage() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 border rounded-lg">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center">
-                      <Shield className="w-5 h-5 text-green-600" />
+                    <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center">
+                      <Shield className="w-5 h-5 text-zinc-300" />
                     </div>
                     <div>
                       <p className="font-medium">Desktop App (Current)</p>
                       <p className="text-sm text-muted-foreground">Last active: Just now</p>
                     </div>
                   </div>
-                  <span className="text-xs text-green-600 font-medium">Active</span>
+                  <span className="text-xs text-zinc-300 font-medium">Active</span>
                 </div>
               </div>
             </CardContent>

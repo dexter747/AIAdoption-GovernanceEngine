@@ -47,8 +47,8 @@ export default function AdminLoginPage() {
  {/* Logo */}
  <div className="text-center mb-8">
  <div className="flex items-center justify-center gap-2 mb-4">
- <img src="/logo.png" alt="Velanova" className="w-8 h-8 rounded-lg" />
- <span className="text-2xl font-medium text-foreground">Velanova</span>
+ <img src="/logo.png" alt="Velanova" className="w-14 h-14 rounded-2xl" />
+ <span className="text-2xl font-medium tracking-tight text-foreground">Velanova</span>
  </div>
  <h1 className="text-xl font-medium text-foreground mb-2">Admin Portal</h1>
  <p className="text-sm text-muted-foreground">Sign in with your admin credentials</p>
@@ -71,7 +71,7 @@ export default function AdminLoginPage() {
  placeholder="admin@gmail.com"
  required
  autoComplete="email"
- className="w-full pl-10 pr-4 py-2.5 border border-border rounded-lg text-sm text-foreground placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+ className="w-full pl-10 pr-4 py-2.5 border border-border rounded-lg text-sm text-foreground placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-600 focus:border-transparent"
  />
  </div>
  </div>
@@ -91,7 +91,7 @@ export default function AdminLoginPage() {
  placeholder="••••••••"
  required
  autoComplete="current-password"
- className="w-full pl-10 pr-10 py-2.5 border border-border rounded-lg text-sm text-foreground placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+ className="w-full pl-10 pr-10 py-2.5 border border-border rounded-lg text-sm text-foreground placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-600 focus:border-transparent"
  />
  <button
  type="button"
@@ -105,7 +105,7 @@ export default function AdminLoginPage() {
 
  {/* Error */}
  {error && (
- <div className="p-3 bg-red-950 border border-red-800 rounded-lg text-sm text-red-400">
+ <div className="p-3 bg-zinc-950 border border-zinc-800 rounded-lg text-sm text-zinc-400">
  {error}
  </div>
  )}
@@ -114,7 +114,7 @@ export default function AdminLoginPage() {
  <button
  type="submit"
  disabled={isLoading}
- className="w-full py-2.5 bg-blue-500 hover:bg-blue-600 disabled:opacity-60 text-white font-medium rounded-lg transition-colors"
+ className="w-full py-2.5 bg-white hover:bg-zinc-200 disabled:opacity-60 text-black font-medium rounded-lg transition-colors"
  >
  {isLoading ? 'Signing in...' : 'Sign in'}
  </button>

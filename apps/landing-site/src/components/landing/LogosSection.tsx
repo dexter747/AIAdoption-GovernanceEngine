@@ -2,7 +2,7 @@ const integrations = ['PostgreSQL', 'MySQL', 'Oracle', 'MongoDB', 'SQL Server', 
 
 export function LogosSection() {
  return (
- <section className="py-12 border-t border-gray-800">
+ <section className="py-12 border-t border-zinc-800">
  <div className="max-w-6xl mx-auto px-6">
  <p className="font-medium uppercase tracking-widest mb-6 text-muted-foreground">
  Works with your existing infrastructure

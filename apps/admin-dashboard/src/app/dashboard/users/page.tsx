@@ -73,7 +73,7 @@ export default function UsersPage() {
  return (
  <div className="p-8 flex items-center justify-center min-h-screen">
  <div className="text-center">
- <RefreshCw className="w-8 h-8 text-blue-500 animate-spin mx-auto mb-4" />
+ <RefreshCw className="w-8 h-8 text-zinc-300 animate-spin mx-auto mb-4" />
  <p className="text-muted-foreground">Loading users...</p>
  </div>
  </div>
@@ -91,12 +91,12 @@ export default function UsersPage() {
  <div className="flex gap-3">
  <button
  onClick={fetchUsers}
- className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground rounded-lg hover:text-white border-gray-800"
+ className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground rounded-lg hover:text-white border-zinc-800"
  >
  <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
  Refresh
  </button>
- <button className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+ <button className="flex items-center gap-2 px-4 py-2 bg-white text-black rounded-lg hover:bg-zinc-200 transition-colors">
  <UserPlus className="w-4 h-4" />
  Add User
  </button>
@@ -112,13 +112,13 @@ export default function UsersPage() {
  placeholder="Search users..."
  value={searchQuery}
  onChange={(e) => setSearchQuery(e.target.value)}
- className="w-full pl-10 pr-4 py-2 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-black border-gray-800 text-white"
+ className="w-full pl-10 pr-4 py-2 rounded-lg placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-600 bg-black border-zinc-800 text-white"
  />
  </div>
  <select
  value={filterPlan}
  onChange={(e) => setFilterPlan(e.target.value)}
- className="px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-black border-gray-800 text-white"
+ className="px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-600 bg-black border-zinc-800 text-white"
  >
  <option value="all">All Plans</option>
  <option value="Free">Free</option>
@@ -128,7 +128,7 @@ export default function UsersPage() {
  <select
  value={filterStatus}
  onChange={(e) => setFilterStatus(e.target.value)}
- className="px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-black border-gray-800 text-white"
+ className="px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-600 bg-black border-zinc-800 text-white"
  >
  <option value="all">All Status</option>
  <option value="Active">Active</option>
@@ -139,30 +139,30 @@ export default function UsersPage() {
 
  {/* Stats */}
  <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
- <div className="rounded-lg p-4 bg-black border-gray-800">
+ <div className="rounded-lg p-4 bg-black border-zinc-800">
  <p className="font-medium text-white">{total}</p>
  <p className="text-sm text-muted-foreground">Total Users</p>
  </div>
- <div className="rounded-lg p-4 bg-black border-gray-800">
- <p className="text-2xl font-medium text-green-500">{stats.active}</p>
+ <div className="rounded-lg p-4 bg-black border-zinc-800">
+ <p className="text-2xl font-medium text-zinc-400">{stats.active}</p>
  <p className="text-sm text-muted-foreground">Active</p>
  </div>
- <div className="rounded-lg p-4 bg-black border-gray-800">
- <p className="text-2xl font-medium text-yellow-500">{stats.pending}</p>
+ <div className="rounded-lg p-4 bg-black border-zinc-800">
+ <p className="text-2xl font-medium text-zinc-400">{stats.pending}</p>
  <p className="text-sm text-muted-foreground">Pending</p>
  </div>
- <div className="rounded-lg p-4 bg-black border-gray-800">
+ <div className="rounded-lg p-4 bg-black border-zinc-800">
  <p className="text-2xl font-medium text-muted-foreground">{stats.inactive}</p>
  <p className="text-sm text-muted-foreground">Inactive</p>
  </div>
  </div>
 
  {/* Users Table */}
- <div className="rounded-xl overflow-hidden bg-black border-gray-800">
+ <div className="rounded-xl overflow-hidden bg-black border-zinc-800">
  <div className="overflow-x-auto">
  <table className="w-full">
  <thead>
- <tr className="border-b border-gray-800 bg-gray-900/50">
+ <tr className="border-b border-zinc-800 bg-zinc-950/50">
  <th className="text-left px-6 py-3 text-xs font-medium text-muted-foreground uppercase">User</th>
  <th className="text-left px-6 py-3 text-xs font-medium text-muted-foreground uppercase">Plan</th>
  <th className="text-left px-6 py-3 text-xs font-medium text-muted-foreground uppercase">Status</th>
@@ -180,10 +180,10 @@ export default function UsersPage() {
  </tr>
  ) : (
  users.map((user) => (
- <tr key={user.id} className="border-b last:border-0 border-gray-900 hover:bg-gray-900/50">
+ <tr key={user.id} className="border-b last:border-0 border-zinc-900 hover:bg-zinc-950/50">
  <td className="px-6 py-4">
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+ <div className="w-10 h-10 bg-zinc-800 rounded-full flex items-center justify-center">
  <span className="text-white text-sm font-medium">{user.name.charAt(0).toUpperCase()}</span>
  </div>
  <div>
@@ -193,12 +193,12 @@ export default function UsersPage() {
  </div>
  </td>
  <td className="px-6 py-4">
- <span className={`px-2 py-1 font-medium rounded-full ${ user.plan === 'Enterprise' ? 'bg-purple-900/30 text-purple-400' : user.plan === 'Pro' ? 'bg-blue-900/30 text-blue-400' : 'bg-secondary text-muted-foreground' }`}>
+ <span className={`px-2 py-1 font-medium rounded-full ${ user.plan === 'Enterprise' ? 'bg-zinc-900/40 text-zinc-400' : user.plan === 'Pro' ? 'bg-zinc-900/40 text-zinc-400' : 'bg-secondary text-muted-foreground' }`}>
  {user.plan}
  </span>
  </td>
  <td className="px-6 py-4">
- <span className={`px-2 py-1 font-medium rounded-full ${ user.status === 'Active' ? 'bg-green-900/30 text-green-400' : user.status === 'Pending' ? 'bg-yellow-900/30 text-yellow-400' : 'bg-secondary text-muted-foreground' }`}>
+ <span className={`px-2 py-1 font-medium rounded-full ${ user.status === 'Active' ? 'bg-zinc-900/40 text-zinc-400' : user.status === 'Pending' ? 'bg-zinc-900/40 text-zinc-400' : 'bg-secondary text-muted-foreground' }`}>
  {user.status}
  </span>
  </td>
@@ -210,13 +210,13 @@ export default function UsersPage() {
  </td>
  <td className="px-6 py-4">
  <div className="flex items-center justify-end gap-2">
- <button className="p-1.5 text-muted-foreground hover:text-blue-500 transition-colors" title="Send Email">
+ <button className="p-1.5 text-muted-foreground hover:text-zinc-300 transition-colors" title="Send Email">
  <Mail className="w-4 h-4" />
  </button>
- <button className="p-1.5 text-muted-foreground hover:text-yellow-500 transition-colors" title="Suspend">
+ <button className="p-1.5 text-muted-foreground hover:text-zinc-400 transition-colors" title="Suspend">
  <Ban className="w-4 h-4" />
  </button>
- <button className="p-1.5 text-muted-foreground hover:text-red-500 transition-colors" title="Delete">
+ <button className="p-1.5 text-muted-foreground hover:text-zinc-400 transition-colors" title="Delete">
  <Trash2 className="w-4 h-4" />
  </button>
  </div>
@@ -229,7 +229,7 @@ export default function UsersPage() {
  </div>
  
  {/* Pagination */}
- <div className="px-6 py-4 border-t flex items-center justify-between border-gray-800">
+ <div className="px-6 py-4 border-t flex items-center justify-between border-zinc-800">
  <p className="text-sm text-muted-foreground">
  Showing <span className="font-medium text-white">{users.length}</span> of <span className="font-medium text-white">{total}</span> users
  </p>
@@ -237,14 +237,14 @@ export default function UsersPage() {
  <button 
  onClick={() => setPage(p => Math.max(1, p - 1))}
  disabled={page === 1}
- className="px-3 py-1.5 text-sm font-medium text-muted-foreground rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:text-white border-gray-800"
+ className="px-3 py-1.5 text-sm font-medium text-muted-foreground rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:text-white border-zinc-800"
  >
  Previous
  </button>
  <button 
  onClick={() => setPage(p => p + 1)}
  disabled={users.length < 10}
- className="px-3 py-1.5 text-sm font-medium text-muted-foreground rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:text-white border-gray-800"
+ className="px-3 py-1.5 text-sm font-medium text-muted-foreground rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:text-white border-zinc-800"
  >
  Next
  </button>

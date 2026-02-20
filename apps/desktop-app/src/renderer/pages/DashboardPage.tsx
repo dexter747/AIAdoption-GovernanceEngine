@@ -41,10 +41,10 @@ const DEFAULT_STATS: DashboardStats = {
 };
 
 const QUICK_ACTIONS = [
- { icon: Plus, label: 'New Connection', href: '/connections-dashboard', color: 'from-blue-500 to-cyan-500' },
- { icon: MessageSquare, label: 'Start Chat', href: '/chat', color: 'from-purple-500 to-pink-500' },
- { icon: Brain, label: 'API Keys', href: '/settings/api-keys', color: 'from-orange-500 to-red-500' },
- { icon: Shield, label: 'License', href: '/license', color: 'from-green-500 to-emerald-500' },
+ { icon: Plus, label: 'New Connection', href: '/connections-dashboard', color: 'from-zinc-400 to-zinc-500' },
+ { icon: MessageSquare, label: 'Start Chat', href: '/chat', color: 'from-zinc-400 to-zinc-500' },
+ { icon: Brain, label: 'API Keys', href: '/settings/api-keys', color: 'from-zinc-400 to-zinc-600' },
+ { icon: Shield, label: 'License', href: '/license', color: 'from-zinc-500 to-zinc-500' },
 ];
 
 const DB_ICONS: Record<string, string> = {
@@ -139,7 +139,7 @@ export default function DashboardPage() {
  </div>
  <Link
  to="/chat"
- className="flex items-center gap-2 px-5 py-2.5 bg-blue-500 text-white rounded-xl font-medium hover:bg-blue-600 transition-all shadow-lg shadow-blue-500/25"
+ className="flex items-center gap-2 px-5 py-2.5 bg-white text-black rounded-xl font-medium hover:bg-zinc-200 transition-all shadow-lg shadow-white/5"
  >
  <Sparkles className="w-4 h-4" />
  Start AI Chat
@@ -167,11 +167,11 @@ export default function DashboardPage() {
  <action.icon className="w-5 h-5 text-white" />
  </div>
  <div className="flex-1">
- <p className="font-medium group-hover:text-blue-500 transition-colors text-white">
+ <p className="font-medium group-hover:text-zinc-300 transition-colors text-white">
  {action.label}
  </p>
  </div>
- <ChevronRight className="w-4 h-4 group-hover:text-blue-500 transition-colors text-white/30" />
+ <ChevronRight className="w-4 h-4 group-hover:text-zinc-300 transition-colors text-white/30" />
  </Link>
  ))}
  </motion.div>
@@ -194,26 +194,26 @@ export default function DashboardPage() {
  <div className="flex items-center justify-between mb-4">
  <div className={cn(
  "w-12 h-12 rounded-xl flex items-center justify-center",
- stat.color === 'blue' ? 'bg-blue-500/10' :
- stat.color === 'green' ? 'bg-green-500/10' :
- stat.color === 'purple' ? 'bg-purple-500/10' :
- 'bg-orange-500/10'
+ stat.color === 'blue' ? 'bg-white/5' :
+ stat.color === 'green' ? 'bg-white/5' :
+ stat.color === 'purple' ? 'bg-white/5' :
+ 'bg-white/5'
  )}>
  <stat.icon className={cn(
  "w-6 h-6",
- stat.color === 'blue' ? 'text-blue-500' :
- stat.color === 'green' ? 'text-green-500' :
- stat.color === 'purple' ? 'text-purple-500' :
- 'text-orange-500'
+ stat.color === 'blue' ? 'text-zinc-300' :
+ stat.color === 'green' ? 'text-zinc-400' :
+ stat.color === 'purple' ? 'text-zinc-300' :
+ 'text-zinc-400'
  )} />
  </div>
- <div className="flex items-center gap-1 text-green-500 text-sm font-medium">
+ <div className="flex items-center gap-1 text-zinc-400 text-sm font-medium">
  <ArrowUpRight className="w-4 h-4" />
  </div>
  </div>
  <p className="font-medium mb-1 text-white">{stat.value}</p>
  <p className="text-white/50">{stat.name}</p>
- <p className="text-xs text-green-500 mt-2">{stat.trend}</p>
+ <p className="text-xs text-zinc-400 mt-2">{stat.trend}</p>
  </motion.div>
  ))}
  </motion.div>
@@ -229,7 +229,7 @@ export default function DashboardPage() {
  >
  <div className="px-6 py-5 border-b flex items-center justify-between border-white/10">
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+ <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-zinc-400 to-zinc-600 flex items-center justify-center">
  <Activity className="w-5 h-5 text-white" />
  </div>
  <div>
@@ -237,7 +237,7 @@ export default function DashboardPage() {
  <p className="text-white/40">AI-powered database queries</p>
  </div>
  </div>
- <Link to="/queries" className="text-sm text-blue-500 hover:text-blue-600 font-medium flex items-center gap-1">
+ <Link to="/queries" className="text-sm text-zinc-300 hover:text-zinc-400 font-medium flex items-center gap-1">
  View All
  <ExternalLink className="w-3 h-3" />
  </Link>
@@ -261,7 +261,7 @@ export default function DashboardPage() {
  {query.model && (
  <>
  <span className="text-white/30">•</span>
- <span className="text-xs text-blue-500 flex items-center gap-1">
+ <span className="text-xs text-zinc-300 flex items-center gap-1">
  <Sparkles className="w-3 h-3" />
  {query.model}
  </span>
@@ -272,10 +272,10 @@ export default function DashboardPage() {
  <span className={cn(
  "px-2.5 py-1 text-xs font-medium rounded-full",
  query.status === 'success' 
- ? 'bg-green-500/10 text-green-400' 
+ ? 'bg-white/5 text-zinc-400' 
  : query.status === 'error'
- ? 'bg-red-500/10 text-red-400'
- : 'bg-yellow-500/10 text-yellow-400'
+ ? 'bg-white/5 text-zinc-400'
+ : 'bg-white/5 text-zinc-400'
  )}>
  {query.status}
  </span>
@@ -294,7 +294,7 @@ export default function DashboardPage() {
  >
  <div className="px-6 py-5 border-b flex items-center justify-between border-white/10">
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
+ <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-zinc-500 to-zinc-600 flex items-center justify-center">
  <Server className="w-5 h-5 text-white" />
  </div>
  <div>
@@ -302,7 +302,7 @@ export default function DashboardPage() {
  <p className="text-white/40">Active data sources</p>
  </div>
  </div>
- <Link to="/connections-dashboard" className="text-sm text-blue-500 hover:text-blue-600 font-medium flex items-center gap-1">
+ <Link to="/connections-dashboard" className="text-sm text-zinc-300 hover:text-zinc-400 font-medium flex items-center gap-1">
  Add New
  <Plus className="w-3 h-3" />
  </Link>
@@ -316,7 +316,7 @@ export default function DashboardPage() {
  <p className="mb-4 text-white/50">No databases connected yet</p>
  <Link
  to="/connections-dashboard"
- className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+ className="inline-flex items-center gap-2 px-4 py-2 bg-white text-black rounded-lg hover:bg-zinc-200 transition-colors"
  >
  <Plus className="w-4 h-4" />
  Add Connection
@@ -328,7 +328,7 @@ export default function DashboardPage() {
  <div className="flex items-center gap-4">
  <div className={cn(
  "w-12 h-12 rounded-xl flex items-center justify-center text-2xl",
- db.status === 'connected' ? 'bg-green-500/10' : 'bg-background/5'
+ db.status === 'connected' ? 'bg-white/5' : 'bg-background/5'
  )}>
  {db.icon}
  </div>
@@ -341,7 +341,7 @@ export default function DashboardPage() {
  <span className={cn(
  "px-2.5 py-1 text-xs font-medium rounded-full",
  db.status === 'connected' 
- ? 'bg-green-500/10 text-green-400' 
+ ? 'bg-white/5 text-zinc-400' 
  : 'bg-background/5 text-white/40'
  )}>
  {db.status}
@@ -360,11 +360,11 @@ export default function DashboardPage() {
  initial={{ opacity: 0, y: 20 }}
  animate={{ opacity: 1, y: 0 }}
  transition={{ delay: 0.4 }}
- className="mt-8 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-2xl p-6 border-white/10"
+ className="mt-8 bg-gradient-to-r from-white/5 via-white/5 to-white/5 rounded-2xl p-6 border-white/10"
  >
  <div className="flex items-center justify-between mb-6">
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+ <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-zinc-400 to-zinc-600 flex items-center justify-center">
  <Brain className="w-5 h-5 text-white" />
  </div>
  <div>
@@ -372,7 +372,7 @@ export default function DashboardPage() {
  <p className="text-white/40">Configured LLM providers</p>
  </div>
  </div>
- <Link to="/settings/api-keys" className="text-sm text-blue-500 hover:text-blue-600 font-medium">
+ <Link to="/settings/api-keys" className="text-sm text-zinc-300 hover:text-zinc-400 font-medium">
  Configure →
  </Link>
  </div>
@@ -383,7 +383,7 @@ export default function DashboardPage() {
  { name: 'Google', models: ['Gemini 2.0', 'Gemini 1.5 Pro'], logo: '🔵', configured: false },
  { name: 'Groq', models: ['Llama 3.3', 'Mixtral'], logo: '🦙', configured: true },
  { name: 'Mistral', models: ['Mistral Large', 'Codestral'], logo: '🟠', configured: false },
- { name: 'xAI', models: ['Grok 2'], logo: '⚫', configured: false }, ].map((provider) => ( <div key={provider.name} className={cn( "p-4 rounded-xl transition-all", provider.configured ? "bg-background : "bg-secondary opacity-60" )} > <div className="flex items-center gap-2 mb-2"> <span className="text-xl">{provider.logo}</span> <span className="font-medium text-white">{provider.name}</span> {provider.configured && <Star className="w-3 h-3 text-yellow-500 ml-auto" />} </div> <p className="truncate text-white/40"> {provider.models.join( bg-background/[0.02] border-white/10', ')}
+ { name: 'xAI', models: ['Grok 2'], logo: '⚫', configured: false }, ].map((provider) => ( <div key={provider.name} className={cn( "p-4 rounded-xl transition-all", provider.configured ? "bg-background : "bg-secondary opacity-60" )} > <div className="flex items-center gap-2 mb-2"> <span className="text-xl">{provider.logo}</span> <span className="font-medium text-white">{provider.name}</span> {provider.configured && <Star className="w-3 h-3 text-zinc-400 ml-auto" />} </div> <p className="truncate text-white/40"> {provider.models.join( bg-background/[0.02] border-white/10', ')}
  </p>
  </div>
  ))}

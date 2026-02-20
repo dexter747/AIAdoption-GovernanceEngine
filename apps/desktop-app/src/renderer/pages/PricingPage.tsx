@@ -66,11 +66,11 @@ export default function PricingPage() {
  {plans.map((plan) => (
  <div
  key={plan.name}
- className={`relative rounded-2xl p-6 border ${plan.popular ? 'border-blue-500 ring-2 ring-blue-500' : 'border-gray-800'} bg-black`}
+ className={`relative rounded-2xl p-6 border ${plan.popular ? 'border-zinc-700 ring-2 ring-zinc-600' : 'border-zinc-800'} bg-black`}
  >
  {plan.popular && (
  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
- <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-500 text-white text-xs font-medium rounded-full">
+ <span className="inline-flex items-center gap-1 px-3 py-1 bg-zinc-800 text-white text-xs font-medium rounded-full">
  <Sparkles className="w-3 h-3" />
  Most Popular
  </span>
@@ -89,14 +89,14 @@ export default function PricingPage() {
  <ul className="space-y-3 mb-6">
  {plan.features.map((feature, i) => (
  <li key={i} className="flex items-center gap-2 text-muted-foreground">
- <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
+ <Check className="w-4 h-4 text-zinc-400 flex-shrink-0" />
  {feature}
  </li>
  ))}
  </ul>
 
  <button
- className={`w-full py-2.5 rounded-lg text-sm font-medium transition-colors ${ plan.current ? 'bg-secondary text-muted-foreground cursor-default' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+ className={`w-full py-2.5 rounded-lg text-sm font-medium transition-colors ${ plan.current ? 'bg-secondary text-muted-foreground cursor-default' : 'bg-white text-black hover:bg-zinc-200 hover:text-black'}`}
  disabled={plan.current}
  >
  {plan.cta}
@@ -108,7 +108,7 @@ export default function PricingPage() {
  {/* FAQ or Additional Info */}
  <div className="mt-12 text-center">
  <p className="text-sm text-muted-foreground">
- Need a custom plan? <button className="text-blue-500 hover:underline">Contact sales</button>
+ Need a custom plan? <button className="text-zinc-300 hover:underline">Contact sales</button>
  </p>
  </div>
  </div>

@@ -60,12 +60,13 @@ export function Navbar() {
 
  return (
  <nav className="fixed top-4 left-0 right-0 z-50 px-4 sm:px-6 lg:px-8">
- <div className="max-w-4xl mx-auto backdrop-blur-2xl rounded-2xl bg-black/70 border-gray-800/50 shadow-black/50">
+ <div className="max-w-4xl mx-auto backdrop-blur-2xl rounded-2xl bg-black/70 border-zinc-800/50 shadow-black/50">
  <div className="px-6">
  <div className="h-16 flex items-center justify-between gap-4">
  {/* Logo */}
- <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-              <img src="/logo.png" alt="Velanova" className="w-8 h-8 rounded-lg" />
+ <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
+ <img src="/logo.png" alt="Velanova" className="w-10 h-10 rounded-xl" />
+ <span className="text-lg font-medium tracking-tight text-white">Velanova</span>
  </Link>
 
  {/* Desktop Nav */}
@@ -74,7 +75,7 @@ export function Navbar() {
  <Link
  key={item.name}
  href={item.href}
- className="px-3 py-2 font-medium transition-colors rounded-lg whitespace-nowrap text-gray-300 hover:text-white hover:bg-gray-800"
+ className="px-3 py-2 font-medium transition-colors rounded-lg whitespace-nowrap text-zinc-400 hover:text-white hover:bg-zinc-900"
  >
  {item.name}
  </Link>
@@ -85,7 +86,7 @@ export function Navbar() {
  <div className="flex items-center gap-2 flex-shrink-0">
  <Link
  href="/download"
- className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 font-medium transition-colors rounded-lg whitespace-nowrap text-gray-300 hover:text-white hover:bg-gray-800"
+ className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 font-medium transition-colors rounded-lg whitespace-nowrap text-zinc-400 hover:text-white hover:bg-zinc-900"
  >
  <Download className="w-4 h-4" />
  Download
@@ -95,7 +96,7 @@ export function Navbar() {
  <div className="relative">
  <button
  onClick={() => setUserMenuOpen(!userMenuOpen)}
- className="flex items-center gap-2 px-2 py-1 rounded-lg transition-colors hover:bg-gray-800"
+ className="flex items-center gap-2 px-2 py-1 rounded-lg transition-colors hover:bg-zinc-900"
  >
  {user.image ? (
  <img
@@ -106,7 +107,7 @@ export function Navbar() {
  />
  ) : null}
  <div className={cn(
- "w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center",
+ "w-7 h-7 rounded-full bg-white flex items-center justify-center",
  user.image ? "hidden" : ""
  )}>
  <span className="text-white text-xs font-medium">
@@ -116,14 +117,14 @@ export function Navbar() {
  </button>
 
  {userMenuOpen && (
- <div className="absolute right-0 top-full mt-2 w-56 rounded-xl shadow-xl py-1 overflow-hidden bg-black border-gray-800">
- <div className="px-4 py-3 border-b border-gray-800">
- <p className="font-semibold truncate text-white">{user.name}</p>
+ <div className="absolute right-0 top-full mt-2 w-56 rounded-xl shadow-xl py-1 overflow-hidden bg-black border-zinc-800">
+ <div className="px-4 py-3 border-b border-zinc-800">
+ <p className="font-medium truncate text-white">{user.name}</p>
  <p className="truncate text-muted-foreground">{user.email}</p>
  </div>
  <Link
  href="/download"
- className="flex items-center gap-3 px-4 py-2.5 font-medium transition-colors text-gray-300 hover:bg-gray-800"
+ className="flex items-center gap-3 px-4 py-2.5 font-medium transition-colors text-zinc-400 hover:bg-zinc-900"
  onClick={() => setUserMenuOpen(false)}
  >
  <Download className="w-4 h-4" />
@@ -131,7 +132,7 @@ export function Navbar() {
  </Link>
  <button
  onClick={handleSignOut}
- className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-900/30"
+ className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-zinc-300 transition-colors hover:bg-zinc-900/40"
  >
  <LogOut className="w-4 h-4" />
  Sign Out
@@ -142,17 +143,17 @@ export function Navbar() {
  ) : (
  <Link
  href="/login"
- className="px-4 py-2 text-sm font-medium bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all whitespace-nowrap"
+ className="px-4 py-2 text-sm font-medium bg-white text-black rounded-lg hover:bg-zinc-200 transition-all whitespace-nowrap"
  >
  Sign In
  </Link>
  )}
 
  <button
- className="md:hidden p-2 rounded-lg transition-colors flex-shrink-0 hover:bg-gray-800"
+ className="md:hidden p-2 rounded-lg transition-colors flex-shrink-0 hover:bg-zinc-900"
  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
  >
- {mobileMenuOpen ? <X className="w-5 h-5 text-gray-300" /> : <Menu className="w-5 h-5 text-gray-300" />}
+ {mobileMenuOpen ? <X className="w-5 h-5 text-zinc-400" /> : <Menu className="w-5 h-5 text-zinc-400" />}
  </button>
  </div>
  </div>
@@ -160,13 +161,13 @@ export function Navbar() {
 
  {/* Mobile Menu */}
  {mobileMenuOpen && (
- <div className="md:hidden border-t border-gray-800">
+ <div className="md:hidden border-t border-zinc-800">
  <div className="px-6 py-4 space-y-1">
  {navLinks.map((item) => (
  <Link
  key={item.name}
  href={item.href}
- className="block px-4 py-3 font-medium rounded-lg transition-colors text-gray-300 hover:text-white hover:bg-gray-800"
+ className="block px-4 py-3 font-medium rounded-lg transition-colors text-zinc-400 hover:text-white hover:bg-zinc-900"
  onClick={() => setMobileMenuOpen(false)}
  >
  {item.name}
@@ -175,7 +176,7 @@ export function Navbar() {
  {!user && (
  <Link
  href="/login"
- className="block px-4 py-3 text-base font-medium text-blue-500 rounded-lg transition-colors hover:bg-blue-900/30"
+ className="block px-4 py-3 text-base font-medium text-zinc-300 rounded-lg transition-colors hover:bg-zinc-900/40"
  onClick={() => setMobileMenuOpen(false)}
  >
  Sign In

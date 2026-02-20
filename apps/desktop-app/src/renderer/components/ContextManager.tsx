@@ -62,12 +62,12 @@ const BookIcon = () => (
 
 // Type label and color map
 const TYPE_CONFIG: Record<ContextType, { label: string; color: string; icon: React.FC }> = {
- system_prompt: { label: 'System Prompt', color: 'bg-purple-900 text-purple-200', icon: ChatIcon },
- database_schema: { label: 'Database Schema', color: 'bg-blue-900 text-blue-200', icon: DatabaseIcon },
- knowledge_base: { label: 'Knowledge', color: 'bg-green-900 text-green-200', icon: BookIcon },
- memory_summary: { label: 'Memory', color: 'bg-yellow-900 text-yellow-200', icon: ChatIcon },
- project: { label: 'Project', color: 'bg-orange-900 text-orange-200', icon: DocumentIcon },
- template: { label: 'Template', color: 'bg-gray-800 text-gray-200', icon: DocumentIcon },
+ system_prompt: { label: 'System Prompt', color: 'bg-zinc-900 text-zinc-500', icon: ChatIcon },
+ database_schema: { label: 'Database Schema', color: 'bg-zinc-900 text-zinc-500', icon: DatabaseIcon },
+ knowledge_base: { label: 'Knowledge', color: 'bg-zinc-900 text-zinc-500', icon: BookIcon },
+ memory_summary: { label: 'Memory', color: 'bg-zinc-900 text-zinc-500', icon: ChatIcon },
+ project: { label: 'Project', color: 'bg-zinc-900 text-zinc-500', icon: DocumentIcon },
+ template: { label: 'Template', color: 'bg-zinc-900 text-zinc-300', icon: DocumentIcon },
 };
 
 // Context Card Component
@@ -116,7 +116,7 @@ function ContextCard({
  variant="ghost" 
  size="sm"
  onClick={() => onDelete(context.id)}
- className="h-8 w-8 p-0 text-red-500 hover:text-red-700"
+ className="h-8 w-8 p-0 text-zinc-400 hover:text-zinc-300"
  >
  <TrashIcon />
  </Button>
@@ -476,7 +476,7 @@ export default function ContextManager() {
  {stats && <StatsCard stats={stats} />}
 
  {error && (
- <div className="bg-red-500/10 text-red-400 rounded-lg p-4 mb-6">
+ <div className="bg-white/5 text-zinc-400 rounded-lg p-4 mb-6">
  {error}
  </div>
  )}

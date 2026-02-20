@@ -67,6 +67,8 @@ const config: Config = {
         // Bidirectional marquee
         'marquee': 'marquee 45s linear infinite',
         'marquee-reverse': 'marquee-reverse 50s linear infinite',
+        'marquee-slow': 'marquee 80s linear infinite',
+        'marquee-reverse-slow': 'marquee-reverse 90s linear infinite',
       },
       keyframes: {
         fadeIn: {

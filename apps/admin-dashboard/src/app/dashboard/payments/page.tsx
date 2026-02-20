@@ -67,11 +67,11 @@ export default function PaymentsPage() {
  const statusIcon = (status: string) => {
  switch (status.toLowerCase()) {
  case 'completed':
- return <CheckCircle className="w-4 h-4 text-green-500" />;
+ return <CheckCircle className="w-4 h-4 text-zinc-400" />;
  case 'pending':
- return <Clock className="w-4 h-4 text-yellow-500" />;
+ return <Clock className="w-4 h-4 text-zinc-400" />;
  case 'failed':
- return <XCircle className="w-4 h-4 text-red-500" />;
+ return <XCircle className="w-4 h-4 text-zinc-400" />;
  case 'refunded':
  return <RefreshCw className="w-4 h-4 text-muted-foreground" />;
  default:
@@ -83,7 +83,7 @@ export default function PaymentsPage() {
  return (
  <div className="p-8 flex items-center justify-center min-h-screen">
  <div className="text-center">
- <RefreshCw className="w-8 h-8 text-blue-500 animate-spin mx-auto mb-4" />
+ <RefreshCw className="w-8 h-8 text-zinc-300 animate-spin mx-auto mb-4" />
  <p className="text-muted-foreground">Loading payments...</p>
  </div>
  </div>
@@ -100,7 +100,7 @@ export default function PaymentsPage() {
  </div>
  <button
  onClick={fetchPayments}
- className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground rounded-lg hover:text-white border-gray-800"
+ className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground rounded-lg hover:text-white border-zinc-800"
  >
  <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
  Refresh
@@ -116,13 +116,13 @@ export default function PaymentsPage() {
  placeholder="Search by user..."
  value={searchQuery}
  onChange={(e) => setSearchQuery(e.target.value)}
- className="w-full pl-10 pr-4 py-2 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-black border-gray-800 text-white"
+ className="w-full pl-10 pr-4 py-2 rounded-lg placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-600 bg-black border-zinc-800 text-white"
  />
  </div>
  <select
  value={filterStatus}
  onChange={(e) => setFilterStatus(e.target.value)}
- className="px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-black border-gray-800 text-white"
+ className="px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-600 bg-black border-zinc-800 text-white"
  >
  <option value="all">All Status</option>
  <option value="Completed">Completed</option>
@@ -133,7 +133,7 @@ export default function PaymentsPage() {
  <select
  value={filterPlan}
  onChange={(e) => setFilterPlan(e.target.value)}
- className="px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-black border-gray-800 text-white"
+ className="px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-600 bg-black border-zinc-800 text-white"
  >
  <option value="all">All Plans</option>
  <option value="Pro">Pro</option>
@@ -143,25 +143,25 @@ export default function PaymentsPage() {
 
  {/* Stats */}
  <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
- <div className="rounded-lg p-4 bg-black border-gray-800">
+ <div className="rounded-lg p-4 bg-black border-zinc-800">
  <div className="flex items-center gap-2">
- <DollarSign className="w-5 h-5 text-green-500" />
- <p className="text-2xl font-medium text-green-500">${summary.totalRevenue.toFixed(2)}</p>
+ <DollarSign className="w-5 h-5 text-zinc-400" />
+ <p className="text-2xl font-medium text-zinc-400">${summary.totalRevenue.toFixed(2)}</p>
  </div>
  <p className="text-sm text-muted-foreground">Total Revenue</p>
  </div>
- <div className="rounded-lg p-4 bg-black border-gray-800">
+ <div className="rounded-lg p-4 bg-black border-zinc-800">
  <p className="font-medium text-white">{total}</p>
  <p className="text-sm text-muted-foreground">Total Transactions</p>
  </div>
- <div className="rounded-lg p-4 bg-black border-gray-800">
+ <div className="rounded-lg p-4 bg-black border-zinc-800">
  <div className="flex items-center gap-2">
- <Clock className="w-5 h-5 text-yellow-500" />
- <p className="text-2xl font-medium text-yellow-500">${summary.pendingAmount.toFixed(2)}</p>
+ <Clock className="w-5 h-5 text-zinc-400" />
+ <p className="text-2xl font-medium text-zinc-400">${summary.pendingAmount.toFixed(2)}</p>
  </div>
  <p className="text-sm text-muted-foreground">Pending</p>
  </div>
- <div className="rounded-lg p-4 bg-black border-gray-800">
+ <div className="rounded-lg p-4 bg-black border-zinc-800">
  <div className="flex items-center gap-2">
  <RefreshCw className="w-5 h-5 text-muted-foreground" />
  <p className="text-2xl font-medium text-muted-foreground">${summary.refundedAmount.toFixed(2)}</p>
@@ -171,11 +171,11 @@ export default function PaymentsPage() {
  </div>
 
  {/* Payments Table */}
- <div className="rounded-xl overflow-hidden bg-black border-gray-800">
+ <div className="rounded-xl overflow-hidden bg-black border-zinc-800">
  <div className="overflow-x-auto">
  <table className="w-full">
  <thead>
- <tr className="border-b border-gray-800 bg-gray-900/50">
+ <tr className="border-b border-zinc-800 bg-zinc-950/50">
  <th className="text-left px-6 py-3 text-xs font-medium text-muted-foreground uppercase">User</th>
  <th className="text-left px-6 py-3 text-xs font-medium text-muted-foreground uppercase">Amount</th>
  <th className="text-left px-6 py-3 text-xs font-medium text-muted-foreground uppercase">Plan</th>
@@ -193,10 +193,10 @@ export default function PaymentsPage() {
  </tr>
  ) : (
  payments.map((payment) => (
- <tr key={payment.id} className="border-b last:border-0 border-gray-900 hover:bg-gray-900/50">
+ <tr key={payment.id} className="border-b last:border-0 border-zinc-900 hover:bg-zinc-950/50">
  <td className="px-6 py-4">
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+ <div className="w-10 h-10 bg-zinc-800 rounded-full flex items-center justify-center">
  <span className="text-white text-sm font-medium">{payment.user.charAt(0).toUpperCase()}</span>
  </div>
  <div>
@@ -209,7 +209,7 @@ export default function PaymentsPage() {
  <span className="font-medium text-white">${payment.amount.toFixed(2)}</span>
  </td>
  <td className="px-6 py-4">
- <span className={`px-2 py-1 font-medium rounded-full ${ payment.plan === 'Enterprise' ? 'bg-purple-900/30 text-purple-400' : 'bg-blue-900/30 text-blue-400' }`}>
+ <span className={`px-2 py-1 font-medium rounded-full ${ payment.plan === 'Enterprise' ? 'bg-zinc-900/40 text-zinc-400' : 'bg-zinc-900/40 text-zinc-400' }`}>
  {payment.plan}
  </span>
  </td>
@@ -217,7 +217,7 @@ export default function PaymentsPage() {
  <span className="text-sm text-muted-foreground">{payment.method}</span>
  </td>
  <td className="px-6 py-4">
- <span className={`inline-flex items-center gap-1.5 px-2 py-1 font-medium rounded-full ${ payment.status.toLowerCase() === 'completed' ? 'bg-green-900/30 text-green-400' : payment.status.toLowerCase() === 'pending' ? 'bg-yellow-900/30 text-yellow-400' : payment.status.toLowerCase() === 'failed' ? 'bg-red-900/30 text-red-400' : 'bg-secondary text-muted-foreground' }`}>
+ <span className={`inline-flex items-center gap-1.5 px-2 py-1 font-medium rounded-full ${ payment.status.toLowerCase() === 'completed' ? 'bg-zinc-900/40 text-zinc-400' : payment.status.toLowerCase() === 'pending' ? 'bg-zinc-900/40 text-zinc-400' : payment.status.toLowerCase() === 'failed' ? 'bg-zinc-900/40 text-zinc-400' : 'bg-secondary text-muted-foreground' }`}>
  {statusIcon(payment.status)}
  {payment.status}
  </span>
@@ -233,7 +233,7 @@ export default function PaymentsPage() {
  </div>
  
  {/* Pagination */}
- <div className="px-6 py-4 border-t flex items-center justify-between border-gray-800">
+ <div className="px-6 py-4 border-t flex items-center justify-between border-zinc-800">
  <p className="text-sm text-muted-foreground">
  Showing <span className="font-medium text-white">{payments.length}</span> of <span className="font-medium text-white">{total}</span> payments
  </p>
@@ -241,14 +241,14 @@ export default function PaymentsPage() {
  <button 
  onClick={() => setPage(p => Math.max(1, p - 1))}
  disabled={page === 1}
- className="px-3 py-1.5 text-sm font-medium text-muted-foreground rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:text-white border-gray-800"
+ className="px-3 py-1.5 text-sm font-medium text-muted-foreground rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:text-white border-zinc-800"
  >
  Previous
  </button>
  <button 
  onClick={() => setPage(p => p + 1)}
  disabled={payments.length < 10}
- className="px-3 py-1.5 text-sm font-medium text-muted-foreground rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:text-white border-gray-800"
+ className="px-3 py-1.5 text-sm font-medium text-muted-foreground rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:text-white border-zinc-800"
  >
  Next
  </button>

@@ -86,7 +86,7 @@ function SubscribeContent() {
         'Advanced security features',
         'Custom AI model training',
         'Audit logs',
-        'HIPAA compliance',
+        'Air-gapped deployment',
       ],
       cta: 'Contact Sales',
       popular: false,
@@ -158,7 +158,7 @@ function SubscribeContent() {
             }`}
           >
             Annual
-            <span className="text-xs bg-green-500 text-white px-2 py-0.5 rounded-full">Save 20%</span>
+            <span className="text-xs bg-zinc-800 text-white px-2 py-0.5 rounded-full">Save 20%</span>
           </button>
         </div>
 
@@ -226,7 +226,7 @@ function SubscribeContent() {
                     )}
                   </div>
                   {savings > 0 && (
-                    <p className="text-green-600 text-sm mt-1">
+                    <p className="text-zinc-300 text-sm mt-1">
                       Save {savings}% with annual billing (${currentPlan.monthlyPrice! * 12 - currentPlan.annualPrice! * 12}/year)
                     </p>
                   )}
@@ -259,7 +259,7 @@ function SubscribeContent() {
               <ul className="space-y-3">
                 {currentPlan.features.map((feature, i) => (
                   <li key={i} className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-5 h-5 text-zinc-400 flex-shrink-0 mt-0.5" />
                     <span className="text-foreground">{feature}</span>
                   </li>
                 ))}
@@ -314,7 +314,7 @@ export default function SubscribePage() {
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="flex items-center gap-2">
               <Sparkles className="w-8 h-8 text-primary" />
-              <span className="text-xl font-medium bg-gradient-to-r from-primary to-indigo-600 bg-clip-text text-transparent">Velanova</span>
+              <span className="text-xl font-medium bg-gradient-to-r from-primary to-zinc-600 bg-clip-text text-transparent">Velanova</span>
             </Link>
             <Link href="/" className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-2">
               <ArrowLeft className="w-4 h-4" /> Back to Home

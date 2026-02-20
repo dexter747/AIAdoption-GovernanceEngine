@@ -125,18 +125,18 @@ function AddConnectionModal({ isOpen, onClose, onAdd }: AddConnectionModalProps)
   
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-slate-800 rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+      <div className="bg-zinc-900 rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
         <h2 className="text-xl font-medium text-white mb-4">Add Database Connection</h2>
         
         <form onSubmit={handleSubmit}>
           {/* Connection Name */}
           <div className="mb-4">
-            <label className="block text-sm text-slate-400 mb-1">Connection Name</label>
+            <label className="block text-sm text-zinc-500 mb-1">Connection Name</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white"
+              className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white"
               placeholder="My Database"
               required
             />
@@ -144,7 +144,7 @@ function AddConnectionModal({ isOpen, onClose, onAdd }: AddConnectionModalProps)
           
           {/* Database Type Selection */}
           <div className="mb-4">
-            <label className="block text-sm text-slate-400 mb-2">Database Type</label>
+            <label className="block text-sm text-zinc-500 mb-2">Database Type</label>
             <div className="grid grid-cols-3 gap-2">
               {DATABASE_TYPES.map(type => (
                 <button
@@ -153,8 +153,8 @@ function AddConnectionModal({ isOpen, onClose, onAdd }: AddConnectionModalProps)
                   onClick={() => setSelectedType(type)}
                   className={`p-3 rounded-lg border transition-all ${
                     selectedType.id === type.id
-                      ? 'bg-indigo-600 border-indigo-500 text-white'
-                      : 'bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600'
+                      ? 'bg-zinc-800 border-zinc-700 text-white'
+                      : 'bg-zinc-800 border-zinc-700 text-zinc-400 hover:bg-zinc-800'
                   }`}
                 >
                   <span className="text-2xl block mb-1">{type.icon}</span>
@@ -168,23 +168,23 @@ function AddConnectionModal({ isOpen, onClose, onAdd }: AddConnectionModalProps)
           <div className="space-y-3 mb-6">
             {selectedType.fields.map(field => (
               <div key={field.name}>
-                <label className="block text-sm text-slate-400 mb-1">{field.label}</label>
+                <label className="block text-sm text-zinc-500 mb-1">{field.label}</label>
                 {field.type === 'checkbox' ? (
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={config[field.name] || false}
                       onChange={(e) => updateConfig(field.name, e.target.checked)}
-                      className="w-4 h-4 rounded bg-slate-700 border-slate-600"
+                      className="w-4 h-4 rounded bg-zinc-800 border-zinc-700"
                     />
-                    <span className="text-slate-300 text-sm">Enable</span>
+                    <span className="text-zinc-400 text-sm">Enable</span>
                   </label>
                 ) : (
                   <input
                     type={field.type}
                     value={config[field.name] || ''}
                     onChange={(e) => updateConfig(field.name, e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white"
+                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white"
                     placeholder={field.placeholder}
                     required={field.required}
                   />
@@ -195,7 +195,7 @@ function AddConnectionModal({ isOpen, onClose, onAdd }: AddConnectionModalProps)
           
           {/* Error message */}
           {error && (
-            <div className="mb-4 p-3 bg-red-900/50 border border-red-700 rounded-lg text-red-300 text-sm">
+            <div className="mb-4 p-3 bg-zinc-900/50 border border-zinc-800 rounded-lg text-zinc-400 text-sm">
               {error}
             </div>
           )}
@@ -205,14 +205,14 @@ function AddConnectionModal({ isOpen, onClose, onAdd }: AddConnectionModalProps)
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 bg-slate-700 text-white rounded-lg hover:bg-slate-600"
+              className="flex-1 px-4 py-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-800"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isLoading}
-              className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 disabled:opacity-50"
+              className="flex-1 px-4 py-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-800 disabled:opacity-50"
             >
               {isLoading ? 'Connecting...' : 'Connect'}
             </button>
@@ -295,7 +295,7 @@ export default function DatabaseConnectionsPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-zinc-700"></div>
       </div>
     );
   }
@@ -306,13 +306,13 @@ export default function DatabaseConnectionsPage() {
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-medium text-white">Database Connections</h1>
-          <p className="text-slate-400 mt-1">
+          <p className="text-zinc-500 mt-1">
             Connect your databases to query them with AI
           </p>
         </div>
         <button
           onClick={() => setShowAddModal(true)}
-          className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 flex items-center gap-2"
+          className="px-4 py-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-800 flex items-center gap-2"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -322,19 +322,19 @@ export default function DatabaseConnectionsPage() {
       </div>
       
       {/* Status Banner */}
-      <div className="bg-slate-800 rounded-xl p-4 mb-6 border border-slate-700">
+      <div className="bg-zinc-900 rounded-xl p-4 mb-6 border border-zinc-800">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
               <div className={`w-2 h-2 rounded-full ${
-                mcpIntegration.getStatus().backendConnected ? 'bg-green-500' : 'bg-red-500'
+                mcpIntegration.getStatus().backendConnected ? 'bg-zinc-800' : 'bg-zinc-800'
               }`}></div>
-              <span className="text-slate-300 text-sm">
+              <span className="text-zinc-400 text-sm">
                 {mcpIntegration.getStatus().backendConnected ? 'Connected to Velanova' : 'Disconnected'}
               </span>
             </div>
-            <div className="h-4 w-px bg-slate-600"></div>
-            <span className="text-slate-400 text-sm">
+            <div className="h-4 w-px bg-zinc-800"></div>
+            <span className="text-zinc-500 text-sm">
               {connections.length} database{connections.length !== 1 ? 's' : ''} •{' '}
               {mcpIntegration.getStatus().totalTools} tools available
             </span>
@@ -344,15 +344,15 @@ export default function DatabaseConnectionsPage() {
       
       {/* Connections List */}
       {connections.length === 0 ? (
-        <div className="bg-slate-800 rounded-xl p-8 text-center border border-slate-700">
+        <div className="bg-zinc-900 rounded-xl p-8 text-center border border-zinc-800">
           <div className="text-4xl mb-4">🗄️</div>
           <h3 className="text-lg font-medium text-white mb-2">No Database Connections</h3>
-          <p className="text-slate-400 mb-4">
+          <p className="text-zinc-500 mb-4">
             Add your first database connection to start querying with AI
           </p>
           <button
             onClick={() => setShowAddModal(true)}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500"
+            className="px-4 py-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-800"
           >
             Add Your First Database
           </button>
@@ -362,16 +362,16 @@ export default function DatabaseConnectionsPage() {
           {connections.map(connection => (
             <div
               key={connection.id}
-              className="bg-slate-800 rounded-xl p-4 border border-slate-700 hover:border-slate-600 transition-colors"
+              className="bg-zinc-900 rounded-xl p-4 border border-zinc-800 hover:border-zinc-700 transition-colors"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-lg bg-slate-700 flex items-center justify-center text-2xl">
+                  <div className="w-12 h-12 rounded-lg bg-zinc-800 flex items-center justify-center text-2xl">
                     {getDbIcon(connection.type)}
                   </div>
                   <div>
                     <h3 className="text-white font-medium">{connection.name}</h3>
-                    <p className="text-slate-400 text-sm capitalize">
+                    <p className="text-zinc-500 text-sm capitalize">
                       {connection.type} • {connection.tools.length} tools
                     </p>
                   </div>
@@ -381,14 +381,14 @@ export default function DatabaseConnectionsPage() {
                   {/* Status indicator */}
                   <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm ${
                     connection.status === 'connected'
-                      ? 'bg-green-900/30 text-green-400'
+                      ? 'bg-zinc-900/40 text-zinc-400'
                       : connection.status === 'error'
-                      ? 'bg-red-900/30 text-red-400'
-                      : 'bg-slate-700 text-slate-400'
+                      ? 'bg-zinc-900/40 text-zinc-400'
+                      : 'bg-zinc-800 text-zinc-500'
                   }`}>
                     <div className={`w-2 h-2 rounded-full ${
-                      connection.status === 'connected' ? 'bg-green-500' :
-                      connection.status === 'error' ? 'bg-red-500' : 'bg-slate-500'
+                      connection.status === 'connected' ? 'bg-zinc-800' :
+                      connection.status === 'error' ? 'bg-zinc-800' : 'bg-zinc-700'
                     }`}></div>
                     {connection.status}
                   </div>
@@ -397,7 +397,7 @@ export default function DatabaseConnectionsPage() {
                   <button
                     onClick={() => handleTestConnection(connection.id)}
                     disabled={testingConnection === connection.id}
-                    className="px-3 py-1 bg-slate-700 text-slate-300 rounded-lg hover:bg-slate-600 text-sm disabled:opacity-50"
+                    className="px-3 py-1 bg-zinc-800 text-zinc-400 rounded-lg hover:bg-zinc-800 text-sm disabled:opacity-50"
                   >
                     {testingConnection === connection.id ? 'Testing...' : 'Test'}
                   </button>
@@ -405,7 +405,7 @@ export default function DatabaseConnectionsPage() {
                   {/* Remove button */}
                   <button
                     onClick={() => handleRemoveConnection(connection.id)}
-                    className="p-2 text-slate-400 hover:text-red-400 hover:bg-red-900/20 rounded-lg"
+                    className="p-2 text-zinc-500 hover:text-zinc-400 hover:bg-zinc-900/30 rounded-lg"
                     title="Remove connection"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -417,19 +417,19 @@ export default function DatabaseConnectionsPage() {
               
               {/* Tools preview */}
               {connection.tools.length > 0 && (
-                <div className="mt-4 pt-4 border-t border-slate-700">
-                  <p className="text-sm text-slate-400 mb-2">Available Tools:</p>
+                <div className="mt-4 pt-4 border-t border-zinc-800">
+                  <p className="text-sm text-zinc-500 mb-2">Available Tools:</p>
                   <div className="flex flex-wrap gap-2">
                     {connection.tools.slice(0, 5).map(tool => (
                       <span
                         key={tool.name}
-                        className="px-2 py-1 bg-slate-700 text-slate-300 rounded text-xs"
+                        className="px-2 py-1 bg-zinc-800 text-zinc-400 rounded text-xs"
                       >
                         {tool.name}
                       </span>
                     ))}
                     {connection.tools.length > 5 && (
-                      <span className="px-2 py-1 bg-slate-700 text-slate-400 rounded text-xs">
+                      <span className="px-2 py-1 bg-zinc-800 text-zinc-500 rounded text-xs">
                         +{connection.tools.length - 5} more
                       </span>
                     )}
@@ -442,26 +442,26 @@ export default function DatabaseConnectionsPage() {
       )}
       
       {/* How it works section */}
-      <div className="mt-8 bg-slate-800/50 rounded-xl p-6 border border-slate-700">
+      <div className="mt-8 bg-zinc-900/50 rounded-xl p-6 border border-zinc-800">
         <h3 className="text-lg font-medium text-white mb-4">How it works</h3>
         <div className="grid grid-cols-3 gap-4">
           <div className="text-center">
-            <div className="w-10 h-10 rounded-full bg-indigo-600/20 text-indigo-400 flex items-center justify-center mx-auto mb-3">
+            <div className="w-10 h-10 rounded-full bg-white/10 text-zinc-400 flex items-center justify-center mx-auto mb-3">
               1
             </div>
-            <p className="text-slate-300 text-sm">Add your database connection</p>
+            <p className="text-zinc-400 text-sm">Add your database connection</p>
           </div>
           <div className="text-center">
-            <div className="w-10 h-10 rounded-full bg-indigo-600/20 text-indigo-400 flex items-center justify-center mx-auto mb-3">
+            <div className="w-10 h-10 rounded-full bg-white/10 text-zinc-400 flex items-center justify-center mx-auto mb-3">
               2
             </div>
-            <p className="text-slate-300 text-sm">Velanova discovers your schema</p>
+            <p className="text-zinc-400 text-sm">Velanova discovers your schema</p>
           </div>
           <div className="text-center">
-            <div className="w-10 h-10 rounded-full bg-indigo-600/20 text-indigo-400 flex items-center justify-center mx-auto mb-3">
+            <div className="w-10 h-10 rounded-full bg-white/10 text-zinc-400 flex items-center justify-center mx-auto mb-3">
               3
             </div>
-            <p className="text-slate-300 text-sm">Ask questions in natural language</p>
+            <p className="text-zinc-400 text-sm">Ask questions in natural language</p>
           </div>
         </div>
       </div>

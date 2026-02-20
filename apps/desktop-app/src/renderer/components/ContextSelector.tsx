@@ -30,12 +30,12 @@ const ChevronDownIcon = () => (
 
 // Type colors
 const TYPE_COLORS: Record<ContextType, string> = {
-  system_prompt: 'bg-purple-500',
-  database_schema: 'bg-blue-500',
-  knowledge_base: 'bg-green-500',
-  memory_summary: 'bg-yellow-500',
-  project: 'bg-orange-500',
-  template: 'bg-gray-500',
+  system_prompt: 'bg-zinc-800',
+  database_schema: 'bg-zinc-800',
+  knowledge_base: 'bg-zinc-800',
+  memory_summary: 'bg-zinc-700',
+  project: 'bg-zinc-700',
+  template: 'bg-zinc-700',
 };
 
 interface ContextSelectorProps {
@@ -334,7 +334,7 @@ function ContextItem({
       {locked ? (
         <Badge variant="outline" className="text-xs">Auto</Badge>
       ) : selected ? (
-        <div className="text-green-500">
+        <div className="text-zinc-400">
           <CheckIcon />
         </div>
       ) : null}

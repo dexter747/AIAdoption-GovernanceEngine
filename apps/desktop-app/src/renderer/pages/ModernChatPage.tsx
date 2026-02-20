@@ -100,11 +100,11 @@ const LLM_MODELS = [
 
 // Quick action prompts like Claude
 const QUICK_ACTIONS = [
- { icon: Pencil, label: 'Write', prompt: 'Help me write', color: 'hover:bg-orange-500/10 hover:text-orange-500 hover:border-orange-500/30' },
- { icon: Lightbulb, label: 'Learn', prompt: 'Explain to me', color: 'hover:bg-yellow-500/10 hover:text-yellow-500 hover:border-yellow-500/30' },
- { icon: Code, label: 'Code', prompt: 'Help me code', color: 'hover:bg-green-500/10 hover:text-green-500 hover:border-green-500/30' },
- { icon: Briefcase, label: 'Work', prompt: 'Help me with work', color: 'hover:bg-blue-500/10 hover:text-blue-500 hover:border-blue-500/30' },
- { icon: Sparkles, label: 'AI\'s choice', prompt: 'Surprise me with something interesting', color: 'hover:bg-purple-500/10 hover:text-purple-500 hover:border-purple-500/30' },
+ { icon: Pencil, label: 'Write', prompt: 'Help me write', color: 'hover:bg-white/5 hover:text-zinc-400 hover:border-zinc-700/40' },
+ { icon: Lightbulb, label: 'Learn', prompt: 'Explain to me', color: 'hover:bg-white/5 hover:text-zinc-400 hover:border-zinc-700/40' },
+ { icon: Code, label: 'Code', prompt: 'Help me code', color: 'hover:bg-white/5 hover:text-zinc-400 hover:border-zinc-700/40' },
+ { icon: Briefcase, label: 'Work', prompt: 'Help me with work', color: 'hover:bg-white/5 hover:text-zinc-300 hover:border-zinc-700/40' },
+ { icon: Sparkles, label: 'AI\'s choice', prompt: 'Surprise me with something interesting', color: 'hover:bg-white/5 hover:text-zinc-300 hover:border-zinc-700/40' },
 ];
 
 // Helper: get the correct provider string for a model
@@ -591,13 +591,13 @@ export default function ModernChatPage() {
  animate={{ width: 280, opacity: 1 }}
  exit={{ width: 0, opacity: 0 }}
  transition={{ duration: 0.2 }}
- className="flex flex-col border-r bg-gray-900 border-gray-800"
+ className="flex flex-col border-r bg-zinc-950 border-zinc-800"
  >
  {/* New Chat Button */}
  <div className="p-4">
  <Button
  onClick={createNewSession}
- className="w-full bg-blue-600 hover:bg-blue-700 text-white border-0 rounded-xl h-11"
+ className="w-full bg-white hover:bg-zinc-200 text-white border-0 rounded-xl h-11"
  >
  <Plus className="w-4 h-4 mr-2" />
  New Chat
@@ -613,7 +613,7 @@ export default function ModernChatPage() {
  placeholder="Search conversations..."
  value={searchQuery}
  onChange={(e) => setSearchQuery(e.target.value)}
- className="w-full rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-800 border-gray-700 text-white placeholder:text-muted-foreground"
+ className="w-full rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-zinc-600 bg-zinc-900 border-zinc-800 text-white placeholder:text-muted-foreground"
  />
  </div>
  </div>
@@ -634,14 +634,14 @@ export default function ModernChatPage() {
  className={cn(
  'group relative flex items-center gap-3 px-3 py-3 rounded-xl cursor-pointer transition-colors',
  currentSession?.id === session.id
- ? 'bg-gray-800'
- : 'hover:bg-gray-800/50'
+ ? 'bg-zinc-900'
+ : 'hover:bg-zinc-900/50'
  )}
  onClick={() => setCurrentSession(session)}
  >
  <MessageSquare className="w-4 h-4 flex-shrink-0 text-muted-foreground" />
  <div className="flex-1 min-w-0">
- <p className="truncate text-gray-100">{session.title}</p>
+ <p className="truncate text-zinc-100">{session.title}</p>
  <p className="mt-0.5 text-muted-foreground">
  {session.messages.length} messages
  </p>
@@ -649,7 +649,7 @@ export default function ModernChatPage() {
  <Button
  variant="ghost"
  size="icon"
- className="opacity-0 group-hover:opacity-100 h-7 w-7 hover:text-red-500 text-muted-foreground hover:bg-red-500/10"
+ className="opacity-0 group-hover:opacity-100 h-7 w-7 hover:text-zinc-400 text-muted-foreground hover:bg-white/5"
  onClick={(e) => {
  e.stopPropagation();
  deleteSession(session.id);
@@ -664,11 +664,11 @@ export default function ModernChatPage() {
  </div>
 
  {/* Collapse Button */}
- <div className="p-3 border-t border-gray-800">
+ <div className="p-3 border-t border-zinc-800">
  <Button
  variant="ghost"
  size="sm"
- className="w-full text-muted-foreground hover:text-white hover:bg-gray-800"
+ className="w-full text-muted-foreground hover:text-white hover:bg-zinc-900"
  onClick={() => setSidebarOpen(false)}
  >
  <PanelLeftClose className="w-4 h-4 mr-2" />
@@ -682,13 +682,13 @@ export default function ModernChatPage() {
  {/* Main Chat Area */}
  <div className="flex-1 flex flex-col min-w-0">
  {/* Top Bar */}
- <div className="h-12 flex items-center justify-between px-4 border-b border-gray-800">
+ <div className="h-12 flex items-center justify-between px-4 border-b border-zinc-800">
  <div className="flex items-center gap-2">
  {!sidebarOpen && (
  <Button
  variant="ghost"
  size="icon"
- className="h-8 w-8 text-muted-foreground hover:text-white hover:bg-gray-800"
+ className="h-8 w-8 text-muted-foreground hover:text-white hover:bg-zinc-900"
  onClick={() => setSidebarOpen(true)}
  >
  <PanelLeft className="w-4 h-4" />
@@ -697,7 +697,7 @@ export default function ModernChatPage() {
  <Button
  variant="ghost"
  size="icon"
- className="h-8 w-8 text-muted-foreground hover:text-white hover:bg-gray-800"
+ className="h-8 w-8 text-muted-foreground hover:text-white hover:bg-zinc-900"
  onClick={createNewSession}
  >
  <Plus className="w-4 h-4" />
@@ -710,7 +710,7 @@ export default function ModernChatPage() {
  <Database className="w-3.5 h-3.5" />
  {connections.find(c => c.id === selectedConnection)?.name}
  {contextStatus && (
- <span className="ml-2 px-2 py-0.5 rounded-full bg-green-900/30 text-green-400">
+ <span className="ml-2 px-2 py-0.5 rounded-full bg-zinc-900/40 text-zinc-400">
  {contextStatus}
  </span>
  )}
@@ -739,12 +739,12 @@ export default function ModernChatPage() {
  {attachedFiles.length > 0 && (
  <div className="flex flex-wrap gap-2 mb-3">
  {attachedFiles.map((file, index) => (
- <div key={index} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-900/20 text-blue-300">
+ <div key={index} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-900/30 text-zinc-400">
  <FileText className="w-4 h-4" />
  <span className="truncate max-w-[150px]">{file.name}</span>
  <button 
  onClick={() => removeAttachedFile(index)}
- className="hover:text-blue-100"
+ className="hover:text-zinc-500"
  >
  <X className="w-3.5 h-3.5" />
  </button>
@@ -753,7 +753,7 @@ export default function ModernChatPage() {
  </div>
  )}
  
- <div className="relative rounded-2xl focus-within:border-blue-500 transition-colors shadow-sm bg-gray-900 border-gray-700">
+ <div className="relative rounded-2xl focus-within:border-zinc-700 transition-colors shadow-sm bg-zinc-950 border-zinc-800">
  {/* Hidden file input */}
  <input
  ref={fileInputRef}
@@ -781,11 +781,11 @@ export default function ModernChatPage() {
  <button 
  onClick={() => fileInputRef.current?.click()}
  title="Attach files"
- className="p-2 rounded-lg transition-colors text-muted-foreground hover:text-gray-300 hover:bg-gray-800"
+ className="p-2 rounded-lg transition-colors text-muted-foreground hover:text-zinc-400 hover:bg-zinc-900"
  >
  <Paperclip className="w-4 h-4" />
  </button>
- <button className="p-2 rounded-lg transition-colors text-muted-foreground hover:text-gray-300 hover:bg-gray-800">
+ <button className="p-2 rounded-lg transition-colors text-muted-foreground hover:text-zinc-400 hover:bg-zinc-900">
  <Clock className="w-4 h-4" />
  </button>
  </div>
@@ -795,7 +795,7 @@ export default function ModernChatPage() {
  <div className="relative" ref={modelDropdownRef}>
  <button
  onClick={() => setShowModelDropdown(!showModelDropdown)}
- className="flex items-center gap-2 transition-colors text-muted-foreground hover:text-gray-200"
+ className="flex items-center gap-2 transition-colors text-muted-foreground hover:text-zinc-300"
  >
  {selectedModelInfo.hasIcon ? (
  <img src={selectedModelInfo.icon} alt={selectedModelInfo.name} className="w-4 h-4" />
@@ -815,7 +815,7 @@ export default function ModernChatPage() {
  initial={{ opacity: 0, y: -10, scale: 0.95 }}
  animate={{ opacity: 1, y: 0, scale: 1 }}
  exit={{ opacity: 0, y: -10, scale: 0.95 }}
- className="absolute top-full right-0 mt-2 rounded-xl shadow-2xl overflow-hidden z-50 w-64 bg-gray-900 border-gray-700"
+ className="absolute top-full right-0 mt-2 rounded-xl shadow-2xl overflow-hidden z-50 w-64 bg-zinc-950 border-zinc-800"
  >
  <div className="py-2 max-h-[400px] overflow-y-auto">
  {LLM_MODELS.map(model => (
@@ -826,8 +826,8 @@ export default function ModernChatPage() {
  setShowModelDropdown(false);
  }}
  className={cn(
- "w-full px-4 py-2.5 text-left transition-colors flex items-center gap-3 hover:bg-gray-800",
- selectedModel === model.id && "bg-gray-800"
+ "w-full px-4 py-2.5 text-left transition-colors flex items-center gap-3 hover:bg-zinc-900",
+ selectedModel === model.id && "bg-zinc-900"
  )}
  >
  {model.hasIcon ? (
@@ -843,11 +843,11 @@ export default function ModernChatPage() {
  <span className="text-base flex-shrink-0">{model.logo}</span>
  )}
  <div className="flex-1 min-w-0">
- <div className="text-gray-100">{model.name}</div>
+ <div className="text-zinc-100">{model.name}</div>
  <div className="text-muted-foreground">{model.provider}</div>
  </div>
  {selectedModel === model.id && (
- <Check className="w-4 h-4 text-blue-500" />
+ <Check className="w-4 h-4 text-zinc-300" />
  )}
  </button>
  ))}
@@ -864,8 +864,8 @@ export default function ModernChatPage() {
  className={cn(
  "w-8 h-8 rounded-full flex items-center justify-center transition-all",
  input.trim() 
- ? "bg-blue-600 hover:bg-blue-700 text-white" 
- : "bg-gray-700 text-muted-foreground"
+ ? "bg-white hover:bg-zinc-200 text-white" 
+ : "bg-zinc-800 text-muted-foreground"
  )}
  >
  {isLoading ? (
@@ -886,7 +886,7 @@ export default function ModernChatPage() {
  key={action.label}
  onClick={() => handleQuickAction(action.prompt)}
  className={cn(
- "flex items-center gap-2 px-4 py-2 rounded-full transition-all hover:border-blue-500 bg-gray-900 border-gray-700 text-gray-300 hover:text-blue-400 hover:bg-blue-500/10"
+ "flex items-center gap-2 px-4 py-2 rounded-full transition-all hover:border-zinc-700 bg-zinc-950 border-zinc-800 text-zinc-400 hover:text-zinc-400 hover:bg-white/5"
  )}
  >
  <action.icon className="w-4 h-4" />
@@ -901,7 +901,7 @@ export default function ModernChatPage() {
  <select
  value={selectedConnection}
  onChange={(e) => setSelectedConnection(e.target.value)}
- className="rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-900 border-gray-700 text-gray-300"
+ className="rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-zinc-600 bg-zinc-950 border-zinc-800 text-zinc-400"
  >
  <option value="">💬 Chat Mode (No Database)</option>
  {connections.map(conn => (
@@ -930,7 +930,7 @@ export default function ModernChatPage() {
  >
  {/* Assistant Avatar */}
  {message.role === 'assistant' && (
- <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0">
+ <div className="w-8 h-8 rounded-full bg-gradient-to-br from-zinc-400 to-zinc-600 flex items-center justify-center flex-shrink-0">
  <Bot className="w-4 h-4 text-white" />
  </div>
  )}
@@ -943,8 +943,8 @@ export default function ModernChatPage() {
  <div className={cn(
  'rounded-2xl px-4 py-3',
  message.role === 'user'
- ? 'bg-blue-600 text-white'
- : 'bg-gray-800 text-gray-100'
+ ? 'bg-white text-white'
+ : 'bg-zinc-900 text-zinc-100'
  )}>
  {message.role === 'assistant' ? (
  <div className="prose prose-sm prose-invert max-w-none">
@@ -955,12 +955,12 @@ export default function ModernChatPage() {
  const match = /language-(\w+)/.exec(className || '');
  return !inline && match ? (
  <div className="relative my-4">
- <div className="flex items-center justify-between px-4 py-2 rounded-t-lg border-b bg-black border-gray-800">
+ <div className="flex items-center justify-between px-4 py-2 rounded-t-lg border-b bg-black border-zinc-800">
  <span className="text-xs text-muted-foreground font-mono">{match[1]}</span>
  <Button
  variant="ghost"
  size="sm"
- className="h-6 px-2 text-muted-foreground hover:text-gray-200"
+ className="h-6 px-2 text-muted-foreground hover:text-zinc-300"
  onClick={() => copyToClipboard(String(children), message.id)}
  >
  {copiedId === message.id ? (
@@ -985,7 +985,7 @@ export default function ModernChatPage() {
  </SyntaxHighlighter>
  </div>
  ) : (
- <code className="px-1.5 py-0.5 rounded text-sm bg-gray-700" {...props}>
+ <code className="px-1.5 py-0.5 rounded text-sm bg-zinc-800" {...props}>
  {children}
  </code>
  );
@@ -1009,7 +1009,7 @@ export default function ModernChatPage() {
 
  {/* User Avatar */}
  {message.role === 'user' && (
- <div className="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center flex-shrink-0 order-2">
+ <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center flex-shrink-0 order-2">
  {user?.image ? (
  <img src={user.image} alt="" className="w-8 h-8 rounded-full" />
  ) : (
@@ -1028,15 +1028,15 @@ export default function ModernChatPage() {
  animate={{ opacity: 1 }}
  className="flex gap-4"
  >
- <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+ <div className="w-8 h-8 rounded-full bg-gradient-to-br from-zinc-400 to-zinc-600 flex items-center justify-center">
  <Bot className="w-4 h-4 text-white animate-pulse" />
  </div>
- <div className="rounded-2xl px-4 py-3 bg-gray-800">
+ <div className="rounded-2xl px-4 py-3 bg-zinc-900">
  <div className="flex items-center gap-2">
  <div className="flex gap-1">
- <span className="w-2 h-2 rounded-full animate-bounce bg-gray-500" style={{ animationDelay: '0ms' }} />
- <span className="w-2 h-2 rounded-full animate-bounce bg-gray-500" style={{ animationDelay: '150ms' }} />
- <span className="w-2 h-2 rounded-full animate-bounce bg-gray-500" style={{ animationDelay: '300ms' }} />
+ <span className="w-2 h-2 rounded-full animate-bounce bg-zinc-700" style={{ animationDelay: '0ms' }} />
+ <span className="w-2 h-2 rounded-full animate-bounce bg-zinc-700" style={{ animationDelay: '150ms' }} />
+ <span className="w-2 h-2 rounded-full animate-bounce bg-zinc-700" style={{ animationDelay: '300ms' }} />
  </div>
  </div>
  </div>
@@ -1050,18 +1050,18 @@ export default function ModernChatPage() {
 
  {/* Input Area - Only shown when in conversation */}
  {hasMessages && (
- <div className="border-t p-4 border-gray-800">
+ <div className="border-t p-4 border-zinc-800">
  <div className="max-w-3xl mx-auto">
  {/* Attached Files Preview */}
  {attachedFiles.length > 0 && (
  <div className="flex flex-wrap gap-2 mb-3">
  {attachedFiles.map((file, index) => (
- <div key={index} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-900/20 text-blue-300">
+ <div key={index} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-900/30 text-zinc-400">
  <FileText className="w-4 h-4" />
  <span className="truncate max-w-[150px]">{file.name}</span>
  <button 
  onClick={() => removeAttachedFile(index)}
- className="hover:text-blue-100"
+ className="hover:text-zinc-500"
  >
  <X className="w-3.5 h-3.5" />
  </button>
@@ -1070,7 +1070,7 @@ export default function ModernChatPage() {
  </div>
  )}
  
- <div className="relative rounded-2xl focus-within:border-blue-500 transition-colors shadow-sm bg-gray-900 border-gray-700">
+ <div className="relative rounded-2xl focus-within:border-zinc-700 transition-colors shadow-sm bg-zinc-950 border-zinc-800">
  <textarea
  value={input}
  onChange={(e) => setInput(e.target.value)}
@@ -1086,7 +1086,7 @@ export default function ModernChatPage() {
  <button
  onClick={() => fileInputRef.current?.click()}
  title="Attach files"
- className="p-1.5 rounded-lg transition-colors text-muted-foreground hover:text-gray-300"
+ className="p-1.5 rounded-lg transition-colors text-muted-foreground hover:text-zinc-400"
  >
  <Paperclip className="w-4 h-4" />
  </button>
@@ -1099,8 +1099,8 @@ export default function ModernChatPage() {
  className={cn(
  "w-8 h-8 rounded-full flex items-center justify-center transition-all",
  input.trim() 
- ? "bg-blue-600 hover:bg-blue-700 text-white" 
- : "bg-gray-700 text-muted-foreground"
+ ? "bg-white hover:bg-zinc-200 text-white" 
+ : "bg-zinc-800 text-muted-foreground"
  )}
  >
  {isLoading ? (

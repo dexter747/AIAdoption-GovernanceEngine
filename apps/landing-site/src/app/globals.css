@@ -24,11 +24,11 @@
     --input: 0 0% 14.9%;
     --ring: 0 0% 83.1%;
     --radius: 0.5rem;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    --chart-1: 0 0% 90%;
+    --chart-2: 0 0% 70%;
+    --chart-3: 0 0% 55%;
+    --chart-4: 0 0% 40%;
+    --chart-5: 0 0% 25%;
   }
 }
 
@@ -78,4 +78,93 @@
 @keyframes accordion-up {
   from { height: var(--radix-accordion-content-height); }
   to { height: 0; }
+}
+
+/* Premium glow effects */
+.glow-sm {
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.03), 0 0 60px rgba(255, 255, 255, 0.01);
+}
+.glow-md {
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.05), 0 0 80px rgba(255, 255, 255, 0.02);
+}
+
+/* Premium card hover lift */
+.card-hover {
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 50px rgba(255, 255, 255, 0.02);
+}
+
+/* Gradient text shimmer */
+.text-shimmer {
+  background: linear-gradient(110deg, #e4e4e7, #ffffff, #a1a1aa, #ffffff, #e4e4e7);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textShimmer 6s ease-in-out infinite;
+}
+
+@keyframes textShimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Subtle noise texture */
+.noise-texture::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Dot grid background */
+.dot-grid {
+  background-image: radial-gradient(circle, rgba(113, 113, 122, 0.15) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Glass card */
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Subtle border glow on hover */
+.border-glow {
+  position: relative;
+}
+.border-glow::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent, rgba(255,255,255,0.05));
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  padding: 1px;
+  opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
+}
+.border-glow:hover::after {
+  opacity: 1;
+}
+
+/* Float animation class */
+.float-element {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Smooth focus rings */
+*:focus-visible {
+  outline: 2px solid rgba(161, 161, 170, 0.5);
+  outline-offset: 2px;
+  border-radius: inherit;
 }

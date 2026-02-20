@@ -19,7 +19,7 @@ const sizeClasses = {
 export function LoadingSpinner({ size = 'md', className, text }: LoadingSpinnerProps) {
  return (
  <div className={cn('flex items-center gap-2', className)}>
- <Loader2 className={cn('animate-spin text-blue-500', sizeClasses[size])} />
+ <Loader2 className={cn('animate-spin text-zinc-300', sizeClasses[size])} />
  {text && <span className="text-muted-foreground text-sm">{text}</span>}
  </div>
  );
@@ -57,7 +57,7 @@ export function LoadingSkeleton({
  width,
  height 
 }: LoadingSkeletonProps) {
- const baseClasses = 'animate-pulse bg-gray-800';
+ const baseClasses = 'animate-pulse bg-zinc-900';
  
  const variantClasses = {
  text: 'rounded h-4',
@@ -84,7 +84,7 @@ interface LoadingCardProps {
 
 export function LoadingCard({ className }: LoadingCardProps) {
  return (
- <div className={cn('p-4 rounded-lg border-gray-800', className)}>
+ <div className={cn('p-4 rounded-lg border-zinc-800', className)}>
  <LoadingSkeleton variant="text" className="w-3/4 mb-3" />
  <LoadingSkeleton variant="text" className="w-1/2 mb-2" />
  <LoadingSkeleton variant="text" className="w-full mb-2" />
@@ -101,9 +101,9 @@ interface LoadingTableProps {
 
 export function LoadingTable({ rows = 5, columns = 4, className }: LoadingTableProps) {
  return (
- <div className={cn('rounded-lg overflow-hidden border-gray-800', className)}>
+ <div className={cn('rounded-lg overflow-hidden border-zinc-800', className)}>
  {/* Header */}
- <div className="grid gap-4 p-4 border-b bg-gray-900 border-gray-800" 
+ <div className="grid gap-4 p-4 border-b bg-zinc-950 border-zinc-800" 
  style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}>
  {Array.from({ length: columns }).map((_, i) => (
  <LoadingSkeleton key={i} variant="text" className="h-4" />
@@ -113,7 +113,7 @@ export function LoadingTable({ rows = 5, columns = 4, className }: LoadingTableP
  {Array.from({ length: rows }).map((_, rowIndex) => (
  <div 
  key={rowIndex}
- className="grid gap-4 p-4 border-b last:border-0 border-gray-800"
+ className="grid gap-4 p-4 border-b last:border-0 border-zinc-800"
  style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}
  >
  {Array.from({ length: columns }).map((_, colIndex) => (

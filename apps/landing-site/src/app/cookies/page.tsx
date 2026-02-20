@@ -12,7 +12,7 @@ export default function CookiePolicy() {
  <div className="flex items-center justify-between h-16">
  <Link href="/" className="flex items-center gap-2">
  <Sparkles className="w-8 h-8 text-primary" />
- <span className="text-xl font-medium bg-gradient-to-r from-primary to-indigo-600 bg-clip-text text-transparent">Velanova</span>
+ <span className="text-xl font-medium bg-gradient-to-r from-primary to-zinc-600 bg-clip-text text-transparent">Velanova</span>
  </Link>
  <Link href="/" className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-2">
  <ArrowLeft className="w-4 h-4" /> Back to Home
@@ -39,12 +39,12 @@ export default function CookiePolicy() {
  <div className="grid gap-4 mt-6">
  <div className="border border-border rounded-lg p-6">
  <div className="flex items-center gap-3 mb-3">
- <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
- <Shield className="w-5 h-5 text-green-500" />
+ <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center">
+ <Shield className="w-5 h-5 text-zinc-400" />
  </div>
  <div>
  <h3 className="font-medium text-foreground">Essential Cookies</h3>
- <span className="text-xs bg-green-500/10 text-green-600 px-2 py-0.5 rounded">Required</span>
+ <span className="text-xs bg-white/5 text-zinc-300 px-2 py-0.5 rounded">Required</span>
  </div>
  </div>
  <p className="text-muted-foreground text-sm">
@@ -63,12 +63,12 @@ export default function CookiePolicy() {
 
  <div className="border border-border rounded-lg p-6">
  <div className="flex items-center gap-3 mb-3">
- <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
- <Settings className="w-5 h-5 text-blue-500" />
+ <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center">
+ <Settings className="w-5 h-5 text-zinc-300" />
  </div>
  <div>
  <h3 className="font-medium text-foreground">Functional Cookies</h3>
- <span className="text-xs bg-blue-500/10 text-blue-600 px-2 py-0.5 rounded">Optional</span>
+ <span className="text-xs bg-white/5 text-zinc-400 px-2 py-0.5 rounded">Optional</span>
  </div>
  </div>
  <p className="text-muted-foreground text-sm">
@@ -86,12 +86,12 @@ export default function CookiePolicy() {
 
  <div className="border border-border rounded-lg p-6">
  <div className="flex items-center gap-3 mb-3">
- <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
- <BarChart3 className="w-5 h-5 text-purple-500" />
+ <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center">
+ <BarChart3 className="w-5 h-5 text-zinc-300" />
  </div>
  <div>
  <h3 className="font-medium text-foreground">Analytics Cookies</h3>
- <span className="text-xs bg-purple-500/10 text-purple-600 px-2 py-0.5 rounded">Optional</span>
+ <span className="text-xs bg-white/5 text-zinc-300 px-2 py-0.5 rounded">Optional</span>
  </div>
  </div>
  <p className="text-muted-foreground text-sm">
@@ -191,7 +191,7 @@ export default function CookiePolicy() {
  <li><a href="https://support.microsoft.com/en-us/microsoft-edge/delete-cookies-in-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09" className="text-primary hover:underline">Microsoft Edge</a></li>
  </ul>
 
- <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 mt-6">
+ <div className="bg-white/5 border border-zinc-700/30 rounded-lg p-4 mt-6">
  <p className="text-foreground font-medium">Note:</p>
  <p className="text-muted-foreground mt-2">
  Disabling essential cookies may affect the functionality of the website. Some features may not work correctly without them.

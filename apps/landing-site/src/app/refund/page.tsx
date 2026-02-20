@@ -12,7 +12,7 @@ export default function RefundPolicy() {
  <div className="flex items-center justify-between h-16">
  <Link href="/" className="flex items-center gap-2">
  <Sparkles className="w-8 h-8 text-primary" />
- <span className="text-xl font-medium bg-gradient-to-r from-primary to-indigo-600 bg-clip-text text-transparent">Velanova</span>
+ <span className="text-xl font-medium bg-gradient-to-r from-primary to-zinc-600 bg-clip-text text-transparent">Velanova</span>
  </Link>
  <Link href="/" className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-2">
  <ArrowLeft className="w-4 h-4" /> Back to Home
@@ -37,28 +37,28 @@ export default function RefundPolicy() {
  <h2 className="text-2xl font-medium text-foreground mb-4">1. Eligible for Refund</h2>
  <div className="space-y-4">
  <div className="flex items-start gap-3">
- <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+ <CheckCircle2 className="w-5 h-5 text-zinc-400 flex-shrink-0 mt-0.5" />
  <div>
  <p className="text-foreground font-medium">First-time subscription payments</p>
  <p className="text-muted-foreground text-sm">Refundable within 30 days of initial purchase</p>
  </div>
  </div>
  <div className="flex items-start gap-3">
- <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+ <CheckCircle2 className="w-5 h-5 text-zinc-400 flex-shrink-0 mt-0.5" />
  <div>
  <p className="text-foreground font-medium">Plan upgrades</p>
  <p className="text-muted-foreground text-sm">Prorated difference refundable within 14 days of upgrade</p>
  </div>
  </div>
  <div className="flex items-start gap-3">
- <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+ <CheckCircle2 className="w-5 h-5 text-zinc-400 flex-shrink-0 mt-0.5" />
  <div>
  <p className="text-foreground font-medium">Annual subscriptions</p>
  <p className="text-muted-foreground text-sm">Full refund within 30 days, or prorated refund within 90 days</p>
  </div>
  </div>
  <div className="flex items-start gap-3">
- <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+ <CheckCircle2 className="w-5 h-5 text-zinc-400 flex-shrink-0 mt-0.5" />
  <div>
  <p className="text-foreground font-medium">Service outages</p>
  <p className="text-muted-foreground text-sm">Prorated credit for downtime exceeding 24 hours</p>
@@ -71,28 +71,28 @@ export default function RefundPolicy() {
  <h2 className="text-2xl font-medium text-foreground mb-4">2. Not Eligible for Refund</h2>
  <div className="space-y-4">
  <div className="flex items-start gap-3">
- <XCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+ <XCircle className="w-5 h-5 text-zinc-400 flex-shrink-0 mt-0.5" />
  <div>
  <p className="text-foreground font-medium">Renewal payments</p>
  <p className="text-muted-foreground text-sm">Automatic renewals are non-refundable (you can cancel before renewal)</p>
  </div>
  </div>
  <div className="flex items-start gap-3">
- <XCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+ <XCircle className="w-5 h-5 text-zinc-400 flex-shrink-0 mt-0.5" />
  <div>
  <p className="text-foreground font-medium">Requests after 30 days</p>
  <p className="text-muted-foreground text-sm">The refund window closes 30 days after purchase</p>
  </div>
  </div>
  <div className="flex items-start gap-3">
- <XCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+ <XCircle className="w-5 h-5 text-zinc-400 flex-shrink-0 mt-0.5" />
  <div>
  <p className="text-foreground font-medium">Terms of Service violations</p>
  <p className="text-muted-foreground text-sm">Accounts terminated for abuse are not eligible</p>
  </div>
  </div>
  <div className="flex items-start gap-3">
- <XCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+ <XCircle className="w-5 h-5 text-zinc-400 flex-shrink-0 mt-0.5" />
  <div>
  <p className="text-foreground font-medium">Third-party charges</p>
  <p className="text-muted-foreground text-sm">API costs from OpenAI, Anthropic, etc. are billed by those providers</p>
@@ -136,8 +136,8 @@ export default function RefundPolicy() {
  <li>No further charges will be made</li>
  <li>Your data will be retained for 30 days, then deleted</li>
  </ul>
- <div className="flex items-start gap-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 mt-4">
- <AlertCircle className="w-5 h-5 text-yellow-500 flex-shrink-0 mt-0.5" />
+ <div className="flex items-start gap-3 bg-white/5 border border-zinc-700/30 rounded-lg p-4 mt-4">
+ <AlertCircle className="w-5 h-5 text-zinc-400 flex-shrink-0 mt-0.5" />
  <p className="text-muted-foreground">
  <strong className="text-foreground">Tip:</strong> Cancel at least 24 hours before your renewal date to avoid being charged for the next billing cycle.
  </p>

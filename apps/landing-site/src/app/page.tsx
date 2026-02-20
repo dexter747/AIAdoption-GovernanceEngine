@@ -13,6 +13,7 @@ import ROICalculator from '@/components/landing/ROICalculator';
 import FAQSection from '@/components/landing/FAQSection';
 import TrustSection from '@/components/landing/TrustSection';
 import IntegrationsSection from '@/components/landing/IntegrationsSection';
+import LLMParallaxSection from '@/components/landing/LLMParallaxSection';
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
       <Navbar />
       <NewHeroSection />
       <LogosSection />
+      <LLMParallaxSection />
       <IntegrationsSection />
       <FeaturesSection />
       <HowItWorksSection />

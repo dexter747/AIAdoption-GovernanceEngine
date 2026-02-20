@@ -1,223 +1,165 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { Check, Sparkles, Building2, Rocket, X } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardFooter } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Link from "next/link";
+import { Check, Sparkles, Building2, Rocket, X } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-interface PricingTier {
- name: string;
- icon: any;
- price: string;
- period?: string;
- description: string;
- features: string[];
- notIncluded?: string[];
- cta: string;
- ctaLink: string;
- highlighted?: boolean;
-}
+gsap.registerPlugin(ScrollTrigger);
 
-const pricingTiers: PricingTier[] = [
- {
- name: 'Starter',
- icon: Rocket,
- price: '$0',
- period: '/14 days',
- description: 'Perfect for trying out the platform',
- features: [
- '1 device license',
- '100 queries per month',
- 'All AI model providers',
- 'Basic database connectors',
- 'Email support',
- '7-day data retention',
- ],
- notIncluded: [
- 'Advanced analytics',
- 'Custom workflows',
- 'API access',
- ],
- cta: 'Start Free Trial',
- ctaLink: '/download',
- },
- {
- name: 'Professional',
- icon: Sparkles,
- price: '$199',
- period: '/month per user',
- description: 'For teams that need unlimited power',
- features: [
- 'Up to 10 device licenses',
- 'Unlimited queries',
- 'All 64+ system connectors',
- 'All AI model providers',
- 'Advanced analytics & dashboards',
- 'Custom workflows & automation',
- 'Priority support (4h SLA)',
- 'API access & webhooks',
- '90-day data retention',
- 'SSO integration',
- 'Custom reports',
- ],
- cta: 'Start 14-Day Trial',
- ctaLink: '/subscribe?plan=pro',
- highlighted: true,
- },
- {
- name: 'Enterprise',
- icon: Building2,
- price: 'Custom',
- description: 'For organizations with complex needs',
- features: [
- 'Unlimited device licenses',
- 'Unlimited everything',
- 'All Professional features',
- 'On-premise / air-gapped deployment',
- 'White-label & custom branding',
- 'Dedicated account manager',
- '24/7 phone support (1h SLA)',
- 'Custom integrations & development',
- 'Unlimited data retention',
- 'SOC 2 Type II compliance',
- 'SLA guarantees',
- 'Training & onboarding',
- ],
- cta: 'Contact Sales',
- ctaLink: '/contact',
- },
+const pricingTiers = [
+  {
+    name: "Starter",
+    icon: Rocket,
+    price: "$0",
+    period: "/14 days",
+    description: "Perfect for trying out the platform",
+    features: ["1 device license", "100 queries per month", "All AI model providers", "Basic database connectors", "Email support", "7-day data retention"],
+    notIncluded: ["Advanced analytics", "Custom workflows", "API access"],
+    cta: "Start Free Trial",
+    ctaLink: "/download",
+    highlighted: false,
+  },
+  {
+    name: "Professional",
+    icon: Sparkles,
+    price: "$199",
+    period: "/month per user",
+    description: "For teams that need unlimited power",
+    features: ["Up to 10 device licenses", "Unlimited queries", "All 64+ system connectors", "All AI model providers", "Advanced analytics & dashboards", "Custom workflows & automation", "Priority support (4h SLA)", "API access & webhooks", "90-day data retention", "SSO integration", "Custom reports"],
+    cta: "Start 14-Day Trial",
+    ctaLink: "/subscribe?plan=pro",
+    highlighted: true,
+  },
+  {
+    name: "Enterprise",
+    icon: Building2,
+    price: "Custom",
+    description: "For organizations with complex needs",
+    features: ["Unlimited device licenses", "Unlimited everything", "All Professional features", "On-premise / air-gapped deployment", "White-label & custom branding", "Dedicated account manager", "24/7 phone support (1h SLA)", "Custom integrations & development", "Unlimited data retention", "SLA guarantees", "Training & onboarding"],
+    cta: "Contact Sales",
+    ctaLink: "/contact",
+    highlighted: false,
+  },
 ];
 
 export function PricingSection() {
- return (
- <section 
- id="pricing" 
- className="relative py-24 bg-gradient-to-b from-white via-indigo-50/30 to-white"
- >
- {/* Background decoration */}
- <div className="absolute inset-0 bg-grid-gray-900/[0.02]" />
- 
- <div className="relative max-w-7xl mx-auto px-6">
- <div className="text-center max-w-3xl mx-auto mb-16">
- <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full font-medium mb-4 bg-indigo-950 text-indigo-300">
- <Sparkles className="w-4 h-4" />
- Simple, Transparent Pricing
- </div>
- <h2 className="md:text-5xl font-medium mb-4 text-white">
- Plans that{' '}
- <span className="text-blue-500">
- scale with you
- </span>
- </h2>
- <p className="text-muted-foreground">
- Start free. Upgrade when you're ready. No hidden fees. Cancel anytime.
- </p>
- </div>
+  const ref = useRef<HTMLElement>(null);
 
- <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
- {pricingTiers.map((tier) => {
- const Icon = tier.icon;
- return (
- <Card
- key={tier.name}
- className={cn(
- 'pricing-card relative overflow-hidden transition-all duration-300',
- tier.highlighted
- ? 'border-2 shadow-xl shadow-blue-500/20 scale-105 md:scale-110 border-blue-400'
- : 'hover:shadow-lg hover:-translate-y-1 border-gray-800'
- )}
- >
- {/* Most popular badge */}
- {tier.highlighted && (
- <div className="absolute top-0 right-0 bg-blue-500 text-white text-xs font-medium px-4 py-1.5 rounded-bl-lg">
- MOST POPULAR
- </div>
- )}
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from(".price-header > *", {
+        opacity: 0, y: 30, duration: 0.7, stagger: 0.12,
+        scrollTrigger: { trigger: ".price-header", start: "top 85%", once: true },
+      });
+      gsap.from(".price-card", {
+        opacity: 0, y: 50, scale: 0.95, duration: 0.7, stagger: 0.15, ease: "power3.out",
+        scrollTrigger: { trigger: ".price-grid", start: "top 85%", once: true },
+      });
+      gsap.from(".price-footer > *", {
+        opacity: 0, y: 15, duration: 0.5, stagger: 0.1,
+        scrollTrigger: { trigger: ".price-footer", start: "top 90%", once: true },
+      });
+    }, ref);
+    return () => ctx.revert();
+  }, []);
 
- <CardHeader className="pb-4">
- <div className="w-12 h-12 rounded-lg bg-blue-500 flex items-center justify-center mb-3">
- <Icon className="w-6 h-6 text-white" />
- </div>
- 
- <h3 className="font-medium text-white">
- {tier.name}
- </h3>
- <p className="mt-1 text-muted-foreground">
- {tier.description}
- </p>
- 
- <div className="flex items-baseline gap-1 mt-4">
- <span className="font-medium text-white">
- {tier.price}
- </span>
- {tier.period && (
- <span className="font-medium text-muted-foreground">
- {tier.period}
- </span>
- )}
- </div>
- </CardHeader>
+  return (
+    <section id="pricing" ref={ref} className="relative py-28 bg-black">
+      <div className="absolute inset-0 dot-grid opacity-20" />
 
- <CardContent className="pb-6">
- <ul className="space-y-3">
- {tier.features.map((feature) => (
- <li key={feature} className="flex items-start gap-3 text-sm">
- <Check className="w-5 h-5 flex-shrink-0 mt-0.5 text-blue-500" />
- <span className="text-gray-300">
- {feature}
- </span>
- </li>
- ))}
- {tier.notIncluded?.map((feature) => (
- <li key={feature} className="flex items-start gap-3 text-sm opacity-50">
- <X className="w-5 h-5 flex-shrink-0 mt-0.5 text-muted-foreground" />
- <span className="line-through text-muted-foreground">
- {feature}
- </span>
- </li>
- ))}
- </ul>
- </CardContent>
+      <div className="relative max-w-7xl mx-auto px-6">
+        <div className="price-header text-center max-w-3xl mx-auto mb-20">
+          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border mb-5 bg-white/[0.03] border-white/[0.08]">
+            <Sparkles className="w-4 h-4 text-zinc-500" />
+            <span className="text-sm font-medium text-zinc-500">Simple, Transparent Pricing</span>
+          </div>
+          <h2 className="text-4xl md:text-5xl font-medium tracking-tight mb-5 text-white">
+            Plans that <span className="text-shimmer">scale with you</span>
+          </h2>
+          <p className="text-lg text-zinc-500">
+            Start free. Upgrade when you&apos;re ready. No hidden fees. Cancel anytime.
+          </p>
+        </div>
 
- <CardFooter>
- <Link
- href={tier.ctaLink}
- className={cn(
- 'w-full text-center py-3 rounded-lg font-medium text-sm transition-all duration-300',
- tier.highlighted
- ? 'bg-blue-500 text-white hover:bg-blue-600'
- : 'border-gray-700 text-white hover:border-blue-400'
- )}
- >
- {tier.cta}
- </Link>
- </CardFooter>
- </Card>
- );
- })}
- </div>
+        <div className="price-grid grid md:grid-cols-3 gap-6 max-w-6xl mx-auto py-6 overflow-visible">
+          {pricingTiers.map((tier) => {
+            const Icon = tier.icon;
+            return (
+              <div
+                key={tier.name}
+                className={cn(
+                  "price-card relative p-8 rounded-2xl border transition-all duration-500",
+                  tier.highlighted
+                    ? "border-white/20 bg-white/[0.05] shadow-2xl shadow-white/[0.05] ring-1 ring-white/10"
+                    : "border-white/[0.06] bg-white/[0.02] hover:border-white/[0.12] card-hover"
+                )}
+              >
+                {tier.highlighted && (
+                  <div className="absolute top-0 right-0 bg-white text-black text-xs font-medium px-4 py-1.5 rounded-bl-xl rounded-tr-2xl">
+                    MOST POPULAR
+                  </div>
+                )}
 
- {/* Bottom note */}
- <div className="mt-12 text-center">
- <p className="text-muted-foreground">
- All plans include 14-day free trial • No credit card required • Cancel anytime
- </p>
- <div className="flex items-center justify-center gap-6 mt-4 text-sm">
- <span className="flex items-center gap-2 text-muted-foreground">
- <Check className="w-4 h-4 text-blue-500" />
- SOC 2 Certified
- </span>
- <span className="flex items-center gap-2 text-muted-foreground">
- <Check className="w-4 h-4 text-blue-500" />
- GDPR Compliant
- </span>
- <span className="flex items-center gap-2 text-muted-foreground">
- <Check className="w-4 h-4 text-blue-500" />
- 99.9% Uptime SLA
- </span>
- </div>
- </div>
- </div>
- </section>
- );
+                <div className="w-12 h-12 rounded-xl bg-white/[0.06] flex items-center justify-center mb-5">
+                  <Icon className="w-6 h-6 text-zinc-400" />
+                </div>
+
+                <h3 className="text-xl font-medium text-white mb-1">{tier.name}</h3>
+                <p className="text-sm text-zinc-500 mb-5">{tier.description}</p>
+
+                <div className="flex items-baseline gap-1 mb-7">
+                  <span className="text-4xl font-medium text-white tracking-tight">{tier.price}</span>
+                  {tier.period && <span className="text-sm text-zinc-500">{tier.period}</span>}
+                </div>
+
+                <ul className="space-y-3 mb-8">
+                  {tier.features.map((feature) => (
+                    <li key={feature} className="flex items-start gap-3 text-sm">
+                      <Check className="w-4 h-4 flex-shrink-0 mt-0.5 text-zinc-500" />
+                      <span className="text-zinc-400">{feature}</span>
+                    </li>
+                  ))}
+                  {tier.notIncluded && tier.notIncluded.map((feature) => (
+                    <li key={feature} className="flex items-start gap-3 text-sm opacity-40">
+                      <X className="w-4 h-4 flex-shrink-0 mt-0.5 text-zinc-600" />
+                      <span className="line-through text-zinc-600">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <Link
+                  href={tier.ctaLink}
+                  className={cn(
+                    "block w-full text-center py-3.5 rounded-xl font-medium text-sm transition-all duration-300",
+                    tier.highlighted
+                      ? "bg-white text-black hover:bg-zinc-200 shadow-lg shadow-white/5"
+                      : "border border-white/[0.08] text-zinc-300 hover:border-white/[0.15] hover:bg-white/[0.03]"
+                  )}
+                >
+                  {tier.cta}
+                </Link>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="price-footer mt-16 text-center">
+          <p className="text-sm text-zinc-500 mb-4">
+            All plans include 14-day free trial &middot; No credit card required &middot; Cancel anytime
+          </p>
+          <div className="flex items-center justify-center gap-6">
+            {["Zero lock-in", "Cancel anytime", "99.9% Uptime SLA"].map((text) => (
+              <span key={text} className="flex items-center gap-2 text-sm text-zinc-600">
+                <Check className="w-3.5 h-3.5 text-zinc-500" />
+                {text}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }

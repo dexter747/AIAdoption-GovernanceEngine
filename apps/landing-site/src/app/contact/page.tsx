@@ -30,7 +30,7 @@ export default function ContactPage() {
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="flex items-center gap-2">
               <Sparkles className="w-8 h-8 text-primary" />
-              <span className="text-xl font-medium bg-gradient-to-r from-primary to-indigo-600 bg-clip-text text-transparent">Velanova</span>
+              <span className="text-xl font-medium bg-gradient-to-r from-primary to-zinc-600 bg-clip-text text-transparent">Velanova</span>
             </Link>
             <Link href="/" className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-2">
               <ArrowLeft className="w-4 h-4" /> Back to Home
@@ -83,8 +83,8 @@ export default function ContactPage() {
               <h2 className="text-2xl font-medium text-foreground mb-6">Send us a Message</h2>
               
               {formState === 'success' ? (
-                <div className="bg-green-500/10 border border-green-500/20 rounded-2xl p-8 text-center">
-                  <CheckCircle2 className="w-12 h-12 text-green-500 mx-auto mb-4" />
+                <div className="bg-white/5 border border-zinc-700/30 rounded-2xl p-8 text-center">
+                  <CheckCircle2 className="w-12 h-12 text-zinc-400 mx-auto mb-4" />
                   <h3 className="text-xl font-medium text-foreground mb-2">Message Sent!</h3>
                   <p className="text-muted-foreground mb-6">Thanks for reaching out. We&apos;ll get back to you within 24 hours.</p>
                   <button 

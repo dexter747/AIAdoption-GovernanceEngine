@@ -12,7 +12,7 @@ export default function PrivacyPolicy() {
  <div className="flex items-center justify-between h-16">
  <Link href="/" className="flex items-center gap-2">
  <Sparkles className="w-8 h-8 text-primary" />
- <span className="text-xl font-medium bg-gradient-to-r from-primary to-indigo-600 bg-clip-text text-transparent">Velanova</span>
+ <span className="text-xl font-medium bg-gradient-to-r from-primary to-zinc-600 bg-clip-text text-transparent">Velanova</span>
  </Link>
  <Link href="/" className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-2">
  <ArrowLeft className="w-4 h-4" /> Back to Home
@@ -55,7 +55,7 @@ export default function PrivacyPolicy() {
  </ul>
 
  <h3 className="text-lg font-medium text-foreground mt-6 mb-3">2.3 Data We Do NOT Collect</h3>
- <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4 mt-4">
+ <div className="bg-white/5 border border-zinc-700/30 rounded-lg p-4 mt-4">
  <p className="text-foreground font-medium">Zero-Knowledge Architecture</p>
  <ul className="list-disc pl-6 text-muted-foreground mt-2 space-y-2">
  <li>We do NOT access, store, or transmit your database contents</li>

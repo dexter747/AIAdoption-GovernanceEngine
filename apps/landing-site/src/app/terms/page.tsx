@@ -12,7 +12,7 @@ export default function TermsOfService() {
  <div className="flex items-center justify-between h-16">
  <Link href="/" className="flex items-center gap-2">
  <Sparkles className="w-8 h-8 text-primary" />
- <span className="text-xl font-medium bg-gradient-to-r from-primary to-indigo-600 bg-clip-text text-transparent">Velanova</span>
+ <span className="text-xl font-medium bg-gradient-to-r from-primary to-zinc-600 bg-clip-text text-transparent">Velanova</span>
  </Link>
  <Link href="/" className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-2">
  <ArrowLeft className="w-4 h-4" /> Back to Home
@@ -112,7 +112,7 @@ export default function TermsOfService() {
  <p className="text-muted-foreground leading-relaxed">
  The Service integrates with third-party AI providers (OpenAI, Anthropic, Google, etc.). Your use of these services is subject to their respective terms and privacy policies. We are not responsible for third-party services.
  </p>
- <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 mt-4">
+ <div className="bg-white/5 border border-zinc-700/30 rounded-lg p-4 mt-4">
  <p className="text-foreground font-medium">Important:</p>
  <p className="text-muted-foreground mt-2">
  When using third-party AI providers, your queries and data may be transmitted to their servers according to their terms. For maximum privacy, use local AI models via Ollama.

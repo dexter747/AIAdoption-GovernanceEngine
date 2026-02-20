@@ -101,24 +101,24 @@ interface ToastItemProps {
 
 const toastStyles: Record<ToastType, { bg: string; border: string; icon: ReactNode }> = {
  success: {
- bg: 'bg-green-900/30',
- border: 'border-green-800',
- icon: <CheckCircle className="w-5 h-5 text-green-500" />,
+ bg: 'bg-zinc-900/40',
+ border: 'border-zinc-800',
+ icon: <CheckCircle className="w-5 h-5 text-zinc-400" />,
  },
  error: {
- bg: 'bg-red-900/30',
- border: 'border-red-800',
- icon: <XCircle className="w-5 h-5 text-red-500" />,
+ bg: 'bg-zinc-900/40',
+ border: 'border-zinc-800',
+ icon: <XCircle className="w-5 h-5 text-zinc-400" />,
  },
  warning: {
- bg: 'bg-amber-900/30',
- border: 'border-amber-800',
- icon: <AlertTriangle className="w-5 h-5 text-amber-500" />,
+ bg: 'bg-zinc-900/40',
+ border: 'border-zinc-800',
+ icon: <AlertTriangle className="w-5 h-5 text-zinc-400" />,
  },
  info: {
- bg: 'bg-blue-900/30',
- border: 'border-blue-800',
- icon: <Info className="w-5 h-5 text-blue-500" />,
+ bg: 'bg-zinc-900/40',
+ border: 'border-zinc-800',
+ icon: <Info className="w-5 h-5 text-zinc-300" />,
  },
 };
 
@@ -142,14 +142,14 @@ function ToastItem({ toast, onRemove }: ToastItemProps) {
  {toast.title}
  </p>
  {toast.message && (
- <p className="mt-1 text-gray-300">
+ <p className="mt-1 text-zinc-400">
  {toast.message}
  </p>
  )}
  </div>
  <button
  onClick={onRemove}
- className="flex-shrink-0 text-muted-foreground transition-colors hover:text-gray-200"
+ className="flex-shrink-0 text-muted-foreground transition-colors hover:text-zinc-300"
  >
  <X className="w-4 h-4" />
  </button>

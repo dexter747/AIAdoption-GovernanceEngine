@@ -125,25 +125,25 @@ export default function LicensesPage() {
 
  const getTierBadge = (tier: string) => {
  const badges: Record<string, { color: string; icon: React.ReactNode }> = {
- free: { color: 'bg-gray-800 text-gray-300', icon: null },
- starter: { color: 'bg-blue-900/30 text-blue-400', icon: <Sparkles className="w-3 h-3" /> },
- pro: { color: 'bg-purple-900/30 text-purple-400', icon: <Sparkles className="w-3 h-3" /> },
- enterprise: { color: 'bg-amber-900/30 text-amber-400', icon: <Crown className="w-3 h-3" /> },
+ free: { color: 'bg-zinc-900 text-zinc-400', icon: null },
+ starter: { color: 'bg-zinc-900/40 text-zinc-400', icon: <Sparkles className="w-3 h-3" /> },
+ pro: { color: 'bg-zinc-900/40 text-zinc-400', icon: <Sparkles className="w-3 h-3" /> },
+ enterprise: { color: 'bg-zinc-900/40 text-zinc-400', icon: <Crown className="w-3 h-3" /> },
  };
  return badges[tier] || badges.free;
  };
 
  const getStatusBadge = (license: License) => {
  if (license.isExpired) {
- return { color: 'bg-red-900/30 text-red-400', icon: <XCircle className="w-3 h-3" />, label: 'Expired' };
+ return { color: 'bg-zinc-900/40 text-zinc-400', icon: <XCircle className="w-3 h-3" />, label: 'Expired' };
  }
  if (!license.isActive) {
- return { color: 'bg-gray-800 text-gray-300', icon: <XCircle className="w-3 h-3" />, label: 'Revoked' };
+ return { color: 'bg-zinc-900 text-zinc-400', icon: <XCircle className="w-3 h-3" />, label: 'Revoked' };
  }
  if (license.daysRemaining !== null && license.daysRemaining < 7) {
- return { color: 'bg-amber-900/30 text-amber-400', icon: <AlertTriangle className="w-3 h-3" />, label: 'Expiring Soon' };
+ return { color: 'bg-zinc-900/40 text-zinc-400', icon: <AlertTriangle className="w-3 h-3" />, label: 'Expiring Soon' };
  }
- return { color: 'bg-green-900/30 text-green-400', icon: <CheckCircle className="w-3 h-3" />, label: 'Active' };
+ return { color: 'bg-zinc-900/40 text-zinc-400', icon: <CheckCircle className="w-3 h-3" />, label: 'Active' };
  };
 
  return (
@@ -152,7 +152,7 @@ export default function LicensesPage() {
  <div className="flex items-center justify-between mb-8">
  <div>
  <h1 className="font-medium flex items-center gap-2 text-white">
- <Key className="w-6 h-6 text-blue-500" />
+ <Key className="w-6 h-6 text-zinc-300" />
  Licenses
  </h1>
  <p className="text-muted-foreground mt-1">Manage software licenses</p>
@@ -160,14 +160,14 @@ export default function LicensesPage() {
  <div className="flex gap-3">
  <button
  onClick={fetchLicenses}
- className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground rounded-lg hover:text-white border-gray-800"
+ className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground rounded-lg hover:text-white border-zinc-800"
  >
  <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
  Refresh
  </button>
  <button
  onClick={() => setShowCreateModal(true)}
- className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+ className="flex items-center gap-2 px-4 py-2 bg-white text-black rounded-lg hover:bg-zinc-200 transition-colors"
  >
  <Plus className="w-4 h-4" />
  Create License
@@ -178,10 +178,10 @@ export default function LicensesPage() {
  {/* Stats Cards */}
  {stats && (
  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
- <div className="rounded-xl p-4 bg-gray-900 border-gray-800">
+ <div className="rounded-xl p-4 bg-zinc-950 border-zinc-800">
  <div className="flex items-center gap-3">
- <div className="p-2 rounded-lg bg-blue-900/30">
- <Key className="w-5 h-5 text-blue-500" />
+ <div className="p-2 rounded-lg bg-zinc-900/40">
+ <Key className="w-5 h-5 text-zinc-300" />
  </div>
  <div>
  <p className="font-medium text-white">{stats.total}</p>
@@ -189,10 +189,10 @@ export default function LicensesPage() {
  </div>
  </div>
  </div>
- <div className="rounded-xl p-4 bg-gray-900 border-gray-800">
+ <div className="rounded-xl p-4 bg-zinc-950 border-zinc-800">
  <div className="flex items-center gap-3">
- <div className="p-2 rounded-lg bg-green-900/30">
- <CheckCircle className="w-5 h-5 text-green-500" />
+ <div className="p-2 rounded-lg bg-zinc-900/40">
+ <CheckCircle className="w-5 h-5 text-zinc-400" />
  </div>
  <div>
  <p className="font-medium text-white">{stats.active}</p>
@@ -200,10 +200,10 @@ export default function LicensesPage() {
  </div>
  </div>
  </div>
- <div className="rounded-xl p-4 bg-gray-900 border-gray-800">
+ <div className="rounded-xl p-4 bg-zinc-950 border-zinc-800">
  <div className="flex items-center gap-3">
- <div className="p-2 rounded-lg bg-red-900/30">
- <XCircle className="w-5 h-5 text-red-500" />
+ <div className="p-2 rounded-lg bg-zinc-900/40">
+ <XCircle className="w-5 h-5 text-zinc-400" />
  </div>
  <div>
  <p className="font-medium text-white">{stats.expired}</p>
@@ -211,10 +211,10 @@ export default function LicensesPage() {
  </div>
  </div>
  </div>
- <div className="rounded-xl p-4 bg-gray-900 border-gray-800">
+ <div className="rounded-xl p-4 bg-zinc-950 border-zinc-800">
  <div className="flex items-center gap-3">
- <div className="p-2 rounded-lg bg-purple-900/30">
- <Crown className="w-5 h-5 text-purple-500" />
+ <div className="p-2 rounded-lg bg-zinc-900/40">
+ <Crown className="w-5 h-5 text-zinc-300" />
  </div>
  <div>
  <p className="font-medium text-white">{stats.byTier.pro + stats.byTier.enterprise}</p>
@@ -235,14 +235,14 @@ export default function LicensesPage() {
  placeholder="Search by email or license key..."
  value={searchQuery}
  onChange={(e) => setSearchQuery(e.target.value)}
- className="w-full pl-10 pr-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent border-gray-800 bg-gray-900 text-white"
+ className="w-full pl-10 pr-4 py-2 rounded-lg focus:ring-2 focus:ring-zinc-600 focus:border-transparent border-zinc-800 bg-zinc-950 text-white"
  />
  </div>
  </div>
  <select
  value={filterStatus}
  onChange={(e) => setFilterStatus(e.target.value)}
- className="px-4 py-2 rounded-lg border-gray-800 bg-gray-900 text-white"
+ className="px-4 py-2 rounded-lg border-zinc-800 bg-zinc-950 text-white"
  >
  <option value="all">All Status</option>
  <option value="active">Active</option>
@@ -251,7 +251,7 @@ export default function LicensesPage() {
  <select
  value={filterTier}
  onChange={(e) => setFilterTier(e.target.value)}
- className="px-4 py-2 rounded-lg border-gray-800 bg-gray-900 text-white"
+ className="px-4 py-2 rounded-lg border-zinc-800 bg-zinc-950 text-white"
  >
  <option value="all">All Tiers</option>
  <option value="free">Free</option>
@@ -262,11 +262,11 @@ export default function LicensesPage() {
  </div>
 
  {/* Table */}
- <div className="rounded-xl overflow-hidden bg-gray-900 border-gray-800">
+ <div className="rounded-xl overflow-hidden bg-zinc-950 border-zinc-800">
  <div className="overflow-x-auto">
  <table className="w-full">
  <thead>
- <tr className="border-b border-gray-800">
+ <tr className="border-b border-zinc-800">
  <th className="text-left px-6 py-4 text-xs font-medium text-muted-foreground uppercase tracking-wider">User</th>
  <th className="text-left px-6 py-4 text-xs font-medium text-muted-foreground uppercase tracking-wider">License Key</th>
  <th className="text-left px-6 py-4 text-xs font-medium text-muted-foreground uppercase tracking-wider">Tier</th>
@@ -280,14 +280,14 @@ export default function LicensesPage() {
  {loading && licenses.length === 0 ? (
  <tr>
  <td colSpan={7} className="px-6 py-12 text-center">
- <RefreshCw className="w-6 h-6 text-blue-500 animate-spin mx-auto mb-2" />
+ <RefreshCw className="w-6 h-6 text-zinc-300 animate-spin mx-auto mb-2" />
  <p className="text-muted-foreground">Loading licenses...</p>
  </td>
  </tr>
  ) : licenses.length === 0 ? (
  <tr>
  <td colSpan={7} className="px-6 py-12 text-center">
- <Key className="w-8 h-8 text-gray-300 mx-auto mb-2" />
+ <Key className="w-8 h-8 text-zinc-400 mx-auto mb-2" />
  <p className="text-muted-foreground">No licenses found</p>
  </td>
  </tr>
@@ -297,7 +297,7 @@ export default function LicensesPage() {
  const statusBadge = getStatusBadge(license);
  
  return (
- <tr key={license.id} className="hover:bg-gray-800/50">
+ <tr key={license.id} className="hover:bg-zinc-900/50">
  <td className="px-6 py-4">
  <div>
  <p className="font-medium text-white">
@@ -310,15 +310,15 @@ export default function LicensesPage() {
  </td>
  <td className="px-6 py-4">
  <div className="flex items-center gap-2">
- <code className="font-mono px-2 py-1 rounded text-muted-foreground bg-gray-800">
+ <code className="font-mono px-2 py-1 rounded text-muted-foreground bg-zinc-900">
  {license.licenseKey}
  </code>
  <button
  onClick={() => handleCopyKey(license.licenseKey, license.id)}
- className="p-1 rounded hover:bg-gray-700"
+ className="p-1 rounded hover:bg-zinc-800"
  >
  {copiedId === license.id ? (
- <Check className="w-4 h-4 text-green-500" />
+ <Check className="w-4 h-4 text-zinc-400" />
  ) : (
  <Copy className="w-4 h-4 text-muted-foreground" />
  )}
@@ -346,7 +346,7 @@ export default function LicensesPage() {
  <td className="px-6 py-4">
  {license.expiresAt ? (
  <div className="text-sm">
- <p className={`${license.daysRemaining !== null && license.daysRemaining < 7 ? 'text-red-500' : 'text-muted-foreground'}`}>
+ <p className={`${license.daysRemaining !== null && license.daysRemaining < 7 ? 'text-zinc-400' : 'text-muted-foreground'}`}>
  {new Date(license.expiresAt).toLocaleDateString()}
  </p>
  {license.daysRemaining !== null && (
@@ -363,14 +363,14 @@ export default function LicensesPage() {
  <div className="flex items-center justify-end gap-2">
  <button
  onClick={() => handleToggleActive(license)}
- className={`p-2 rounded-lg transition-colors ${ license.isActive ? 'text-amber-500 : 'text-green-500 } hover:bg-green-900/30'`}
+ className={`p-2 rounded-lg transition-colors ${ license.isActive ? 'text-zinc-400 : 'text-zinc-400 } hover:bg-zinc-900/40'`}
  title={license.isActive ? 'Revoke' : 'Activate'}
  >
  {license.isActive ? <XCircle className="w-4 h-4" /> : <CheckCircle className="w-4 h-4" />}
  </button>
  <button
  onClick={() => handleDelete(license)}
- className="p-2 text-red-500 rounded-lg transition-colors hover:bg-red-900/30"
+ className="p-2 text-zinc-400 rounded-lg transition-colors hover:bg-zinc-900/40"
  title="Delete"
  >
  <Trash2 className="w-4 h-4" />
@@ -387,7 +387,7 @@ export default function LicensesPage() {
 
  {/* Pagination */}
  {totalPages > 1 && (
- <div className="flex items-center justify-between px-6 py-4 border-t border-gray-800">
+ <div className="flex items-center justify-between px-6 py-4 border-t border-zinc-800">
  <p className="text-sm text-muted-foreground">
  Page {page} of {totalPages}
  </p>
@@ -395,14 +395,14 @@ export default function LicensesPage() {
  <button
  onClick={() => setPage(p => Math.max(1, p - 1))}
  disabled={page === 1}
- className="px-3 py-1 text-sm rounded-lg disabled:opacity-50 disabled:cursor-not-allowed border-gray-800 hover:bg-gray-800"
+ className="px-3 py-1 text-sm rounded-lg disabled:opacity-50 disabled:cursor-not-allowed border-zinc-800 hover:bg-zinc-900"
  >
  Previous
  </button>
  <button
  onClick={() => setPage(p => Math.min(totalPages, p + 1))}
  disabled={page === totalPages}
- className="px-3 py-1 text-sm rounded-lg disabled:opacity-50 disabled:cursor-not-allowed border-gray-800 hover:bg-gray-800"
+ className="px-3 py-1 text-sm rounded-lg disabled:opacity-50 disabled:cursor-not-allowed border-zinc-800 hover:bg-zinc-900"
  >
  Next
  </button>
@@ -414,14 +414,14 @@ export default function LicensesPage() {
  {/* Create License Modal - Placeholder */}
  {showCreateModal && (
  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
- <div className="rounded-xl p-6 max-w-md w-full mx-4 bg-gray-900">
+ <div className="rounded-xl p-6 max-w-md w-full mx-4 bg-zinc-950">
  <h2 className="font-medium mb-4 text-white">Create License</h2>
  <p className="text-muted-foreground mb-4">
  License creation requires user selection. Please use the Users page to create licenses for specific users.
  </p>
  <button
  onClick={() => setShowCreateModal(false)}
- className="w-full px-4 py-2 rounded-lg bg-gray-800 text-white hover:bg-gray-700"
+ className="w-full px-4 py-2 rounded-lg bg-zinc-900 text-white hover:bg-zinc-800"
  >
  Close
  </button>

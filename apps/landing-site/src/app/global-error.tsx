@@ -22,7 +22,7 @@ export default function GlobalError({
  <div className="min-h-screen flex items-center justify-center p-4">
  <div className="text-center max-w-md">
  <div className="flex justify-center mb-6">
- <Sparkles className="w-16 h-16 text-red-500" />
+ <Sparkles className="w-16 h-16 text-zinc-400" />
  </div>
  
  <h1 className="font-medium mb-2 text-white">
@@ -35,14 +35,14 @@ export default function GlobalError({
  <div className="flex flex-col sm:flex-row gap-3 justify-center">
  <button
  onClick={() => reset()}
- className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
+ className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-black rounded-lg hover:bg-zinc-200 transition-colors font-medium"
  >
  <RefreshCw className="w-4 h-4" />
  Try Again
  </button>
  <Link 
  href="/"
- className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg hover:border-blue-500 transition-colors font-medium border-gray-700 text-white"
+ className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg hover:border-zinc-700 transition-colors font-medium border-zinc-800 text-white"
  >
  <Home className="w-4 h-4" />
  Go Home

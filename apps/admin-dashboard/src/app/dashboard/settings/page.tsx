@@ -45,7 +45,7 @@ export default function SettingsPage() {
  </div>
  <button 
  onClick={handleSave}
- className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+ className="flex items-center gap-2 px-4 py-2 bg-white text-black rounded-lg hover:bg-zinc-200 transition-colors"
  >
  <Save className="w-4 h-4" />
  Save Changes
@@ -53,7 +53,7 @@ export default function SettingsPage() {
  </div>
 
  {/* Tabs */}
- <div className="flex gap-1 p-1 rounded-lg mb-6 w-fit bg-gray-900">
+ <div className="flex gap-1 p-1 rounded-lg mb-6 w-fit bg-zinc-950">
  {tabs.map((tab) => (
  <button
  key={tab.id}
@@ -67,7 +67,7 @@ export default function SettingsPage() {
  </div>
 
  {/* Content */}
- <div className="rounded-xl bg-black border-gray-800">
+ <div className="rounded-xl bg-black border-zinc-800">
  {activeTab === 'general' && (
  <div className="p-6 space-y-6">
  <h3 className="font-medium text-white">General Settings</h3>
@@ -81,7 +81,7 @@ export default function SettingsPage() {
  type="text"
  value={settings.siteName}
  onChange={(e) => setSettings({ ...settings, siteName: e.target.value })}
- className="w-full max-w-md px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-black border-gray-800 text-white"
+ className="w-full max-w-md px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-600 bg-black border-zinc-800 text-white"
  />
  </div>
 
@@ -93,7 +93,7 @@ export default function SettingsPage() {
  value={settings.siteDescription}
  onChange={(e) => setSettings({ ...settings, siteDescription: e.target.value })}
  rows={3}
- className="w-full max-w-md px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-black border-gray-800 text-white"
+ className="w-full max-w-md px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-600 bg-black border-zinc-800 text-white"
  />
  </div>
 
@@ -105,7 +105,7 @@ export default function SettingsPage() {
  type="email"
  value={settings.supportEmail}
  onChange={(e) => setSettings({ ...settings, supportEmail: e.target.value })}
- className="w-full max-w-md px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-black border-gray-800 text-white"
+ className="w-full max-w-md px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-600 bg-black border-zinc-800 text-white"
  />
  </div>
 
@@ -116,7 +116,7 @@ export default function SettingsPage() {
  </div>
  <button
  onClick={() => setSettings({ ...settings, enableRegistration: !settings.enableRegistration })}
- className={`w-12 h-6 rounded-full transition-colors ${ settings.enableRegistration ? 'bg-blue-500' : 'bg-gray-700'`}
+ className={`w-12 h-6 rounded-full transition-colors ${ settings.enableRegistration ? 'bg-zinc-800' : 'bg-zinc-800'`}
  >
  <div className={`w-5 h-5 bg-background rounded-full shadow transition-transform ${
  settings.enableRegistration ? 'translate-x-6' : 'translate-x-0.5'
@@ -131,7 +131,7 @@ export default function SettingsPage() {
  </div>
  <button
  onClick={() => setSettings({ ...settings, requireEmailVerification: !settings.requireEmailVerification })}
- className={`w-12 h-6 rounded-full transition-colors ${ settings.requireEmailVerification ? 'bg-blue-500' : 'bg-gray-700'`}
+ className={`w-12 h-6 rounded-full transition-colors ${ settings.requireEmailVerification ? 'bg-zinc-800' : 'bg-zinc-800'`}
  >
  <div className={`w-5 h-5 bg-background rounded-full shadow transition-transform ${
  settings.requireEmailVerification ? 'translate-x-6' : 'translate-x-0.5'
@@ -154,7 +154,7 @@ export default function SettingsPage() {
  </div>
  <button
  onClick={() => setSettings({ ...settings, enableNotifications: !settings.enableNotifications })}
- className={`w-12 h-6 rounded-full transition-colors ${ settings.enableNotifications ? 'bg-blue-500' : 'bg-gray-700'`}
+ className={`w-12 h-6 rounded-full transition-colors ${ settings.enableNotifications ? 'bg-zinc-800' : 'bg-zinc-800'`}
  >
  <div className={`w-5 h-5 bg-background rounded-full shadow transition-transform ${
  settings.enableNotifications ? 'translate-x-6' : 'translate-x-0.5'
@@ -169,7 +169,7 @@ export default function SettingsPage() {
  </div>
  <button
  onClick={() => setSettings({ ...settings, emailOnNewUser: !settings.emailOnNewUser })}
- className={`w-12 h-6 rounded-full transition-colors ${ settings.emailOnNewUser ? 'bg-blue-500' : 'bg-gray-700'`}
+ className={`w-12 h-6 rounded-full transition-colors ${ settings.emailOnNewUser ? 'bg-zinc-800' : 'bg-zinc-800'`}
  >
  <div className={`w-5 h-5 bg-background rounded-full shadow transition-transform ${
  settings.emailOnNewUser ? 'translate-x-6' : 'translate-x-0.5'
@@ -184,7 +184,7 @@ export default function SettingsPage() {
  </div>
  <button
  onClick={() => setSettings({ ...settings, emailOnPayment: !settings.emailOnPayment })}
- className={`w-12 h-6 rounded-full transition-colors ${ settings.emailOnPayment ? 'bg-blue-500' : 'bg-gray-700'`}
+ className={`w-12 h-6 rounded-full transition-colors ${ settings.emailOnPayment ? 'bg-zinc-800' : 'bg-zinc-800'`}
  >
  <div className={`w-5 h-5 bg-background rounded-full shadow transition-transform ${
  settings.emailOnPayment ? 'translate-x-6' : 'translate-x-0.5'
@@ -199,7 +199,7 @@ export default function SettingsPage() {
  </div>
  <button
  onClick={() => setSettings({ ...settings, emailOnDownload: !settings.emailOnDownload })}
- className={`w-12 h-6 rounded-full transition-colors ${ settings.emailOnDownload ? 'bg-blue-500' : 'bg-gray-700'`}
+ className={`w-12 h-6 rounded-full transition-colors ${ settings.emailOnDownload ? 'bg-zinc-800' : 'bg-zinc-800'`}
  >
  <div className={`w-5 h-5 bg-background rounded-full shadow transition-transform ${
  settings.emailOnDownload ? 'translate-x-6' : 'translate-x-0.5'
@@ -215,35 +215,35 @@ export default function SettingsPage() {
  <h3 className="font-medium text-white">Security Settings</h3>
  
  <div className="grid gap-6">
- <div className="p-4 rounded-lg max-w-md bg-gray-900">
+ <div className="p-4 rounded-lg max-w-md bg-zinc-950">
  <div className="flex items-center gap-3 mb-3">
- <Key className="w-5 h-5 text-blue-500" />
+ <Key className="w-5 h-5 text-zinc-300" />
  <p className="font-medium text-white">API Keys</p>
  </div>
  <p className="text-xs text-muted-foreground mb-3">Manage your API keys for third-party integrations</p>
- <button className="px-3 py-1.5 text-xs font-medium text-blue-500 border border-blue-500 rounded-lg transition-colors hover:bg-blue-950">
+ <button className="px-3 py-1.5 text-xs font-medium text-zinc-300 border border-zinc-700 rounded-lg transition-colors hover:bg-zinc-950">
  Generate New Key
  </button>
  </div>
 
- <div className="p-4 rounded-lg max-w-md bg-gray-900">
+ <div className="p-4 rounded-lg max-w-md bg-zinc-950">
  <div className="flex items-center gap-3 mb-3">
- <Shield className="w-5 h-5 text-blue-500" />
+ <Shield className="w-5 h-5 text-zinc-300" />
  <p className="font-medium text-white">Two-Factor Authentication</p>
  </div>
  <p className="text-xs text-muted-foreground mb-3">Add an extra layer of security to admin accounts</p>
- <button className="px-3 py-1.5 text-xs font-medium text-blue-500 border border-blue-500 rounded-lg transition-colors hover:bg-blue-950">
+ <button className="px-3 py-1.5 text-xs font-medium text-zinc-300 border border-zinc-700 rounded-lg transition-colors hover:bg-zinc-950">
  Enable 2FA
  </button>
  </div>
 
- <div className="p-4 rounded-lg max-w-md bg-gray-900">
+ <div className="p-4 rounded-lg max-w-md bg-zinc-950">
  <div className="flex items-center gap-3 mb-3">
- <Mail className="w-5 h-5 text-blue-500" />
+ <Mail className="w-5 h-5 text-zinc-300" />
  <p className="font-medium text-white">Session Management</p>
  </div>
  <p className="text-xs text-muted-foreground mb-3">View and revoke active sessions</p>
- <button className="px-3 py-1.5 text-xs font-medium text-red-500 border border-red-500 rounded-lg transition-colors hover:bg-red-950">
+ <button className="px-3 py-1.5 text-xs font-medium text-zinc-400 border border-zinc-700 rounded-lg transition-colors hover:bg-zinc-950">
  Revoke All Sessions
  </button>
  </div>
@@ -264,7 +264,7 @@ export default function SettingsPage() {
  type="password"
  value={settings.stripePublishableKey}
  onChange={(e) => setSettings({ ...settings, stripePublishableKey: e.target.value })}
- className="w-full max-w-md px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-black border-gray-800 text-white"
+ className="w-full max-w-md px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-600 bg-black border-zinc-800 text-white"
  />
  </div>
 
@@ -276,11 +276,11 @@ export default function SettingsPage() {
  type="password"
  value={settings.stripeSecretKey}
  onChange={(e) => setSettings({ ...settings, stripeSecretKey: e.target.value })}
- className="w-full max-w-md px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-black border-gray-800 text-white"
+ className="w-full max-w-md px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-600 bg-black border-zinc-800 text-white"
  />
  </div>
 
- <hr className="border-gray-800" />
+ <hr className="border-zinc-800" />
 
  <h4 className="font-medium text-white">Pricing Plans</h4>
 
@@ -291,7 +291,7 @@ export default function SettingsPage() {
  </div>
  <button
  onClick={() => setSettings({ ...settings, enableProPlan: !settings.enableProPlan })}
- className={`w-12 h-6 rounded-full transition-colors ${ settings.enableProPlan ? 'bg-blue-500' : 'bg-gray-700'`}
+ className={`w-12 h-6 rounded-full transition-colors ${ settings.enableProPlan ? 'bg-zinc-800' : 'bg-zinc-800'`}
  >
  <div className={`w-5 h-5 bg-background rounded-full shadow transition-transform ${
  settings.enableProPlan ? 'translate-x-6' : 'translate-x-0.5'
@@ -307,7 +307,7 @@ export default function SettingsPage() {
  type="number"
  value={settings.proMonthlyPrice}
  onChange={(e) => setSettings({ ...settings, proMonthlyPrice: parseFloat(e.target.value) })}
- className="w-32 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-black border-gray-800 text-white"
+ className="w-32 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-600 bg-black border-zinc-800 text-white"
  />
  </div>
 
@@ -318,7 +318,7 @@ export default function SettingsPage() {
  </div>
  <button
  onClick={() => setSettings({ ...settings, enableEnterprisePlan: !settings.enableEnterprisePlan })}
- className={`w-12 h-6 rounded-full transition-colors ${ settings.enableEnterprisePlan ? 'bg-blue-500' : 'bg-gray-700'`}
+ className={`w-12 h-6 rounded-full transition-colors ${ settings.enableEnterprisePlan ? 'bg-zinc-800' : 'bg-zinc-800'`}
  >
  <div className={`w-5 h-5 bg-background rounded-full shadow transition-transform ${
  settings.enableEnterprisePlan ? 'translate-x-6' : 'translate-x-0.5'
@@ -334,7 +334,7 @@ export default function SettingsPage() {
  type="number"
  value={settings.enterpriseMonthlyPrice}
  onChange={(e) => setSettings({ ...settings, enterpriseMonthlyPrice: parseFloat(e.target.value) })}
- className="w-32 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-black border-gray-800 text-white"
+ className="w-32 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-600 bg-black border-zinc-800 text-white"
  />
  </div>
  </div>

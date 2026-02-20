@@ -177,7 +177,7 @@ export default function LibraryPage() {
  placeholder="Search connections..."
  value={searchQuery}
  onChange={(e) => setSearchQuery(e.target.value)}
- className="w-full rounded-xl pl-12 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 bg-zinc-900 border-white/10 placeholder:text-white/40"
+ className="w-full rounded-xl pl-12 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-600/60 bg-zinc-900 border-white/10 placeholder:text-white/40"
  />
  </div>
  <div className="flex items-center gap-2 rounded-lg p-1 bg-zinc-900">
@@ -215,7 +215,7 @@ export default function LibraryPage() {
  className={cn(
  'flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all',
  selectedCategory === cat.id
- ? 'bg-blue-500 text-white'
+ ? 'bg-zinc-800 text-white'
  : 'bg-zinc-900 text-white/60 hover:bg-background/10'
  )}
  >
@@ -240,12 +240,12 @@ export default function LibraryPage() {
  className={cn(
  'group relative border rounded-2xl overflow-hidden transition-all hover:shadow-lg bg-zinc-900',
  isAdded 
- ? 'border-green-500/30' 
+ ? 'border-zinc-700/40' 
  : 'border-white/10 hover:border-white/20'
  )}
  >
  {isAdded && (
- <div className="absolute top-3 right-3 bg-green-500 text-white p-1 rounded-full">
+ <div className="absolute top-3 right-3 bg-zinc-800 text-white p-1 rounded-full">
  <Check className="w-3 h-3" />
  </div>
  )}
@@ -268,7 +268,7 @@ export default function LibraryPage() {
  <Button
  variant="outline"
  size="sm"
- className="w-full border-green-500/50 text-green-500 hover:bg-green-500/10"
+ className="w-full border-zinc-700/60 text-zinc-400 hover:bg-white/5"
  onClick={() => navigate('/my-connections')}
  >
  <Check className="w-4 h-4 mr-2" />
@@ -277,7 +277,7 @@ export default function LibraryPage() {
  ) : (
  <Button
  size="sm"
- className="w-full bg-blue-500 hover:bg-blue-600 text-white"
+ className="w-full bg-white hover:bg-zinc-200 text-black"
  onClick={() => handleAddConnection(key)}
  >
  <Plus className="w-4 h-4 mr-2" />
@@ -346,7 +346,7 @@ export default function LibraryPage() {
  value={connectionConfig.name}
  onChange={(e) => setConnectionConfig({ ...connectionConfig, name: e.target.value })}
  placeholder="My Database"
- className="w-full rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 bg-background/5 border-white/10"
+ className="w-full rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-600/60 bg-background/5 border-white/10"
  />
  </div>
 
@@ -360,7 +360,7 @@ export default function LibraryPage() {
  value={connectionConfig.host}
  onChange={(e) => setConnectionConfig({ ...connectionConfig, host: e.target.value })}
  placeholder="localhost"
- className="w-full rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 bg-background/5 border-white/10"
+ className="w-full rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-600/60 bg-background/5 border-white/10"
  />
  </div>
  <div>
@@ -372,7 +372,7 @@ export default function LibraryPage() {
  value={connectionConfig.port}
  onChange={(e) => setConnectionConfig({ ...connectionConfig, port: parseInt(e.target.value) })}
  placeholder="5432"
- className="w-full rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 bg-background/5 border-white/10"
+ className="w-full rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-600/60 bg-background/5 border-white/10"
  />
  </div>
  </div>
@@ -386,7 +386,7 @@ export default function LibraryPage() {
  value={connectionConfig.database}
  onChange={(e) => setConnectionConfig({ ...connectionConfig, database: e.target.value })}
  placeholder="mydb"
- className="w-full rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 bg-background/5 border-white/10"
+ className="w-full rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-600/60 bg-background/5 border-white/10"
  />
  </div>
 
@@ -400,7 +400,7 @@ export default function LibraryPage() {
  value={connectionConfig.username}
  onChange={(e) => setConnectionConfig({ ...connectionConfig, username: e.target.value })}
  placeholder="root"
- className="w-full rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 bg-background/5 border-white/10"
+ className="w-full rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-600/60 bg-background/5 border-white/10"
  />
  </div>
  <div>
@@ -412,17 +412,17 @@ export default function LibraryPage() {
  value={connectionConfig.password}
  onChange={(e) => setConnectionConfig({ ...connectionConfig, password: e.target.value })}
  placeholder="••••••••"
- className="w-full rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 bg-background/5 border-white/10"
+ className="w-full rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-600/60 bg-background/5 border-white/10"
  />
  </div>
  </div>
 
- <div className="border rounded-xl p-4 bg-blue-500/10 border-blue-500/20">
+ <div className="border rounded-xl p-4 bg-white/5 border-zinc-700/30">
  <div className="flex items-start gap-3">
- <Zap className="w-5 h-5 text-blue-500 mt-0.5" />
+ <Zap className="w-5 h-5 text-zinc-300 mt-0.5" />
  <div>
- <p className="font-medium text-blue-400">MCP Integration</p>
- <p className="mt-1 text-blue-300/70">
+ <p className="font-medium text-zinc-400">MCP Integration</p>
+ <p className="mt-1 text-zinc-400/70">
  This connection will be available via MCP, allowing AI to perform CRUD operations 
  on your data using natural language.
  </p>
@@ -442,7 +442,7 @@ export default function LibraryPage() {
  <Button
  onClick={saveConnection}
  disabled={!connectionConfig.name || isAdding}
- className="bg-blue-500 hover:bg-blue-600 text-white"
+ className="bg-white hover:bg-zinc-200 text-black"
  >
  {isAdding ? (
  <>

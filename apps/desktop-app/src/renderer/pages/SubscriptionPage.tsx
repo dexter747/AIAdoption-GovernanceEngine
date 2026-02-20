@@ -30,20 +30,20 @@ const PLAN_DETAILS = {
   trial: {
     name: 'Trial',
     features: ['14 days', '100 queries', 'Basic support'],
-    color: 'text-gray-500',
-    bg: 'bg-gray-500/10',
+    color: 'text-zinc-500',
+    bg: 'bg-zinc-800/20',
   },
   professional: {
     name: 'Professional',
     features: ['Unlimited queries', 'All AI models', 'Priority support', '5 databases'],
-    color: 'text-blue-500',
-    bg: 'bg-blue-500/10',
+    color: 'text-zinc-300',
+    bg: 'bg-white/5',
   },
   team: {
     name: 'Team',
     features: ['Everything in Pro', '10 team members', 'Advanced analytics', 'Unlimited databases'],
-    color: 'text-purple-500',
-    bg: 'bg-purple-500/10',
+    color: 'text-zinc-300',
+    bg: 'bg-white/5',
   },
   enterprise: {
     name: 'Enterprise',
@@ -192,12 +192,12 @@ export default function SubscriptionPage() {
                   <CardTitle className="text-2xl">{planDetails.name} Plan</CardTitle>
                   <CardDescription className="mt-2">
                     {subscription.status === 'active' ? (
-                      <span className="flex items-center gap-2 text-green-600">
+                      <span className="flex items-center gap-2 text-zinc-300">
                         <Check className="w-4 h-4" />
                         Active subscription
                       </span>
                     ) : (
-                      <span className="flex items-center gap-2 text-red-600">
+                      <span className="flex items-center gap-2 text-zinc-300">
                         <X className="w-4 h-4" />
                         {subscription.status}
                       </span>
@@ -221,7 +221,7 @@ export default function SubscriptionPage() {
                 <div className="grid grid-cols-2 gap-3">
                   {planDetails.features.map((feature, index) => (
                     <div key={index} className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-green-600" />
+                      <Check className="w-4 h-4 text-zinc-300" />
                       <span className="text-sm">{feature}</span>
                     </div>
                   ))}
@@ -240,7 +240,7 @@ export default function SubscriptionPage() {
                   </div>
                 </div>
                 {subscription.cancelAtPeriodEnd && (
-                  <div className="text-orange-600 text-sm font-medium">
+                  <div className="text-zinc-300 text-sm font-medium">
                     Cancels on {formatDate(subscription.currentPeriodEnd)}
                   </div>
                 )}
@@ -312,9 +312,9 @@ export default function SubscriptionPage() {
                   <div className="flex items-center gap-4">
                     <div className={cn(
                       'w-10 h-10 rounded-full flex items-center justify-center',
-                      payment.status === 'succeeded' ? 'bg-green-500/10 text-green-400' :
-                      payment.status === 'failed' ? 'bg-red-500/10 text-red-400' :
-                      'bg-yellow-500/10 text-yellow-400'
+                      payment.status === 'succeeded' ? 'bg-white/5 text-zinc-400' :
+                      payment.status === 'failed' ? 'bg-white/5 text-zinc-400' :
+                      'bg-white/5 text-zinc-400'
                     )}>
                       <CreditCard className="w-5 h-5" />
                     </div>
@@ -361,11 +361,11 @@ export default function SubscriptionPage() {
               <p className="text-sm text-muted-foreground mt-1">Queries</p>
             </div>
             <div className="text-center p-4 border rounded-lg">
-              <p className="text-3xl font-medium text-purple-600">45.2K</p>
+              <p className="text-3xl font-medium text-zinc-300">45.2K</p>
               <p className="text-sm text-muted-foreground mt-1">Tokens</p>
             </div>
             <div className="text-center p-4 border rounded-lg">
-              <p className="text-3xl font-medium text-green-600">$12.45</p>
+              <p className="text-3xl font-medium text-zinc-300">$12.45</p>
               <p className="text-sm text-muted-foreground mt-1">Cost</p>
             </div>
           </div>

@@ -137,7 +137,7 @@ export default function APIKeysPage() {
  </div>
  <button
  onClick={() => setShowAddModal(true)}
- className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2"
+ className="px-4 py-2 bg-white text-white rounded-lg hover:bg-zinc-200 flex items-center gap-2"
  >
  <span>➕</span> Add API Key
  </button>
@@ -145,7 +145,7 @@ export default function APIKeysPage() {
 
  {/* Error Banner */}
  {error && (
- <div className="mb-4 p-4 bg-red-500/10 text-red-400 rounded-lg flex items-center justify-between">
+ <div className="mb-4 p-4 bg-white/5 text-zinc-400 rounded-lg flex items-center justify-between">
  <span>{error}</span>
  <button onClick={() => setError(null)}>✕</button>
  </div>
@@ -153,14 +153,14 @@ export default function APIKeysPage() {
 
  {/* Configured Keys */}
  <div className="mb-8">
- <h2 className="font-medium mb-4 text-gray-200">
+ <h2 className="font-medium mb-4 text-zinc-300">
  Your API Keys ({keys.length})
  </h2>
  
  {loading ? (
  <div className="text-center py-8 text-muted-foreground">Loading...</div>
  ) : keys.length === 0 ? (
- <div className="text-center py-12 rounded-lg bg-gray-800 border-gray-600">
+ <div className="text-center py-12 rounded-lg bg-zinc-900 border-zinc-700">
  <p className="mb-4 text-muted-foreground">
  No API keys configured yet
  </p>
@@ -173,7 +173,7 @@ export default function APIKeysPage() {
  {keys.map(key => (
  <div
  key={key.id}
- className="p-4 rounded-lg flex items-center justify-between bg-gray-800 border-gray-700"
+ className="p-4 rounded-lg flex items-center justify-between bg-zinc-900 border-zinc-800"
  >
  <div className="flex items-center gap-4">
  <span className="text-2xl">{key.provider_info?.icon || '🔑'}</span>
@@ -198,8 +198,8 @@ export default function APIKeysPage() {
  {/* Status Badge */}
  <span className={`px-2 py-1 text-xs rounded-full ${
  key.is_valid 
- ? 'bg-green-500/10 text-green-400' 
- : 'bg-red-500/10 text-red-400'
+ ? 'bg-white/5 text-zinc-400' 
+ : 'bg-white/5 text-zinc-400'
  }`}>
  {key.is_valid ? '✓ Valid' : '✗ Invalid'}
  </span>
@@ -208,7 +208,7 @@ export default function APIKeysPage() {
  <button
  onClick={() => handleTestKey(key.id)}
  disabled={testingKey === key.id}
- className="px-3 py-1 text-sm rounded bg-gray-700 hover:bg-gray-600"
+ className="px-3 py-1 text-sm rounded bg-zinc-800 hover:bg-zinc-800"
  >
  {testingKey === key.id ? '⏳' : '🧪'} Test
  </button>
@@ -216,7 +216,7 @@ export default function APIKeysPage() {
  {/* Delete Button */}
  <button
  onClick={() => handleDeleteKey(key.id)}
- className="px-3 py-1 text-sm text-red-600 hover:bg-red-50 rounded"
+ className="px-3 py-1 text-sm text-zinc-300 hover:bg-zinc-900/50 rounded"
  >
  🗑️
  </button>
@@ -229,7 +229,7 @@ export default function APIKeysPage() {
 
  {/* Available Providers */}
  <div>
- <h2 className="font-medium mb-4 text-gray-200">
+ <h2 className="font-medium mb-4 text-zinc-300">
  Available Providers ({availableProviders.length})
  </h2>
  
@@ -241,13 +241,13 @@ export default function APIKeysPage() {
  setSelectedProvider(provider);
  setShowAddModal(true);
  }}
- className="p-4 rounded-lg hover:border-blue-500 hover:shadow-md transition-all text-left bg-gray-800 border-gray-700"
+ className="p-4 rounded-lg hover:border-zinc-700 hover:shadow-md transition-all text-left bg-zinc-900 border-zinc-800"
  >
  <span className="text-2xl block mb-2">{provider.icon}</span>
  <div className="font-medium text-white">
  {provider.name}
  </div>
- <div className="mt-1 text-blue-400">
+ <div className="mt-1 text-zinc-400">
  + Add key
  </div>
  </button>
@@ -306,7 +306,7 @@ function AddKeyModal({
 
  return (
  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
- <div className="rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto bg-gray-900">
+ <div className="rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto bg-zinc-950">
  <div className="p-6">
  <div className="flex items-center justify-between mb-6">
  <h2 className="font-medium text-white">
@@ -320,11 +320,11 @@ function AddKeyModal({
  <form onSubmit={handleSubmit}>
  {/* Provider Selection */}
  <div className="mb-4">
- <label className="block font-medium mb-2 text-gray-300">
+ <label className="block font-medium mb-2 text-zinc-400">
  Provider
  </label>
  {provider ? (
- <div className="flex items-center gap-3 p-3 rounded-lg bg-gray-800">
+ <div className="flex items-center gap-3 p-3 rounded-lg bg-zinc-900">
  <span className="text-2xl">{provider.icon}</span>
  <span className="font-medium">{provider.name}</span>
  </div>
@@ -332,7 +332,7 @@ function AddKeyModal({
  <select
  value={selectedProvider?.id || ''}
  onChange={(e) => setSelectedProvider(providers.find(p => p.id === e.target.value) || null)}
- className="w-full p-3 rounded-lg border-gray-600 bg-gray-800"
+ className="w-full p-3 rounded-lg border-zinc-700 bg-zinc-900"
  >
  <option value="">Select a provider...</option>
  {providers.map(p => (
@@ -346,8 +346,8 @@ function AddKeyModal({
 
  {/* Get API Key Link */}
  {selectedProvider && (
- <div className="mb-4 p-3 rounded-lg bg-blue-900/20">
- <p className="text-blue-300">
+ <div className="mb-4 p-3 rounded-lg bg-zinc-900/30">
+ <p className="text-zinc-400">
  Need an API key?{' '}
  <button
  type="button"
@@ -362,7 +362,7 @@ function AddKeyModal({
 
  {/* Key Name */}
  <div className="mb-4">
- <label className="block font-medium mb-2 text-gray-300">
+ <label className="block font-medium mb-2 text-zinc-400">
  Key Name (optional)
  </label>
  <input
@@ -370,13 +370,13 @@ function AddKeyModal({
  value={keyName}
  onChange={(e) => setKeyName(e.target.value)}
  placeholder="e.g., Production Key, Personal"
- className="w-full p-3 rounded-lg border-gray-600 bg-gray-800"
+ className="w-full p-3 rounded-lg border-zinc-700 bg-zinc-900"
  />
  </div>
 
  {/* API Key Input */}
  <div className="mb-6">
- <label className="block font-medium mb-2 text-gray-300">
+ <label className="block font-medium mb-2 text-zinc-400">
  API Key
  </label>
  <div className="relative">
@@ -385,7 +385,7 @@ function AddKeyModal({
  value={apiKey}
  onChange={(e) => setApiKey(e.target.value)}
  placeholder="sk-..."
- className="w-full p-3 pr-12 rounded-lg font-mono text-sm border-gray-600 bg-gray-800"
+ className="w-full p-3 pr-12 rounded-lg font-mono text-sm border-zinc-700 bg-zinc-900"
  required
  />
  <button
@@ -406,14 +406,14 @@ function AddKeyModal({
  <button
  type="button"
  onClick={onClose}
- className="flex-1 px-4 py-2 rounded-lg border-gray-600 hover:bg-gray-800"
+ className="flex-1 px-4 py-2 rounded-lg border-zinc-700 hover:bg-zinc-900"
  >
  Cancel
  </button>
  <button
  type="submit"
  disabled={!selectedProvider || !apiKey || saving}
- className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+ className="flex-1 px-4 py-2 bg-white text-white rounded-lg hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed"
  >
  {saving ? 'Saving...' : 'Add Key'}
  </button>

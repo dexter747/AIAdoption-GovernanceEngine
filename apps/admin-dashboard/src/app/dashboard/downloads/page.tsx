@@ -79,7 +79,7 @@ export default function DownloadsPage() {
  return (
  <div className="p-8 flex items-center justify-center min-h-screen">
  <div className="text-center">
- <RefreshCw className="w-8 h-8 text-blue-500 animate-spin mx-auto mb-4" />
+ <RefreshCw className="w-8 h-8 text-zinc-300 animate-spin mx-auto mb-4" />
  <p className="text-muted-foreground">Loading activations...</p>
  </div>
  </div>
@@ -96,7 +96,7 @@ export default function DownloadsPage() {
  </div>
  <button
  onClick={fetchDownloads}
- className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground rounded-lg hover:text-white border-gray-800"
+ className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground rounded-lg hover:text-white border-zinc-800"
  >
  <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
  Refresh
@@ -112,13 +112,13 @@ export default function DownloadsPage() {
  placeholder="Search by user..."
  value={searchQuery}
  onChange={(e) => setSearchQuery(e.target.value)}
- className="w-full pl-10 pr-4 py-2 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-black border-gray-800 text-white"
+ className="w-full pl-10 pr-4 py-2 rounded-lg placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-600 bg-black border-zinc-800 text-white"
  />
  </div>
  <select
  value={filterPlatform}
  onChange={(e) => setFilterPlatform(e.target.value)}
- className="px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-black border-gray-800 text-white"
+ className="px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-600 bg-black border-zinc-800 text-white"
  >
  <option value="all">All Platforms</option>
  <option value="windows">Windows</option>
@@ -129,39 +129,39 @@ export default function DownloadsPage() {
 
  {/* Stats */}
  <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
- <div className="rounded-lg p-4 bg-black border-gray-800">
+ <div className="rounded-lg p-4 bg-black border-zinc-800">
  <p className="font-medium text-white">{total}</p>
  <p className="text-sm text-muted-foreground">Total Activations</p>
  </div>
- <div className="rounded-lg p-4 bg-black border-gray-800">
+ <div className="rounded-lg p-4 bg-black border-zinc-800">
  <div className="flex items-center gap-2">
- <Monitor className="w-5 h-5 text-blue-500" />
- <p className="text-2xl font-medium text-blue-500">{platforms.windows}</p>
+ <Monitor className="w-5 h-5 text-zinc-300" />
+ <p className="text-2xl font-medium text-zinc-300">{platforms.windows}</p>
  </div>
  <p className="text-sm text-muted-foreground">Windows</p>
  </div>
- <div className="rounded-lg p-4 bg-black border-gray-800">
+ <div className="rounded-lg p-4 bg-black border-zinc-800">
  <div className="flex items-center gap-2">
  <Apple className="w-5 h-5 text-muted-foreground" />
- <p className="font-medium text-gray-300">{platforms.macos}</p>
+ <p className="font-medium text-zinc-400">{platforms.macos}</p>
  </div>
  <p className="text-sm text-muted-foreground">macOS</p>
  </div>
- <div className="rounded-lg p-4 bg-black border-gray-800">
+ <div className="rounded-lg p-4 bg-black border-zinc-800">
  <div className="flex items-center gap-2">
- <Terminal className="w-5 h-5 text-orange-500" />
- <p className="text-2xl font-medium text-orange-500">{platforms.linux}</p>
+ <Terminal className="w-5 h-5 text-zinc-400" />
+ <p className="text-2xl font-medium text-zinc-400">{platforms.linux}</p>
  </div>
  <p className="text-sm text-muted-foreground">Linux</p>
  </div>
  </div>
 
  {/* Downloads Table */}
- <div className="rounded-xl overflow-hidden bg-black border-gray-800">
+ <div className="rounded-xl overflow-hidden bg-black border-zinc-800">
  <div className="overflow-x-auto">
  <table className="w-full">
  <thead>
- <tr className="border-b border-gray-800 bg-gray-900/50">
+ <tr className="border-b border-zinc-800 bg-zinc-950/50">
  <th className="text-left px-6 py-3 text-xs font-medium text-muted-foreground uppercase">User</th>
  <th className="text-left px-6 py-3 text-xs font-medium text-muted-foreground uppercase">Device</th>
  <th className="text-left px-6 py-3 text-xs font-medium text-muted-foreground uppercase">Tier</th>
@@ -178,10 +178,10 @@ export default function DownloadsPage() {
  </tr>
  ) : (
  downloads.map((download) => (
- <tr key={download.id} className="border-b last:border-0 border-gray-900 hover:bg-gray-900/50">
+ <tr key={download.id} className="border-b last:border-0 border-zinc-900 hover:bg-zinc-950/50">
  <td className="px-6 py-4">
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+ <div className="w-10 h-10 bg-zinc-800 rounded-full flex items-center justify-center">
  <span className="text-white text-sm font-medium">{download.user.charAt(0).toUpperCase()}</span>
  </div>
  <div>
@@ -194,12 +194,12 @@ export default function DownloadsPage() {
  <p className="text-white">{download.deviceName || '—'}</p>
  </td>
  <td className="px-6 py-4">
- <span className="px-2 py-1 font-medium rounded-full capitalize bg-blue-900/30 text-blue-400">
+ <span className="px-2 py-1 font-medium rounded-full capitalize bg-zinc-900/40 text-zinc-400">
  {download.version}
  </span>
  </td>
  <td className="px-6 py-4">
- <span className={`inline-flex items-center gap-1.5 px-2 py-1 font-medium rounded-full ${ download.platform.toLowerCase() === 'windows' ? 'bg-blue-900/30 text-blue-400' : download.platform.toLowerCase() === 'macos' ? 'bg-secondary text-muted-foreground' : 'bg-orange-900/30 text-orange-400' }`}>
+ <span className={`inline-flex items-center gap-1.5 px-2 py-1 font-medium rounded-full ${ download.platform.toLowerCase() === 'windows' ? 'bg-zinc-900/40 text-zinc-400' : download.platform.toLowerCase() === 'macos' ? 'bg-secondary text-muted-foreground' : 'bg-zinc-900/40 text-zinc-400' }`}>
  {platformIcon(download.platform)}
  {download.platform}
  </span>
@@ -215,7 +215,7 @@ export default function DownloadsPage() {
  </div>
  
  {/* Pagination */}
- <div className="px-6 py-4 border-t flex items-center justify-between border-gray-800">
+ <div className="px-6 py-4 border-t flex items-center justify-between border-zinc-800">
  <p className="text-sm text-muted-foreground">
  Showing <span className="font-medium text-white">{downloads.length}</span> of <span className="font-medium text-white">{total}</span> activations
  </p>
@@ -223,14 +223,14 @@ export default function DownloadsPage() {
  <button 
  onClick={() => setPage(p => Math.max(1, p - 1))}
  disabled={page === 1}
- className="px-3 py-1.5 text-sm font-medium text-muted-foreground rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:text-white border-gray-800"
+ className="px-3 py-1.5 text-sm font-medium text-muted-foreground rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:text-white border-zinc-800"
  >
  Previous
  </button>
  <button 
  onClick={() => setPage(p => p + 1)}
  disabled={downloads.length < 10}
- className="px-3 py-1.5 text-sm font-medium text-muted-foreground rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:text-white border-gray-800"
+ className="px-3 py-1.5 text-sm font-medium text-muted-foreground rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:text-white border-zinc-800"
  >
  Next
  </button>

@@ -84,11 +84,11 @@ export default function ConnectionsPageEnhanced() {
  const getStatusIcon = (status: string) => {
  switch (status) {
  case 'connected':
- return <CheckCircle className="w-5 h-5 text-green-500" />;
+ return <CheckCircle className="w-5 h-5 text-zinc-400" />;
  case 'disconnected':
  return <XCircle className="w-5 h-5 text-muted-foreground" />;
  case 'error':
- return <AlertCircle className="w-5 h-5 text-red-500" />;
+ return <AlertCircle className="w-5 h-5 text-zinc-400" />;
  default:
  return null;
  }
@@ -96,7 +96,7 @@ export default function ConnectionsPageEnhanced() {
 
  const getTypeBadge = (type: string) => {
  const info = CONNECTION_LIBRARY[type];
- const defaultClass = 'bg-gray-800 text-gray-300';
+ const defaultClass = 'bg-zinc-900 text-zinc-400';
  
  return (
  <span className={`px-2 py-1 rounded-full text-xs font-medium ${defaultClass}`}>
@@ -113,7 +113,7 @@ export default function ConnectionsPageEnhanced() {
  };
 
  return (
- <span className="px-2 py-1 rounded text-xs font-mono bg-gray-800">
+ <span className="px-2 py-1 rounded text-xs font-mono bg-zinc-900">
  {icons[serverType]} {serverType}
  </span>
  );
@@ -131,7 +131,7 @@ export default function ConnectionsPageEnhanced() {
  </div>
  <button
  onClick={() => setShowAddModal(true)}
- className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2"
+ className="px-4 py-2 bg-white text-black rounded-lg hover:bg-zinc-200 transition-colors flex items-center gap-2"
  >
  <Plus className="w-5 h-5" />
  Add Connection
@@ -140,13 +140,13 @@ export default function ConnectionsPageEnhanced() {
 
  {/* Docker Status Warning */}
  {!dockerAvailable && (
- <div className="mb-6 p-4 border rounded-lg flex items-start gap-3 bg-yellow-900/20 border-yellow-800">
- <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5 text-yellow-500" />
+ <div className="mb-6 p-4 border rounded-lg flex items-start gap-3 bg-zinc-900/30 border-zinc-800">
+ <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5 text-zinc-400" />
  <div>
- <p className="font-medium text-yellow-200">
+ <p className="font-medium text-zinc-500">
  Docker not detected
  </p>
- <p className="mt-1 text-yellow-300">
+ <p className="mt-1 text-zinc-400">
  Some MCP connections require Docker. Install Docker Desktop to enable Docker-based MCP servers.
  </p>
  </div>
@@ -167,7 +167,7 @@ export default function ConnectionsPageEnhanced() {
  </p>
  <button
  onClick={() => setShowAddModal(true)}
- className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors inline-flex items-center gap-2"
+ className="px-4 py-2 bg-white text-black rounded-lg hover:bg-zinc-200 transition-colors inline-flex items-center gap-2"
  >
  <Plus className="w-5 h-5" />
  Add Connection
@@ -179,12 +179,12 @@ export default function ConnectionsPageEnhanced() {
  {connections.map((conn) => (
  <div
  key={conn.id}
- className="rounded-xl p-6 transition-colors bg-black border-gray-800 hover:border-gray-700"
+ className="rounded-xl p-6 transition-colors bg-black border-zinc-800 hover:border-zinc-800"
  >
  <div className="flex items-start justify-between">
  <div className="flex items-start gap-4 flex-1">
  {/* Status Icon */}
- <div className="p-3 rounded-lg bg-gray-900">
+ <div className="p-3 rounded-lg bg-zinc-950">
  {getStatusIcon(conn.status)}
  </div>
 
@@ -202,8 +202,8 @@ export default function ConnectionsPageEnhanced() {
  <div className="flex items-center gap-2 text-muted-foreground">
  <span className="font-medium">Status:</span>
  <span className={
- conn.status === 'connected' ? 'text-green-400' :
- conn.status === 'error' ? 'text-red-400' :
+ conn.status === 'connected' ? 'text-zinc-400' :
+ conn.status === 'error' ? 'text-zinc-400' :
  'text-muted-foreground'
  }>
  {conn.status}
@@ -218,7 +218,7 @@ export default function ConnectionsPageEnhanced() {
  )}
 
  {conn.error && (
- <div className="mt-2 p-2 border rounded bg-red-900/20 border-red-800 text-red-300">
+ <div className="mt-2 p-2 border rounded bg-zinc-900/30 border-zinc-800 text-zinc-400">
  {conn.error}
  </div>
  )}
@@ -231,7 +231,7 @@ export default function ConnectionsPageEnhanced() {
  <button
  onClick={() => handleToggleConnection(conn.id, conn.enabled)}
  disabled={loading}
- className={`p-2 rounded-lg transition-colors ${ conn.enabled ? 'bg-green-500/10 text-green-400 hover:bg-green-500/20' : 'bg-secondary text-muted-foreground hover:bg-gray-800'}`}
+ className={`p-2 rounded-lg transition-colors ${ conn.enabled ? 'bg-white/5 text-zinc-400 hover:bg-white/10' : 'bg-secondary text-muted-foreground hover:bg-zinc-900'}`}
  title={conn.enabled ? 'Disable connection' : 'Enable connection'}
  >
  {loading ? (
@@ -245,7 +245,7 @@ export default function ConnectionsPageEnhanced() {
 
  <button
  onClick={() => {/* TODO: Open edit modal */}}
- className="p-2 rounded-lg transition-colors bg-gray-900 text-muted-foreground hover:bg-gray-800"
+ className="p-2 rounded-lg transition-colors bg-zinc-950 text-muted-foreground hover:bg-zinc-900"
  title="Edit connection"
  >
  <Settings className="w-5 h-5" />
@@ -254,7 +254,7 @@ export default function ConnectionsPageEnhanced() {
  <button
  onClick={() => handleDeleteConnection(conn.id)}
  disabled={loading || conn.enabled}
- className="p-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-red-900/30 text-red-400 hover:bg-red-900/50"
+ className="p-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-zinc-900/40 text-zinc-400 hover:bg-zinc-900/50"
  title="Delete connection"
  >
  <Trash2 className="w-5 h-5" />
@@ -351,15 +351,15 @@ function AddConnectionModal({ onClose, onSuccess }: { onClose: () => void; onSuc
 
  return (
  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
- <div className="rounded-xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto bg-gray-900">
- <div className="p-6 border-b border-gray-800">
+ <div className="rounded-xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto bg-zinc-950">
+ <div className="p-6 border-b border-zinc-800">
  <h2 className="font-medium text-white">Add MCP Connection</h2>
  </div>
 
  <form onSubmit={handleSubmit} className="p-6 space-y-4">
  {/* Connection Name */}
  <div>
- <label className="block font-medium mb-1 text-gray-300">
+ <label className="block font-medium mb-1 text-zinc-400">
  Connection Name
  </label>
  <input
@@ -367,20 +367,20 @@ function AddConnectionModal({ onClose, onSuccess }: { onClose: () => void; onSuc
  required
  value={connectionName}
  onChange={(e) => setConnectionName(e.target.value)}
- className="w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 border-gray-700 bg-gray-800 text-white"
+ className="w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-zinc-600 border-zinc-800 bg-zinc-900 text-white"
  placeholder="My Connection"
  />
  </div>
 
  {/* System Type Selector */}
  <div>
- <label className="block font-medium mb-1 text-gray-300">
+ <label className="block font-medium mb-1 text-zinc-400">
  System Type
  </label>
  <select
  value={selectedType}
  onChange={(e) => setSelectedType(e.target.value)}
- className="w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 border-gray-700 bg-gray-800 text-white"
+ className="w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-zinc-600 border-zinc-800 bg-zinc-900 text-white"
  >
  {Object.entries(CONNECTION_LIBRARY).map(([key, info]) => (
  <option key={key} value={key}>{info.icon} {info.name}</option>
@@ -399,15 +399,15 @@ function AddConnectionModal({ onClose, onSuccess }: { onClose: () => void; onSuc
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
  {fields.map((field) => (
  <div key={field.key} className={field.type === 'textarea' ? 'sm:col-span-2' : ''}>
- <label className="block font-medium mb-1 text-gray-300">
+ <label className="block font-medium mb-1 text-zinc-400">
  {field.label}
- {field.required && <span className="text-red-500 ml-1">*</span>}
+ {field.required && <span className="text-zinc-400 ml-1">*</span>}
  </label>
  {field.type === 'select' ? (
  <select
  value={fieldValues[field.key] || ''}
  onChange={(e) => handleFieldChange(field.key, e.target.value)}
- className="w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 border-gray-700 bg-gray-800 text-white"
+ className="w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-zinc-600 border-zinc-800 bg-zinc-900 text-white"
  >
  <option value="">Select...</option>
  <option value="true">Yes</option>
@@ -417,7 +417,7 @@ function AddConnectionModal({ onClose, onSuccess }: { onClose: () => void; onSuc
  <textarea
  value={fieldValues[field.key] || ''}
  onChange={(e) => handleFieldChange(field.key, e.target.value)}
- className="w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 h-20 border-gray-700 bg-gray-800 text-white"
+ className="w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-zinc-600 h-20 border-zinc-800 bg-zinc-900 text-white"
  placeholder={field.placeholder}
  required={field.required}
  />
@@ -426,7 +426,7 @@ function AddConnectionModal({ onClose, onSuccess }: { onClose: () => void; onSuc
  type={field.type === 'password' ? 'password' : field.type === 'number' ? 'number' : 'text'}
  value={fieldValues[field.key] || ''}
  onChange={(e) => handleFieldChange(field.key, e.target.value)}
- className="w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 border-gray-700 bg-gray-800 text-white"
+ className="w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-zinc-600 border-zinc-800 bg-zinc-900 text-white"
  placeholder={field.placeholder}
  required={field.required}
  />
@@ -441,14 +441,14 @@ function AddConnectionModal({ onClose, onSuccess }: { onClose: () => void; onSuc
  <button
  type="button"
  onClick={onClose}
- className="flex-1 px-4 py-2 rounded-lg transition-colors border-gray-700 text-gray-300 hover:bg-gray-800"
+ className="flex-1 px-4 py-2 rounded-lg transition-colors border-zinc-800 text-zinc-400 hover:bg-zinc-900"
  >
  Cancel
  </button>
  <button
  type="submit"
  disabled={loading}
- className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+ className="flex-1 px-4 py-2 bg-white text-black rounded-lg hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
  >
  {loading ? 'Adding...' : 'Add Connection'}
  </button>

@@ -89,7 +89,7 @@ export default function DashboardPage() {
  return (
  <div className="p-8 flex items-center justify-center min-h-screen">
  <div className="text-center">
- <RefreshCw className="w-8 h-8 text-blue-500 animate-spin mx-auto mb-4" />
+ <RefreshCw className="w-8 h-8 text-zinc-300 animate-spin mx-auto mb-4" />
  <p className="text-muted-foreground">Loading dashboard data...</p>
  </div>
  </div>
@@ -151,7 +151,7 @@ export default function DashboardPage() {
  // Simple pie/donut display
  const PlanDistribution = ({ data }: { data: Array<{ name: string; value: number }> }) => {
  const total = data.reduce((sum, d) => sum + d.value, 0);
- const colors = ['bg-blue-500', 'bg-purple-500', 'bg-green-500', 'bg-orange-500'];
+ const colors = ['bg-zinc-800', 'bg-zinc-800', 'bg-zinc-800', 'bg-zinc-700'];
  
  return (
  <div className="space-y-3">
@@ -162,10 +162,10 @@ export default function DashboardPage() {
  <div className={`w-3 h-3 rounded-full ${colors[i % colors.length]}`} />
  <div className="flex-1">
  <div className="flex justify-between text-sm">
- <span className="text-gray-300">{item.name}</span>
+ <span className="text-zinc-400">{item.name}</span>
  <span className="text-muted-foreground">{item.value} ({percentage}%)</span>
  </div>
- <div className="mt-1 h-1.5 rounded-full overflow-hidden bg-gray-800">
+ <div className="mt-1 h-1.5 rounded-full overflow-hidden bg-zinc-900">
  <div 
  className={`h-full ${colors[i % colors.length]} rounded-full transition-all`}
  style={{ width: `${percentage}%` }}
@@ -189,7 +189,7 @@ export default function DashboardPage() {
  </div>
  <button
  onClick={fetchData}
- className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground rounded-lg transition-colors hover:text-white border-gray-800 hover:bg-gray-900"
+ className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground rounded-lg transition-colors hover:text-white border-zinc-800 hover:bg-zinc-950"
  >
  <RefreshCw className="w-4 h-4" />
  Refresh
@@ -198,26 +198,26 @@ export default function DashboardPage() {
 
  {/* Error Alert */}
  {error && (
- <div className="mb-6 border rounded-lg p-4 bg-yellow-950 border-yellow-800">
- <p className="text-yellow-400">{error}</p>
+ <div className="mb-6 border rounded-lg p-4 bg-zinc-950 border-zinc-800">
+ <p className="text-zinc-400">{error}</p>
  </div>
  )}
 
  {/* Stats Cards */}
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
  {statsCards.map((stat) => (
- <div key={stat.name} className="rounded-xl p-6 bg-black border-gray-800">
+ <div key={stat.name} className="rounded-xl p-6 bg-black border-zinc-800">
  <div className="flex items-center justify-between mb-4">
- <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${ stat.color === 'blue' ? 'bg-blue-900/30' : stat.color === 'green' ? 'bg-green-900/30' : stat.color === 'purple' ? 'bg-purple-900/30' : 'bg-orange-900/30' }`}>
+ <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${ stat.color === 'blue' ? 'bg-zinc-900/40' : stat.color === 'green' ? 'bg-zinc-900/40' : stat.color === 'purple' ? 'bg-zinc-900/40' : 'bg-zinc-900/40' }`}>
  <stat.icon className={`w-5 h-5 ${
- stat.color === 'blue' ? 'text-blue-500' :
- stat.color === 'green' ? 'text-green-500' :
- stat.color === 'purple' ? 'text-purple-500' :
- 'text-orange-500'
+ stat.color === 'blue' ? 'text-zinc-300' :
+ stat.color === 'green' ? 'text-zinc-400' :
+ stat.color === 'purple' ? 'text-zinc-300' :
+ 'text-zinc-400'
  }`} />
  </div>
  <span className={`flex items-center gap-1 text-xs font-medium ${
- stat.trend === 'up' ? 'text-green-500' : 'text-red-500'
+ stat.trend === 'up' ? 'text-zinc-400' : 'text-zinc-400'
  }`}>
  {stat.trend === 'up' ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
  {stat.change}
@@ -232,39 +232,39 @@ export default function DashboardPage() {
  {/* Analytics Charts Row */}
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
  {/* User Signups Chart */}
- <div className="rounded-xl p-6 bg-black border-gray-800">
+ <div className="rounded-xl p-6 bg-black border-zinc-800">
  <div className="flex items-center justify-between mb-4">
  <h3 className="font-medium text-white">User Signups</h3>
  <span className="text-xs text-muted-foreground">Last 14 days</span>
  </div>
  {chartData?.userChartData ? (
- <MiniBarChart data={chartData.userChartData} dataKey="users" color="bg-blue-500" />
+ <MiniBarChart data={chartData.userChartData} dataKey="users" color="bg-zinc-800" />
  ) : (
  <div className="h-24 flex items-center justify-center text-muted-foreground text-sm">No data</div>
  )}
  </div>
 
  {/* Revenue Chart */}
- <div className="rounded-xl p-6 bg-black border-gray-800">
+ <div className="rounded-xl p-6 bg-black border-zinc-800">
  <div className="flex items-center justify-between mb-4">
  <h3 className="font-medium text-white">Revenue</h3>
  <span className="text-xs text-muted-foreground">Last 14 days</span>
  </div>
  {chartData?.revenueChartData ? (
- <MiniBarChart data={chartData.revenueChartData} dataKey="revenue" color="bg-purple-500" />
+ <MiniBarChart data={chartData.revenueChartData} dataKey="revenue" color="bg-zinc-800" />
  ) : (
  <div className="h-24 flex items-center justify-center text-muted-foreground text-sm">No data</div>
  )}
  </div>
 
  {/* Downloads Chart */}
- <div className="rounded-xl p-6 bg-black border-gray-800">
+ <div className="rounded-xl p-6 bg-black border-zinc-800">
  <div className="flex items-center justify-between mb-4">
  <h3 className="font-medium text-white">Downloads</h3>
  <span className="text-xs text-muted-foreground">Last 14 days</span>
  </div>
  {chartData?.downloadChartData ? (
- <MiniBarChart data={chartData.downloadChartData} dataKey="downloads" color="bg-green-500" />
+ <MiniBarChart data={chartData.downloadChartData} dataKey="downloads" color="bg-zinc-800" />
  ) : (
  <div className="h-24 flex items-center justify-center text-muted-foreground text-sm">No data</div>
  )}
@@ -274,7 +274,7 @@ export default function DashboardPage() {
  {/* Distribution Charts Row */}
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
  {/* Plan Distribution */}
- <div className="rounded-xl p-6 bg-black border-gray-800">
+ <div className="rounded-xl p-6 bg-black border-zinc-800">
  <div className="flex items-center gap-2 mb-6">
  <BarChart3 className="w-5 h-5 text-muted-foreground" />
  <h3 className="font-medium text-white">Plan Distribution</h3>
@@ -287,7 +287,7 @@ export default function DashboardPage() {
  </div>
 
  {/* Platform Distribution */}
- <div className="rounded-xl p-6 bg-black border-gray-800">
+ <div className="rounded-xl p-6 bg-black border-zinc-800">
  <div className="flex items-center gap-2 mb-6">
  <Download className="w-5 h-5 text-muted-foreground" />
  <h3 className="font-medium text-white">Download Platforms</h3>
@@ -303,10 +303,10 @@ export default function DashboardPage() {
  {/* Recent Activity Row */}
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
  {/* Recent Users */}
- <div className="rounded-xl bg-black border-gray-800">
- <div className="px-6 py-4 border-b flex items-center justify-between border-gray-800">
+ <div className="rounded-xl bg-black border-zinc-800">
+ <div className="px-6 py-4 border-b flex items-center justify-between border-zinc-800">
  <h2 className="font-medium text-white">Recent Users</h2>
- <a href="/dashboard/users" className="text-sm text-blue-500 hover:text-blue-600">View All</a>
+ <a href="/dashboard/users" className="text-sm text-zinc-300 hover:text-zinc-400">View All</a>
  </div>
  <div className="p-4">
  {users.length === 0 ? (
@@ -314,9 +314,9 @@ export default function DashboardPage() {
  ) : (
  <div className="space-y-3">
  {users.map((user) => (
- <div key={user.id} className="flex items-center justify-between p-3 rounded-lg transition-colors hover:bg-gray-900">
+ <div key={user.id} className="flex items-center justify-between p-3 rounded-lg transition-colors hover:bg-zinc-950">
  <div className="flex items-center gap-3">
- <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+ <div className="w-9 h-9 bg-gradient-to-br from-zinc-400 to-zinc-600 rounded-full flex items-center justify-center">
  <span className="text-white text-sm font-medium">{user.name.charAt(0).toUpperCase()}</span>
  </div>
  <div>
@@ -325,7 +325,7 @@ export default function DashboardPage() {
  </div>
  </div>
  <div className="text-right">
- <span className={`px-2 py-1 font-medium rounded-full ${ user.plan === 'Enterprise' ? 'bg-purple-900/30 text-purple-400' : user.plan === 'Pro' ? 'bg-blue-900/30 text-blue-400' : 'bg-secondary text-muted-foreground' }`}>{user.plan}</span>
+ <span className={`px-2 py-1 font-medium rounded-full ${ user.plan === 'Enterprise' ? 'bg-zinc-900/40 text-zinc-400' : user.plan === 'Pro' ? 'bg-zinc-900/40 text-zinc-400' : 'bg-secondary text-muted-foreground' }`}>{user.plan}</span>
  <p className="text-xs text-muted-foreground mt-1">{user.joined}</p>
  </div>
  </div>
@@ -336,10 +336,10 @@ export default function DashboardPage() {
  </div>
 
  {/* Recent Payments */}
- <div className="rounded-xl bg-black border-gray-800">
- <div className="px-6 py-4 border-b flex items-center justify-between border-gray-800">
+ <div className="rounded-xl bg-black border-zinc-800">
+ <div className="px-6 py-4 border-b flex items-center justify-between border-zinc-800">
  <h2 className="font-medium text-white">Recent Payments</h2>
- <a href="/dashboard/payments" className="text-sm text-blue-500 hover:text-blue-600">View All</a>
+ <a href="/dashboard/payments" className="text-sm text-zinc-300 hover:text-zinc-400">View All</a>
  </div>
  <div className="p-4">
  {payments.length === 0 ? (
@@ -347,11 +347,11 @@ export default function DashboardPage() {
  ) : (
  <div className="space-y-3">
  {payments.map((payment) => (
- <div key={payment.id} className="flex items-center justify-between p-3 rounded-lg transition-colors hover:bg-gray-900">
+ <div key={payment.id} className="flex items-center justify-between p-3 rounded-lg transition-colors hover:bg-zinc-950">
  <div className="flex items-center gap-3">
- <div className={`w-9 h-9 rounded-full flex items-center justify-center ${ payment.status === 'Completed' ? 'bg-green-900/30' : 'bg-yellow-900/30' }`}>
+ <div className={`w-9 h-9 rounded-full flex items-center justify-center ${ payment.status === 'Completed' ? 'bg-zinc-900/40' : 'bg-zinc-900/40' }`}>
  <DollarSign className={`w-4 h-4 ${
- payment.status === 'Completed' ? 'text-green-600' : 'text-yellow-600'
+ payment.status === 'Completed' ? 'text-zinc-300' : 'text-zinc-300'
  }`} />
  </div>
  <div>

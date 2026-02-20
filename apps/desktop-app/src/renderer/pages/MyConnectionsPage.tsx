@@ -129,29 +129,29 @@ export default function MyConnectionsPage() {
  switch (status) {
  case 'connected':
  return (
- <span className="flex items-center gap-1.5 text-green-500 text-xs font-medium">
- <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+ <span className="flex items-center gap-1.5 text-zinc-400 text-xs font-medium">
+ <span className="w-2 h-2 bg-zinc-800 rounded-full animate-pulse" />
  Connected
  </span>
  );
  case 'disconnected':
  return (
  <span className="flex items-center gap-1.5 text-muted-foreground text-xs font-medium">
- <span className="w-2 h-2 bg-gray-400 rounded-full" />
+ <span className="w-2 h-2 bg-zinc-700 rounded-full" />
  Disconnected
  </span>
  );
  case 'connecting':
  return (
- <span className="flex items-center gap-1.5 text-blue-500 text-xs font-medium">
+ <span className="flex items-center gap-1.5 text-zinc-300 text-xs font-medium">
  <Loader2 className="w-3 h-3 animate-spin" />
  Connecting
  </span>
  );
  case 'error':
  return (
- <span className="flex items-center gap-1.5 text-red-500 text-xs font-medium">
- <span className="w-2 h-2 bg-red-500 rounded-full" />
+ <span className="flex items-center gap-1.5 text-zinc-400 text-xs font-medium">
+ <span className="w-2 h-2 bg-zinc-800 rounded-full" />
  Error
  </span>
  );
@@ -164,7 +164,7 @@ export default function MyConnectionsPage() {
  return (
  <div className="min-h-screen flex items-center justify-center bg-black">
  <div className="text-center">
- <Loader2 className="w-8 h-8 text-blue-500 animate-spin mx-auto mb-4" />
+ <Loader2 className="w-8 h-8 text-zinc-300 animate-spin mx-auto mb-4" />
  <p className="text-muted-foreground">Loading connections...</p>
  </div>
  </div>
@@ -192,7 +192,7 @@ export default function MyConnectionsPage() {
  Refresh
  </Button>
  <Link to="/library">
- <Button className="bg-blue-500 hover:bg-blue-600 text-white">
+ <Button className="bg-white hover:bg-zinc-200 text-black">
  <Plus className="w-4 h-4 mr-2" />
  Add Connection
  </Button>
@@ -212,8 +212,8 @@ export default function MyConnectionsPage() {
  <p className="text-white/50">Total Connections</p>
  <p className="font-medium mt-1 text-white">{connections.length}</p>
  </div>
- <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
- <Database className="w-6 h-6 text-blue-500" />
+ <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
+ <Database className="w-6 h-6 text-zinc-300" />
  </div>
  </div>
  </motion.div>
@@ -227,12 +227,12 @@ export default function MyConnectionsPage() {
  <div className="flex items-center justify-between">
  <div>
  <p className="text-white/50">Active</p>
- <p className="text-3xl font-medium text-green-500 mt-1">
+ <p className="text-3xl font-medium text-zinc-400 mt-1">
  {connections.filter(c => c.status === 'connected').length}
  </p>
  </div>
- <div className="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
- <CheckCircle className="w-6 h-6 text-green-500" />
+ <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
+ <CheckCircle className="w-6 h-6 text-zinc-400" />
  </div>
  </div>
  </motion.div>
@@ -246,12 +246,12 @@ export default function MyConnectionsPage() {
  <div className="flex items-center justify-between">
  <div>
  <p className="text-white/50">With Errors</p>
- <p className="text-3xl font-medium text-red-500 mt-1">
+ <p className="text-3xl font-medium text-zinc-400 mt-1">
  {connections.filter(c => c.status === 'error').length}
  </p>
  </div>
- <div className="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center">
- <XCircle className="w-6 h-6 text-red-500" />
+ <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
+ <XCircle className="w-6 h-6 text-zinc-400" />
  </div>
  </div>
  </motion.div>
@@ -265,12 +265,12 @@ export default function MyConnectionsPage() {
  <div className="flex items-center justify-between">
  <div>
  <p className="text-white/50">Total Queries</p>
- <p className="text-3xl font-medium text-purple-500 mt-1">
+ <p className="text-3xl font-medium text-zinc-300 mt-1">
  {connections.reduce((acc, c) => acc + (c.queriesCount || 0), 0)}
  </p>
  </div>
- <div className="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center">
- <Zap className="w-6 h-6 text-purple-500" />
+ <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
+ <Zap className="w-6 h-6 text-zinc-300" />
  </div>
  </div>
  </motion.div>
@@ -285,7 +285,7 @@ export default function MyConnectionsPage() {
  placeholder="Search connections..."
  value={searchQuery}
  onChange={(e) => setSearchQuery(e.target.value)}
- className="w-full rounded-xl pl-12 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 bg-zinc-900 border-white/10 placeholder:text-white/40"
+ className="w-full rounded-xl pl-12 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-600/60 bg-zinc-900 border-white/10 placeholder:text-white/40"
  />
  </div>
  <div className="flex items-center gap-2 rounded-lg p-1 bg-zinc-900">
@@ -323,7 +323,7 @@ export default function MyConnectionsPage() {
  Add connections from the library to start querying your data with AI
  </p>
  <Link to="/library">
- <Button className="bg-blue-500 hover:bg-blue-600 text-white">
+ <Button className="bg-white hover:bg-zinc-200 text-black">
  <Plus className="w-4 h-4 mr-2" />
  Browse Library
  </Button>
@@ -344,9 +344,9 @@ export default function MyConnectionsPage() {
  className={cn(
  'group relative border rounded-2xl overflow-hidden transition-all hover:shadow-lg bg-zinc-900',
  conn.status === 'connected' 
- ? 'border-green-500/30' 
+ ? 'border-zinc-700/40' 
  : conn.status === 'error'
- ? 'border-red-500/30'
+ ? 'border-zinc-700/40'
  : 'border-white/10'
  )}
  >
@@ -394,7 +394,7 @@ export default function MyConnectionsPage() {
  
  <Button
  size="sm"
- className="bg-blue-500 hover:bg-blue-600 text-white"
+ className="bg-white hover:bg-zinc-200 text-black"
  onClick={() => startChat(conn.id)}
  >
  <Bot className="w-4 h-4 mr-1" />
@@ -434,7 +434,7 @@ export default function MyConnectionsPage() {
  setShowMenu(null);
  deleteConnection(conn.id);
  }}
- className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-500 hover:bg-red-500/10"
+ className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-zinc-400 hover:bg-white/5"
  >
  <Trash2 className="w-4 h-4" />
  Delete
@@ -465,10 +465,10 @@ export default function MyConnectionsPage() {
  )}
 
  {/* Quick Tip */}
- <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-2xl p-6">
+ <div className="bg-gradient-to-r from-white/5 to-white/5 border border-zinc-700/30 rounded-2xl p-6">
  <div className="flex items-start gap-4">
- <div className="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center">
- <Bot className="w-5 h-5 text-blue-500" />
+ <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+ <Bot className="w-5 h-5 text-zinc-300" />
  </div>
  <div className="flex-1">
  <h3 className="font-medium mb-1 text-white">AI-Powered CRUD Operations</h3>
@@ -478,7 +478,7 @@ export default function MyConnectionsPage() {
  </p>
  </div>
  <Link to="/">
- <Button variant="outline" className="border-blue-500/30 text-blue-500 hover:bg-blue-500/10">
+ <Button variant="outline" className="border-zinc-700/40 text-zinc-300 hover:bg-white/5">
  Go to Dashboard
  <ArrowRight className="w-4 h-4 ml-2" />
  </Button>
