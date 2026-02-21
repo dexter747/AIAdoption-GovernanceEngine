@@ -54,21 +54,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Email and password are required' }, { status: 400 });
     }
 
-    const adminEmail = process.env.ADMIN_EMAIL || 'admin@gmail.com';
     const adminPasswordHash = process.env.ADMIN_PASSWORD_HASH;
 
     if (!adminPasswordHash) {
       console.error('ADMIN_PASSWORD_HASH env var is not set');
-      return NextResponse.json({ error: 'Server misconfiguration' }, { status: 500 });
+      return NextResponse.json({ error: 'Server misconfiguration — ADMIN_PASSWORD_HASH not set' }, { status: 500 });
     }
 
-    const emailMatches = email.toLowerCase() === adminEmail.toLowerCase();
-    const isInAdminList = ADMIN_EMAILS.includes(email.toLowerCase());
+    const normalizedEmail = email.toLowerCase().trim();
+    const isInAdminList = ADMIN_EMAILS.includes(normalizedEmail);
 
     // Always run bcrypt.compare even on email mismatch to prevent timing attacks
     const passwordMatches = await bcrypt.compare(password, adminPasswordHash);
 
-    if (!emailMatches || !passwordMatches || !isInAdminList) {
+    if (!isInAdminList || !passwordMatches) {
       return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 });
     }
 
@@ -78,12 +77,12 @@ export async function POST(request: NextRequest) {
     // Generate JWT pair
     const { accessToken, refreshToken } = await generateTokenPair({
       id: 'admin-01',
-      email: adminEmail,
+      email: normalizedEmail,
       name: 'Admin',
     });
 
     const response = NextResponse.json(
-      { success: true, user: { email: adminEmail, name: 'Admin', role: 'admin' } },
+      { success: true, user: { email: normalizedEmail, name: 'Admin', role: 'admin' } },
       { status: 200 }
     );
 
