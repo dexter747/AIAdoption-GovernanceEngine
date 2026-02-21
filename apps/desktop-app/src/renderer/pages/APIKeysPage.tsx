@@ -530,7 +530,8 @@ export default function APIKeysPage() {
             </div>
           </section>
         )}
-      </div>
+      </div>{/* closes max-w-3xl */}
+      </div>{/* closes flex-1 overflow-auto p-5 */}
 
       {/* Modal */}
       <AnimatePresence>

@@ -56,6 +56,7 @@ export default function LibraryPage() {
  const [showAddModal, setShowAddModal] = useState(false);
  const [isAdding, setIsAdding] = useState(false);
  const [userConnections, setUserConnections] = useState<string[]>([]);
+ const [addError, setAddError] = useState<string | null>(null);
  const [connectionConfig, setConnectionConfig] = useState<ConnectionConfig>({
  type: '',
  name: '',
@@ -116,12 +117,15 @@ export default function LibraryPage() {
  if (!connectionConfig.name) return;
  
  setIsAdding(true);
+ setAddError(null);
  try {
- // Create the connection using the express API or MCP
  const expressAPI = window.electron.express;
  const mcpAPI = window.electron.mcp;
- 
+ let saved = false;
+
+ // Try Express API first
  if (expressAPI?.addUserConnection) {
+ try {
  await expressAPI.addUserConnection(
  connectionConfig.name,
  connectionConfig.type,
@@ -134,7 +138,14 @@ export default function LibraryPage() {
  encrypted: true,
  }
  );
- } else if (mcpAPI?.addConnection) {
+ saved = true;
+ } catch (expressErr: any) {
+ console.warn('Express API failed, trying MCP fallback:', expressErr?.message);
+ }
+ }
+
+ // Fallback to MCP if Express failed or unavailable
+ if (!saved && mcpAPI?.addConnection) {
  await mcpAPI.addConnection({
  name: connectionConfig.name,
  type: connectionConfig.type as any,
@@ -142,16 +153,20 @@ export default function LibraryPage() {
  port: connectionConfig.port,
  enabled: true,
  });
+ saved = true;
  }
- 
+
+ if (!saved) {
+ throw new Error('No backend available to save the connection. Check that the server is running.');
+ }
+
  setShowAddModal(false);
  setSelectedType(null);
  await loadUserConnections();
- 
- // Navigate to My Connections page
  navigate('/my-connections');
- } catch (error) {
+ } catch (error: any) {
  console.error('Failed to create connection:', error);
+ setAddError(error?.message || 'Failed to add connection');
  } finally {
  setIsAdding(false);
  }
@@ -308,7 +323,7 @@ export default function LibraryPage() {
  <motion.div
  initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
  className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50"
- onClick={() => setShowAddModal(false)}
+ onClick={() => { setShowAddModal(false); setAddError(null); }}
  >
  <motion.div
  initial={{ scale: 0.97, opacity: 0, y: 4 }}
@@ -329,6 +344,12 @@ export default function LibraryPage() {
 
  {/* Fields */}
  <div className="px-5 py-4 space-y-3">
+ {addError && (
+ <div className="flex items-start gap-2 px-3 py-2.5 rounded-lg border border-red-500/20 bg-red-950/20 text-[11px] text-red-400/80">
+ <span className="flex-shrink-0 mt-0.5">⚠</span>
+ <span>{addError}</span>
+ </div>
+ )}
  {[
  { label: 'Name', key: 'name', placeholder: `My ${ct?.name}`, type: 'text' },
  ].map(f => (
@@ -404,7 +425,7 @@ export default function LibraryPage() {
  {/* Footer */}
  <div className="flex items-center justify-end gap-2 px-5 py-3 border-t border-white/[0.07]">
  <button
- onClick={() => setShowAddModal(false)}
+ onClick={() => { setShowAddModal(false); setAddError(null); }}
  className="h-7 px-3.5 rounded-[6px] text-[12px] font-medium text-white/50 hover:text-white/80 hover:bg-white/[0.05] transition-all"
  >
  Cancel
