@@ -64,9 +64,11 @@ function AppLayout({ children }: { children: React.ReactNode }) {
   }, [sidebarCollapsed]);
 
   return (
-    <div className="flex min-h-screen bg-[#080808]">
+    /* Full-screen window — no scroll at this level */
+    <div className="flex h-screen overflow-hidden bg-[#080808]">
       <Sidebar collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} />
-      <main className="flex-1 overflow-auto bg-[#0a0a0a]">
+      {/* 1px panel divider is already part of sidebar border-r */}
+      <main className="flex-1 flex flex-col overflow-hidden bg-[#0b0b0b]">
         {children}
       </main>
     </div>

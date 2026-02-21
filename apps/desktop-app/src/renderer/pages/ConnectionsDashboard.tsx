@@ -11,6 +11,7 @@ import { Button } from '../components/ui/button';
 import { cn } from '../lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CONNECTION_LIBRARY as CONNECTION_TYPES } from '../config/connection-types';
+import ConnectionIcon from '../components/ConnectionIcon';
 
 interface DatabaseConnection {
  id: string;
@@ -353,12 +354,13 @@ export default function ConnectionsDashboard() {
  <div className="p-5">
  <div className="flex items-start justify-between mb-4">
  <div className="flex items-center gap-3">
- <div className={cn(
- 'w-12 h-12 rounded-xl flex items-center justify-center text-2xl',
- connType.bgColor
- )}>
- {connType.icon}
- </div>
+ <ConnectionIcon
+ logo={connType.logo}
+ icon={connType.icon}
+ color={connType.color}
+ bgColor={connType.bgColor}
+ size="md"
+ />
  <div>
  <h3 className="font-medium">{connection.name}</h3>
  <p className="text-white/50 text-sm">{connType.name}</p>
@@ -443,12 +445,14 @@ export default function ConnectionsDashboard() {
  selectedType === key && 'border-zinc-700 bg-white/5'
  )}
  >
- <div className={cn(
- 'w-10 h-10 rounded-lg flex items-center justify-center text-xl mb-3',
- config.bgColor
- )}>
- {config.icon}
- </div>
+ <ConnectionIcon
+ logo={config.logo}
+ icon={config.icon}
+ color={config.color}
+ bgColor={config.bgColor}
+ size="sm"
+ className="mb-3"
+ />
  <h3 className="font-medium text-sm">{config.name}</h3>
  <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
  <Plus className="w-4 h-4 text-white/40" />

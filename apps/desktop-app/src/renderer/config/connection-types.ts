@@ -6,6 +6,9 @@
 
 export interface ConnectionTypeConfig {
   icon: string;
+  /** Path to a static logo image (relative to public root, e.g. /legacy/mysql.svg).
+   *  When present, rendered instead of the emoji icon. */
+  logo?: string;
   name: string;
   description: string;
   color: string;
@@ -39,37 +42,37 @@ export type ConnectionCategory =
 export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
   // ─── Relational Databases ────────────────────────────────────────────
   mysql: {
-    icon: '🐬', name: 'MySQL',
+    icon: '🐬', logo: '/legacy/mysql.svg', name: 'MySQL',
     description: 'Open-source relational database',
     color: 'from-blue-500 to-blue-600', bgColor: 'bg-blue-500/10', borderColor: 'border-blue-500/30',
     category: 'database',
   },
   postgresql: {
-    icon: '🐘', name: 'PostgreSQL',
+    icon: '🐘', logo: '/legacy/postgresql.png', name: 'PostgreSQL',
     description: 'Advanced open-source database',
     color: 'from-indigo-500 to-indigo-600', bgColor: 'bg-indigo-500/10', borderColor: 'border-indigo-500/30',
     category: 'database',
   },
   mariadb: {
-    icon: '🦭', name: 'MariaDB',
+    icon: '🦭', logo: '/legacy/mariadb.svg', name: 'MariaDB',
     description: 'MySQL-compatible database',
     color: 'from-sky-500 to-sky-600', bgColor: 'bg-sky-500/10', borderColor: 'border-sky-500/30',
     category: 'database',
   },
   sqlserver: {
-    icon: '🔷', name: 'SQL Server',
+    icon: '🔷', logo: '/legacy/sqlserver.svg', name: 'SQL Server',
     description: 'Microsoft enterprise database',
     color: 'from-red-500 to-red-600', bgColor: 'bg-red-500/10', borderColor: 'border-red-500/30',
     category: 'database',
   },
   oracle: {
-    icon: '🔴', name: 'Oracle',
+    icon: '🔴', logo: '/legacy/oracle.svg', name: 'Oracle',
     description: 'Enterprise-grade database',
     color: 'from-orange-500 to-orange-600', bgColor: 'bg-orange-500/10', borderColor: 'border-orange-500/30',
     category: 'database',
   },
   sqlite: {
-    icon: '📦', name: 'SQLite',
+    icon: '📦', logo: '/legacy/sqlite.svg', name: 'SQLite',
     description: 'Lightweight embedded database',
     color: 'from-gray-500 to-gray-600', bgColor: 'bg-gray-500/10', borderColor: 'border-gray-500/30',
     category: 'database',
@@ -77,43 +80,43 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
 
   // ─── NoSQL Databases ─────────────────────────────────────────────────
   mongodb: {
-    icon: '🍃', name: 'MongoDB',
+    icon: '🍃', logo: '/legacy/mongodb.svg', name: 'MongoDB',
     description: 'Document-oriented NoSQL database',
     color: 'from-green-500 to-green-600', bgColor: 'bg-green-500/10', borderColor: 'border-green-500/30',
     category: 'nosql',
   },
   redis: {
-    icon: '🔥', name: 'Redis',
+    icon: '🔥', logo: '/legacy/redis-logo.svg', name: 'Redis',
     description: 'In-memory data store',
     color: 'from-red-400 to-red-500', bgColor: 'bg-red-400/10', borderColor: 'border-red-400/30',
     category: 'nosql',
   },
   elasticsearch: {
-    icon: '🔍', name: 'Elasticsearch',
+    icon: '🔍', logo: '/legacy/elasticsearch.svg', name: 'Elasticsearch',
     description: 'Search and analytics engine',
     color: 'from-yellow-500 to-yellow-600', bgColor: 'bg-yellow-500/10', borderColor: 'border-yellow-500/30',
     category: 'nosql',
   },
   dynamodb: {
-    icon: '⚡', name: 'DynamoDB',
+    icon: '⚡', logo: '/legacy/dynamodb.svg', name: 'DynamoDB',
     description: 'AWS managed NoSQL database',
     color: 'from-purple-500 to-purple-600', bgColor: 'bg-purple-500/10', borderColor: 'border-purple-500/30',
     category: 'nosql',
   },
   cassandra: {
-    icon: '👁️', name: 'Cassandra',
+    icon: '👁️', logo: '/legacy/cassandra.svg', name: 'Cassandra',
     description: 'Distributed NoSQL database',
     color: 'from-teal-500 to-teal-600', bgColor: 'bg-teal-500/10', borderColor: 'border-teal-500/30',
     category: 'nosql',
   },
   couchdb: {
-    icon: '🛋️', name: 'CouchDB',
+    icon: '🛋️', logo: '/legacy/CouchDB.svg', name: 'CouchDB',
     description: 'Apache document database',
     color: 'from-red-500 to-red-600', bgColor: 'bg-red-500/10', borderColor: 'border-red-500/30',
     category: 'nosql',
   },
   neo4j: {
-    icon: '🕸️', name: 'Neo4j',
+    icon: '🕸️', logo: '/legacy/nero4j.jpeg', name: 'Neo4j',
     description: 'Graph database platform',
     color: 'from-blue-400 to-blue-500', bgColor: 'bg-blue-400/10', borderColor: 'border-blue-400/30',
     category: 'nosql',
@@ -121,13 +124,13 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
 
   // ─── Enterprise / ERP ────────────────────────────────────────────────
   'sap-hana': {
-    icon: '💎', name: 'SAP HANA',
+    icon: '💎', logo: '/legacy/saphana.svg', name: 'SAP HANA',
     description: 'In-memory enterprise platform',
     color: 'from-cyan-500 to-cyan-600', bgColor: 'bg-cyan-500/10', borderColor: 'border-cyan-500/30',
     category: 'enterprise',
   },
   dynamics365: {
-    icon: '🟦', name: 'Dynamics 365',
+    icon: '🟦', logo: '/legacy/Dynamics365.svg', name: 'Dynamics 365',
     description: 'Microsoft ERP & CRM platform',
     color: 'from-blue-600 to-blue-700', bgColor: 'bg-blue-600/10', borderColor: 'border-blue-600/30',
     category: 'erp',
@@ -139,43 +142,43 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     category: 'erp',
   },
   'sap-successfactors': {
-    icon: '🏢', name: 'SAP SuccessFactors',
+    icon: '🏢', logo: '/legacy/sap-successfactors.png', name: 'SAP SuccessFactors',
     description: 'Cloud HCM suite',
     color: 'from-blue-500 to-cyan-500', bgColor: 'bg-blue-500/10', borderColor: 'border-blue-500/30',
     category: 'hcm',
   },
   'infor-cloudsuite': {
-    icon: '☁️', name: 'Infor CloudSuite',
+    icon: '☁️', logo: '/legacy/infor.svg', name: 'Infor CloudSuite',
     description: 'Industry-specific ERP cloud',
     color: 'from-amber-500 to-amber-600', bgColor: 'bg-amber-500/10', borderColor: 'border-amber-500/30',
     category: 'erp',
   },
   'jd-edwards': {
-    icon: '🏗️', name: 'JD Edwards',
+    icon: '🏗️', logo: '/legacy/JDEdwards.svg', name: 'JD Edwards',
     description: 'Oracle JD Edwards ERP',
     color: 'from-red-600 to-red-700', bgColor: 'bg-red-600/10', borderColor: 'border-red-600/30',
     category: 'erp',
   },
   epicor: {
-    icon: '🔧', name: 'Epicor',
+    icon: '🔧', logo: '/legacy/epicor.svg', name: 'Epicor',
     description: 'Manufacturing & distribution ERP',
     color: 'from-green-600 to-green-700', bgColor: 'bg-green-600/10', borderColor: 'border-green-600/30',
     category: 'erp',
   },
   'sage-intacct': {
-    icon: '📗', name: 'Sage Intacct',
+    icon: '📗', logo: '/legacy/sage-intacct.svg', name: 'Sage Intacct',
     description: 'Cloud financial management',
     color: 'from-green-500 to-green-600', bgColor: 'bg-green-500/10', borderColor: 'border-green-500/30',
     category: 'erp',
   },
   'oracle-peoplesoft': {
-    icon: '👤', name: 'Oracle PeopleSoft',
+    icon: '👤', logo: '/legacy/peoplesoft.svg', name: 'Oracle PeopleSoft',
     description: 'HR and campus solutions',
     color: 'from-red-500 to-orange-500', bgColor: 'bg-red-500/10', borderColor: 'border-red-500/30',
     category: 'erp',
   },
   'oracle-opera': {
-    icon: '🏨', name: 'Oracle Opera',
+    icon: '🏨', logo: '/legacy/oracleopera.svg', name: 'Oracle Opera',
     description: 'Hospitality management platform',
     color: 'from-red-600 to-red-700', bgColor: 'bg-red-600/10', borderColor: 'border-red-600/30',
     category: 'erp',
@@ -183,25 +186,25 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
 
   // ─── CRM & Sales ─────────────────────────────────────────────────────
   salesforce: {
-    icon: '☁️', name: 'Salesforce',
+    icon: '☁️', logo: '/legacy/salesforce.png', name: 'Salesforce',
     description: 'CRM and enterprise cloud platform',
     color: 'from-sky-400 to-sky-500', bgColor: 'bg-sky-400/10', borderColor: 'border-sky-400/30',
     category: 'crm',
   },
   hubspot: {
-    icon: '🧡', name: 'HubSpot',
+    icon: '🧡', logo: '/legacy/hubspot.svg', name: 'HubSpot',
     description: 'Marketing and sales CRM',
     color: 'from-orange-500 to-orange-600', bgColor: 'bg-orange-500/10', borderColor: 'border-orange-500/30',
     category: 'crm',
   },
   'oracle-siebel': {
-    icon: '📞', name: 'Oracle Siebel',
+    icon: '📞', logo: '/legacy/oraclesiebel.svg', name: 'Oracle Siebel',
     description: 'Enterprise CRM platform',
     color: 'from-red-500 to-red-600', bgColor: 'bg-red-500/10', borderColor: 'border-red-500/30',
     category: 'crm',
   },
   zendesk: {
-    icon: '🎫', name: 'Zendesk',
+    icon: '🎫', logo: '/legacy/zendesk.svg', name: 'Zendesk',
     description: 'Customer support platform',
     color: 'from-emerald-500 to-emerald-600', bgColor: 'bg-emerald-500/10', borderColor: 'border-emerald-500/30',
     category: 'crm',
@@ -209,13 +212,13 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
 
   // ─── ITSM & Support ──────────────────────────────────────────────────
   servicenow: {
-    icon: '⚡', name: 'ServiceNow',
+    icon: '⚡', logo: '/legacy/ServiceNow.svg', name: 'ServiceNow',
     description: 'IT service management platform',
     color: 'from-teal-400 to-teal-500', bgColor: 'bg-teal-400/10', borderColor: 'border-teal-400/30',
     category: 'enterprise',
   },
   jira: {
-    icon: '📋', name: 'Jira',
+    icon: '📋', logo: '/legacy/jira.svg', name: 'Jira',
     description: 'Project and issue tracking',
     color: 'from-blue-400 to-blue-500', bgColor: 'bg-blue-400/10', borderColor: 'border-blue-400/30',
     category: 'enterprise',
@@ -223,25 +226,25 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
 
   // ─── HCM & HR ─────────────────────────────────────────────────────────
   workday: {
-    icon: '👥', name: 'Workday',
+    icon: '👥', logo: '/legacy/workday.svg', name: 'Workday',
     description: 'HR and finance management',
     color: 'from-orange-400 to-orange-500', bgColor: 'bg-orange-400/10', borderColor: 'border-orange-400/30',
     category: 'hcm',
   },
   adp: {
-    icon: '💼', name: 'ADP',
+    icon: '💼', logo: '/legacy/adp.svg', name: 'ADP',
     description: 'Payroll and HR solutions',
     color: 'from-red-500 to-red-600', bgColor: 'bg-red-500/10', borderColor: 'border-red-500/30',
     category: 'hcm',
   },
   'ukg-kronos': {
-    icon: '⏰', name: 'UKG / Kronos',
+    icon: '⏰', logo: '/legacy/ukg.svg', name: 'UKG / Kronos',
     description: 'Workforce management',
     color: 'from-green-500 to-green-600', bgColor: 'bg-green-500/10', borderColor: 'border-green-500/30',
     category: 'hcm',
   },
   'sap-concur': {
-    icon: '✈️', name: 'SAP Concur',
+    icon: '✈️', logo: '/legacy/sapconcur.svg', name: 'SAP Concur',
     description: 'Travel and expense management',
     color: 'from-blue-500 to-blue-600', bgColor: 'bg-blue-500/10', borderColor: 'border-blue-500/30',
     category: 'hcm',
@@ -249,25 +252,25 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
 
   // ─── Healthcare ──────────────────────────────────────────────────────
   'epic-fhir': {
-    icon: '🏥', name: 'Epic (FHIR)',
+    icon: '🏥', logo: '/legacy/epicsystems.png', name: 'Epic (FHIR)',
     description: 'Healthcare EHR via FHIR R4',
     color: 'from-red-500 to-red-600', bgColor: 'bg-red-500/10', borderColor: 'border-red-500/30',
     category: 'healthcare',
   },
   cerner: {
-    icon: '🩺', name: 'Cerner',
+    icon: '🩺', logo: '/legacy/oraclecerner.svg', name: 'Cerner',
     description: 'Oracle Health / Cerner FHIR',
     color: 'from-blue-500 to-blue-600', bgColor: 'bg-blue-500/10', borderColor: 'border-blue-500/30',
     category: 'healthcare',
   },
   meditech: {
-    icon: '💊', name: 'MEDITECH',
+    icon: '💊', logo: '/legacy/meditech.svg', name: 'MEDITECH',
     description: 'Healthcare information system',
     color: 'from-teal-500 to-teal-600', bgColor: 'bg-teal-500/10', borderColor: 'border-teal-500/30',
     category: 'healthcare',
   },
   allscripts: {
-    icon: '📋', name: 'Allscripts',
+    icon: '📋', logo: '/legacy/allscripts.svg', name: 'Allscripts',
     description: 'Clinical and financial solutions',
     color: 'from-green-600 to-green-700', bgColor: 'bg-green-600/10', borderColor: 'border-green-600/30',
     category: 'healthcare',
@@ -275,19 +278,19 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
 
   // ─── Insurance ───────────────────────────────────────────────────────
   guidewire: {
-    icon: '🛡️', name: 'Guidewire',
+    icon: '🛡️', logo: '/legacy/guidewire.png', name: 'Guidewire',
     description: 'P&C insurance platform',
     color: 'from-blue-600 to-blue-700', bgColor: 'bg-blue-600/10', borderColor: 'border-blue-600/30',
     category: 'insurance',
   },
   'duck-creek': {
-    icon: '🦆', name: 'Duck Creek',
+    icon: '🦆', logo: '/legacy/duckcreek.jpeg', name: 'Duck Creek',
     description: 'Insurance SaaS platform',
     color: 'from-yellow-500 to-yellow-600', bgColor: 'bg-yellow-500/10', borderColor: 'border-yellow-500/30',
     category: 'insurance',
   },
   'applied-epic': {
-    icon: '📄', name: 'Applied Epic',
+    icon: '📄', logo: '/legacy/appliedepic.png', name: 'Applied Epic',
     description: 'Insurance management system',
     color: 'from-indigo-500 to-indigo-600', bgColor: 'bg-indigo-500/10', borderColor: 'border-indigo-500/30',
     category: 'insurance',
@@ -295,19 +298,19 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
 
   // ─── Supply Chain & Logistics ────────────────────────────────────────
   'manhattan-associates': {
-    icon: '📦', name: 'Manhattan Associates',
+    icon: '📦', logo: '/legacy/manhattan-associates.svg', name: 'Manhattan Associates',
     description: 'Supply chain & WMS',
     color: 'from-blue-500 to-blue-600', bgColor: 'bg-blue-500/10', borderColor: 'border-blue-500/30',
     category: 'supply-chain',
   },
   'blue-yonder': {
-    icon: '🔵', name: 'Blue Yonder',
+    icon: '🔵', logo: '/legacy/blueyonder.svg', name: 'Blue Yonder',
     description: 'Supply chain planning',
     color: 'from-blue-400 to-indigo-500', bgColor: 'bg-blue-400/10', borderColor: 'border-blue-400/30',
     category: 'supply-chain',
   },
   descartes: {
-    icon: '🚚', name: 'Descartes',
+    icon: '🚚', logo: '/legacy/descartes.jpeg', name: 'Descartes',
     description: 'Logistics technology platform',
     color: 'from-green-500 to-green-600', bgColor: 'bg-green-500/10', borderColor: 'border-green-500/30',
     category: 'supply-chain',
@@ -315,31 +318,31 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
 
   // ─── Finance & Banking ───────────────────────────────────────────────
   fis: {
-    icon: '🏦', name: 'FIS',
+    icon: '🏦', logo: '/legacy/fis.jpeg', name: 'FIS',
     description: 'Financial services technology',
     color: 'from-blue-700 to-blue-800', bgColor: 'bg-blue-700/10', borderColor: 'border-blue-700/30',
     category: 'finance',
   },
   finastra: {
-    icon: '💳', name: 'Finastra',
+    icon: '💳', logo: '/legacy/finastra.jpeg', name: 'Finastra',
     description: 'Financial software solutions',
     color: 'from-purple-600 to-purple-700', bgColor: 'bg-purple-600/10', borderColor: 'border-purple-600/30',
     category: 'finance',
   },
   temenos: {
-    icon: '🏛️', name: 'Temenos',
+    icon: '🏛️', logo: '/legacy/temenos.jpeg', name: 'Temenos',
     description: 'Banking software platform',
     color: 'from-blue-500 to-blue-600', bgColor: 'bg-blue-500/10', borderColor: 'border-blue-500/30',
     category: 'finance',
   },
   blackline: {
-    icon: '📊', name: 'BlackLine',
+    icon: '📊', logo: '/legacy/blackline.svg', name: 'BlackLine',
     description: 'Financial close management',
     color: 'from-gray-700 to-gray-800', bgColor: 'bg-gray-700/10', borderColor: 'border-gray-700/30',
     category: 'finance',
   },
   quickbooks: {
-    icon: '📒', name: 'QuickBooks',
+    icon: '📒', logo: '/legacy/quickbooks.png', name: 'QuickBooks',
     description: 'Small business accounting',
     color: 'from-green-500 to-green-600', bgColor: 'bg-green-500/10', borderColor: 'border-green-500/30',
     category: 'finance',
@@ -347,13 +350,13 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
 
   // ─── Commerce ────────────────────────────────────────────────────────
   shopify: {
-    icon: '🛒', name: 'Shopify',
+    icon: '🛒', logo: '/legacy/shopify.svg', name: 'Shopify',
     description: 'E-commerce platform',
     color: 'from-green-500 to-green-600', bgColor: 'bg-green-500/10', borderColor: 'border-green-500/30',
     category: 'commerce',
   },
   magento: {
-    icon: '🧲', name: 'Magento',
+    icon: '🧲', logo: '/legacy/magento.png', name: 'Magento',
     description: 'Adobe Commerce platform',
     color: 'from-orange-500 to-orange-600', bgColor: 'bg-orange-500/10', borderColor: 'border-orange-500/30',
     category: 'commerce',
@@ -361,13 +364,13 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
 
   // ─── Telecom ─────────────────────────────────────────────────────────
   amdocs: {
-    icon: '📡', name: 'Amdocs',
+    icon: '📡', logo: '/legacy/amdocs.svg', name: 'Amdocs',
     description: 'Telecom BSS / OSS platform',
     color: 'from-blue-500 to-blue-600', bgColor: 'bg-blue-500/10', borderColor: 'border-blue-500/30',
     category: 'telecom',
   },
   'ericsson-bss': {
-    icon: '📶', name: 'Ericsson BSS',
+    icon: '📶', logo: '/legacy/ericsson.jpeg', name: 'Ericsson BSS',
     description: 'Telecom billing & charging',
     color: 'from-blue-600 to-blue-700', bgColor: 'bg-blue-600/10', borderColor: 'border-blue-600/30',
     category: 'telecom',
@@ -375,25 +378,25 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
 
   // ─── Document Management ─────────────────────────────────────────────
   sharepoint: {
-    icon: '📁', name: 'SharePoint',
+    icon: '📁', logo: '/legacy/sharepoint.svg', name: 'SharePoint',
     description: 'Microsoft collaboration platform',
     color: 'from-teal-500 to-teal-600', bgColor: 'bg-teal-500/10', borderColor: 'border-teal-500/30',
     category: 'document',
   },
   documentum: {
-    icon: '🗄️', name: 'Documentum',
+    icon: '🗄️', logo: '/legacy/documentum.svg', name: 'Documentum',
     description: 'Enterprise content management',
     color: 'from-blue-500 to-blue-600', bgColor: 'bg-blue-500/10', borderColor: 'border-blue-500/30',
     category: 'document',
   },
   'ibm-filenet': {
-    icon: '📂', name: 'IBM FileNet',
+    icon: '📂', logo: '/legacy/filenet.svg', name: 'IBM FileNet',
     description: 'Content management platform',
-    color: 'bg-blue-600 to-blue-700', bgColor: 'bg-blue-600/10', borderColor: 'border-blue-600/30',
+    color: 'from-blue-600 to-blue-700', bgColor: 'bg-blue-600/10', borderColor: 'border-blue-600/30',
     category: 'document',
   },
   box: {
-    icon: '📥', name: 'Box',
+    icon: '📥', logo: '/legacy/box.svg', name: 'Box',
     description: 'Cloud content management',
     color: 'from-blue-400 to-blue-500', bgColor: 'bg-blue-400/10', borderColor: 'border-blue-400/30',
     category: 'document',
@@ -401,13 +404,13 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
 
   // ─── Government ──────────────────────────────────────────────────────
   'cgi-momentum': {
-    icon: '🏛️', name: 'CGI Momentum',
+    icon: '🏛️', logo: '/legacy/cgilogo.svg', name: 'CGI Momentum',
     description: 'Government ERP platform',
     color: 'from-purple-500 to-purple-600', bgColor: 'bg-purple-500/10', borderColor: 'border-purple-500/30',
     category: 'government',
   },
   'tyler-technologies': {
-    icon: '🏫', name: 'Tyler Technologies',
+    icon: '🏫', logo: '/legacy/tylertechnologies.svg', name: 'Tyler Technologies',
     description: 'Government management software',
     color: 'from-blue-500 to-blue-600', bgColor: 'bg-blue-500/10', borderColor: 'border-blue-500/30',
     category: 'government',
@@ -415,7 +418,7 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
 
   // ─── Education ───────────────────────────────────────────────────────
   'ellucian-banner': {
-    icon: '🎓', name: 'Ellucian Banner',
+    icon: '🎓', logo: '/legacy/ellucian.svg', name: 'Ellucian Banner',
     description: 'Higher education ERP',
     color: 'from-purple-500 to-purple-600', bgColor: 'bg-purple-500/10', borderColor: 'border-purple-500/30',
     category: 'education',
@@ -423,19 +426,19 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
 
   // ─── Asset & Facilities ──────────────────────────────────────────────
   'ibm-maximo': {
-    icon: '🏭', name: 'IBM Maximo',
+    icon: '🏭', logo: '/legacy/ibm-maximo.png', name: 'IBM Maximo',
     description: 'Asset management platform',
     color: 'from-blue-600 to-blue-700', bgColor: 'bg-blue-600/10', borderColor: 'border-blue-600/30',
     category: 'asset',
   },
   'ibm-tririga': {
-    icon: '🏢', name: 'IBM TRIRIGA',
+    icon: '🏢', logo: '/legacy/triraga.jpg', name: 'IBM TRIRIGA',
     description: 'Facilities management',
     color: 'from-blue-500 to-blue-600', bgColor: 'bg-blue-500/10', borderColor: 'border-blue-500/30',
     category: 'asset',
   },
   'ge-predix': {
-    icon: '⚙️', name: 'GE Predix',
+    icon: '⚙️', logo: '/legacy/ge-predix.jpg', name: 'GE Predix',
     description: 'Industrial IoT platform',
     color: 'from-blue-500 to-cyan-500', bgColor: 'bg-blue-500/10', borderColor: 'border-blue-500/30',
     category: 'asset',
@@ -443,13 +446,13 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
 
   // ─── Procurement ─────────────────────────────────────────────────────
   'sap-ariba': {
-    icon: '🛍️', name: 'SAP Ariba',
+    icon: '🛍️', logo: '/legacy/sap-ariba.png', name: 'SAP Ariba',
     description: 'Procurement & supply chain',
     color: 'from-blue-500 to-blue-600', bgColor: 'bg-blue-500/10', borderColor: 'border-blue-500/30',
     category: 'procurement',
   },
   coupa: {
-    icon: '💰', name: 'Coupa',
+    icon: '💰', logo: '/legacy/coupa.svg', name: 'Coupa',
     description: 'Business spend management',
     color: 'from-blue-400 to-blue-500', bgColor: 'bg-blue-400/10', borderColor: 'border-blue-400/30',
     category: 'procurement',
@@ -457,7 +460,7 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
 
   // ─── Legacy / Mainframe ──────────────────────────────────────────────
   as400: {
-    icon: '🖥️', name: 'IBM AS/400',
+    icon: '🖥️', logo: '/legacy/ibmas400.png', name: 'IBM AS/400',
     description: 'IBM i / iSeries mainframe',
     color: 'from-gray-600 to-gray-700', bgColor: 'bg-gray-600/10', borderColor: 'border-gray-600/30',
     category: 'legacy',
@@ -465,25 +468,25 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
 
   // ─── Cloud Data Warehouses (display-only, no MCP server) ─────────────
   snowflake: {
-    icon: '❄️', name: 'Snowflake',
+    icon: '❄️', logo: '/legacy/snowflake.svg', name: 'Snowflake',
     description: 'Cloud data platform',
     color: 'from-cyan-400 to-cyan-500', bgColor: 'bg-cyan-400/10', borderColor: 'border-cyan-400/30',
     category: 'warehouse',
   },
   bigquery: {
-    icon: '📊', name: 'BigQuery',
+    icon: '📊', logo: '/legacy/BigQuery.svg', name: 'BigQuery',
     description: 'Google serverless data warehouse',
     color: 'from-blue-500 to-blue-600', bgColor: 'bg-blue-500/10', borderColor: 'border-blue-500/30',
     category: 'warehouse',
   },
   redshift: {
-    icon: '🔶', name: 'Redshift',
+    icon: '🔶', logo: '/legacy/redshiftlogo.svg', name: 'Redshift',
     description: 'AWS cloud data warehouse',
     color: 'from-red-500 to-red-600', bgColor: 'bg-red-500/10', borderColor: 'border-red-500/30',
     category: 'warehouse',
   },
   databricks: {
-    icon: '🧱', name: 'Databricks',
+    icon: '🧱', logo: '/legacy/databricks.svg', name: 'Databricks',
     description: 'Unified analytics platform',
     color: 'from-red-400 to-orange-500', bgColor: 'bg-red-400/10', borderColor: 'border-red-400/30',
     category: 'warehouse',
@@ -491,13 +494,13 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
 
   // ─── MCP Servers / Custom ────────────────────────────────────────────
   'mcp-server': {
-    icon: '🔌', name: 'MCP Server',
+    icon: '🔌', logo: '/legacy/mcp.jpg', name: 'MCP Server',
     description: 'Model Context Protocol server',
     color: 'from-purple-500 to-pink-500', bgColor: 'bg-purple-500/10', borderColor: 'border-purple-500/30',
     category: 'mcp',
   },
   'custom-api': {
-    icon: '🔗', name: 'Custom API',
+    icon: '🔗', logo: '/legacy/customapi.png', name: 'Custom API',
     description: 'Connect to any REST/GraphQL API',
     color: 'from-gray-500 to-gray-600', bgColor: 'bg-gray-500/10', borderColor: 'border-gray-500/30',
     category: 'mcp',
