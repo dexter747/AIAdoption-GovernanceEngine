@@ -109,10 +109,12 @@ export function Footer() {
             &copy; {new Date().getFullYear()} Velanova. All rights reserved.
           </p>
           <div className="flex items-center gap-5 text-sm text-zinc-600">
-            <span className="flex items-center gap-1.5">
-              <Zap className="w-3.5 h-3.5" />
-              Built for enterprise
-            </span>
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <span className="text-xs text-zinc-700 font-medium">Secure Payments By</span>
+              <img src="/paypal.svg" alt="PayPal" className="h-4 object-contain opacity-30 hover:opacity-60 transition-opacity" />
+              <span className="text-zinc-700 text-xs">&amp;</span>
+              <img src="/lemonsqueezy.svg" alt="Lemon Squeezy" className="h-3.5 object-contain opacity-30 hover:opacity-60 transition-opacity" />
+            </div>
           </div>
         </div>
       </div>

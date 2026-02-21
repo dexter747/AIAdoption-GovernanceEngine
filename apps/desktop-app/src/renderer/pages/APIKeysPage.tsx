@@ -53,19 +53,51 @@ const PROVIDERS: Provider[] = [
   { id: 'ollama',      name: 'Ollama',        tag: 'LOCAL', url: 'https://ollama.ai/',                     placeholder: 'http://localhost:11434' },
 ];
 
-// Small initials avatar per provider
-function ProviderAvatar({ id, name }: { id: string; name: string }) {
-  const colors: Record<string, string> = {
-    openai: 'bg-emerald-900/40 text-emerald-400',
-    anthropic: 'bg-orange-900/40 text-orange-400',
-    google: 'bg-blue-900/40 text-blue-400',
-    groq: 'bg-violet-900/40 text-violet-400',
-    ollama: 'bg-zinc-800 text-zinc-400',
-  };
-  const cls = colors[id] || 'bg-zinc-800 text-zinc-400';
+// Domain map for the Google favicon service
+const PROVIDER_DOMAINS: Record<string, string> = {
+  openai: 'openai.com',
+  anthropic: 'anthropic.com',
+  google: 'aistudio.google.com',
+  groq: 'groq.com',
+  cohere: 'cohere.com',
+  mistral: 'mistral.ai',
+  perplexity: 'perplexity.ai',
+  deepseek: 'deepseek.com',
+  together: 'together.ai',
+  openrouter: 'openrouter.ai',
+  replicate: 'replicate.com',
+  huggingface: 'huggingface.co',
+  azure_openai: 'microsoft.com',
+  aws_bedrock: 'aws.amazon.com',
+  ollama: 'ollama.com',
+};
+
+const PROVIDER_RING: Record<string, string> = {
+  openai: 'ring-emerald-500/20 bg-emerald-950/40',
+  anthropic: 'ring-orange-500/20 bg-orange-950/40',
+  google: 'ring-blue-500/20 bg-blue-950/40',
+  groq: 'ring-violet-500/20 bg-violet-950/40',
+  mistral: 'ring-amber-500/20 bg-amber-950/40',
+  perplexity: 'ring-teal-500/20 bg-teal-950/40',
+  deepseek: 'ring-sky-500/20 bg-sky-950/40',
+};
+
+function ProviderLogo({ id, name }: { id: string; name: string }) {
+  const [imgErr, setImgErr] = React.useState(false);
+  const domain = PROVIDER_DOMAINS[id];
+  const ring = PROVIDER_RING[id] || 'ring-white/10 bg-white/[0.04]';
   return (
-    <div className={cn('w-8 h-8 rounded-lg flex items-center justify-center text-[11px] font-bold flex-shrink-0', cls)}>
-      {name.slice(0, 2).toUpperCase()}
+    <div className={cn('w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ring-1', ring)}>
+      {domain && !imgErr ? (
+        <img
+          src={`https://www.google.com/s2/favicons?domain=${domain}&sz=64`}
+          alt={name}
+          className="w-[18px] h-[18px] object-contain"
+          onError={() => setImgErr(true)}
+        />
+      ) : (
+        <span className="text-[10px] font-bold text-white/50">{name.slice(0, 2).toUpperCase()}</span>
+      )}
     </div>
   );
 }
@@ -135,7 +167,7 @@ function AddKeyModal({
             <label className="block text-[12px] text-zinc-500 mb-1.5 font-medium">Provider</label>
             {initialProvider ? (
               <div className="flex items-center gap-3 p-3 rounded-xl border border-white/[0.06] bg-white/[0.03]">
-                <ProviderAvatar id={initialProvider.id} name={initialProvider.name} />
+                <ProviderLogo id={initialProvider.id} name={initialProvider.name} />
                 <span className="text-[14px] text-white">{initialProvider.name}</span>
                 {initialProvider.tag && (
                   <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full border border-emerald-500/30 text-emerald-400">{initialProvider.tag}</span>
@@ -319,7 +351,29 @@ export default function APIKeysPage() {
   );
 
   return (
-    <div className="min-h-full bg-[#0a0a0a] overflow-y-auto">
+    <div className="h-full flex flex-col overflow-hidden bg-[#0b0b0b]">
+      {/* Toolbar */}
+      <div className="toolbar app-region-drag">
+        <h1 className="text-[13px] font-semibold text-white/80 app-region-no-drag select-none">API Keys</h1>
+        <div className="w-px h-4 bg-white/[0.08] mx-3" />
+        <span className="text-[11px] text-white/30 app-region-no-drag">BYOK — keys are AES-256 encrypted on-device</span>
+        <div className="flex-1" />
+        <button
+          onClick={loadKeys}
+          disabled={loading}
+          className="app-region-no-drag p-1.5 rounded-[5px] text-white/30 hover:text-white/60 hover:bg-white/[0.06] transition-all"
+          title="Refresh"
+        >
+          <RefreshCw className={cn('w-3.5 h-3.5', loading && 'animate-spin')} />
+        </button>
+        <button
+          onClick={() => { setSelectedProvider(null); setShowModal(true); }}
+          className="app-region-no-drag ml-2 h-6 px-3 rounded-[5px] text-[11px] font-medium bg-white/[0.08] text-white/70 hover:bg-white/[0.14] flex items-center gap-1.5 transition-all"
+        >
+          <Plus className="w-3 h-3" /> Add Key
+        </button>
+      </div>
+
       {/* Toast */}
       <AnimatePresence>
         {toast && (
@@ -342,33 +396,8 @@ export default function APIKeysPage() {
         )}
       </AnimatePresence>
 
-      <div className="max-w-4xl mx-auto px-6 py-10">
-        {/* Header */}
-        <div className="flex items-start justify-between mb-8">
-          <div>
-            <h1 className="text-xl font-semibold text-white">API Keys</h1>
-            <p className="text-[13px] text-zinc-500 mt-1">
-              Bring your own keys (BYOK). Keys are AES-encrypted and stored locally.
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={loadKeys}
-              disabled={loading}
-              className="p-2 rounded-lg text-zinc-700 hover:text-zinc-400 hover:bg-white/[0.05] transition-all"
-              title="Refresh"
-            >
-              <RefreshCw className={cn('w-4 h-4', loading && 'animate-spin')} />
-            </button>
-            <button
-              onClick={() => { setSelectedProvider(null); setShowModal(true); }}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-black text-[13px] font-medium hover:bg-zinc-100 transition-all shadow-[0_2px_16px_-4px_rgba(255,255,255,0.15)]"
-            >
-              <Plus className="w-4 h-4" /> Add Key
-            </button>
-          </div>
-        </div>
-
+      <div className="flex-1 overflow-auto p-5">
+        <div className="max-w-3xl">
         {/* Privacy notice */}
         <div className="mb-6 flex items-center gap-3 px-4 py-3 rounded-xl border border-white/[0.05] bg-white/[0.02]">
           <Shield className="w-4 h-4 text-zinc-600 flex-shrink-0" />
@@ -406,7 +435,7 @@ export default function APIKeysPage() {
                     layout
                     className="flex items-center gap-4 p-4 rounded-2xl border border-white/[0.06] bg-white/[0.015] hover:border-white/[0.09] transition-all"
                   >
-                    <ProviderAvatar
+                    <ProviderLogo
                       id={key.provider}
                       name={key.provider_info?.name || key.provider}
                     />
@@ -486,7 +515,7 @@ export default function APIKeysPage() {
                   }}
                   className="group relative p-4 rounded-2xl border border-white/[0.06] bg-white/[0.015] hover:border-white/[0.12] hover:bg-white/[0.03] transition-all text-left"
                 >
-                  <ProviderAvatar id={provider.id} name={provider.name} />
+                  <ProviderLogo id={provider.id} name={provider.name} />
                   <p className="mt-2.5 text-[13px] font-medium text-zinc-300 leading-tight">{provider.name}</p>
                   {provider.tag && (
                     <span className="mt-1 inline-block text-[10px] px-1.5 py-0.5 rounded border border-emerald-500/25 text-emerald-500">

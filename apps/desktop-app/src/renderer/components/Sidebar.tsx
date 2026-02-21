@@ -3,10 +3,9 @@ import { useAuth } from '../hooks/useAuth';
 import {
   MessageSquare, Settings,
   CreditCard, LogOut,
-  Key, UserCircle, Shield, Library, FolderOpen, ChevronUp,
+  Key, UserCircle, Shield, Library, FolderOpen,
   PanelLeftClose, PanelLeft, Brain,
 } from 'lucide-react';
-import { useState, useEffect, useRef } from 'react';
 import { cn } from '../lib/utils';
 
 const workspaceNav = [
@@ -15,11 +14,11 @@ const workspaceNav = [
   { name: 'Contexts',       href: '/contexts',       icon: Brain },
 ];
 
-const profileMenuItems = [
-  { name: 'Profile',  href: '/profile-settings',  icon: UserCircle },
-  { name: 'License',  href: '/license',            icon: Shield },
-  { name: 'API Keys', href: '/settings/api-keys',  icon: Key },
-  { name: 'General',  href: '/settings',           icon: Settings },
+const settingsNav = [
+  { name: 'Profile',   href: '/profile-settings', icon: UserCircle },
+  { name: 'API Keys',  href: '/settings/api-keys', icon: Key },
+  { name: 'License',   href: '/license',           icon: Shield },
+  { name: 'Settings',  href: '/settings',          icon: Settings },
 ];
 
 interface SidebarProps {
@@ -30,18 +29,6 @@ interface SidebarProps {
 export default function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
   const location = useLocation();
   const { user, logout } = useAuth();
-  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
-  const profileMenuRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
-        setProfileMenuOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   /** Renders a single nav link — reused across sections */
   const navLink = (
@@ -157,7 +144,23 @@ export default function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
         </div>
       </div>
 
-      {/* ── MCP status card — fills the dead space intentionally ── */}
+      {/* ── Settings section ── */}
+      <div className={cn('px-2 pt-5 flex-shrink-0', collapsed && 'px-1.5')}>
+        {!collapsed ? (
+          <p className="px-2.5 mb-1.5 text-[10px] font-semibold text-zinc-600 uppercase tracking-widest">
+            Settings
+          </p>
+        ) : (
+          <div className="h-px bg-white/[0.055] mx-auto mb-2" />
+        )}
+        <div className="space-y-0.5">
+          {settingsNav.map((item) => (
+            <div key={item.href}>{navLink(item.href, item.icon, item.name)}</div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── MCP status card ── */}
       <div className="flex-1 flex flex-col items-stretch justify-end px-2 py-4">
         {!collapsed && (
           <div className="rounded-xl border border-white/[0.055] bg-white/[0.018] p-3.5">
@@ -192,63 +195,18 @@ export default function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
         )}
       </div>
 
-      {/* ── Account section ── */}
+      {/* ── Subscription ── */}
       <div className={cn('px-2 pb-2 flex-shrink-0', collapsed && 'px-1.5')}>
-        {!collapsed ? (
-          <p className="px-2.5 mb-1.5 text-[10px] font-semibold text-zinc-600 uppercase tracking-widest">
-            Account
-          </p>
-        ) : (
-          <div className="h-px bg-white/[0.055] mx-auto mb-2" />
-        )}
         {navLink('/subscription', CreditCard, 'Subscription')}
       </div>
 
-      {/* ── Profile footer ── */}
+      {/* ── Profile footer: user identity + logout ── */}
       <div
         className={cn(
-          'border-t border-white/[0.055] px-2 py-2.5 relative flex-shrink-0',
+          'border-t border-white/[0.055] px-2 py-2 flex-shrink-0',
           collapsed && 'px-1.5',
         )}
-        ref={profileMenuRef}
       >
-        {/* Profile popup menu */}
-        {profileMenuOpen && !collapsed && (
-          <div className="absolute bottom-full left-2 right-2 mb-2 rounded-xl border border-white/[0.07] bg-[#0e0e0e] shadow-2xl overflow-hidden z-50 animate-fade-in-up">
-            <div className="py-1.5">
-              {profileMenuItems.map((item) => {
-                const isActive = location.pathname === item.href;
-                return (
-                  <Link
-                    key={item.name}
-                    to={item.href}
-                    onClick={() => setProfileMenuOpen(false)}
-                    className={cn(
-                      'flex items-center gap-3 px-4 py-2.5 text-[13px] font-medium transition-colors',
-                      isActive
-                        ? 'text-white bg-white/[0.06]'
-                        : 'text-zinc-500 hover:text-zinc-200 hover:bg-white/[0.04]',
-                    )}
-                  >
-                    <item.icon className="w-3.5 h-3.5" />
-                    {item.name}
-                  </Link>
-                );
-              })}
-            </div>
-            <div className="border-t border-white/[0.06] py-1.5">
-              <button
-                onClick={() => { logout(); setProfileMenuOpen(false); }}
-                className="w-full flex items-center gap-3 px-4 py-2.5 text-[13px] font-medium text-zinc-500 hover:text-red-400 hover:bg-white/[0.04] transition-colors"
-              >
-                <LogOut className="w-3.5 h-3.5" />
-                Sign Out
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Profile button */}
         {collapsed ? (
           <Link
             to="/profile-settings"
@@ -256,55 +214,34 @@ export default function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
             title={user?.name || 'Profile'}
           >
             {user?.image ? (
-              <img
-                src={user.image}
-                alt={user.name}
-                className="w-7 h-7 rounded-full ring-1 ring-white/10"
-              />
+              <img src={user.image} alt={user.name} className="w-7 h-7 rounded-full ring-1 ring-white/10" />
             ) : (
               <div className="w-7 h-7 bg-white/[0.08] rounded-full flex items-center justify-center ring-1 ring-white/[0.07]">
-                <span className="text-white text-xs font-medium">
-                  {user?.name?.charAt(0)?.toUpperCase() || 'U'}
-                </span>
+                <span className="text-white text-xs font-medium">{user?.name?.charAt(0)?.toUpperCase() || 'U'}</span>
               </div>
             )}
           </Link>
         ) : (
-          <button
-            onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-            className={cn(
-              'w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg transition-all text-left',
-              profileMenuOpen ? 'bg-white/[0.06]' : 'hover:bg-white/[0.04]',
-            )}
-          >
+          <div className="flex items-center gap-2 px-1">
             {user?.image ? (
-              <img
-                src={user.image}
-                alt={user.name}
-                className="w-7 h-7 rounded-full ring-1 ring-white/10 flex-shrink-0"
-              />
+              <img src={user.image} alt={user.name} className="w-7 h-7 rounded-full ring-1 ring-white/10 flex-shrink-0" />
             ) : (
               <div className="w-7 h-7 bg-white/[0.08] rounded-full flex items-center justify-center ring-1 ring-white/[0.07] flex-shrink-0">
-                <span className="text-white text-xs font-medium">
-                  {user?.name?.charAt(0)?.toUpperCase() || 'U'}
-                </span>
+                <span className="text-white text-xs font-medium">{user?.name?.charAt(0)?.toUpperCase() || 'U'}</span>
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <p className="text-[13px] font-medium text-white truncate leading-tight">
-                {user?.name || 'User'}
-              </p>
-              <p className="text-[11px] text-zinc-600 truncate leading-tight">
-                {user?.email || ''}
-              </p>
+              <p className="text-[12px] font-medium text-white/80 truncate leading-tight">{user?.name || 'User'}</p>
+              <p className="text-[10.5px] text-zinc-600 truncate leading-tight">{user?.email || ''}</p>
             </div>
-            <ChevronUp
-              className={cn(
-                'w-3.5 h-3.5 text-zinc-600 flex-shrink-0 transition-transform duration-200',
-                profileMenuOpen ? 'rotate-180' : '',
-              )}
-            />
-          </button>
+            <button
+              onClick={logout}
+              title="Sign out"
+              className="p-1.5 rounded-md text-zinc-600 hover:text-red-400 hover:bg-white/[0.05] transition-all flex-shrink-0"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+            </button>
+          </div>
         )}
       </div>
     </aside>

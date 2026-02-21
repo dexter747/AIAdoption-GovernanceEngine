@@ -150,13 +150,20 @@ export function PricingSection() {
           <p className="text-sm text-zinc-500 mb-4">
             All plans include 14-day free trial &middot; No credit card required &middot; Cancel anytime
           </p>
-          <div className="flex items-center justify-center gap-6">
+          <div className="flex items-center justify-center gap-6 mb-8">
             {["Zero lock-in", "Cancel anytime", "99.9% Uptime SLA"].map((text) => (
               <span key={text} className="flex items-center gap-2 text-sm text-zinc-600">
                 <Check className="w-3.5 h-3.5 text-zinc-500" />
                 {text}
               </span>
             ))}
+          </div>
+          {/* Secure Payments */}
+          <div className="flex items-center justify-center gap-3 flex-wrap">
+            <span className="text-xs text-zinc-600 font-medium">Secure Payments By</span>
+            <img src="/paypal.svg" alt="PayPal" className="h-5 object-contain opacity-40 hover:opacity-70 transition-opacity" />
+            <span className="text-zinc-700 text-xs">&amp;</span>
+            <img src="/lemonsqueezy.svg" alt="Lemon Squeezy" className="h-4 object-contain opacity-40 hover:opacity-70 transition-opacity" />
           </div>
         </div>
       </div>

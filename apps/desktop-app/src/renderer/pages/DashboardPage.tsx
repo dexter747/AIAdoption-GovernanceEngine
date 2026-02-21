@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
- Database, MessageSquare, Zap, TrendingUp, ArrowUpRight, Clock,
- Plus, ChevronRight, Sparkles, Activity, Brain,
- Server, Shield, Star, ExternalLink
+ Database, MessageSquare, Zap, TrendingUp,
+ Plus, Sparkles, Activity, Brain,
+ Server, ExternalLink, Clock, Shield
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { cn } from '../lib/utils';
 
 interface DashboardStats {
@@ -125,287 +124,167 @@ export default function DashboardPage() {
  ];
 
  return (
- <div className="min-h-screen p-8 bg-black">
- {/* Header */}
- <motion.div 
- initial={{ opacity: 0, y: -20 }}
- animate={{ opacity: 1, y: 0 }}
- className="mb-8"
- >
- <div className="flex items-center justify-between">
- <div>
- <h1 className="font-medium text-white">Dashboard</h1>
- <p className="mt-1 text-white/50">Welcome back! Here's your AI workspace overview.</p>
- </div>
- <Link
- to="/chat"
- className="flex items-center gap-2 px-5 py-2.5 bg-white text-black rounded-xl font-medium hover:bg-zinc-200 transition-all shadow-lg shadow-white/5"
- >
- <Sparkles className="w-4 h-4" />
- Start AI Chat
- </Link>
- </div>
- </motion.div>
+ <div className="h-full flex flex-col overflow-hidden">
 
- {/* Quick Actions */}
- <motion.div 
- initial={{ opacity: 0, y: 20 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{ delay: 0.1 }}
- className="grid grid-cols-4 gap-4 mb-8"
- >
- {QUICK_ACTIONS.map((action) => (
- <Link
- key={action.label}
- to={action.href}
- className="group flex items-center gap-4 p-4 rounded-2xl hover:shadow-lg transition-all bg-zinc-900 border-white/10 hover:border-white/20"
- >
- <div className={cn(
- "w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br shadow-lg",
- action.color
- )}>
- <action.icon className="w-5 h-5 text-white" />
+ {/* ── Toolbar ─────────────────────────────────────────── */}
+ <div className="toolbar app-region-drag">
+ <h1 className="text-[13px] font-semibold text-white/80 app-region-no-drag select-none">Dashboard</h1>
+ <div className="w-px h-4 bg-white/[0.08] mx-3" />
+ {/* Stat pills inline */}
+ <div className="flex items-center gap-4 app-region-no-drag">
+ {statCards.map(s => (
+ <span key={s.name} className="flex items-center gap-1.5 text-[11px] text-white/40">
+ <s.icon className="w-3 h-3 text-white/25" />
+ <span className="tabular-nums font-medium text-white/60">{s.value}</span>
+ <span>{s.name}</span>
+ </span>
+ ))}
  </div>
- <div className="flex-1">
- <p className="font-medium group-hover:text-zinc-300 transition-colors text-white">
- {action.label}
- </p>
- </div>
- <ChevronRight className="w-4 h-4 group-hover:text-zinc-300 transition-colors text-white/30" />
+ <div className="flex-1" />
+ {/* Quick action buttons */}
+ <div className="flex items-center gap-1.5 app-region-no-drag">
+ {QUICK_ACTIONS.map(a => (
+ <Link key={a.label} to={a.href}
+ className="h-6 px-2.5 rounded-[5px] text-[11px] font-medium text-white/40 hover:text-white/70 hover:bg-white/[0.05] flex items-center gap-1.5 transition-all">
+ <a.icon className="w-3 h-3" />{a.label}
  </Link>
  ))}
- </motion.div>
-
- {/* Stats Grid */}
- <motion.div 
- initial={{ opacity: 0, y: 20 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{ delay: 0.2 }}
- className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
- >
- {statCards.map((stat, idx) => (
- <motion.div
- key={stat.name}
- initial={{ opacity: 0, scale: 0.95 }}
- animate={{ opacity: 1, scale: 1 }}
- transition={{ delay: 0.1 * idx }}
- className="rounded-2xl p-6 transition-all bg-zinc-900 border-white/10 hover:shadow-none"
- >
- <div className="flex items-center justify-between mb-4">
- <div className={cn(
- "w-12 h-12 rounded-xl flex items-center justify-center",
- stat.color === 'blue' ? 'bg-white/5' :
- stat.color === 'green' ? 'bg-white/5' :
- stat.color === 'purple' ? 'bg-white/5' :
- 'bg-white/5'
- )}>
- <stat.icon className={cn(
- "w-6 h-6",
- stat.color === 'blue' ? 'text-zinc-300' :
- stat.color === 'green' ? 'text-zinc-400' :
- stat.color === 'purple' ? 'text-zinc-300' :
- 'text-zinc-400'
- )} />
- </div>
- <div className="flex items-center gap-1 text-zinc-400 text-sm font-medium">
- <ArrowUpRight className="w-4 h-4" />
- </div>
- </div>
- <p className="font-medium mb-1 text-white">{stat.value}</p>
- <p className="text-white/50">{stat.name}</p>
- <p className="text-xs text-zinc-400 mt-2">{stat.trend}</p>
- </motion.div>
- ))}
- </motion.div>
-
- {/* Content Grid */}
- <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
- {/* Recent Queries */}
- <motion.div 
- initial={{ opacity: 0, x: -20 }}
- animate={{ opacity: 1, x: 0 }}
- transition={{ delay: 0.3 }}
- className="rounded-2xl overflow-hidden bg-zinc-900 border-white/10"
- >
- <div className="px-6 py-5 border-b flex items-center justify-between border-white/10">
- <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-zinc-400 to-zinc-600 flex items-center justify-center">
- <Activity className="w-5 h-5 text-white" />
- </div>
- <div>
- <h2 className="font-medium text-white">Recent Queries</h2>
- <p className="text-white/40">AI-powered database queries</p>
- </div>
- </div>
- <Link to="/queries" className="text-sm text-zinc-300 hover:text-zinc-400 font-medium flex items-center gap-1">
- View All
- <ExternalLink className="w-3 h-3" />
+ <div className="w-px h-4 bg-white/[0.08] mx-1" />
+ <Link to="/chat"
+ className="h-6 px-2.5 rounded-[5px] text-[11px] font-medium bg-white/[0.08] text-white/70 hover:bg-white/[0.14] flex items-center gap-1.5 transition-all">
+ <Sparkles className="w-3 h-3" />AI Chat
  </Link>
  </div>
- <div className="divide-white/5">
- {recentQueries.map((query) => (
- <div key={query.id} className="px-6 py-4 transition-colors hover:bg-background/5">
- <div className="flex items-start justify-between gap-4">
- <div className="flex-1 min-w-0">
- <p className="font-medium truncate text-white">{query.query}</p>
- <div className="flex items-center gap-3 mt-2">
- <span className="flex items-center gap-1 text-white/40">
- <Database className="w-3 h-3" />
- {query.database}
+ </div>
+
+ {/* ── Body ────────────────────────────────────────────── */}
+ <div className="flex-1 overflow-auto grid grid-cols-[1fr_280px] divide-x divide-white/[0.05]">
+
+ {/* Left: Recent queries + AI models */}
+ <div className="flex flex-col divide-y divide-white/[0.05] overflow-hidden">
+
+ {/* Recent Queries panel */}
+ <div className="flex flex-col flex-1 min-h-0">
+ <div className="flex items-center justify-between px-4 py-2 border-b border-white/[0.05]">
+ <div className="flex items-center gap-2">
+ <Activity className="w-3 h-3 text-white/25" />
+ <span className="text-[11.5px] font-semibold text-white/50 uppercase tracking-wider">Recent Queries</span>
+ </div>
+ <Link to="/queries" className="text-[10.5px] text-white/30 hover:text-white/60 flex items-center gap-1 transition-colors">
+ View all<ExternalLink className="w-2.5 h-2.5" />
+ </Link>
+ </div>
+
+ <div className="flex-1 overflow-auto">
+ {recentQueries.length === 0 ? (
+ <div className="flex flex-col items-center justify-center h-full gap-2 py-12">
+ <MessageSquare className="w-7 h-7 text-white/10" />
+ <p className="text-[11px] text-white/25">No queries yet — start an AI chat</p>
+ <Link to="/chat"
+ className="mt-1 h-6 px-3 rounded-[5px] text-[11px] font-medium bg-white/[0.06] text-white/50 hover:bg-white/[0.1] flex items-center gap-1.5 transition-all">
+ <Sparkles className="w-3 h-3" />Start Chat
+ </Link>
+ </div>
+ ) : recentQueries.map((q, i) => (
+ <div key={q.id}
+ className={cn('grid grid-cols-[1fr_80px_70px] items-center gap-3 px-4 py-2.5 border-b border-white/[0.04] transition-colors',
+ i % 2 === 0 ? 'bg-[#0d0d0d] hover:bg-[#101010]' : 'bg-[#0b0b0b] hover:bg-[#0e0e0e]')}>
+ <div className="min-w-0">
+ <p className="text-[12px] text-white/75 truncate font-mono">{q.query}</p>
+ <div className="flex items-center gap-2 mt-0.5">
+ <span className="flex items-center gap-1 text-[10.5px] text-white/30">
+ <Database className="w-2.5 h-2.5" />{q.database}
  </span>
- <span className="text-white/30">•</span>
- <span className="flex items-center gap-1 text-white/40">
- <Clock className="w-3 h-3" />
- {query.time}
- </span>
- {query.model && (
- <>
- <span className="text-white/30">•</span>
- <span className="text-xs text-zinc-300 flex items-center gap-1">
- <Sparkles className="w-3 h-3" />
- {query.model}
- </span>
- </>
- )}
+ {q.model && <span className="text-[10.5px] text-white/25">{q.model}</span>}
  </div>
  </div>
- <span className={cn(
- "px-2.5 py-1 text-xs font-medium rounded-full",
- query.status === 'success' 
- ? 'bg-white/5 text-zinc-400' 
- : query.status === 'error'
- ? 'bg-white/5 text-zinc-400'
- : 'bg-white/5 text-zinc-400'
- )}>
- {query.status}
+ <span className="text-[10.5px] text-white/25 flex items-center gap-1">
+ <Clock className="w-2.5 h-2.5" />{q.time}
  </span>
- </div>
+ <span className={cn('text-[10px] font-medium',
+ q.status === 'success' ? 'text-emerald-500/70' :
+ q.status === 'error' ? 'text-red-400/70' : 'text-amber-400/60')}>
+ {q.status}
+ </span>
  </div>
  ))}
  </div>
- </motion.div>
+ </div>
 
- {/* Connected Databases */}
- <motion.div 
- initial={{ opacity: 0, x: 20 }}
- animate={{ opacity: 1, x: 0 }}
- transition={{ delay: 0.3 }}
- className="rounded-2xl overflow-hidden bg-zinc-900 border-white/10"
- >
- <div className="px-6 py-5 border-b flex items-center justify-between border-white/10">
- <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-zinc-500 to-zinc-600 flex items-center justify-center">
- <Server className="w-5 h-5 text-white" />
+ {/* AI Models panel */}
+ <div className="shrink-0">
+ <div className="flex items-center justify-between px-4 py-2 border-b border-white/[0.05]">
+ <div className="flex items-center gap-2">
+ <Brain className="w-3 h-3 text-white/25" />
+ <span className="text-[11.5px] font-semibold text-white/50 uppercase tracking-wider">AI Models</span>
  </div>
- <div>
- <h2 className="font-medium text-white">Connected Databases</h2>
- <p className="text-white/40">Active data sources</p>
+ <Link to="/settings/api-keys" className="text-[10.5px] text-white/30 hover:text-white/60 transition-colors">Configure →</Link>
+ </div>
+ <div className="flex flex-wrap gap-2 p-4">
+ {[
+ { name: 'OpenAI', configured: true },
+ { name: 'Anthropic', configured: true },
+ { name: 'Google', configured: false },
+ { name: 'Groq', configured: true },
+ { name: 'Mistral', configured: false },
+ { name: 'xAI', configured: false },
+ ].map(p => (
+ <span key={p.name}
+ className={cn('h-6 px-2.5 rounded-full text-[11px] font-medium border flex items-center gap-1.5 transition-all',
+ p.configured
+ ? 'bg-white/[0.06] border-white/[0.12] text-white/65'
+ : 'bg-transparent border-white/[0.05] text-white/22')}>
+ {p.configured && <span className="w-1.5 h-1.5 bg-emerald-500/70 rounded-full" />}
+ {p.name}
+ </span>
+ ))}
  </div>
  </div>
- <Link to="/connections-dashboard" className="text-sm text-zinc-300 hover:text-zinc-400 font-medium flex items-center gap-1">
- Add New
- <Plus className="w-3 h-3" />
+ </div>
+
+ {/* Right: Connections sidebar */}
+ <div className="flex flex-col overflow-hidden">
+ <div className="flex items-center justify-between px-4 py-2 border-b border-white/[0.05]">
+ <div className="flex items-center gap-2">
+ <Server className="w-3 h-3 text-white/25" />
+ <span className="text-[11.5px] font-semibold text-white/50 uppercase tracking-wider">Connections</span>
+ </div>
+ <Link to="/connections-dashboard"
+ className="h-5 px-2 rounded-[4px] text-[10.5px] text-white/30 hover:text-white/60 hover:bg-white/[0.05] flex items-center gap-1 transition-colors">
+ <Plus className="w-2.5 h-2.5" />Add
  </Link>
  </div>
- <div className="divide-white/5">
+ <div className="flex-1 overflow-auto">
  {connections.length === 0 ? (
- <div className="px-6 py-12 text-center">
- <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 bg-background/5">
- <Database className="w-8 h-8 text-white/30" />
- </div>
- <p className="mb-4 text-white/50">No databases connected yet</p>
- <Link
- to="/connections-dashboard"
- className="inline-flex items-center gap-2 px-4 py-2 bg-white text-black rounded-lg hover:bg-zinc-200 transition-colors"
- >
- <Plus className="w-4 h-4" />
- Add Connection
+ <div className="flex flex-col items-center justify-center h-full gap-2 py-12">
+ <Database className="w-8 h-8 text-white/[0.07]" />
+ <p className="text-[11px] text-white/22 text-center px-6">No connections yet</p>
+ <Link to="/connections-dashboard"
+ className="mt-1 h-6 px-3 rounded-[5px] text-[11px] font-medium bg-white/[0.06] text-white/50 hover:bg-white/[0.1] flex items-center gap-1.5 transition-all">
+ <Plus className="w-3 h-3" />Browse Library
  </Link>
  </div>
- ) : (
- connections.slice(0, 4).map((db) => (
- <div key={db.id} className="px-6 py-4 flex items-center justify-between transition-colors hover:bg-background/5">
- <div className="flex items-center gap-4">
- <div className={cn(
- "w-12 h-12 rounded-xl flex items-center justify-center text-2xl",
- db.status === 'connected' ? 'bg-white/5' : 'bg-background/5'
- )}>
+ ) : connections.map((db, i) => (
+ <div key={db.id}
+ className={cn('flex items-center gap-2.5 px-3 py-2 border-b border-white/[0.04] transition-colors',
+ i % 2 === 0 ? 'bg-[#0d0d0d] hover:bg-[#101010]' : 'bg-[#0b0b0b] hover:bg-[#0e0e0e]')}>
+ <div className="w-7 h-7 rounded-[6px] bg-white/[0.05] flex items-center justify-center text-base shrink-0">
  {db.icon}
  </div>
- <div>
- <p className="font-medium text-white">{db.name}</p>
- <p className="text-white/40">{db.type}</p>
+ <div className="flex-1 min-w-0">
+ <p className="text-[12px] text-white/75 font-medium truncate">{db.name}</p>
+ <p className="text-[10.5px] text-white/30 truncate">{db.type}</p>
  </div>
- </div>
- <div className="text-right">
- <span className={cn(
- "px-2.5 py-1 text-xs font-medium rounded-full",
- db.status === 'connected' 
- ? 'bg-white/5 text-zinc-400' 
- : 'bg-background/5 text-white/40'
- )}>
- {db.status}
+ <span className={cn('text-[10px] font-medium',
+ db.status === 'connected' ? 'text-emerald-500/65' :
+ db.status === 'error' ? 'text-red-400/60' : 'text-white/22')}>
+ {db.status === 'connected' ? '●' : '○'}
  </span>
- <p className="mt-1 text-white/40">{db.queries} queries</p>
- </div>
- </div>
- ))
- )}
- </div>
- </motion.div>
- </div>
-
- {/* AI Models Section */}
- <motion.div 
- initial={{ opacity: 0, y: 20 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{ delay: 0.4 }}
- className="mt-8 bg-gradient-to-r from-white/5 via-white/5 to-white/5 rounded-2xl p-6 border-white/10"
- >
- <div className="flex items-center justify-between mb-6">
- <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-zinc-400 to-zinc-600 flex items-center justify-center">
- <Brain className="w-5 h-5 text-white" />
- </div>
- <div>
- <h2 className="font-medium text-white">Available AI Models</h2>
- <p className="text-white/40">Configured LLM providers</p>
- </div>
- </div>
- <Link to="/settings/api-keys" className="text-sm text-zinc-300 hover:text-zinc-400 font-medium">
- Configure →
- </Link>
- </div>
- <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
- {[
- { name: 'OpenAI', models: ['GPT-4o', 'GPT-4o Mini', 'o1'], logo: '🟢', configured: true },
- { name: 'Anthropic', models: ['Claude 3.5 Sonnet', 'Claude 3 Opus'], logo: '🟤', configured: true },
- { name: 'Google', models: ['Gemini 2.0', 'Gemini 1.5 Pro'], logo: '🔵', configured: false },
- { name: 'Groq', models: ['Llama 3.3', 'Mixtral'], logo: '🦙', configured: true },
- { name: 'Mistral', models: ['Mistral Large', 'Codestral'], logo: '🟠', configured: false },
- { name: 'xAI', models: ['Grok 2'], logo: '⚫', configured: false },
- ].map((provider) => (
- <div
- key={provider.name}
- className={cn(
- "p-4 rounded-xl border transition-all",
- provider.configured
- ? "bg-white/[0.02] border-white/[0.08]"
- : "bg-white/[0.01] border-white/[0.04] opacity-60"
- )}
- >
- <div className="flex items-center gap-2 mb-2">
- <span className="text-xl">{provider.logo}</span>
- <span className="font-medium text-white text-sm">{provider.name}</span>
- {provider.configured && <Star className="w-3 h-3 text-zinc-400 ml-auto" />}
- </div>
- <p className="text-xs truncate text-white/40">
- {provider.models.join(', ')}
- </p>
  </div>
  ))}
  </div>
- </motion.div>
+ </div>
+ </div>
  </div>
  );
 }

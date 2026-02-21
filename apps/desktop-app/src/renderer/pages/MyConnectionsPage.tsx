@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
- Database, Plus, Edit2, Trash2, RefreshCw,
- CheckCircle, XCircle, Loader2, Search, Grid3x3, List,
- Power, MoreVertical, Zap, ArrowRight, Bot
+ Database, Plus, Trash2, RefreshCw,
+ Loader2, Search, Grid3x3, List,
+ Power, Bot
 } from 'lucide-react';
-import { Button } from '../components/ui/button';
 import { cn } from '../lib/utils';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { getSimpleConnectionTypes, CONNECTION_LIBRARY } from '../config/connection-types';
 import ConnectionIcon from '../components/ConnectionIcon';
 
@@ -35,7 +34,6 @@ export default function MyConnectionsPage() {
  const [searchQuery, setSearchQuery] = useState('');
  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
  const [testingConnection, setTestingConnection] = useState<string | null>(null);
- const [showMenu, setShowMenu] = useState<string | null>(null);
 
  useEffect(() => {
  loadConnections();
@@ -130,30 +128,26 @@ export default function MyConnectionsPage() {
  switch (status) {
  case 'connected':
  return (
- <span className="flex items-center gap-1.5 text-zinc-400 text-xs font-medium">
- <span className="w-2 h-2 bg-zinc-800 rounded-full animate-pulse" />
- Connected
+ <span className="flex items-center gap-1 text-[10px] font-medium text-emerald-500/80">
+ <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />Live
  </span>
  );
  case 'disconnected':
  return (
- <span className="flex items-center gap-1.5 text-muted-foreground text-xs font-medium">
- <span className="w-2 h-2 bg-zinc-700 rounded-full" />
- Disconnected
+ <span className="flex items-center gap-1 text-[10px] font-medium text-white/30">
+ <span className="w-1.5 h-1.5 bg-white/20 rounded-full" />Off
  </span>
  );
  case 'connecting':
  return (
- <span className="flex items-center gap-1.5 text-zinc-300 text-xs font-medium">
- <Loader2 className="w-3 h-3 animate-spin" />
- Connecting
+ <span className="flex items-center gap-1 text-[10px] font-medium text-amber-400/70">
+ <Loader2 className="w-2.5 h-2.5 animate-spin" />Connecting
  </span>
  );
  case 'error':
  return (
- <span className="flex items-center gap-1.5 text-zinc-400 text-xs font-medium">
- <span className="w-2 h-2 bg-zinc-800 rounded-full" />
- Error
+ <span className="flex items-center gap-1 text-[10px] font-medium text-red-400/70">
+ <span className="w-1.5 h-1.5 bg-red-500/70 rounded-full" />Error
  </span>
  );
  default:

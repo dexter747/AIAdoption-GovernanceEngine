@@ -1,15 +1,13 @@
 import { useState, useEffect } from 'react';
 import {
- Database, Plus, Edit2, Trash2, PowerOff,
- CheckCircle, XCircle, Loader2, RefreshCw,
+ Database, Plus, Trash2,
+ Loader2, RefreshCw,
  Search, Grid3x3, List, Shield,
  Zap, HardDrive, Warehouse,
  Building2, Briefcase, Users, Heart, Truck,
  Banknote, ShoppingCart, Radio, FileText, Landmark, Monitor,
 } from 'lucide-react';
-import { Button } from '../components/ui/button';
 import { cn } from '../lib/utils';
-import { motion, AnimatePresence } from 'framer-motion';
 import { CONNECTION_LIBRARY as CONNECTION_TYPES } from '../config/connection-types';
 import ConnectionIcon from '../components/ConnectionIcon';
 
@@ -135,378 +133,172 @@ export default function ConnectionsDashboard() {
 
  const getStatusBadge = (status: string) => {
  switch (status) {
- case 'connected':
- return (
- <span className="flex items-center gap-1.5 text-zinc-400 text-xs">
- <span className="w-2 h-2 bg-zinc-700 rounded-full animate-pulse" />
- Connected
- </span>
- );
- case 'disconnected':
- return (
- <span className="flex items-center gap-1.5 text-white/40 text-xs">
- <span className="w-2 h-2 bg-background/40 rounded-full" />
- Disconnected
- </span>
- );
- case 'connecting':
- return (
- <span className="flex items-center gap-1.5 text-zinc-400 text-xs">
- <Loader2 className="w-3 h-3 animate-spin" />
- Connecting
- </span>
- );
- case 'error':
- return (
- <span className="flex items-center gap-1.5 text-zinc-400 text-xs">
- <span className="w-2 h-2 bg-zinc-700 rounded-full" />
- Error
- </span>
- );
- default:
- return null;
+ case 'connected': return <span className="flex items-center gap-1 text-[10px] font-medium text-emerald-500/80"><span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />Live</span>;
+ case 'disconnected': return <span className="flex items-center gap-1 text-[10px] font-medium text-white/30"><span className="w-1.5 h-1.5 bg-white/20 rounded-full" />Off</span>;
+ case 'connecting': return <span className="flex items-center gap-1 text-[10px] font-medium text-amber-400/70"><Loader2 className="w-2.5 h-2.5 animate-spin" />…</span>;
+ case 'error': return <span className="flex items-center gap-1 text-[10px] font-medium text-red-400/70"><span className="w-1.5 h-1.5 bg-red-500/70 rounded-full" />Err</span>;
+ default: return null;
  }
  };
 
  return (
- <div className="min-h-screen p-6 bg-black text-white">
- <div className="max-w-7xl mx-auto space-y-6">
- {/* Header */}
- <div className="flex items-center justify-between">
- <div>
- <h1 className="font-medium text-white">Connections</h1>
- <p className="mt-1 text-white/50">
- Connect your databases and enterprise systems
- </p>
+ <div className="h-full flex flex-col overflow-hidden">
+
+ {/* ── Toolbar ─────────────────────────────────────────── */}
+ <div className="toolbar app-region-drag">
+ <h1 className="text-[13px] font-semibold text-white/80 app-region-no-drag select-none">Connections</h1>
+ <div className="w-px h-4 bg-white/[0.08] mx-3" />
+ <div className="flex items-center gap-3 app-region-no-drag text-[11px] text-white/40">
+ <span className="tabular-nums"><strong className="text-white/60 font-semibold">{connections.length}</strong> total</span>
+ {connections.filter(c => c.status === 'connected').length > 0 &&
+ <span className="text-emerald-500/65 tabular-nums">{connections.filter(c => c.status === 'connected').length} live</span>}
+ {connections.filter(c => c.status === 'error').length > 0 &&
+ <span className="text-red-400/60 tabular-nums">{connections.filter(c => c.status === 'error').length} err</span>}
  </div>
- <div className="flex items-center gap-3">
- <Button 
- variant="outline" 
- onClick={loadConnections}
- className="border-white/10 text-white hover:bg-background/10"
- >
- <RefreshCw className="w-4 h-4 mr-2" />
- Refresh
- </Button>
+ <div className="flex-1" />
+ {/* search */}
+ <div className="relative app-region-no-drag">
+ <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 text-white/30 pointer-events-none" />
+ <input type="text" placeholder="Search…" value={searchQuery}
+ onChange={e => setSearchQuery(e.target.value)}
+ className="input-desktop pl-7 w-44" />
  </div>
+ {/* view toggle */}
+ <div className="flex items-center gap-0.5 bg-white/[0.05] rounded-[6px] p-0.5 app-region-no-drag">
+ {([['grid', Grid3x3], ['list', List]] as const).map(([m, Icon]) => (
+ <button key={m} onClick={() => setViewMode(m)}
+ className={cn('p-1.5 rounded-[5px] transition-all',
+ viewMode === m ? 'bg-white/[0.1] text-white' : 'text-white/30 hover:text-white/60')}>
+ <Icon className="w-3 h-3" />
+ </button>
+ ))}
+ </div>
+ <div className="w-px h-4 bg-white/[0.08] mx-1" />
+ <button onClick={loadConnections}
+ className="app-region-no-drag h-6 px-2 rounded-[5px] text-[11px] text-white/35 hover:text-white/60 hover:bg-white/[0.05] flex items-center transition-all">
+ <RefreshCw className="w-3 h-3" />
+ </button>
  </div>
 
- {/* Stats Cards */}
- <div className="grid grid-cols-4 gap-4">
- <motion.div
- initial={{ opacity: 0, y: 20 }}
- animate={{ opacity: 1, y: 0 }}
- className="rounded-xl p-5 bg-zinc-900 border-white/10"
- >
- <div className="flex items-center justify-between">
- <div>
- <p className="text-white/50">Total Connections</p>
- <p className="font-medium mt-1 text-white">{connections.length}</p>
- </div>
- <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
- <Database className="w-6 h-6 text-zinc-400" />
- </div>
- </div>
- </motion.div>
-
- <motion.div
- initial={{ opacity: 0, y: 20 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{ delay: 0.1 }}
- className="rounded-xl p-5 bg-zinc-900 border-white/10"
- >
- <div className="flex items-center justify-between">
- <div>
- <p className="text-white/50">Active</p>
- <p className="text-3xl font-medium mt-1 text-zinc-400">
- {connections.filter(c => c.status === 'connected').length}
- </p>
- </div>
- <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
- <CheckCircle className="w-6 h-6 text-zinc-400" />
- </div>
- </div>
- </motion.div>
-
- <motion.div
- initial={{ opacity: 0, y: 20 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{ delay: 0.2 }}
- className="rounded-xl p-5 bg-zinc-900 border-white/10"
- >
- <div className="flex items-center justify-between">
- <div>
- <p className="text-white/50">Inactive</p>
- <p className="font-medium mt-1 text-white/60">
- {connections.filter(c => c.status === 'disconnected').length}
- </p>
- </div>
- <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-background/10">
- <PowerOff className="w-6 h-6 text-white/40" />
- </div>
- </div>
- </motion.div>
-
- <motion.div
- initial={{ opacity: 0, y: 20 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{ delay: 0.3 }}
- className="rounded-xl p-5 bg-zinc-900 border-white/10"
- >
- <div className="flex items-center justify-between">
- <div>
- <p className="text-white/50">Errors</p>
- <p className="text-3xl font-medium mt-1 text-zinc-400">
- {connections.filter(c => c.status === 'error').length}
- </p>
- </div>
- <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
- <XCircle className="w-6 h-6 text-zinc-400" />
- </div>
- </div>
- </motion.div>
- </div>
-
- {/* Category Tabs */}
- <div className="flex items-center gap-2 overflow-x-auto pb-2">
- {CATEGORIES.map((category) => {
- const Icon = category.icon;
+ {/* ── Category strip ──────────────────────────────────── */}
+ <div className="flex items-center gap-1 px-3 py-1.5 border-b border-white/[0.05] overflow-x-auto shrink-0 scrollbar-none">
+ {CATEGORIES.map(cat => {
+ const Icon = cat.icon;
  return (
- <button
- key={category.id}
- onClick={() => setSelectedCategory(category.id)}
- className={cn(
- 'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap',
- selectedCategory === category.id
- ? 'bg-zinc-800 text-white'
- : 'bg-background/5 text-white/60 hover:bg-background/10 hover:text-white'
- )}
- >
- <Icon className="w-4 h-4" />
- {category.name}
+ <button key={cat.id} onClick={() => setSelectedCategory(cat.id)}
+ className={cn('tab-strip-item whitespace-nowrap flex items-center gap-1.5',
+ selectedCategory === cat.id ? 'is-active' : '')}>
+ <Icon className="w-3 h-3" />{cat.name}
  </button>
  );
  })}
  </div>
 
- {/* Search and Filters */}
- <div className="flex items-center gap-4">
- <div className="flex-1 relative">
- <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
- <input
- type="text"
- placeholder="Search connections..."
- value={searchQuery}
- onChange={(e) => setSearchQuery(e.target.value)}
- className="w-full rounded-xl pl-11 pr-4 py-3 focus:outline-none focus:border-zinc-700 focus:ring-2 focus:ring-zinc-600/30 bg-background/5 border-white/10 text-white placeholder:text-white/40"
- />
- </div>
- <div className="flex gap-1 rounded-xl p-1 bg-background/5 border-white/10">
- <Button
- variant={viewMode === 'grid' ? 'default' : 'ghost'}
- size="sm"
- onClick={() => setViewMode('grid')}
- className={viewMode === 'grid' ? 'bg-background/10' : 'text-white/60 hover:text-white'}
- >
- <Grid3x3 className="w-4 h-4" />
- </Button>
- <Button
- variant={viewMode === 'list' ? 'default' : 'ghost'}
- size="sm"
- onClick={() => setViewMode('list')}
- className={viewMode === 'list' ? 'bg-background/10' : 'text-white/60 hover:text-white'}
- >
- <List className="w-4 h-4" />
- </Button>
- </div>
- </div>
+ {/* ── Content ─────────────────────────────────────────── */}
+ <div className="flex-1 overflow-auto p-4 space-y-6">
 
- {/* Existing Connections */}
+ {/* Existing connections */}
  {isLoading ? (
- <div className="flex items-center justify-center py-20">
- <Loader2 className="w-8 h-8 animate-spin text-zinc-400" />
+ <div className="flex items-center justify-center py-12">
+ <Loader2 className="w-5 h-5 animate-spin text-white/20" />
  </div>
- ) : filteredConnections.length > 0 ? (
+ ) : filteredConnections.length > 0 && (
  <div>
- <h2 className="text-lg font-medium mb-4">Your Connections</h2>
- <div className={cn(
- viewMode === 'grid' 
- ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4' 
- : 'space-y-3'
- )}>
- <AnimatePresence>
- {filteredConnections.map((connection, index) => {
- const connType = CONNECTION_TYPES[connection.type as keyof typeof CONNECTION_TYPES] 
- || CONNECTION_TYPES.mysql;
- 
+ <p className="text-[10.5px] font-semibold text-white/30 uppercase tracking-wider mb-2.5">Your Connections</p>
+ {viewMode === 'grid' ? (
+ <div className="grid gap-2.5 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+ {filteredConnections.map(conn => {
+ const ct = CONNECTION_TYPES[conn.type as keyof typeof CONNECTION_TYPES] || CONNECTION_TYPES.mysql;
  return (
- <motion.div
- key={connection.id}
- initial={{ opacity: 0, scale: 0.95 }}
- animate={{ opacity: 1, scale: 1 }}
- exit={{ opacity: 0, scale: 0.95 }}
- transition={{ delay: index * 0.05 }}
- className={cn(
- 'group bg-background/5 border rounded-xl overflow-hidden hover:border-white/20 transition-all',
- connType.borderColor
- )}
- >
- <div className="p-5">
- <div className="flex items-start justify-between mb-4">
- <div className="flex items-center gap-3">
- <ConnectionIcon
- logo={connType.logo}
- icon={connType.icon}
- color={connType.color}
- bgColor={connType.bgColor}
- size="md"
- />
- <div>
- <h3 className="font-medium">{connection.name}</h3>
- <p className="text-white/50 text-sm">{connType.name}</p>
+ <div key={conn.id}
+ className="group flex flex-col gap-2.5 p-3 rounded-lg border border-white/[0.07] bg-[#111] hover:bg-[#151515] transition-colors">
+ <div className="flex items-start justify-between">
+ <ConnectionIcon logo={ct.logo} icon={ct.icon} color={ct.color} bgColor={ct.bgColor} size="sm" />
+ {getStatusBadge(conn.status)}
  </div>
+ <div className="min-w-0">
+ <p className="text-[12.5px] font-medium text-white/80 truncate">{conn.name}</p>
+ <p className="text-[11px] text-white/35">{ct.name}</p>
+ {conn.host && <p className="text-[10.5px] text-white/22 font-mono mt-0.5 truncate">{conn.host}{conn.port ? `:${conn.port}` : ''}</p>}
  </div>
- {getStatusBadge(connection.status)}
- </div>
-
- {connection.host && (
- <div className="text-sm text-white/40 mb-3 font-mono truncate">
- {connection.host}:{connection.port || 'default'}
- </div>
- )}
-
- {connection.database && (
- <div className="text-sm text-white/60 mb-3">
- Database: <span className="font-mono">{connection.database}</span>
- </div>
- )}
-
- <div className="flex items-center gap-2 pt-3 border-t border-white/10">
- <Button
- variant="ghost"
- size="sm"
- className="flex-1 text-white/60 hover:text-white hover:bg-background/10"
- onClick={() => testConnection(connection.id)}
- disabled={testingConnection === connection.id}
- >
- {testingConnection === connection.id ? (
- <Loader2 className="w-3 h-3 mr-1 animate-spin" />
- ) : (
- <Zap className="w-3 h-3 mr-1" />
- )}
- Test
- </Button>
- <Button
- variant="ghost"
- size="sm"
- className="text-white/60 hover:text-white hover:bg-background/10"
- >
- <Edit2 className="w-3 h-3" />
- </Button>
- <Button
- variant="ghost"
- size="sm"
- className="text-white/60 hover:text-zinc-400 hover:bg-white/5"
- onClick={() => deleteConnection(connection.id)}
- >
+ <div className="flex items-center gap-1.5">
+ <button onClick={() => testConnection(conn.id)} disabled={testingConnection === conn.id}
+ className="h-6 px-2 rounded-[5px] text-[11px] text-white/40 hover:text-white/70 hover:bg-white/[0.06] flex items-center gap-1 transition-all flex-1 justify-center">
+ {testingConnection === conn.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <><Zap className="w-3 h-3" />Test</>}
+ </button>
+ <button onClick={() => deleteConnection(conn.id)}
+ className="h-6 px-2 rounded-[5px] text-[11px] text-white/20 hover:text-red-400/60 hover:bg-white/[0.04] flex items-center transition-all">
  <Trash2 className="w-3 h-3" />
- </Button>
+ </button>
  </div>
  </div>
- </motion.div>
  );
  })}
- </AnimatePresence>
+ </div>
+ ) : (
+ <div className="rounded-lg border border-white/[0.07] overflow-hidden">
+ <div className="grid grid-cols-[28px_1fr_140px_80px_100px] gap-3 px-3 py-2 border-b border-white/[0.07] bg-[#0e0e0e]">
+ <div /><span className="text-[10.5px] font-semibold text-white/25 uppercase tracking-wider">Name</span>
+ <span className="text-[10.5px] font-semibold text-white/25 uppercase tracking-wider">Host</span>
+ <span className="text-[10.5px] font-semibold text-white/25 uppercase tracking-wider">Status</span>
+ <span className="text-[10.5px] font-semibold text-white/25 uppercase tracking-wider text-right">Actions</span>
+ </div>
+ {filteredConnections.map((conn, i) => {
+ const ct = CONNECTION_TYPES[conn.type as keyof typeof CONNECTION_TYPES] || CONNECTION_TYPES.mysql;
+ return (
+ <div key={conn.id}
+ className={cn('grid grid-cols-[28px_1fr_140px_80px_100px] items-center gap-3 px-3 py-2 border-b border-white/[0.04] transition-colors',
+ i % 2 === 0 ? 'bg-[#0d0d0d] hover:bg-[#101010]' : 'bg-[#0b0b0b] hover:bg-[#0e0e0e]')}>
+ <ConnectionIcon logo={ct.logo} icon={ct.icon} color={ct.color} bgColor={ct.bgColor} size="sm"
+ className="!w-7 !h-7 rounded-md" />
+ <div className="min-w-0">
+ <p className="text-[12px] font-medium text-white/80 truncate">{conn.name}</p>
+ <p className="text-[10.5px] text-white/35">{ct.name}</p>
+ </div>
+ <p className="text-[11px] text-white/30 font-mono truncate">
+ {conn.host ? `${conn.host}${conn.port ? `:${conn.port}` : ''}` : '—'}
+ </p>
+ <div>{getStatusBadge(conn.status)}</div>
+ <div className="flex items-center gap-1 justify-end">
+ <button onClick={() => testConnection(conn.id)} disabled={testingConnection === conn.id}
+ className="h-6 px-2 rounded-[5px] text-[11px] text-white/35 hover:text-white/60 hover:bg-white/[0.05] transition-all">
+ {testingConnection === conn.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Zap className="w-3 h-3" />}
+ </button>
+ <button onClick={() => deleteConnection(conn.id)}
+ className="h-6 px-2 rounded-[5px] text-[11px] text-white/20 hover:text-red-400/60 hover:bg-white/[0.04] transition-all">
+ <Trash2 className="w-3 h-3" />
+ </button>
  </div>
  </div>
- ) : connections.length === 0 ? null : (
- <div className="text-center py-12 bg-background/5 border border-white/10 rounded-xl">
- <Search className="w-12 h-12 text-white/20 mx-auto mb-4" />
- <h3 className="text-lg font-medium mb-2">No connections found</h3>
- <p className="text-white/50">Try adjusting your search or filters</p>
+ );
+ })}
+ </div>
+ )}
  </div>
  )}
 
- {/* Add New Connection Section */}
+ {/* Add new connection type picker */}
  <div>
- <h2 className="text-lg font-medium mb-4">
- {connections.length === 0 ? 'Get Started - Add a Connection' : 'Add New Connection'}
- </h2>
- <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
- {filteredTypes.map(([key, config], index) => (
- <motion.button
- key={key}
- initial={{ opacity: 0, y: 20 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{ delay: index * 0.03 }}
- onClick={() => setSelectedType(key)}
+ <p className="text-[10.5px] font-semibold text-white/30 uppercase tracking-wider mb-2.5">
+ {connections.length === 0 ? 'Select a connector to get started' : 'Add New Connection'}
+ </p>
+ <div className="grid gap-2 grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8">
+ {filteredTypes.map(([key, config]) => (
+ <button key={key} onClick={() => setSelectedType(key)}
  className={cn(
- 'group relative p-4 bg-background/5 border border-white/10 rounded-xl hover:border-white/20 transition-all text-left',
- selectedType === key && 'border-zinc-700 bg-white/5'
- )}
- >
- <ConnectionIcon
- logo={config.logo}
- icon={config.icon}
- color={config.color}
- bgColor={config.bgColor}
- size="sm"
- className="mb-3"
- />
- <h3 className="font-medium text-sm">{config.name}</h3>
- <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
- <Plus className="w-4 h-4 text-white/40" />
- </div>
- </motion.button>
+ 'group flex flex-col items-start gap-2 p-3 rounded-lg border transition-all text-left',
+ selectedType === key
+ ? 'border-white/[0.18] bg-white/[0.06]'
+ : 'border-white/[0.06] bg-[#111] hover:bg-[#151515] hover:border-white/[0.1]'
+ )}>
+ <ConnectionIcon logo={config.logo} icon={config.icon} color={config.color} bgColor={config.bgColor} size="sm"
+ className="!w-8 !h-8 rounded-[7px] shadow-none" />
+ <p className="text-[11.5px] font-medium text-white/70 leading-tight">{config.name}</p>
+ </button>
  ))}
  </div>
  </div>
 
- {/* Quick Setup Guide */}
- {connections.length === 0 && (
- <motion.div
- initial={{ opacity: 0, y: 20 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{ delay: 0.5 }}
- className="bg-gradient-to-r from-white/5 to-white/5 border border-zinc-700/30 rounded-xl p-6"
- >
- <div className="flex items-start gap-4">
- <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
- <Zap className="w-6 h-6 text-zinc-400" />
- </div>
- <div>
- <h3 className="font-medium text-lg mb-2">Quick Setup Guide</h3>
- <div className="space-y-2 text-white/70 text-sm">
- <p className="flex items-center gap-2">
- <span className="w-5 h-5 rounded-full bg-white/10 text-zinc-400 text-xs flex items-center justify-center">1</span>
- Select a connection type above
- </p>
- <p className="flex items-center gap-2">
- <span className="w-5 h-5 rounded-full bg-white/10 text-zinc-400 text-xs flex items-center justify-center">2</span>
- Enter your database credentials
- </p>
- <p className="flex items-center gap-2">
- <span className="w-5 h-5 rounded-full bg-white/10 text-zinc-400 text-xs flex items-center justify-center">3</span>
- Test the connection
- </p>
- <p className="flex items-center gap-2">
- <span className="w-5 h-5 rounded-full bg-white/10 text-zinc-400 text-xs flex items-center justify-center">4</span>
- Start querying with natural language!
- </p>
- </div>
- </div>
- </div>
- </motion.div>
- )}
-
- {/* Security Note */}
- <div className="flex items-center gap-3 p-4 bg-background/5 border border-white/10 rounded-xl">
- <Shield className="w-5 h-5 text-zinc-400 flex-shrink-0" />
- <p className="text-sm text-white/60">
- All connections are encrypted and stored securely on your local device. 
- Your credentials never leave your machine.
- </p>
- </div>
  </div>
  </div>
  );
