@@ -253,3 +253,58 @@
   transform: translateY(-1px);
   box-shadow: 0 6px 24px -6px rgba(255,255,255,0.07);
 }
+
+/* ═══════════════════════════════════════════════════════════
+   PERFORMANCE & POWER SAVING
+   These rules help on old / low-power hardware and respect
+   the OS-level "Reduce Motion" accessibility preference.
+═══════════════════════════════════════════════════════════ */
+
+/* ── CSS containment — limits how far the browser's layout /
+   paint engine has to walk the DOM tree.  The toolbar and
+   main panel are independent regions that never affect each
+   other's layout, so we tell the browser that explicitly. ── */
+.toolbar       { contain: strict; }
+.panel-body    { contain: layout style; }
+.surface-card  { contain: layout style; }
+.data-row      { contain: layout; }
+
+/* ── Reduced motion \u2014 honours the OS "Reduce Motion" setting.
+   All Framer Motion animations respect this natively.
+   We also neutralise our own CSS animations here so the
+   whole app feels fast on every machine. ────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration:   0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration:  0.01ms !important;
+    scroll-behavior:      auto !important;
+  }
+
+  /* Kill the float, shimmer, glow animations */
+  .login-particle,
+  .animate-fade-in-up,
+  .text-shimmer,
+  .glow-pulse { animation: none !important; }
+
+  /* Keep text readable without shimmer */
+  .text-shimmer {
+    background: none;
+    -webkit-text-fill-color: #a1a1aa;
+    color: #a1a1aa;
+  }
+
+  /* Glass card \u2014 no lift on hover */
+  .glass-card:hover { transform: none; box-shadow: none; }
+}
+
+/* ── Scrollable regions: opt in the compositor thread so
+   panning doesn't block the main JS thread ────────────── */
+.overflow-auto,
+.overflow-y-auto,
+.overflow-x-auto,
+.flex-1.overflow-auto { will-change: transform; }
+
+/* ── Prevent paint-flash when switching routes quickly
+   (app background matches the Electron backgroundColor) ─ */
+#root { background-color: #080808; }

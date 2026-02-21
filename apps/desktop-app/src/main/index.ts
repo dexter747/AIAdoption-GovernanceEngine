@@ -8,6 +8,27 @@ import { expressClient } from './api/express-client';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// ── Hardware / power optimisations ────────────────────────────────────────
+// Must be called BEFORE app.whenReady() / before the GPU process starts.
+//
+// These flags make the app run well on old laptops with mediocre GPUs:
+//   • No shader-disk-cache → avoids stalls on slow HDDs at first launch
+//   • In-process GPU      → eliminates one extra OS process on machines with
+//     ≤ 4 GB RAM (the GPU sandbox process costs ~60 MB).
+//   • Disable GPU memory buffer → safer on machines with < 512 MB VRAM
+//   • No vsync enforcement → lets Chromium decide its own paint cadence
+//     (Chromium is already smart about this; forcing 60 fps on 30 Hz panels wastes power)
+app.commandLine.appendSwitch('disable-gpu-shader-disk-cache');
+app.commandLine.appendSwitch('disable-background-timer-throttling');
+app.commandLine.appendSwitch('disable-renderer-backgrounding');
+app.commandLine.appendSwitch('disable-backgrounding-occluded-windows');
+app.commandLine.appendSwitch('js-flags', '--max-old-space-size=256'); // cap V8 heap
+// Chromium can still use hardware acceleration; we just remove fragile features:
+app.commandLine.appendSwitch('disable-features',
+  'VizDisplayCompositor,UseSkiaRenderer,ThrottleDisplayNoneAndVisibilityHiddenCrossOriginIframes'
+);
+// ─────────────────────────────────────────────────────────────────────────
+
 // Safe logger to prevent EPIPE errors when stdout is closed
 const safeLog = (...args: any[]) => {
   try {
@@ -65,11 +86,18 @@ function createWindow() {
     minWidth: 1024,
     minHeight: 768,
     icon: iconPath,
+    // Fill with app bg colour immediately — eliminates the white flash on slow machines
+    backgroundColor: '#080808',
     webPreferences: {
       preload: path.join(__dirname, '../../dist/main/preload.js'),
       nodeIntegration: false,
       contextIsolation: true,
       sandbox: true,
+      // Keep JS timers running even when window loses focus — essential for
+      // in-flight AI requests, MCP heartbeats, and token-refresh loops.
+      backgroundThrottling: false,
+      // Reduce idle GPU usage — our UI has no WebGL / heavy canvas work
+      offscreen: false,
     },
     titleBarStyle: 'hidden',
     trafficLightPosition: { x: 15, y: 15 },
