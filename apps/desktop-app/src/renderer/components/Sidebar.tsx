@@ -94,7 +94,7 @@ export default function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
             />
           </div>
           {!collapsed && (
-            <span className="text-[14px] font-semibold tracking-tight text-white/90">
+            <span className="text-[14px] font-medium tracking-tight text-white/90">
               Velanova
             </span>
           )}
@@ -131,7 +131,7 @@ export default function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
       {/* ── Workspace section ── */}
       <div className={cn('px-2 pt-5 flex-shrink-0', collapsed && 'px-1.5')}>
         {!collapsed ? (
-          <p className="px-2.5 mb-1.5 text-[10px] font-semibold text-zinc-600 uppercase tracking-widest">
+          <p className="px-2.5 mb-1.5 text-[10px] font-medium text-zinc-600 uppercase tracking-widest">
             Workspace
           </p>
         ) : (
@@ -147,7 +147,7 @@ export default function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
       {/* ── Settings section ── */}
       <div className={cn('px-2 pt-5 flex-shrink-0', collapsed && 'px-1.5')}>
         {!collapsed ? (
-          <p className="px-2.5 mb-1.5 text-[10px] font-semibold text-zinc-600 uppercase tracking-widest">
+          <p className="px-2.5 mb-1.5 text-[10px] font-medium text-zinc-600 uppercase tracking-widest">
             Settings
           </p>
         ) : (

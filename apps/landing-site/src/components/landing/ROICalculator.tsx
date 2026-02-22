@@ -124,14 +124,16 @@ export default function ROICalculator() {
               <p className="text-sm text-zinc-600">ROI in the first 12 months</p>
             </div>
 
-            <div className="roi-result p-7 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
-              <h4 className="font-medium text-white mb-2">Ready to unlock these savings?</h4>
-              <p className="text-sm mb-5 text-zinc-500">Start with a free 14-day trial. No credit card required.</p>
-              <button className="w-full bg-white text-black py-3.5 rounded-xl font-medium hover:bg-zinc-200 transition-all shadow-lg shadow-white/5">
-                Start Free Trial
-              </button>
-            </div>
           </div>
+        </div>
+
+        {/* Centered CTA below the grid */}
+        <div className="roi-result mt-8 max-w-md mx-auto p-7 rounded-2xl bg-white/[0.03] border border-white/[0.06] text-center">
+          <h4 className="font-medium text-white mb-2">Ready To Unlock These Savings?</h4>
+          <p className="text-sm mb-5 text-zinc-500">Start with a free 14-day trial. No credit card required.</p>
+          <a href="/download" className="block w-full bg-white text-black py-3.5 rounded-xl font-medium hover:bg-zinc-200 transition-all shadow-lg shadow-white/5">
+            Start Free Trial
+          </a>
         </div>
       </div>
     </section>

@@ -96,7 +96,7 @@ function ProviderLogo({ id, name }: { id: string; name: string }) {
           onError={() => setImgErr(true)}
         />
       ) : (
-        <span className="text-[10px] font-bold text-white/50">{name.slice(0, 2).toUpperCase()}</span>
+        <span className="text-[10px] font-medium text-white/50">{name.slice(0, 2).toUpperCase()}</span>
       )}
     </div>
   );
@@ -153,7 +153,7 @@ function AddKeyModal({
       >
         <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06]">
           <div>
-            <h2 className="text-[15px] font-semibold text-white">Add API Key</h2>
+            <h2 className="text-[15px] font-medium text-white">Add API Key</h2>
             <p className="text-[12px] text-zinc-600 mt-0.5">Keys are AES-encrypted, stored locally</p>
           </div>
           <button onClick={onClose} className="w-7 h-7 flex items-center justify-center rounded-lg text-zinc-600 hover:text-zinc-300 hover:bg-white/[0.06] transition-all">
@@ -354,7 +354,7 @@ export default function APIKeysPage() {
     <div className="h-full flex flex-col overflow-hidden bg-[#0b0b0b]">
       {/* Toolbar */}
       <div className="toolbar app-region-drag">
-        <h1 className="text-[13px] font-semibold text-white/80 app-region-no-drag select-none">API Keys</h1>
+        <h1 className="text-[13px] font-medium text-white/80 app-region-no-drag select-none">API Keys</h1>
         <div className="w-px h-4 bg-white/[0.08] mx-3" />
         <span className="text-[11px] text-white/30 app-region-no-drag">BYOK — keys are AES-256 encrypted on-device</span>
         <div className="flex-1" />
@@ -408,7 +408,7 @@ export default function APIKeysPage() {
 
         {/* Configured Keys */}
         <section className="mb-10">
-          <h2 className="text-[12px] font-semibold text-zinc-600 uppercase tracking-widest mb-3">
+          <h2 className="text-[12px] font-medium text-zinc-600 uppercase tracking-widest mb-3">
             Configured Keys ({keys.length})
           </h2>
 
@@ -502,7 +502,7 @@ export default function APIKeysPage() {
         {/* Available Providers */}
         {availableProviders.length > 0 && (
           <section>
-            <h2 className="text-[12px] font-semibold text-zinc-600 uppercase tracking-widest mb-3">
+            <h2 className="text-[12px] font-medium text-zinc-600 uppercase tracking-widest mb-3">
               Add a Provider
             </h2>
             <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">

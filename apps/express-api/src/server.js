@@ -375,10 +375,12 @@ app.post('/api/ai/query', async (req, res) => {
       }
     }
 
-    // Check if provider is available
-    if (!isProviderAvailable(provider)) {
+    // Check if provider is known (availability also depends on BYOK keys;
+    // routeAIRequest handles the full BYOK check)
+    const knownProviders = ['openai', 'anthropic', 'google', 'groq', 'xai', 'mistral', 'deepseek', 'cohere', 'perplexity'];
+    if (!knownProviders.includes(provider)) {
       return res.status(400).json({
-        error: `Provider ${provider} is not available or configured`,
+        error: `Unknown provider: ${provider}`,
       });
     }
 

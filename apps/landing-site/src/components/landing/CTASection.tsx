@@ -36,8 +36,8 @@ export function CTASection() {
           </div>
 
           <h2 className="text-4xl md:text-6xl font-medium tracking-tight mb-7 leading-tight text-white">
-            Ready to transform your<br />
-            <span className="text-shimmer">legacy systems with AI?</span>
+            Ready To Transform Your<br />
+            <span className="text-shimmer">Legacy Systems With AI?</span>
           </h2>
 
           <p className="text-lg mb-10 max-w-2xl mx-auto leading-relaxed text-zinc-500">

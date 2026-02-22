@@ -1,35 +1,10 @@
 "use client";
 
-import { useEffect, useState } from 'react';
 import { ArrowRight, Play, Sparkles, Zap, Shield, TrendingUp, CheckCircle2 } from 'lucide-react';
 import { Button } from '../ui/button';
 
 export default function HeroSection() {
- const [stats, setStats] = useState({ companies: 2500, queries: 10000000, savings: 89, uptime: 99 });
-
- useEffect(() => {
- const animateCounter = (target: number, key: 'companies' | 'queries' | 'savings' | 'uptime') => {
- let current = 0;
- const increment = target / 60;
- const timer = setInterval(() => {
- current += increment;
- if (current >= target) {
- current = target;
- clearInterval(timer);
- }
- setStats(prev => ({ ...prev, [key]: Math.floor(current) }));
- }, 30);
- };
-
- setTimeout(() => {
- animateCounter(2500, 'companies');
- animateCounter(10000000, 'queries');
- animateCounter(89, 'savings');
- animateCounter(99, 'uptime');
- }, 500);
- }, []);
-
- return (
+  return (
  <div
  className="relative min-h-[90vh] overflow-hidden bg-background"
  >
@@ -151,13 +126,13 @@ export default function HeroSection() {
 
  {/* Floating stat cards */}
  <div className="absolute -top-6 -left-6 float-element">
- <div className="rounded-xl shadow-xl p-4 bg-zinc-900 border-zinc-800">
+ <div className="rounded-xl shadow-xl p-4 bg-zinc-900 border border-zinc-800">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-zinc-900/40">
  <TrendingUp className="w-5 h-5 text-zinc-400" />
  </div>
  <div>
- <div className="font-medium text-white">{stats.queries.toLocaleString('en-US')}+</div>
+ <div className="font-medium text-white">10M+</div>
  <div className="text-muted-foreground">Queries Processed</div>
  </div>
  </div>
@@ -165,13 +140,13 @@ export default function HeroSection() {
  </div>
 
  <div className="absolute -bottom-6 -right-6 float-element" style={{ animationDelay: '0.5s' }}>
- <div className="rounded-xl shadow-xl p-4 bg-zinc-900 border-zinc-800">
+ <div className="rounded-xl shadow-xl p-4 bg-zinc-900 border border-zinc-800">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-zinc-900/40">
  <Shield className="w-5 h-5 text-zinc-300" />
  </div>
  <div>
- <div className="font-medium text-white">{stats.uptime}%</div>
+ <div className="font-medium text-white">99%</div>
  <div className="text-muted-foreground">Uptime SLA</div>
  </div>
  </div>
@@ -180,33 +155,6 @@ export default function HeroSection() {
  </div>
  </div>
 
- {/* Live stats bar */}
- <div className="hero-stats mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
- <div className="text-center">
- <div className="sm:text-4xl font-medium mb-1 text-white">
- {stats.companies.toLocaleString('en-US')}+
- </div>
- <div className="text-muted-foreground">Companies Trust Us</div>
- </div>
- <div className="text-center">
- <div className="sm:text-4xl font-medium mb-1 text-white">
- 64
- </div>
- <div className="text-muted-foreground">Systems Supported</div>
- </div>
- <div className="text-center">
- <div className="sm:text-4xl font-medium mb-1 text-white">
- {stats.savings}%
- </div>
- <div className="text-muted-foreground">Time Saved</div>
- </div>
- <div className="text-center">
- <div className="sm:text-4xl font-medium mb-1 text-white">
- 24/7
- </div>
- <div className="text-muted-foreground">Expert Support</div>
- </div>
- </div>
  </div>
  </div>
  );

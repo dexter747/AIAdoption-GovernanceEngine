@@ -127,7 +127,7 @@ export default function ProfileSettingsPage() {
 
       {/* ── Toolbar ── */}
       <div className="toolbar app-region-drag">
-        <h1 className="text-[13px] font-semibold text-white/80 app-region-no-drag select-none">Profile &amp; Settings</h1>
+        <h1 className="text-[13px] font-medium text-white/80 app-region-no-drag select-none">Profile &amp; Settings</h1>
         <div className="w-px h-4 bg-white/[0.08] mx-3" />
         {/* Tab strip inside toolbar */}
         <div className="flex items-center gap-0.5 app-region-no-drag">
@@ -216,7 +216,7 @@ export default function ProfileSettingsPage() {
           <div className="max-w-lg space-y-6">
             {/* Theme */}
             <div>
-              <label className="block text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-2">Theme</label>
+              <label className="block text-[11px] font-medium text-white/40 uppercase tracking-wider mb-2">Theme</label>
               <div className="flex gap-2">
                 {(['light', 'dark', 'system'] as const).map(theme => (
                   <button key={theme} onClick={() => setPreferences({ ...preferences, theme })}
@@ -232,7 +232,7 @@ export default function ProfileSettingsPage() {
 
             {/* Default model */}
             <div>
-              <label className="block text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-1.5">Default AI Model</label>
+              <label className="block text-[11px] font-medium text-white/40 uppercase tracking-wider mb-1.5">Default AI Model</label>
               <select
                 value={preferences.defaultModel}
                 onChange={e => setPreferences({ ...preferences, defaultModel: e.target.value })}
@@ -247,7 +247,7 @@ export default function ProfileSettingsPage() {
 
             {/* Notifications */}
             <div>
-              <label className="block text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-2">Notifications</label>
+              <label className="block text-[11px] font-medium text-white/40 uppercase tracking-wider mb-2">Notifications</label>
               <div className="space-y-1 rounded-lg border border-white/[0.06] overflow-hidden">
                 {([
                   { key: 'email',       label: 'Email notifications',      desc: 'Receive updates via email' },
@@ -279,7 +279,7 @@ export default function ProfileSettingsPage() {
         {activeTab === 'security' && (
           <div className="max-w-lg space-y-6">
             <div>
-              <label className="block text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-3">Change Password</label>
+              <label className="block text-[11px] font-medium text-white/40 uppercase tracking-wider mb-3">Change Password</label>
               <div className="space-y-2.5">
                 {['Current Password', 'New Password', 'Confirm Password'].map(label => (
                   <div key={label}>
@@ -294,7 +294,7 @@ export default function ProfileSettingsPage() {
             </div>
 
             <div className="border-t border-white/[0.05] pt-5">
-              <label className="block text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-3">Active Sessions</label>
+              <label className="block text-[11px] font-medium text-white/40 uppercase tracking-wider mb-3">Active Sessions</label>
               <div className="flex items-center justify-between py-3 px-4 rounded-lg border border-white/[0.06] bg-white/[0.02]">
                 <div className="flex items-center gap-3">
                   <Shield className="w-4 h-4 text-white/25" />

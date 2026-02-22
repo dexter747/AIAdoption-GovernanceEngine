@@ -128,7 +128,7 @@ export default function DashboardPage() {
 
  {/* ── Toolbar ─────────────────────────────────────────── */}
  <div className="toolbar app-region-drag">
- <h1 className="text-[13px] font-semibold text-white/80 app-region-no-drag select-none">Dashboard</h1>
+ <h1 className="text-[13px] font-medium text-white/80 app-region-no-drag select-none">Dashboard</h1>
  <div className="w-px h-4 bg-white/[0.08] mx-3" />
  {/* Stat pills inline */}
  <div className="flex items-center gap-4 app-region-no-drag">
@@ -168,7 +168,7 @@ export default function DashboardPage() {
  <div className="flex items-center justify-between px-4 py-2 border-b border-white/[0.05]">
  <div className="flex items-center gap-2">
  <Activity className="w-3 h-3 text-white/25" />
- <span className="text-[11.5px] font-semibold text-white/50 uppercase tracking-wider">Recent Queries</span>
+ <span className="text-[11.5px] font-medium text-white/50 uppercase tracking-wider">Recent Queries</span>
  </div>
  <Link to="/queries" className="text-[10.5px] text-white/30 hover:text-white/60 flex items-center gap-1 transition-colors">
  View all<ExternalLink className="w-2.5 h-2.5" />
@@ -216,7 +216,7 @@ export default function DashboardPage() {
  <div className="flex items-center justify-between px-4 py-2 border-b border-white/[0.05]">
  <div className="flex items-center gap-2">
  <Brain className="w-3 h-3 text-white/25" />
- <span className="text-[11.5px] font-semibold text-white/50 uppercase tracking-wider">AI Models</span>
+ <span className="text-[11.5px] font-medium text-white/50 uppercase tracking-wider">AI Models</span>
  </div>
  <Link to="/settings/api-keys" className="text-[10.5px] text-white/30 hover:text-white/60 transition-colors">Configure →</Link>
  </div>
@@ -247,7 +247,7 @@ export default function DashboardPage() {
  <div className="flex items-center justify-between px-4 py-2 border-b border-white/[0.05]">
  <div className="flex items-center gap-2">
  <Server className="w-3 h-3 text-white/25" />
- <span className="text-[11.5px] font-semibold text-white/50 uppercase tracking-wider">Connections</span>
+ <span className="text-[11.5px] font-medium text-white/50 uppercase tracking-wider">Connections</span>
  </div>
  <Link to="/connections-dashboard"
  className="h-5 px-2 rounded-[4px] text-[10.5px] text-white/30 hover:text-white/60 hover:bg-white/[0.05] flex items-center gap-1 transition-colors">

@@ -172,7 +172,7 @@ export default function MyConnectionsPage() {
 
  {/* ── Toolbar ──────────────────────────────────────────── */}
  <div className="toolbar app-region-drag">
- <h1 className="text-[13px] font-semibold text-white/80 mr-3 app-region-no-drag select-none">
+ <h1 className="text-[13px] font-medium text-white/80 mr-3 app-region-no-drag select-none">
  My Connections
  </h1>
  <div className="w-px h-4 bg-white/[0.08] mx-1" />
@@ -275,10 +275,10 @@ export default function MyConnectionsPage() {
  {/* List header */}
  <div className="grid grid-cols-[28px_1fr_140px_80px_100px] items-center gap-3 px-3 py-2 border-b border-white/[0.07] bg-[#0e0e0e]">
  <div />
- <span className="text-[10.5px] font-semibold text-white/25 uppercase tracking-wider">Name</span>
- <span className="text-[10.5px] font-semibold text-white/25 uppercase tracking-wider">Host</span>
- <span className="text-[10.5px] font-semibold text-white/25 uppercase tracking-wider">Status</span>
- <span className="text-[10.5px] font-semibold text-white/25 uppercase tracking-wider text-right">Actions</span>
+ <span className="text-[10.5px] font-medium text-white/25 uppercase tracking-wider">Name</span>
+ <span className="text-[10.5px] font-medium text-white/25 uppercase tracking-wider">Host</span>
+ <span className="text-[10.5px] font-medium text-white/25 uppercase tracking-wider">Status</span>
+ <span className="text-[10.5px] font-medium text-white/25 uppercase tracking-wider text-right">Actions</span>
  </div>
  {filteredConnections.map((conn, i) => {
  const connInfo = getConnectionInfo(conn.type);

@@ -88,7 +88,7 @@ export function LLMParallaxSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative py-14 bg-zinc-950/70 overflow-hidden">
+    <section ref={sectionRef} className="relative bg-zinc-950/70 overflow-hidden">
       {/* Fade edges */}
       <div className="absolute inset-y-0 left-0 w-32 z-10 bg-gradient-to-r from-zinc-950 to-transparent pointer-events-none" />
       <div className="absolute inset-y-0 right-0 w-32 z-10 bg-gradient-to-l from-zinc-950 to-transparent pointer-events-none" />
@@ -100,9 +100,9 @@ export function LLMParallaxSection() {
           <span className="text-sm font-medium text-zinc-500">Universal AI Integration</span>
         </div>
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white mb-4">
-          Every leading AI model,{" "}
+          Every Leading AI Model,{" "}
           <br className="hidden sm:block" />
-          <span className="text-shimmer">connected to your legacy systems</span>
+          <span className="text-shimmer">Connected To Your Legacy Systems</span>
         </h2>
         <p className="text-lg text-zinc-500 max-w-2xl mx-auto">
           Velanova bridges any LLM with your existing Oracle, SAP, Salesforce, or any enterprise system — no migration needed.
@@ -130,7 +130,7 @@ export function LLMParallaxSection() {
       {/* Bottom CTA */}
       <div className="relative z-10 text-center mt-14 px-6">
         <p className="text-sm text-zinc-500">
-          Use your own API keys (BYOK) or ours &mdash; switch models with one click, no code changes needed.
+          Use your own API keys (BYOK) &mdash; switch models with one click, no code changes needed.
         </p>
       </div>
     </section>

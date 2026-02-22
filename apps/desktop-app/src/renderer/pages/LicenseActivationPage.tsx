@@ -83,7 +83,7 @@ export default function LicenseActivationPage() {
    {/* Toolbar */}
    <div className="toolbar app-region-drag">
     <Key className="w-3.5 h-3.5 text-white/30 app-region-no-drag" />
-    <h1 className="ml-2 text-[13px] font-semibold text-white/80 app-region-no-drag select-none">License</h1>
+    <h1 className="ml-2 text-[13px] font-medium text-white/80 app-region-no-drag select-none">License</h1>
     {isValid && license && (
      <>
       <div className="w-px h-4 bg-white/[0.08] mx-3" />
@@ -142,7 +142,7 @@ export default function LicenseActivationPage() {
            </div>
            {license.features.length > 0 && (
              <div className="mt-4 pt-4 border-t border-white/[0.05]">
-               <p className="text-[11px] font-semibold text-white/30 uppercase tracking-wider mb-2">Included Features</p>
+               <p className="text-[11px] font-medium text-white/30 uppercase tracking-wider mb-2">Included Features</p>
                <div className="grid grid-cols-2 gap-1.5">
                  {license.features.map(f => (
                    <div key={f} className="flex items-center gap-1.5 text-[11px] text-white/50">
@@ -176,7 +176,7 @@ export default function LicenseActivationPage() {
      {!isValid && (
        <div className="max-w-sm space-y-4">
          <div>
-           <label className="block text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-1.5">License Key</label>
+           <label className="block text-[11px] font-medium text-white/40 uppercase tracking-wider mb-1.5">License Key</label>
            {error && (
              <div className="mb-2 flex items-center gap-2 text-[11px] text-red-400/80 px-3 py-2 rounded-[5px] border border-red-500/20 bg-red-950/20">
                <XCircle className="w-3.5 h-3.5 flex-shrink-0" />{error}

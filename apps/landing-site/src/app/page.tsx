@@ -1,6 +1,5 @@
 import {
   Navbar,
-  LogosSection,
   FeaturesSection,
   HowItWorksSection,
   PricingSection,
@@ -20,7 +19,6 @@ export default function Home() {
     <div className="min-h-screen bg-black">
       <Navbar />
       <NewHeroSection />
-      <LogosSection />
       <LLMParallaxSection />
       <IntegrationsSection />
       <FeaturesSection />

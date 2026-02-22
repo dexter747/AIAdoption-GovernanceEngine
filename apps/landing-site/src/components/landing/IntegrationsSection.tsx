@@ -9,11 +9,11 @@ gsap.registerPlugin(ScrollTrigger);
 
 // Top featured integrations — shown as hero cards
 const featured = [
-  { name: "Salesforce", logo: "SF", description: "CRM & Sales Cloud", color: "from-blue-950/40 to-transparent" },
-  { name: "SAP", logo: "SAP", description: "ERP & S/4HANA", color: "from-zinc-900/60 to-transparent" },
-  { name: "Oracle", logo: "ORA", description: "Database & EBS", color: "from-red-950/30 to-transparent" },
-  { name: "Snowflake", logo: "❄", description: "Data Warehouse", color: "from-cyan-950/30 to-transparent" },
-  { name: "HubSpot", logo: "HS", description: "CRM & Marketing", color: "from-orange-950/30 to-transparent" },
+  { name: "Salesforce", logo: "/legacy/salesforce.png", description: "CRM & Sales Cloud", color: "from-blue-950/40 to-transparent" },
+  { name: "SAP", logo: "/legacy/saphana.svg", description: "ERP & S/4HANA", color: "from-zinc-900/60 to-transparent" },
+  { name: "Oracle", logo: "/legacy/oracle.svg", description: "Database & EBS", color: "from-red-950/30 to-transparent" },
+  { name: "Snowflake", logo: "/legacy/snowflake.svg", description: "Data Warehouse", color: "from-cyan-950/30 to-transparent" },
+  { name: "HubSpot", logo: "/legacy/hubspot.svg", description: "CRM & Marketing", color: "from-orange-950/30 to-transparent" },
 ];
 
 // Category summary counts
@@ -65,9 +65,9 @@ export function IntegrationsSection() {
             <Boxes className="w-4 h-4 text-zinc-500" />
             <span className="text-sm font-medium text-zinc-500">{totalCount}+ Integrations</span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-semibold tracking-tight mb-5 text-white">
-            Connect to{" "}
-            <span className="text-shimmer">any system</span>
+          <h2 className="text-4xl md:text-5xl font-medium tracking-tight mb-5 text-white">
+            Connect To{" "}
+            <span className="text-shimmer">Any System</span>
           </h2>
           <p className="text-lg text-zinc-500 leading-relaxed">
             Pre-built connectors for databases, ERPs, CRMs, data warehouses, and more.
@@ -82,10 +82,10 @@ export function IntegrationsSection() {
               key={item.name}
               className={`feat-card relative p-6 rounded-2xl border border-white/[0.06] bg-gradient-to-br ${item.color} bg-white/[0.02] hover:border-white/[0.12] transition-all duration-300 card-hover text-center overflow-hidden`}
             >
-              <div className="w-14 h-14 rounded-xl bg-white/[0.08] border border-white/[0.08] flex items-center justify-center mx-auto mb-4 text-lg font-bold text-white tracking-tight">
-                {item.logo}
+              <div className="w-14 h-14 rounded-xl bg-white/[0.06] border border-white/[0.08] flex items-center justify-center mx-auto mb-4 p-2.5">
+                <img src={item.logo} alt={item.name} className="w-full h-full object-contain" />
               </div>
-              <div className="text-sm font-semibold text-white mb-1">{item.name}</div>
+              <div className="text-sm font-medium text-white mb-1">{item.name}</div>
               <div className="text-xs text-zinc-500">{item.description}</div>
             </div>
           ))}
@@ -110,7 +110,7 @@ export function IntegrationsSection() {
               className="cat-pill group flex items-center gap-2.5 px-4 py-2.5 rounded-full border border-white/[0.06] bg-white/[0.02] hover:border-white/[0.12] hover:bg-white/[0.04] transition-all duration-300 cursor-default"
             >
               <span className="text-sm font-medium text-zinc-400 group-hover:text-white transition-colors">{cat.name}</span>
-              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-white/[0.06] text-zinc-500 group-hover:text-zinc-300 transition-colors">{cat.count}</span>
+              <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-white/[0.06] text-zinc-500 group-hover:text-zinc-300 transition-colors">{cat.count}</span>
             </div>
           ))}
         </div>

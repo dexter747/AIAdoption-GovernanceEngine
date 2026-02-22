@@ -152,7 +152,7 @@ function PlanCard({
       )}
     >
       {plan.highlight && (
-        <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white text-black text-[11px] font-semibold tracking-wide whitespace-nowrap shadow">
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white text-black text-[11px] font-medium tracking-wide whitespace-nowrap shadow">
           Most Popular
         </div>
       )}
@@ -166,19 +166,19 @@ function PlanCard({
             <plan.Icon className="w-4 h-4 text-zinc-300" strokeWidth={1.6} />
           </div>
           <div>
-            <h3 className="text-[14px] font-semibold text-white">{plan.name}</h3>
+            <h3 className="text-[14px] font-medium text-white">{plan.name}</h3>
             <p className="text-[11px] text-zinc-600 leading-tight">{plan.description}</p>
           </div>
         </div>
 
         <div className="flex items-end gap-1">
           {isEnterprise ? (
-            <span className="text-2xl font-bold text-white">Custom</span>
+            <span className="text-2xl font-medium text-white">Custom</span>
           ) : price === 0 ? (
-            <span className="text-2xl font-bold text-white">Free</span>
+            <span className="text-2xl font-medium text-white">Free</span>
           ) : (
             <>
-              <span className="text-2xl font-bold text-white">${price}</span>
+              <span className="text-2xl font-medium text-white">${price}</span>
               <span className="text-zinc-600 mb-0.5 text-[13px]">
                 /{billing === 'monthly' ? 'mo' : 'yr'}
               </span>
@@ -345,7 +345,7 @@ export default function SubscriptionPage() {
 
       <div className="max-w-5xl mx-auto px-6 py-10">
         <div className="text-center mb-10">
-          <h1 className="text-2xl font-semibold text-white mb-2">Plans &amp; Billing</h1>
+          <h1 className="text-2xl font-medium text-white mb-2">Plans &amp; Billing</h1>
           <p className="text-[14px] text-zinc-500">
             Upgrade to unlock unlimited queries, all AI models, and BYOK support
           </p>
@@ -361,7 +361,7 @@ export default function SubscriptionPage() {
               >
                 {b === 'monthly' ? 'Monthly' : 'Annual'}
                 {b === 'yearly' && (
-                  <span className="ml-1.5 text-[10px] text-emerald-400 font-semibold">-20%</span>
+                  <span className="ml-1.5 text-[10px] text-emerald-400 font-medium">-20%</span>
                 )}
               </button>
             ))}
@@ -393,7 +393,7 @@ export default function SubscriptionPage() {
                   <CreditCard className="w-5 h-5 text-zinc-400" />
                 </div>
                 <div>
-                  <p className="text-[14px] font-semibold text-white">
+                  <p className="text-[14px] font-medium text-white">
                     {PLANS.find((p) => p.id === currentPlan)?.name} — Active
                   </p>
                   <p className="text-[12px] text-zinc-600">Renews automatically each billing period</p>
@@ -434,7 +434,7 @@ export default function SubscriptionPage() {
         <div className="rounded-2xl border border-white/[0.06] bg-white/[0.015] overflow-hidden mb-8">
           <div className="px-5 py-4 border-b border-white/[0.05] flex items-center justify-between">
             <div>
-              <h2 className="text-[14px] font-semibold text-white">Payment History</h2>
+              <h2 className="text-[14px] font-medium text-white">Payment History</h2>
               <p className="text-[12px] text-zinc-600 mt-0.5">Your invoices and transactions</p>
             </div>
             <Calendar className="w-4 h-4 text-zinc-700" />
@@ -486,7 +486,7 @@ export default function SubscriptionPage() {
             <Zap className="w-4 h-4 text-zinc-400" />
           </div>
           <div>
-            <p className="text-[14px] font-semibold text-white mb-1">Bring Your Own API Keys (BYOK)</p>
+            <p className="text-[14px] font-medium text-white mb-1">Bring Your Own API Keys (BYOK)</p>
             <p className="text-[13px] text-zinc-500 leading-relaxed">
               On Professional and above you can add your own OpenAI, Anthropic, Google, Groq, and more
               API keys. Keys are AES-encrypted and stored locally — we never see them. Costs go

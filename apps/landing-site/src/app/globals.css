@@ -162,9 +162,74 @@
   animation: float 6s ease-in-out infinite;
 }
 
+/* InfiniteRibbon animations */
+@keyframes infinite-ribbon {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-20%); }
+}
+@keyframes infinite-ribbon-reverse {
+  0% { transform: translateX(-20%); }
+  100% { transform: translateX(0); }
+}
+.animate-infinite-ribbon {
+  animation: infinite-ribbon var(--ribbon-duration, 20s) linear infinite;
+}
+.animate-infinite-ribbon-reverse {
+  animation: infinite-ribbon-reverse var(--ribbon-duration, 20s) linear infinite;
+}
+
 /* Smooth focus rings */
 *:focus-visible {
   outline: 2px solid rgba(161, 161, 170, 0.5);
   outline-offset: 2px;
   border-radius: inherit;
+}
+
+/* Border beam sweep effect on hover */
+@property --beam-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.border-beam {
+  position: relative;
+  isolation: isolate;
+}
+
+.border-beam::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--beam-angle),
+    transparent 0deg,
+    transparent 300deg,
+    rgba(255, 255, 255, 0.08) 320deg,
+    rgba(255, 255, 255, 0.55) 340deg,
+    rgba(255, 255, 255, 0.08) 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.border-beam:hover::before {
+  opacity: 1;
+  animation: border-beam-spin 2.5s linear infinite;
+}
+
+@keyframes border-beam-spin {
+  to { --beam-angle: 360deg; }
 }

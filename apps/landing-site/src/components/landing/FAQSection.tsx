@@ -45,7 +45,7 @@ export default function FAQSection() {
   }, []);
 
   return (
-    <section ref={ref} className="py-16 bg-zinc-950/50">
+    <section id="faq" ref={ref} className="py-16 bg-zinc-950/50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="faq-header text-center mb-10">
           <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border mb-5 bg-white/[0.03] border-white/[0.08]">
@@ -53,7 +53,7 @@ export default function FAQSection() {
             <span className="text-sm font-medium text-zinc-500">FAQ</span>
           </div>
           <h2 className="text-4xl sm:text-5xl font-medium tracking-tight mb-5 text-white">
-            Everything You Need to Know
+            Everything You Need To Know
           </h2>
           <p className="text-lg max-w-2xl mx-auto text-zinc-500">
             Have questions? We&apos;ve got answers.{" "}
@@ -82,7 +82,7 @@ export default function FAQSection() {
 
         <div className="faq-cta-box mt-16 text-center">
           <div className="rounded-2xl p-8 border bg-white/[0.02] border-white/[0.06]">
-            <h3 className="text-lg font-medium mb-2 text-white">Still have questions?</h3>
+            <h3 className="text-lg font-medium mb-2 text-white">Still Have Questions?</h3>
             <p className="text-sm mb-6 text-zinc-500">Our team is here to help. Get in touch and we&apos;ll respond within 24 hours.</p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <a href="/contact" className="px-6 py-3 rounded-xl bg-white text-black font-medium hover:bg-zinc-200 transition-all shadow-lg shadow-white/5 text-sm">

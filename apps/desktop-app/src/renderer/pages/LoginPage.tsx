@@ -102,7 +102,7 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <h1 className="text-[22px] font-semibold tracking-tight text-white mb-1.5 font-sans">
+          <h1 className="text-[22px] font-medium tracking-tight text-white mb-1.5 font-sans">
             Velanova
           </h1>
           <p className="text-[13px] text-zinc-500 tracking-wide font-light">

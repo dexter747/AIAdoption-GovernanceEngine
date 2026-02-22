@@ -142,13 +142,20 @@ export async function routeAIRequest({
   stream = false,
 }) {
   try {
-    // Validate provider and model
-    if (!providers[provider]?.enabled) {
-      throw new Error(`Provider ${provider} is not enabled or configured`);
+    // Validate provider
+    if (!providers[provider]) {
+      throw new Error(`Provider ${provider} is not supported`);
     }
 
-    // Get user's API key if using BYOK (Bring Your Own Key)
+    // Get user's API key first (BYOK - Bring Your Own Key)
+    // IMPORTANT: check BYOK before the server-enabled guard so users with their
+    // own keys can use providers that aren't server-configured.
     const userApiKey = await getUserApiKey(userId, provider);
+
+    // Allow if server has the key configured OR user has a BYOK key
+    if (!providers[provider].enabled && !userApiKey) {
+      throw new Error(`Provider ${provider} is not configured. Please add your API key in Settings → API Keys.`);
+    }
 
     // Route to appropriate provider
     let response;

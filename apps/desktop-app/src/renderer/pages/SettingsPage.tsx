@@ -38,7 +38,7 @@ export default function SettingsPage() {
     <div className="h-full flex flex-col overflow-hidden">
       {/* Toolbar */}
       <div className="toolbar app-region-drag">
-        <h1 className="text-[13px] font-semibold text-white/80 app-region-no-drag select-none">Settings</h1>
+        <h1 className="text-[13px] font-medium text-white/80 app-region-no-drag select-none">Settings</h1>
         <div className="w-px h-4 bg-white/[0.08] mx-3" />
         <div className="flex items-center gap-0.5 app-region-no-drag">
           {tabs.map(tab => (
@@ -58,7 +58,7 @@ export default function SettingsPage() {
           {activeTab === 'general' && (
             <>
               <div>
-                <label className="block text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-1.5">Default Database</label>
+                <label className="block text-[11px] font-medium text-white/40 uppercase tracking-wider mb-1.5">Default Database</label>
                 <select
                   value={settings.defaultDatabase}
                   onChange={e => setSettings({ ...settings, defaultDatabase: e.target.value })}
@@ -88,7 +88,7 @@ export default function SettingsPage() {
           {activeTab === 'ai' && (
             <>
               <div>
-                <label className="block text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-1.5">AI Provider</label>
+                <label className="block text-[11px] font-medium text-white/40 uppercase tracking-wider mb-1.5">AI Provider</label>
                 <select
                   value={settings.apiProvider}
                   onChange={e => setSettings({ ...settings, apiProvider: e.target.value })}
@@ -101,7 +101,7 @@ export default function SettingsPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-1.5">API Key</label>
+                <label className="block text-[11px] font-medium text-white/40 uppercase tracking-wider mb-1.5">API Key</label>
                 <input
                   type="password"
                   value={settings.apiKey}

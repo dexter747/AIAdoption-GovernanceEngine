@@ -67,8 +67,8 @@ export function FeaturesSection() {
             <span className="text-sm font-medium text-zinc-500">Enterprise Features</span>
           </div>
           <h2 className="text-4xl md:text-5xl font-medium tracking-tight mb-5 text-white">
-            Everything you need to{" "}
-            <span className="text-shimmer">transform your enterprise</span>
+            Everything You Need To{" "}
+            <span className="text-shimmer">Transform Your Enterprise</span>
           </h2>
           <p className="text-lg text-zinc-500 leading-relaxed">
             A complete AI-powered platform to unlock the value in your legacy systems.
@@ -82,7 +82,7 @@ export function FeaturesSection() {
             return (
               <div
                 key={feature.title}
-                className="feat-card group relative p-6 rounded-2xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-sm hover:border-white/[0.12] hover:bg-white/[0.04] transition-all duration-500 card-hover"
+                className="feat-card border-beam group relative p-6 rounded-2xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-sm hover:border-white/[0.10] hover:bg-white/[0.04] transition-all duration-500 card-hover"
               >
                 <div className="w-11 h-11 rounded-xl bg-white/[0.06] flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-500">
                   <Icon className="w-5 h-5 text-zinc-400" />

@@ -84,7 +84,7 @@ export default function PricingPage() {
     <div className="h-full flex flex-col overflow-hidden">
       {/* Toolbar */}
       <div className="toolbar app-region-drag">
-        <h1 className="text-[13px] font-semibold text-white/80 app-region-no-drag select-none">Pricing</h1>
+        <h1 className="text-[13px] font-medium text-white/80 app-region-no-drag select-none">Pricing</h1>
         <div className="w-px h-4 bg-white/[0.08] mx-3" />
         <span className="text-[11px] text-white/30 app-region-no-drag">Start free · No credit card required · Cancel anytime</span>
       </div>
@@ -103,7 +103,7 @@ export default function PricingPage() {
                 )}
               >
                 {plan.highlighted && (
-                  <div className="absolute top-0 right-0 text-[10px] font-semibold px-3 py-1 bg-white text-black rounded-bl-lg rounded-tr-xl tracking-wide">
+                  <div className="absolute top-0 right-0 text-[10px] font-medium px-3 py-1 bg-white text-black rounded-bl-lg rounded-tr-xl tracking-wide">
                     MOST POPULAR
                   </div>
                 )}
@@ -112,7 +112,7 @@ export default function PricingPage() {
                   <Icon className="w-4.5 h-4.5 text-white/40" size={18} />
                 </div>
 
-                <h3 className="text-[14px] font-semibold text-white mb-0.5">{plan.name}</h3>
+                <h3 className="text-[14px] font-medium text-white mb-0.5">{plan.name}</h3>
                 <p className="text-[11px] text-white/35 mb-4">{plan.description}</p>
 
                 <div className="flex items-baseline gap-1 mb-5">

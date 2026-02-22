@@ -22,10 +22,7 @@ const trustBadges: TrustBadge[] = [
   { icon: Users, title: "2,500+ Enterprises", description: "Trusted by Fortune 500 companies" },
 ];
 
-const companies = [
-  "TechCorp Global", "SecureBank", "RetailCo", "FinanceHub",
-  "HealthTech Solutions", "DataFlow Industries", "Enterprise Systems Inc", "Global Manufacturing Co",
-];
+
 
 export function TrustSection() {
   const ref = useRef<HTMLElement>(null);
@@ -39,10 +36,6 @@ export function TrustSection() {
       gsap.from(".trust-badge-card", {
         opacity: 0, y: 30, duration: 0.5, stagger: 0.08, ease: "power3.out", immediateRender: false,
         scrollTrigger: { trigger: ".trust-grid", start: "top 85%", once: true },
-      });
-      gsap.from(".company-item", {
-        opacity: 0, duration: 0.4, stagger: 0.06, immediateRender: false,
-        scrollTrigger: { trigger: ".companies-grid", start: "top 90%", once: true },
       });
       gsap.from(".security-banner", {
         opacity: 0, y: 20, duration: 0.6, immediateRender: false,
@@ -59,8 +52,8 @@ export function TrustSection() {
       <div className="relative max-w-7xl mx-auto px-6">
         <div className="trust-header text-center mb-10">
           <h2 className="text-3xl md:text-5xl font-medium tracking-tight text-white mb-4">
-            Enterprise-grade{" "}
-            <span className="text-shimmer">security by design</span>
+            Enterprise-Grade{" "}
+            <span className="text-shimmer">Security By Design</span>
           </h2>
           <p className="text-lg text-zinc-500">
             Built for the world&apos;s most security-conscious organizations
@@ -83,19 +76,6 @@ export function TrustSection() {
               </div>
             );
           })}
-        </div>
-
-        <div className="mb-10">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-center mb-8 text-zinc-600">
-            Trusted by leading enterprises
-          </p>
-          <div className="companies-grid grid grid-cols-2 md:grid-cols-4 gap-6 items-center justify-items-center">
-            {companies.map((company) => (
-              <div key={company} className="company-item px-6 py-4 text-center">
-                <span className="text-sm font-medium text-zinc-600 hover:text-zinc-400 transition-colors">{company}</span>
-              </div>
-            ))}
-          </div>
         </div>
 
         <div className="security-banner max-w-3xl mx-auto text-center">

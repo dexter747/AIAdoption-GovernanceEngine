@@ -77,7 +77,7 @@ export function PricingSection() {
             <span className="text-sm font-medium text-zinc-500">Simple, Transparent Pricing</span>
           </div>
           <h2 className="text-4xl md:text-5xl font-medium tracking-tight mb-5 text-white">
-            Plans that <span className="text-shimmer">scale with you</span>
+            Plans That <span className="text-shimmer">Scale With You</span>
           </h2>
           <p className="text-lg text-zinc-500">
             Start free. Upgrade when you&apos;re ready. No hidden fees. Cancel anytime.
@@ -93,7 +93,7 @@ export function PricingSection() {
                 className={cn(
                   "price-card relative p-8 rounded-2xl border transition-all duration-500",
                   tier.highlighted
-                    ? "border-white/30 bg-white/[0.09] shadow-2xl shadow-white/[0.08] ring-1 ring-white/20"
+                    ? "border-white/20 bg-white/[0.05] shadow-2xl shadow-white/[0.05] ring-1 ring-white/[0.12]"
                     : "border-white/[0.06] bg-white/[0.02] hover:border-white/[0.12] card-hover"
                 )}
               >
@@ -161,9 +161,9 @@ export function PricingSection() {
           {/* Secure Payments */}
           <div className="flex items-center justify-center gap-3 flex-wrap">
             <span className="text-xs text-zinc-600 font-medium">Secure Payments By</span>
-            <img src="/paypal.svg" alt="PayPal" className="h-5 object-contain opacity-40 hover:opacity-70 transition-opacity" />
+            <img src="/paypal.svg" alt="PayPal" className="h-6 object-contain brightness-0 invert opacity-70 hover:opacity-100 transition-opacity" />
             <span className="text-zinc-700 text-xs">&amp;</span>
-            <img src="/lemonsqueezy.svg" alt="Lemon Squeezy" className="h-4 object-contain opacity-40 hover:opacity-70 transition-opacity" />
+            <img src="/lemonsqueezy.svg" alt="Lemon Squeezy" className="h-5 object-contain brightness-0 invert opacity-70 hover:opacity-100 transition-opacity" />
           </div>
         </div>
       </div>

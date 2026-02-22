@@ -26,7 +26,7 @@ function LoginContent() {
 
  return (
  <div className="min-h-screen flex items-center justify-center p-4 bg-black">
- <div className="rounded-2xl shadow-lg p-8 md:p-12 w-full max-w-md bg-black border-zinc-800">
+ <div className="rounded-2xl shadow-lg p-8 md:p-12 w-full max-w-md bg-black border border-zinc-800">
  {/* Error Message */}
  {error && (
  <div className="mb-6 p-3 border rounded-lg bg-zinc-900/30 border-zinc-800">
@@ -65,7 +65,7 @@ function LoginContent() {
  <button
  onClick={handleGoogleSignIn}
  disabled={isLoading}
- className="w-full flex items-center justify-center gap-3 px-6 py-3 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed border-zinc-800 hover:bg-zinc-950"
+ className="w-full flex items-center justify-center gap-3 px-6 py-3 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed border border-zinc-700 hover:border-zinc-600 hover:bg-zinc-950"
  >
  <svg className="w-5 h-5" viewBox="0 0 24 24">
  <path
@@ -154,7 +154,7 @@ function LoginContent() {
 function LoadingFallback() {
  return (
  <div className="min-h-screen flex items-center justify-center p-4 bg-black">
- <div className="rounded-2xl shadow-lg p-8 md:p-12 w-full max-w-md bg-black border-zinc-800">
+ <div className="rounded-2xl shadow-lg p-8 md:p-12 w-full max-w-md bg-black border border-zinc-800">
  <div className="flex flex-col items-center">
  <Sparkles className="w-10 h-10 text-zinc-300 animate-pulse" />
  <p className="mt-4 text-muted-foreground">Loading...</p>

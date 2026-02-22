@@ -110,7 +110,7 @@ export function TestimonialsSection() {
             Customer Stories
           </div>
           <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-white mb-4">
-            Trusted by <span className="text-shimmer">2,500+ enterprises</span>
+            Trusted By <span className="text-shimmer">2,500+ Enterprises</span>
           </h2>
           <p className="text-lg text-zinc-500">
             See how teams are transforming their legacy systems with Velanova

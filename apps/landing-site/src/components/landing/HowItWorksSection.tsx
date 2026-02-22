@@ -42,7 +42,7 @@ export function HowItWorksSection() {
             <span className="text-sm font-medium text-zinc-500">How It Works</span>
           </div>
           <h2 className="text-4xl md:text-5xl font-medium tracking-tight mb-5 text-white">
-            Get started in <span className="text-shimmer">minutes</span>
+            Get Started In <span className="text-shimmer">Minutes</span>
           </h2>
           <p className="text-lg text-zinc-500 max-w-xl mx-auto">
             Three simple steps to unlock AI-powered insights from your data

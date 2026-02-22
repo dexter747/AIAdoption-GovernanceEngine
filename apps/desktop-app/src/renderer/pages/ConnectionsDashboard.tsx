@@ -146,10 +146,10 @@ export default function ConnectionsDashboard() {
 
  {/* ── Toolbar ─────────────────────────────────────────── */}
  <div className="toolbar app-region-drag">
- <h1 className="text-[13px] font-semibold text-white/80 app-region-no-drag select-none">Connections</h1>
+ <h1 className="text-[13px] font-medium text-white/80 app-region-no-drag select-none">Connections</h1>
  <div className="w-px h-4 bg-white/[0.08] mx-3" />
  <div className="flex items-center gap-3 app-region-no-drag text-[11px] text-white/40">
- <span className="tabular-nums"><strong className="text-white/60 font-semibold">{connections.length}</strong> total</span>
+ <span className="tabular-nums"><strong className="text-white/60 font-medium">{connections.length}</strong> total</span>
  {connections.filter(c => c.status === 'connected').length > 0 &&
  <span className="text-emerald-500/65 tabular-nums">{connections.filter(c => c.status === 'connected').length} live</span>}
  {connections.filter(c => c.status === 'error').length > 0 &&
@@ -204,7 +204,7 @@ export default function ConnectionsDashboard() {
  </div>
  ) : filteredConnections.length > 0 && (
  <div>
- <p className="text-[10.5px] font-semibold text-white/30 uppercase tracking-wider mb-2.5">Your Connections</p>
+ <p className="text-[10.5px] font-medium text-white/30 uppercase tracking-wider mb-2.5">Your Connections</p>
  {viewMode === 'grid' ? (
  <div className="grid gap-2.5 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
  {filteredConnections.map(conn => {
@@ -238,10 +238,10 @@ export default function ConnectionsDashboard() {
  ) : (
  <div className="rounded-lg border border-white/[0.07] overflow-hidden">
  <div className="grid grid-cols-[28px_1fr_140px_80px_100px] gap-3 px-3 py-2 border-b border-white/[0.07] bg-[#0e0e0e]">
- <div /><span className="text-[10.5px] font-semibold text-white/25 uppercase tracking-wider">Name</span>
- <span className="text-[10.5px] font-semibold text-white/25 uppercase tracking-wider">Host</span>
- <span className="text-[10.5px] font-semibold text-white/25 uppercase tracking-wider">Status</span>
- <span className="text-[10.5px] font-semibold text-white/25 uppercase tracking-wider text-right">Actions</span>
+ <div /><span className="text-[10.5px] font-medium text-white/25 uppercase tracking-wider">Name</span>
+ <span className="text-[10.5px] font-medium text-white/25 uppercase tracking-wider">Host</span>
+ <span className="text-[10.5px] font-medium text-white/25 uppercase tracking-wider">Status</span>
+ <span className="text-[10.5px] font-medium text-white/25 uppercase tracking-wider text-right">Actions</span>
  </div>
  {filteredConnections.map((conn, i) => {
  const ct = CONNECTION_TYPES[conn.type as keyof typeof CONNECTION_TYPES] || CONNECTION_TYPES.mysql;
@@ -279,7 +279,7 @@ export default function ConnectionsDashboard() {
 
  {/* Add new connection type picker */}
  <div>
- <p className="text-[10.5px] font-semibold text-white/30 uppercase tracking-wider mb-2.5">
+ <p className="text-[10.5px] font-medium text-white/30 uppercase tracking-wider mb-2.5">
  {connections.length === 0 ? 'Select a connector to get started' : 'Add New Connection'}
  </p>
  <div className="grid gap-2 grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8">

@@ -178,7 +178,7 @@ export default function LibraryPage() {
 
  {/* ── Toolbar ──────────────────────────────────────────── */}
  <div className="toolbar app-region-drag">
- <h1 className="text-[13px] font-semibold text-white/80 mr-3 app-region-no-drag select-none">
+ <h1 className="text-[13px] font-medium text-white/80 mr-3 app-region-no-drag select-none">
  Library
  </h1>
  <div className="w-px h-4 bg-white/[0.08] mx-1" />
@@ -337,7 +337,7 @@ export default function LibraryPage() {
  <div className="flex items-center gap-3 px-5 py-4 border-b border-white/[0.07]">
  <ConnectionIcon logo={ct?.logo} icon={ct?.icon ?? ''} color={ct?.color ?? ''} bgColor={ct?.bgColor ?? ''} size="sm" />
  <div>
- <p className="text-[13px] font-semibold text-white/90">Add {ct?.name}</p>
+ <p className="text-[13px] font-medium text-white/90">Add {ct?.name}</p>
  <p className="text-[11px] text-white/40">Configure connection credentials</p>
  </div>
  </div>

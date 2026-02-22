@@ -2,12 +2,13 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { Menu, X, Download, LogOut } from 'lucide-react';
+import { Menu, X, Download, LogOut, Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navLinks = [
- { name: 'Features', href: '#features' },
- { name: 'Pricing', href: '#pricing' },
+ { name: 'Features', href: '/#features' },
+ { name: 'Pricing', href: '/#pricing' },
+ { name: 'FAQ', href: '/#faq' },
  { name: 'Blog', href: '/blog' },
  { name: 'Contact', href: '/contact' },
 ];
@@ -85,12 +86,19 @@ export function Navbar() {
  {/* Right side */}
  <div className="flex items-center gap-2 flex-shrink-0">
  <Link
- href="/download"
- className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 font-medium transition-colors rounded-lg whitespace-nowrap text-zinc-400 hover:text-white hover:bg-zinc-900"
- >
- <Download className="w-4 h-4" />
- Download
- </Link>
+                 href="/demo"
+                 className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 font-medium transition-colors rounded-lg whitespace-nowrap text-zinc-400 hover:text-white hover:bg-zinc-900"
+                 >
+                 <Play className="w-4 h-4" />
+                 View Demo
+                 </Link>
+                 <Link
+                 href="/download"
+                 className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 font-medium transition-colors rounded-lg whitespace-nowrap text-zinc-400 hover:text-white hover:bg-zinc-900"
+                 >
+                 <Download className="w-4 h-4" />
+                 Download
+                 </Link>
 
  {user ? (
  <div className="relative">
