@@ -1,6 +1,10 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { CallToolRequestSchema, ListToolsRequestSchema, Tool } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+  Tool,
+} from '@modelcontextprotocol/sdk/types.js';
 import axios, { AxiosInstance } from 'axios';
 
 let api: AxiosInstance | null = null;
@@ -18,7 +22,7 @@ async function initConnection(): Promise<void> {
     headers: {
       'X-API-Key': apiKey,
       'Content-Type': 'application/json',
-      'Accept': 'application/json',
+      Accept: 'application/json',
     },
   });
 }
@@ -45,7 +49,10 @@ const TOOLS: Tool[] = [
       properties: {
         permit_id: { type: 'string', description: 'Specific permit ID' },
         type: { type: 'string', description: 'Permit type (building, zoning, business)' },
-        status: { type: 'string', description: 'Permit status (pending, approved, denied, expired)' },
+        status: {
+          type: 'string',
+          description: 'Permit status (pending, approved, denied, expired)',
+        },
         applicant: { type: 'string', description: 'Applicant name' },
         date_from: { type: 'string', description: 'Start date (YYYY-MM-DD)' },
         date_to: { type: 'string', description: 'End date (YYYY-MM-DD)' },
@@ -102,7 +109,10 @@ const TOOLS: Tool[] = [
       type: 'object',
       properties: {
         query: { type: 'string', description: 'Search query string' },
-        record_type: { type: 'string', description: 'Filter by record type (citizen, permit, case, payment, assessment)' },
+        record_type: {
+          type: 'string',
+          description: 'Filter by record type (citizen, permit, case, payment, assessment)',
+        },
         limit: { type: 'number', description: 'Maximum results to return' },
         offset: { type: 'number', description: 'Offset for pagination' },
       },
@@ -115,7 +125,11 @@ const TOOLS: Tool[] = [
     inputSchema: {
       type: 'object',
       properties: {
-        method: { type: 'string', description: 'HTTP method (GET, POST, PUT, DELETE)', enum: ['GET', 'POST', 'PUT', 'DELETE'] },
+        method: {
+          type: 'string',
+          description: 'HTTP method (GET, POST, PUT, DELETE)',
+          enum: ['GET', 'POST', 'PUT', 'DELETE'],
+        },
         endpoint: { type: 'string', description: 'API endpoint path' },
         params: { type: 'object', description: 'Query parameters' },
         body: { type: 'object', description: 'Request body for POST/PUT' },
@@ -134,7 +148,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
   return { tools: TOOLS };
 });
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   const { name, arguments: args } = request.params;
 
   if (!api) {
@@ -211,7 +225,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       }
 
       case 'api_call': {
-        const method = (args?.method as string || 'GET').toLowerCase();
+        const method = ((args?.method as string) || 'GET').toLowerCase();
         const endpoint = args?.endpoint as string;
         response = await api!.request({
           method,
@@ -235,10 +249,12 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   } catch (error: unknown) {
     const err = error as Error & { response?: { status: number; data: unknown } };
     return {
-      content: [{
-        type: 'text',
-        text: `Error: ${err.message}${err.response ? `\nStatus: ${err.response.status}\nData: ${JSON.stringify(err.response.data)}` : ''}`,
-      }],
+      content: [
+        {
+          type: 'text',
+          text: `Error: ${err.message}${err.response ? `\nStatus: ${err.response.status}\nData: ${JSON.stringify(err.response.data)}` : ''}`,
+        },
+      ],
       isError: true,
     };
   }

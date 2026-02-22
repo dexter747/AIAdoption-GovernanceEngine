@@ -21,14 +21,8 @@
       }
     ]
   },
-  "testMatch": [
-    "**/*.test.ts",
-    "**/*.test.tsx"
-  ],
-  "testPathIgnorePatterns": [
-    "/node_modules/",
-    "/dist/"
-  ],
+  "testMatch": ["**/*.test.ts", "**/*.test.tsx"],
+  "testPathIgnorePatterns": ["/node_modules/", "/dist/"],
   "collectCoverageFrom": [
     "../apps/**/*.{ts,tsx,js,jsx}",
     "../packages/**/*.{ts,tsx,js,jsx}",

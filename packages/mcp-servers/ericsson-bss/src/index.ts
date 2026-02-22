@@ -1,6 +1,10 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { CallToolRequestSchema, ListToolsRequestSchema, Tool } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+  Tool,
+} from '@modelcontextprotocol/sdk/types.js';
 import axios, { AxiosInstance } from 'axios';
 
 let api: AxiosInstance | null = null;
@@ -10,13 +14,15 @@ function initConnection(): void {
   const token = process.env.ERICSSON_BSS_ACCESS_TOKEN;
 
   if (!baseURL || !token) {
-    throw new Error('ERICSSON_BSS_URL and ERICSSON_BSS_ACCESS_TOKEN environment variables are required');
+    throw new Error(
+      'ERICSSON_BSS_URL and ERICSSON_BSS_ACCESS_TOKEN environment variables are required'
+    );
   }
 
   api = axios.create({
     baseURL,
     headers: {
-      'Authorization': `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
   });
@@ -97,7 +103,11 @@ const tools: Tool[] = [
     inputSchema: {
       type: 'object',
       properties: {
-        method: { type: 'string', description: 'HTTP method (GET, POST, PUT, DELETE)', enum: ['GET', 'POST', 'PUT', 'DELETE'] },
+        method: {
+          type: 'string',
+          description: 'HTTP method (GET, POST, PUT, DELETE)',
+          enum: ['GET', 'POST', 'PUT', 'DELETE'],
+        },
         path: { type: 'string', description: 'API path' },
         body: { type: 'object', description: 'Request body for POST/PUT' },
       },
@@ -113,7 +123,7 @@ const server = new Server(
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools }));
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   if (!api) initConnection();
 
   const { name, arguments: args } = request.params;
@@ -123,28 +133,43 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
     switch (name) {
       case 'get_subscribers':
-        r = await api!.get('/subscribers', { params: { limit: args?.limit, offset: args?.offset } });
+        r = await api!.get('/subscribers', {
+          params: { limit: args?.limit, offset: args?.offset },
+        });
         break;
       case 'get_subscriber':
         r = await api!.get(`/subscribers/${args!.subscriberId}`);
         break;
       case 'get_usage':
-        r = await api!.get(`/subscribers/${args!.subscriberId}/usage`, { params: { startDate: args?.startDate, endDate: args?.endDate } });
+        r = await api!.get(`/subscribers/${args!.subscriberId}/usage`, {
+          params: { startDate: args?.startDate, endDate: args?.endDate },
+        });
         break;
       case 'get_billing':
-        r = await api!.get(`/subscribers/${args!.subscriberId}/billing`, { params: { period: args?.period } });
+        r = await api!.get(`/subscribers/${args!.subscriberId}/billing`, {
+          params: { period: args?.period },
+        });
         break;
       case 'get_products':
         r = await api!.get('/products', { params: { category: args?.category } });
         break;
       case 'get_offers':
-        r = await api!.get('/offers', { params: { subscriberId: args?.subscriberId, status: args?.status } });
+        r = await api!.get('/offers', {
+          params: { subscriberId: args?.subscriberId, status: args?.status },
+        });
         break;
       case 'api_call':
-        r = await api!.request({ method: args!.method as string, url: args!.path as string, data: args?.body });
+        r = await api!.request({
+          method: args!.method as string,
+          url: args!.path as string,
+          data: args?.body,
+        });
         break;
       default:
-        return { content: [{ type: 'text' as const, text: `Unknown tool: ${name}` }], isError: true };
+        return {
+          content: [{ type: 'text' as const, text: `Unknown tool: ${name}` }],
+          isError: true,
+        };
     }
 
     return { content: [{ type: 'text' as const, text: JSON.stringify(r.data, null, 2) }] };

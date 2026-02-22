@@ -1,6 +1,10 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { CallToolRequestSchema, ListToolsRequestSchema, Tool } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+  Tool,
+} from '@modelcontextprotocol/sdk/types.js';
 import axios, { AxiosInstance } from 'axios';
 
 // Environment variables
@@ -14,16 +18,17 @@ let api: AxiosInstance | null = null;
 function initConnection(): void {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
-    'Accept': 'application/json',
+    Accept: 'application/json',
   };
 
   if (MAXIMO_API_KEY) {
     headers['apikey'] = MAXIMO_API_KEY;
   }
 
-  const authConfig = MAXIMO_USERNAME && MAXIMO_PASSWORD && !MAXIMO_API_KEY
-    ? { username: MAXIMO_USERNAME, password: MAXIMO_PASSWORD }
-    : undefined;
+  const authConfig =
+    MAXIMO_USERNAME && MAXIMO_PASSWORD && !MAXIMO_API_KEY
+      ? { username: MAXIMO_USERNAME, password: MAXIMO_PASSWORD }
+      : undefined;
 
   api = axios.create({
     baseURL: `${MAXIMO_URL}/maximo/oslc/os`,
@@ -121,7 +126,11 @@ const tools: Tool[] = [
     inputSchema: {
       type: 'object',
       properties: {
-        method: { type: 'string', enum: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], description: 'HTTP method' },
+        method: {
+          type: 'string',
+          enum: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+          description: 'HTTP method',
+        },
         path: { type: 'string', description: 'API path (relative to base URL)' },
         data: { type: 'object', description: 'Request body for POST/PUT/PATCH' },
         params: { type: 'object', description: 'Query parameters' },
@@ -138,11 +147,18 @@ const server = new Server(
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools }));
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   const { name, arguments: args } = request.params;
 
   if (!api) {
-    return { content: [{ type: 'text', text: 'Error: Maximo connection not initialized. Check MAXIMO_URL and credentials.' }] };
+    return {
+      content: [
+        {
+          type: 'text',
+          text: 'Error: Maximo connection not initialized. Check MAXIMO_URL and credentials.',
+        },
+      ],
+    };
   }
 
   try {

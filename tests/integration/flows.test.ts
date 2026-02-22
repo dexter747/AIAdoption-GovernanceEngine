@@ -136,9 +136,11 @@ describe('License Activation Flow', () => {
     it('should validate license key format', () => {
       const isValidFormat = (key: string) => {
         // JWT format check
-        return key.split('.').length === 3 || 
-               // Legacy format check
-               /^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(key);
+        return (
+          key.split('.').length === 3 ||
+          // Legacy format check
+          /^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(key)
+        );
       };
 
       expect(isValidFormat('eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiMSJ9.sig')).toBe(true);
@@ -166,7 +168,11 @@ describe('License Activation Flow', () => {
     });
 
     it('should activate machine on first use', async () => {
-      const activateMachine = async (licenseKey: string, machineId: string, machineName: string) => {
+      const activateMachine = async (
+        licenseKey: string,
+        machineId: string,
+        machineName: string
+      ) => {
         return {
           activated: true,
           activationToken: 'activation-token',
@@ -332,9 +338,7 @@ describe('API Key Management Flow', () => {
 describe('MCP Connection Flow', () => {
   describe('Database Connection with MCP', () => {
     it('should list connection types', () => {
-      const connectionTypes = [
-        'postgresql', 'mysql', 'sqlserver', 'mongodb', 'salesforce',
-      ];
+      const connectionTypes = ['postgresql', 'mysql', 'sqlserver', 'mongodb', 'salesforce'];
 
       expect(connectionTypes).toContain('postgresql');
     });
@@ -531,10 +535,7 @@ describe('Admin Dashboard Flow', () => {
     });
 
     it('should search users by email', () => {
-      const users = [
-        { email: 'alice@example.com' },
-        { email: 'bob@other.com' },
-      ];
+      const users = [{ email: 'alice@example.com' }, { email: 'bob@other.com' }];
 
       const search = 'example';
       const filtered = users.filter(u => u.email.includes(search));
@@ -553,7 +554,7 @@ describe('Admin Dashboard Flow', () => {
         usage: {
           totalQueries: 1500,
           totalTokens: 500000,
-          totalCost: 12.50,
+          totalCost: 12.5,
         },
       };
 
@@ -704,12 +705,12 @@ describe('Concurrent Operations', () => {
     const processQueue = async () => {
       if (isProcessing || queue.length === 0) return;
       isProcessing = true;
-      
+
       while (queue.length > 0) {
         const op = queue.shift()!;
         await op();
       }
-      
+
       isProcessing = false;
     };
 

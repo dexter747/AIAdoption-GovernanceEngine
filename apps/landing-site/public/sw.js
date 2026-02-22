@@ -1,12 +1,12 @@
 // Service Worker - Minimal implementation
 // This file exists to prevent 404 errors from previously cached service worker registrations
 
-self.addEventListener('install', (event) => {
+self.addEventListener('install', event => {
   // Skip waiting to activate immediately
   self.skipWaiting();
 });
 
-self.addEventListener('activate', (event) => {
+self.addEventListener('activate', event => {
   // Claim all clients immediately
   event.waitUntil(
     self.clients.claim().then(() => {

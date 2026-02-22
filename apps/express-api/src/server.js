@@ -39,15 +39,17 @@ if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY) {
 app.set('trust proxy', 1);
 
 // Security headers
-app.use(helmet({
-  contentSecurityPolicy: false,  // Allow API consumers
-  crossOriginResourcePolicy: { policy: 'cross-origin' },
-}));
+app.use(
+  helmet({
+    contentSecurityPolicy: false, // Allow API consumers
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+  })
+);
 
 // Rate limiting
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 300,                  // 300 requests per window
+  max: 300, // 300 requests per window
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many requests, please try again later.' },
@@ -62,10 +64,15 @@ const authLimiter = rateLimit({
 });
 app.use('/api/licenses/validate', authLimiter);
 
-app.use(cors({
-  origin: process.env.CORS_ORIGINS?.split(',') || ['http://localhost:3000', 'http://localhost:3001'],
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGINS?.split(',') || [
+      'http://localhost:3000',
+      'http://localhost:3001',
+    ],
+    credentials: true,
+  })
+);
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
@@ -136,10 +143,7 @@ app.post('/api/licenses/validate', async (req, res) => {
     // 3. Check expiration
     if (new Date(license.expires_at) < new Date()) {
       // Update license status to expired
-      await supabase
-        .from('licenses')
-        .update({ status: 'expired' })
-        .eq('id', license.id);
+      await supabase.from('licenses').update({ status: 'expired' }).eq('id', license.id);
 
       return res.status(403).json({
         valid: false,
@@ -160,7 +164,7 @@ app.post('/api/licenses/validate', async (req, res) => {
       // Update last_seen_at
       await supabase
         .from('device_activations')
-        .update({ 
+        .update({
           last_seen_at: new Date().toISOString(),
           device_name: deviceInfo?.name || existingDevice.device_name,
           device_os: deviceInfo?.os || existingDevice.device_os,
@@ -183,15 +187,13 @@ app.post('/api/licenses/validate', async (req, res) => {
       }
 
       // Activate new device
-      const { error: activationError } = await supabase
-        .from('device_activations')
-        .insert({
-          license_id: license.id,
-          device_id: deviceId,
-          device_name: deviceInfo?.name,
-          device_os: deviceInfo?.os,
-          ip_address: req.ip,
-        });
+      const { error: activationError } = await supabase.from('device_activations').insert({
+        license_id: license.id,
+        device_id: deviceId,
+        device_name: deviceInfo?.name,
+        device_os: deviceInfo?.os,
+        ip_address: req.ip,
+      });
 
       if (activationError) {
         console.error('Device activation error:', activationError);
@@ -204,7 +206,7 @@ app.post('/api/licenses/validate', async (req, res) => {
       // Update devices_activated count
       await supabase
         .from('licenses')
-        .update({ 
+        .update({
           devices_activated: activeDevices + 1,
           last_validated_at: new Date().toISOString(),
         })
@@ -224,7 +226,6 @@ app.post('/api/licenses/validate', async (req, res) => {
         features: getPlanFeatures(license.plan),
       },
     });
-
   } catch (error) {
     console.error('License validation error:', error);
     res.status(500).json({
@@ -260,29 +261,18 @@ app.use('/api/subscriptions', subscriptionsRoutes);
 
 app.post('/api/usage/log', async (req, res) => {
   try {
-    const { 
-      userId, 
-      licenseId, 
-      eventType, 
-      provider, 
-      model, 
-      tokensUsed, 
-      cost,
-      metadata 
-    } = req.body;
+    const { userId, licenseId, eventType, provider, model, tokensUsed, cost, metadata } = req.body;
 
-    const { error } = await supabase
-      .from('usage_logs')
-      .insert({
-        user_id: userId,
-        license_id: licenseId,
-        event_type: eventType,
-        provider,
-        model,
-        tokens_used: tokensUsed,
-        cost,
-        metadata,
-      });
+    const { error } = await supabase.from('usage_logs').insert({
+      user_id: userId,
+      license_id: licenseId,
+      event_type: eventType,
+      provider,
+      model,
+      tokens_used: tokensUsed,
+      cost,
+      metadata,
+    });
 
     if (error) throw error;
 
@@ -317,11 +307,14 @@ app.get('/api/usage/:userId', async (req, res) => {
     if (error) throw error;
 
     // Calculate totals
-    const totals = usage.reduce((acc, log) => {
-      acc.totalTokens += log.tokens_used || 0;
-      acc.totalCost += parseFloat(log.cost || 0);
-      return acc;
-    }, { totalTokens: 0, totalCost: 0 });
+    const totals = usage.reduce(
+      (acc, log) => {
+        acc.totalTokens += log.tokens_used || 0;
+        acc.totalCost += parseFloat(log.cost || 0);
+        return acc;
+      },
+      { totalTokens: 0, totalCost: 0 }
+    );
 
     res.json({ usage, totals });
   } catch (error) {
@@ -358,7 +351,11 @@ app.get('/api/subscriptions/:userId', async (req, res) => {
 // AI QUERY ENDPOINTS
 // =============================================================================
 
-import { routeAIRequest, getAvailableProviders, isProviderAvailable } from './providers/ai-router.js';
+import {
+  routeAIRequest,
+  getAvailableProviders,
+  isProviderAvailable,
+} from './providers/ai-router.js';
 
 app.get('/api/ai/providers', (req, res) => {
   const providers = getAvailableProviders();
@@ -367,16 +364,8 @@ app.get('/api/ai/providers', (req, res) => {
 
 app.post('/api/ai/query', async (req, res) => {
   try {
-    const { 
-      userId, 
-      licenseId, 
-      provider, 
-      model, 
-      messages, 
-      temperature, 
-      maxTokens,
-      stream 
-    } = req.body;
+    const { userId, licenseId, provider, model, messages, temperature, maxTokens, stream } =
+      req.body;
 
     // Validate required fields
     if (!provider || !model || !messages) {
@@ -388,7 +377,7 @@ app.post('/api/ai/query', async (req, res) => {
     // In development mode or for local/trial users, skip license validation
     const isDevelopment = process.env.NODE_ENV !== 'production';
     const isLocalUser = !licenseId || licenseId === 'local' || licenseId === 'trial';
-    
+
     if (!isDevelopment && !isLocalUser && supabase) {
       // Validate license only in production with real license
       const { data: license } = await supabase
@@ -407,7 +396,17 @@ app.post('/api/ai/query', async (req, res) => {
 
     // Check if provider is known (availability also depends on BYOK keys;
     // routeAIRequest handles the full BYOK check)
-    const knownProviders = ['openai', 'anthropic', 'google', 'groq', 'xai', 'mistral', 'deepseek', 'cohere', 'perplexity'];
+    const knownProviders = [
+      'openai',
+      'anthropic',
+      'google',
+      'groq',
+      'xai',
+      'mistral',
+      'deepseek',
+      'cohere',
+      'perplexity',
+    ];
     if (!knownProviders.includes(provider)) {
       return res.status(400).json({
         error: `Unknown provider: ${provider}`,
@@ -427,7 +426,6 @@ app.post('/api/ai/query', async (req, res) => {
     });
 
     res.json(result);
-
   } catch (error) {
     console.error('AI query error:', error);
     res.status(500).json({
@@ -451,7 +449,7 @@ const validateJwtMiddleware = (req, res, next) => {
 
     const token = authHeader.substring(7);
     const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-in-production';
-    
+
     const decoded = jwt.verify(token, JWT_SECRET);
     req.user = decoded; // Add user info to request
     next();
@@ -480,9 +478,9 @@ app.get('/api/user/connections', validateJwtMiddleware, async (req, res) => {
     res.json({ connections: connections || [] });
   } catch (error) {
     console.error('Failed to fetch connections:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to fetch connections',
-      message: error.message 
+      message: error.message,
     });
   }
 });
@@ -494,8 +492,8 @@ app.post('/api/user/connections', validateJwtMiddleware, async (req, res) => {
     const { name, type, config } = req.body;
 
     if (!name || !type || !config) {
-      return res.status(400).json({ 
-        error: 'Missing required fields: name, type, config' 
+      return res.status(400).json({
+        error: 'Missing required fields: name, type, config',
       });
     }
 
@@ -507,7 +505,7 @@ app.post('/api/user/connections', validateJwtMiddleware, async (req, res) => {
         name,
         type,
         config,
-        is_active: true
+        is_active: true,
       })
       .select()
       .single();
@@ -520,9 +518,9 @@ app.post('/api/user/connections', validateJwtMiddleware, async (req, res) => {
     res.status(201).json({ connection });
   } catch (error) {
     console.error('Failed to create connection:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to create connection',
-      message: error.message 
+      message: error.message,
     });
   }
 });
@@ -547,9 +545,9 @@ app.delete('/api/user/connections/:id', validateJwtMiddleware, async (req, res) 
     res.json({ success: true });
   } catch (error) {
     console.error('Failed to delete connection:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to delete connection',
-      message: error.message 
+      message: error.message,
     });
   }
 });
@@ -562,7 +560,7 @@ app.post('/api/webhooks/lemonsqueezy', async (req, res) => {
   try {
     const signature = req.headers['x-signature'];
     const webhookSecret = process.env.LEMONSQUEEZY_WEBHOOK_SECRET;
-    
+
     // Verify webhook signature
     if (webhookSecret && signature) {
       const crypto = await import('crypto');
@@ -618,25 +616,29 @@ function getPlanFeatures(plan) {
   const features = {
     free: ['basic-queries', 'single-database', '10-queries-per-day'],
     professional: ['unlimited-queries', 'all-databases', 'priority-support', '5-devices'],
-    enterprise: ['unlimited-everything', 'custom-integrations', 'dedicated-support', 'unlimited-devices', 'sso'],
+    enterprise: [
+      'unlimited-everything',
+      'custom-integrations',
+      'dedicated-support',
+      'unlimited-devices',
+      'sso',
+    ],
   };
   return features[plan] || features.free;
 }
 
 async function handlePaymentSuccess(paymentData) {
-  const { data, error } = await supabase
-    .from('payments')
-    .insert({
-      user_id: paymentData.userId,
-      subscription_id: paymentData.subscriptionId,
-      payment_provider: 'lemonsqueezy',
-      provider_payment_id: paymentData.id,
-      amount: paymentData.amount,
-      currency: paymentData.currency,
-      status: 'completed',
-      payment_method: paymentData.paymentMethod,
-      metadata: paymentData.metadata,
-    });
+  const { data, error } = await supabase.from('payments').insert({
+    user_id: paymentData.userId,
+    subscription_id: paymentData.subscriptionId,
+    payment_provider: 'lemonsqueezy',
+    provider_payment_id: paymentData.id,
+    amount: paymentData.amount,
+    currency: paymentData.currency,
+    status: 'completed',
+    payment_method: paymentData.paymentMethod,
+    metadata: paymentData.metadata,
+  });
 
   if (error) {
     console.error('Error recording payment:', error);
@@ -649,20 +651,18 @@ async function handlePaymentFailure(paymentData) {
 }
 
 async function handleSubscriptionCreated(subscriptionData) {
-  const { data, error } = await supabase
-    .from('subscriptions')
-    .insert({
-      user_id: subscriptionData.userId,
-      plan: subscriptionData.plan,
-      status: 'active',
-      payment_provider: 'lemonsqueezy',
-      subscription_id: subscriptionData.id,
-      amount: subscriptionData.amount,
-      currency: subscriptionData.currency,
-      billing_cycle: subscriptionData.interval,
-      current_period_start: subscriptionData.currentPeriodStart,
-      current_period_end: subscriptionData.currentPeriodEnd,
-    });
+  const { data, error } = await supabase.from('subscriptions').insert({
+    user_id: subscriptionData.userId,
+    plan: subscriptionData.plan,
+    status: 'active',
+    payment_provider: 'lemonsqueezy',
+    subscription_id: subscriptionData.id,
+    amount: subscriptionData.amount,
+    currency: subscriptionData.currency,
+    billing_cycle: subscriptionData.interval,
+    current_period_start: subscriptionData.currentPeriodStart,
+    current_period_end: subscriptionData.currentPeriodEnd,
+  });
 
   if (error) {
     console.error('Error creating subscription:', error);
@@ -672,7 +672,7 @@ async function handleSubscriptionCreated(subscriptionData) {
 async function handleSubscriptionCancelled(subscriptionData) {
   const { error } = await supabase
     .from('subscriptions')
-    .update({ 
+    .update({
       status: 'cancelled',
       cancelled_at: new Date().toISOString(),
     })
@@ -703,7 +703,9 @@ app.listen(PORT, () => {
   console.log(`🔗 Supabase: ${process.env.SUPABASE_URL ? '✅ Connected' : '❌ Not configured'}`);
   console.log(`✅ Health check: http://localhost:${PORT}/health`);
   if (!process.env.JWT_SECRET) {
-    console.warn('⚠️  WARNING: JWT_SECRET not set — using insecure default. Set this before deploying to production!');
+    console.warn(
+      '⚠️  WARNING: JWT_SECRET not set — using insecure default. Set this before deploying to production!'
+    );
   }
   if (!process.env.ENCRYPTION_KEY) {
     console.warn('⚠️  WARNING: ENCRYPTION_KEY not set — connection data will not be encrypted.');

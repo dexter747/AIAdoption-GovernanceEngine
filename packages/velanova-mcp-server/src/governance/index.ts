@@ -39,25 +39,26 @@ interface UsageStats {
 
 // In-memory stores (in production, would use Supabase)
 const auditLog: Map<string, AuditEntry> = new Map();
-const usageTracking: Map<string, { calls: number; tokens: number; cost: number; lastReset: Date }> = new Map();
+const usageTracking: Map<string, { calls: number; tokens: number; cost: number; lastReset: Date }> =
+  new Map();
 const rateLimits: Map<string, { count: number; resetAt: Date }> = new Map();
 
 // Rate limit configuration
 const RATE_LIMITS = {
   free: { requestsPerMinute: 10 },
   pro: { requestsPerMinute: 100 },
-  enterprise: { requestsPerMinute: 1000 }
+  enterprise: { requestsPerMinute: 1000 },
 };
 
 // Cost estimates for different operations
 const OPERATION_COSTS: Record<string, number> = {
-  query_ai: 0.01,          // Base cost, actual depends on model
-  query_database: 0.001,   // Very cheap
-  query_sap: 0.005,        // SAP calls are expensive
+  query_ai: 0.01, // Base cost, actual depends on model
+  query_database: 0.001, // Very cheap
+  query_sap: 0.005, // SAP calls are expensive
   query_salesforce: 0.002,
-  query_epic: 0.003,       // HIPAA compliance overhead
+  query_epic: 0.003, // HIPAA compliance overhead
   query_servicenow: 0.002,
-  query_jira: 0.001
+  query_jira: 0.001,
 };
 
 export class GovernanceLayer {
@@ -76,7 +77,7 @@ export class GovernanceLayer {
       return {
         valid: true,
         tier: 'free',
-        features: ['query_ai', 'list_ai_models', 'get_usage_stats']
+        features: ['query_ai', 'list_ai_models', 'get_usage_stats'],
       };
     }
 
@@ -86,8 +87,15 @@ export class GovernanceLayer {
       return {
         valid: true,
         tier: 'pro',
-        features: ['query_ai', 'list_ai_models', 'query_database', 'query_sap', 
-                   'query_salesforce', 'get_usage_stats', 'compare_models']
+        features: [
+          'query_ai',
+          'list_ai_models',
+          'query_database',
+          'query_sap',
+          'query_salesforce',
+          'get_usage_stats',
+          'compare_models',
+        ],
       };
     }
 
@@ -95,14 +103,14 @@ export class GovernanceLayer {
       return {
         valid: true,
         tier: 'enterprise',
-        features: ['*'] // All features
+        features: ['*'], // All features
       };
     }
 
     // Invalid license
     return {
       valid: false,
-      error: 'Invalid license key format'
+      error: 'Invalid license key format',
     };
   }
 
@@ -120,12 +128,15 @@ export class GovernanceLayer {
     if (!userLimit || userLimit.resetAt < now) {
       userLimit = {
         count: 0,
-        resetAt: new Date(now.getTime() + 60000) // 1 minute from now
+        resetAt: new Date(now.getTime() + 60000), // 1 minute from now
       };
     }
 
     if (userLimit.count >= limit.requestsPerMinute) {
-      logger.warn({ userId, count: userLimit.count, limit: limit.requestsPerMinute }, 'Rate limit exceeded');
+      logger.warn(
+        { userId, count: userLimit.count, limit: limit.requestsPerMinute },
+        'Rate limit exceeded'
+      );
       return false;
     }
 
@@ -138,19 +149,19 @@ export class GovernanceLayer {
   // AUDIT LOGGING
   // ============================================================
   async startAudit(
-    userId: string, 
-    action: string, 
+    userId: string,
+    action: string,
     parameters: Record<string, unknown>
   ): Promise<string> {
     const auditId = uuidv4();
-    
+
     const entry: AuditEntry = {
       id: auditId,
       userId,
       action,
       parameters,
       startTime: new Date(),
-      status: 'started'
+      status: 'started',
     };
 
     auditLog.set(auditId, entry);
@@ -159,11 +170,7 @@ export class GovernanceLayer {
     return auditId;
   }
 
-  async completeAudit(
-    auditId: string, 
-    result: unknown, 
-    cost: number
-  ): Promise<void> {
+  async completeAudit(auditId: string, result: unknown, cost: number): Promise<void> {
     const entry = auditLog.get(auditId);
     if (!entry) {
       logger.warn({ auditId }, 'Audit entry not found');
@@ -176,7 +183,10 @@ export class GovernanceLayer {
     entry.cost = cost;
 
     auditLog.set(auditId, entry);
-    logger.debug({ auditId, cost, durationMs: entry.endTime.getTime() - entry.startTime.getTime() }, 'Audit completed');
+    logger.debug(
+      { auditId, cost, durationMs: entry.endTime.getTime() - entry.startTime.getTime() },
+      'Audit completed'
+    );
   }
 
   async failAudit(auditId: string, error: string): Promise<void> {
@@ -216,9 +226,7 @@ export class GovernanceLayer {
     }
 
     // Return most recent first, limited to 100
-    return entries
-      .sort((a, b) => b.startTime.getTime() - a.startTime.getTime())
-      .slice(0, 100);
+    return entries.sort((a, b) => b.startTime.getTime() - a.startTime.getTime()).slice(0, 100);
   }
 
   // ============================================================
@@ -237,13 +245,13 @@ export class GovernanceLayer {
     }
 
     // Track usage
-    const userUsage = usageTracking.get(userId) ?? { 
-      calls: 0, 
-      tokens: 0, 
-      cost: 0, 
-      lastReset: new Date() 
+    const userUsage = usageTracking.get(userId) ?? {
+      calls: 0,
+      tokens: 0,
+      cost: 0,
+      lastReset: new Date(),
     };
-    
+
     userUsage.calls++;
     userUsage.cost += cost;
 
@@ -259,7 +267,7 @@ export class GovernanceLayer {
   }
 
   async estimateCost(
-    operation: string, 
+    operation: string,
     parameters?: Record<string, unknown>
   ): Promise<Record<string, unknown>> {
     const baseCost = OPERATION_COSTS[operation] ?? 0.001;
@@ -271,14 +279,14 @@ export class GovernanceLayer {
         operation,
         estimatedCost: baseCost,
         model: parameters.model,
-        note: 'Actual cost depends on input/output token count'
+        note: 'Actual cost depends on input/output token count',
       };
     }
 
     return {
       operation,
       estimatedCost: baseCost,
-      parameters
+      parameters,
     };
   }
 
@@ -295,7 +303,7 @@ export class GovernanceLayer {
         totalTokens: 0,
         totalCost: 0,
         byModel: {},
-        byUser: {}
+        byUser: {},
       };
     }
 
@@ -305,14 +313,14 @@ export class GovernanceLayer {
       totalCalls: userUsage.calls,
       totalTokens: userUsage.tokens,
       totalCost: userUsage.cost,
-      byModel: {},  // Would be populated from actual data
+      byModel: {}, // Would be populated from actual data
       byUser: {
         [userId]: {
           calls: userUsage.calls,
           tokens: userUsage.tokens,
-          cost: userUsage.cost
-        }
-      }
+          cost: userUsage.cost,
+        },
+      },
     };
   }
 
@@ -324,7 +332,7 @@ export class GovernanceLayer {
       status: 'healthy',
       auditLogSize: auditLog.size,
       trackedUsers: usageTracking.size,
-      rateLimitedUsers: rateLimits.size
+      rateLimitedUsers: rateLimits.size,
     };
   }
 }

@@ -1,6 +1,10 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { CallToolRequestSchema, ListToolsRequestSchema, Tool } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+  Tool,
+} from '@modelcontextprotocol/sdk/types.js';
 import axios, { AxiosInstance } from 'axios';
 
 // Environment variables
@@ -84,17 +88,25 @@ const tools: Tool[] = [
       type: 'object',
       properties: {
         employee_id: { type: 'string', description: 'Optional employee ID to filter accruals' },
-        accrual_code: { type: 'string', description: 'Filter by accrual code (e.g., VAC, SICK, PTO)' },
+        accrual_code: {
+          type: 'string',
+          description: 'Filter by accrual code (e.g., VAC, SICK, PTO)',
+        },
       },
     },
   },
   {
     name: 'api_call',
-    description: 'Make a generic API call to UKG/Kronos. Use for endpoints not covered by other tools.',
+    description:
+      'Make a generic API call to UKG/Kronos. Use for endpoints not covered by other tools.',
     inputSchema: {
       type: 'object',
       properties: {
-        method: { type: 'string', description: 'HTTP method (GET, POST, PUT, DELETE)', enum: ['GET', 'POST', 'PUT', 'DELETE'] },
+        method: {
+          type: 'string',
+          description: 'HTTP method (GET, POST, PUT, DELETE)',
+          enum: ['GET', 'POST', 'PUT', 'DELETE'],
+        },
         path: { type: 'string', description: 'API path (e.g., /api/v1/commons/persons)' },
         body: { type: 'object', description: 'Request body for POST/PUT requests' },
         params: { type: 'object', description: 'Query parameters' },
@@ -113,7 +125,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
   return { tools };
 });
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   const { name, arguments: args } = request.params;
   const client = await initConnection();
 

@@ -7,15 +7,14 @@ import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { verifyToken } from './jwt-auth';
 
-export async function requireAdmin(): Promise<{ authorized: true; user: { email: string; sub: string } } | NextResponse> {
+export async function requireAdmin(): Promise<
+  { authorized: true; user: { email: string; sub: string } } | NextResponse
+> {
   const cookieStore = await cookies();
   const token = cookieStore.get('auth_token')?.value;
 
   if (!token) {
-    return NextResponse.json(
-      { error: 'Authentication required' },
-      { status: 401 }
-    );
+    return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
   }
 
   const result = await verifyToken(token);

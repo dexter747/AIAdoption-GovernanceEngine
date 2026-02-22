@@ -10,10 +10,10 @@ interface SubscriptionData {
 }
 
 const PLAN_LABELS: Record<string, { name: string; price: string }> = {
-  trial:        { name: 'Free Trial',    price: 'Free' },
-  professional: { name: 'Professional',  price: '$49/month' },
-  team:         { name: 'Team',          price: '$199/month' },
-  enterprise:   { name: 'Enterprise',    price: 'Custom' },
+  trial: { name: 'Free Trial', price: 'Free' },
+  professional: { name: 'Professional', price: '$49/month' },
+  team: { name: 'Team', price: '$199/month' },
+  enterprise: { name: 'Enterprise', price: 'Custom' },
 };
 
 export default function ProfilePage() {
@@ -47,9 +47,15 @@ export default function ProfilePage() {
   const planInfo = PLAN_LABELS[subscription?.plan || 'trial'] || PLAN_LABELS.trial;
   const memberSince = profile?.createdAt
     ? new Date(profile.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
-    : user?.email ? 'Active' : '—';
+    : user?.email
+      ? 'Active'
+      : '—';
   const nextBilling = subscription?.billingPeriod?.end
-    ? new Date(subscription.billingPeriod.end).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+    ? new Date(subscription.billingPeriod.end).toLocaleDateString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+      })
     : '—';
 
   return (
@@ -158,7 +164,9 @@ export default function ProfilePage() {
             <Shield className="w-5 h-5 text-zinc-400" />
             <div>
               <p className="font-medium text-white">Signed in with Google</p>
-              <p className="text-xs text-muted-foreground">Your account is secured with Google authentication</p>
+              <p className="text-xs text-muted-foreground">
+                Your account is secured with Google authentication
+              </p>
             </div>
           </div>
           <button

@@ -6,10 +6,7 @@ const router = express.Router();
 let _supabase = null;
 function getSupabase() {
   if (!_supabase) {
-    _supabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_KEY
-    );
+    _supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
   }
   return _supabase;
 }
@@ -17,7 +14,7 @@ function getSupabase() {
 // Middleware to verify admin auth
 const requireAdmin = async (req, res, next) => {
   const token = req.headers.authorization?.replace('Bearer ', '');
-  
+
   if (!token) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
@@ -38,17 +35,19 @@ router.get('/users', requireAdmin, async (req, res) => {
   try {
     const { data: users, error } = await getSupabase()
       .from('users')
-      .select(`
+      .select(
+        `
         *,
         subscriptions(plan_type, status),
         usage_logs(amount)
-      `)
+      `
+      )
       .order('created_at', { ascending: false });
 
     if (error) throw error;
 
     // Calculate usage for each user
-    const usersWithUsage = users.map((user) => ({
+    const usersWithUsage = users.map(user => ({
       id: user.id,
       email: user.email,
       name: user.name || user.email,
@@ -57,9 +56,12 @@ router.get('/users', requireAdmin, async (req, res) => {
       createdAt: user.created_at,
       lastActiveAt: user.last_active_at,
       totalUsage: {
-        tokens: user.usage_logs?.reduce((sum, log) => 
-          sum + (log.usage_type === 'tokens' ? log.amount : 0), 0) || 0,
-        queries: user.usage_logs?.filter((log) => log.usage_type === 'query').length || 0,
+        tokens:
+          user.usage_logs?.reduce(
+            (sum, log) => sum + (log.usage_type === 'tokens' ? log.amount : 0),
+            0
+          ) || 0,
+        queries: user.usage_logs?.filter(log => log.usage_type === 'query').length || 0,
         cost: 0, // Calculate based on usage
       },
     }));
@@ -80,14 +82,16 @@ router.get('/users/:id', requireAdmin, async (req, res) => {
 
     const { data: user, error } = await getSupabase()
       .from('users')
-      .select(`
+      .select(
+        `
         *,
         subscriptions(*),
         licenses(*),
         usage_logs(*),
         user_connections(*),
         user_provider_keys(*)
-      `)
+      `
+      )
       .eq('id', id)
       .single();
 
@@ -141,10 +145,7 @@ router.delete('/users/:id', requireAdmin, async (req, res) => {
     const { id } = req.params;
 
     // Delete user (cascades to related records)
-    const { error } = await getSupabase()
-      .from('users')
-      .delete()
-      .eq('id', id);
+    const { error } = await getSupabase().from('users').delete().eq('id', id);
 
     if (error) throw error;
 
@@ -162,11 +163,13 @@ router.get('/licenses', requireAdmin, async (req, res) => {
   try {
     const { data: licenses, error } = await getSupabase()
       .from('licenses')
-      .select(`
+      .select(
+        `
         *,
         users(email, name),
         subscriptions(plan_type, status)
-      `)
+      `
+      )
       .order('issued_at', { ascending: false });
 
     if (error) throw error;
@@ -246,9 +249,8 @@ router.get('/analytics/dashboard', requireAdmin, async (req, res) => {
       .gte('timestamp', startOfMonth.toISOString());
 
     const totalQueries = usageData?.filter(u => u.usage_type === 'query').length || 0;
-    const totalTokens = usageData
-      ?.filter(u => u.usage_type === 'tokens')
-      .reduce((sum, u) => sum + u.amount, 0) || 0;
+    const totalTokens =
+      usageData?.filter(u => u.usage_type === 'tokens').reduce((sum, u) => sum + u.amount, 0) || 0;
 
     res.json({
       totalUsers,

@@ -3,12 +3,14 @@
 ## Current Components Overview
 
 ### What You Have:
+
 1. **Landing Site** (Next.js) - Public marketing, downloads, payments
 2. **Admin Dashboard** (Next.js) - Internal management
 3. **Desktop App** (Electron) - Local AI + database tool
 4. **Express API** - Backend for desktop app (AI calls, MCP, license validation)
 
 ### Services Decided:
+
 - ✅ **File Storage**: Cloudinary (desktop app installers)
 - ✅ **Database**: Supabase (PostgreSQL)
 - ✅ **Payments**: Dodo, PayPal, Razorpay
@@ -22,6 +24,7 @@
 ### Why Hybrid?
 
 Your desktop app has **unique requirements** that don't fit traditional serverless:
+
 - **Long-running AI requests** (can take 30+ seconds)
 - **Stateful MCP connections** (need persistent processes)
 - **WebSocket support** (for real-time updates)
@@ -81,6 +84,7 @@ Your desktop app has **unique requirements** that don't fit traditional serverle
 ### 1. **Landing Site + Admin Dashboard** → **Vercel**
 
 **Why Vercel:**
+
 - ✅ **Best for Next.js** (built by same team)
 - ✅ **Auto-scaling** (handles traffic spikes)
 - ✅ **Global Edge Network** (fast worldwide)
@@ -90,6 +94,7 @@ Your desktop app has **unique requirements** that don't fit traditional serverle
 - ✅ **Preview deployments** (test before production)
 
 **What runs here:**
+
 - Marketing pages
 - User authentication (NextAuth)
 - Payment processing (Dodo, PayPal, Razorpay webhooks)
@@ -98,6 +103,7 @@ Your desktop app has **unique requirements** that don't fit traditional serverle
 - License generation
 
 **URL Structure:**
+
 ```
 https://velanova.com          → Landing site
 https://admin.velanova.com    → Admin dashboard
@@ -108,6 +114,7 @@ https://admin.velanova.com    → Admin dashboard
 ### 2. **Express API** → **Railway.app** or **Render.com**
 
 **Why NOT Vercel for Express:**
+
 - ❌ Serverless functions timeout after 10-60 seconds
 - ❌ No persistent processes (MCP needs long-running servers)
 - ❌ Can't spawn child processes reliably
@@ -115,6 +122,7 @@ https://admin.velanova.com    → Admin dashboard
 - ❌ Expensive for high usage
 
 **Why Railway/Render:**
+
 - ✅ **Long-running processes** (no timeouts)
 - ✅ **Persistent containers** (MCP servers stay alive)
 - ✅ **WebSocket support** (real-time updates)
@@ -125,6 +133,7 @@ https://admin.velanova.com    → Admin dashboard
 - ✅ **Logs and monitoring** built-in
 
 **What runs here:**
+
 - License validation for desktop app
 - AI model routing (OpenAI, Anthropic, etc.)
 - MCP server management (spawn/manage processes)
@@ -132,11 +141,13 @@ https://admin.velanova.com    → Admin dashboard
 - Background jobs (cleanup, notifications)
 
 **URL:**
+
 ```
 https://api.velanova.com → Express API
 ```
 
 **Alternative Options:**
+
 1. **Railway.app** - $5-10/month, easiest setup
 2. **Render.com** - $7/month, Docker support
 3. **DigitalOcean App Platform** - $12/month, more control
@@ -147,6 +158,7 @@ https://api.velanova.com → Express API
 ### 3. **Database** → **Supabase**
 
 **Why Supabase:**
+
 - ✅ **Managed PostgreSQL** (no maintenance)
 - ✅ **Built-in auth** (can use their JWT)
 - ✅ **Real-time subscriptions** (WebSocket)
@@ -156,6 +168,7 @@ https://api.velanova.com → Express API
 - ✅ **Auto backups** + point-in-time recovery
 
 **What's stored:**
+
 - Users and subscriptions
 - Licenses and activations
 - Usage analytics
@@ -163,12 +176,10 @@ https://api.velanova.com → Express API
 - Desktop app connections
 
 **Connection:**
+
 ```typescript
 // Both Next.js (Vercel) and Express (Railway) connect to same Supabase
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-);
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 ```
 
 ---
@@ -176,6 +187,7 @@ const supabase = createClient(
 ### 4. **File Storage** → **Cloudinary**
 
 **Why Cloudinary:**
+
 - ✅ **CDN delivery** (fast downloads worldwide)
 - ✅ **Version management** (track releases)
 - ✅ **Automatic optimization** (compression)
@@ -183,11 +195,13 @@ const supabase = createClient(
 - ✅ **Simple API** (upload from admin dashboard)
 
 **What's stored:**
+
 - Desktop app installers (.exe, .dmg, .AppImage, .deb)
 - App icons and assets
 - User avatars (optional)
 
 **URL structure:**
+
 ```
 https://res.cloudinary.com/velanova/raw/upload/v1/releases/windows/Velanova-Setup-1.0.0.exe
 https://res.cloudinary.com/velanova/raw/upload/v1/releases/macos/Velanova-1.0.0.dmg
@@ -232,6 +246,7 @@ https://res.cloudinary.com/velanova/raw/upload/v1/releases/macos/Velanova-1.0.0.
 ### Implementation:
 
 **Next.js (Vercel) - Generate License:**
+
 ```typescript
 // apps/landing-site/src/app/api/licenses/generate/route.ts
 import jwt from 'jsonwebtoken';
@@ -239,41 +254,39 @@ import { createClient } from '@supabase/supabase-js';
 
 export async function POST(req: Request) {
   const { userId, plan } = await req.json();
-  
+
   // Create license in database
-  const supabase = createClient(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_KEY!
-  );
-  
+  const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_KEY!);
+
   const { data: license } = await supabase
     .from('licenses')
     .insert({
       user_id: userId,
       plan: plan,
       status: 'active',
-      expires_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) // 1 year
+      expires_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 year
     })
     .select()
     .single();
-  
+
   // Generate JWT
   const token = jwt.sign(
     {
       licenseId: license.id,
       userId: userId,
       plan: plan,
-      expiresAt: license.expires_at
+      expiresAt: license.expires_at,
     },
     process.env.JWT_SECRET!,
     { expiresIn: '1y' }
   );
-  
+
   return Response.json({ licenseKey: token });
 }
 ```
 
 **Express API (Railway) - Validate License:**
+
 ```typescript
 // apps/express-api/middleware/auth.ts
 import jwt from 'jsonwebtoken';
@@ -281,36 +294,33 @@ import { createClient } from '@supabase/supabase-js';
 
 export async function validateLicense(req, res, next) {
   const licenseKey = req.headers.authorization?.replace('Bearer ', '');
-  
+
   if (!licenseKey) {
     return res.status(401).json({ error: 'License key required' });
   }
-  
+
   try {
     // Verify JWT signature
     const decoded = jwt.verify(licenseKey, process.env.JWT_SECRET!);
-    
+
     // Check license in database
-    const supabase = createClient(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_KEY!
-    );
-    
+    const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_KEY!);
+
     const { data: license } = await supabase
       .from('licenses')
       .select('*')
       .eq('id', decoded.licenseId)
       .single();
-    
+
     if (!license || license.status !== 'active') {
       return res.status(401).json({ error: 'Invalid license' });
     }
-    
+
     // Check expiration
     if (new Date(license.expires_at) < new Date()) {
       return res.status(401).json({ error: 'License expired' });
     }
-    
+
     // Attach to request
     req.license = license;
     req.userId = decoded.userId;
@@ -322,6 +332,7 @@ export async function validateLicense(req, res, next) {
 ```
 
 **Desktop App - Authenticate:**
+
 ```typescript
 // apps/desktop-app/src/main/auth.ts
 import Store from 'electron-store';
@@ -335,20 +346,20 @@ export async function activateLicense(licenseKey: string) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${licenseKey}`
-      }
+        Authorization: `Bearer ${licenseKey}`,
+      },
     });
-    
+
     if (!response.ok) {
       throw new Error('Invalid license key');
     }
-    
+
     const { license } = await response.json();
-    
+
     // Store license locally
     store.set('licenseKey', licenseKey);
     store.set('license', license);
-    
+
     return { success: true, license };
   } catch (error) {
     return { success: false, error: error.message };
@@ -362,10 +373,10 @@ export function getStoredLicense() {
 export async function checkLicenseValid() {
   const licenseKey = getStoredLicense();
   if (!licenseKey) return false;
-  
+
   try {
     const response = await fetch('https://api.velanova.com/api/licenses/check', {
-      headers: { 'Authorization': `Bearer ${licenseKey}` }
+      headers: { Authorization: `Bearer ${licenseKey}` },
     });
     return response.ok;
   } catch {
@@ -416,6 +427,7 @@ export async function checkLicenseValid() {
 ### Implementation:
 
 **Payment Webhook Handler (Vercel):**
+
 ```typescript
 // apps/landing-site/src/app/api/webhooks/payment/route.ts
 import { createClient } from '@supabase/supabase-js';
@@ -424,27 +436,24 @@ import jwt from 'jsonwebtoken';
 
 export async function POST(req: Request) {
   const body = await req.json();
-  
+
   // Verify webhook signature (Dodo/PayPal/Razorpay specific)
   const isValid = verifyWebhookSignature(body, req.headers);
   if (!isValid) {
     return Response.json({ error: 'Invalid signature' }, { status: 401 });
   }
-  
+
   const { email, plan, amount, paymentId } = body;
-  
-  const supabase = createClient(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_KEY!
-  );
-  
+
+  const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_KEY!);
+
   // Create user
   const { data: user } = await supabase
     .from('users')
     .insert({ email, plan, payment_id: paymentId })
     .select()
     .single();
-  
+
   // Generate license
   const { data: license } = await supabase
     .from('licenses')
@@ -452,31 +461,31 @@ export async function POST(req: Request) {
       user_id: user.id,
       plan: plan,
       status: 'active',
-      expires_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000)
+      expires_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
     })
     .select()
     .single();
-  
+
   // Create JWT license key
   const licenseKey = jwt.sign(
     {
       licenseId: license.id,
       userId: user.id,
       plan: plan,
-      expiresAt: license.expires_at
+      expiresAt: license.expires_at,
     },
     process.env.JWT_SECRET!,
     { expiresIn: '1y' }
   );
-  
+
   // Send email with license key and download link
   await sendLicenseEmail({
     to: email,
     licenseKey: licenseKey,
     downloadUrl: 'https://velanova.com/download',
-    plan: plan
+    plan: plan,
   });
-  
+
   return Response.json({ success: true });
 }
 ```
@@ -490,35 +499,42 @@ You asked about running everything on one VPS. Here's why it's **not recommended
 ### Problems with Single VPS:
 
 ❌ **Single Point of Failure**
+
 - If server goes down, EVERYTHING is offline
 - Vercel has 99.99% uptime, your VPS might not
 
 ❌ **Manual Maintenance**
+
 - You manage OS updates, security patches
 - Configure Nginx, SSL certificates
 - Monitor server health
 - Handle backups
 
 ❌ **Scaling Issues**
+
 - Can't auto-scale (fixed resources)
 - Traffic spike = server crash
 - Need to manually upgrade server
 
 ❌ **More Expensive Long-term**
+
 - VPS: $20-50/month for decent specs
 - Hybrid: $5 Railway + Free Vercel + Free Supabase tier = $5/month
 
 ❌ **Slower Globally**
+
 - Single location (no CDN)
 - Users far from server = slow
 - Vercel serves from 100+ edge locations
 
 ❌ **Security Risk**
+
 - You manage all security
 - One misconfiguration = breach
 - Vercel/Railway handle security for you
 
 ❌ **No Preview Deployments**
+
 - Can't test changes safely
 - Vercel gives preview URLs for every PR
 
@@ -529,31 +545,37 @@ You asked about running everything on one VPS. Here's why it's **not recommended
 ### Hybrid Approach Benefits:
 
 ✅ **Best Performance**
+
 - Next.js on Vercel = Global edge network
 - Express on Railway = Low latency for AI calls
 - Supabase = Optimized database
 
 ✅ **Cost Effective**
+
 - Start free: Vercel free, Railway $5, Supabase free
 - Scale only what you need
 - VPS = fixed cost regardless of usage
 
 ✅ **Zero Maintenance**
+
 - No server management
 - Automatic updates
 - Built-in monitoring
 
 ✅ **Easy Scaling**
+
 - Vercel auto-scales web apps
 - Railway scales Express API
 - Supabase handles database scaling
 
 ✅ **Better for Development**
+
 - Preview deployments
 - Easy rollbacks
 - CI/CD built-in
 
 ✅ **Reliability**
+
 - Multiple providers = redundancy
 - If Railway goes down, web still works
 - Professional SLA guarantees
@@ -563,6 +585,7 @@ You asked about running everything on one VPS. Here's why it's **not recommended
 ## 💰 Cost Comparison
 
 ### Option A: Single VPS (Hostinger/DigitalOcean)
+
 ```
 VPS (4GB RAM, 2 CPU):     $20-30/month
 Domain:                    $12/year
@@ -572,6 +595,7 @@ Total:                     ~$30/month
 ```
 
 ### Option B: Hybrid (Recommended)
+
 ```
 Vercel (Next.js):          $0 (Free tier)
 Railway (Express):         $5/month
@@ -617,6 +641,7 @@ Total:                     ~$6/month
 ## 📚 Next Steps
 
 Want me to create:
+
 1. **Deployment guides** for each platform?
 2. **Environment variable setup** for all services?
 3. **CI/CD pipeline** configuration?

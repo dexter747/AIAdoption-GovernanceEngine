@@ -2,9 +2,9 @@
 
 /**
  * Velanova Desktop App Deploy Script
- * 
+ *
  * Builds the desktop app and uploads artifacts to Cloudinary.
- * 
+ *
  * Usage:
  *   pnpm desktop:deploy              # Build current platform + upload
  *   pnpm desktop:deploy -- --mac     # Build macOS + upload
@@ -12,7 +12,7 @@
  *   pnpm desktop:deploy -- --linux   # Build Linux + upload
  *   pnpm desktop:deploy -- --all     # Build all platforms + upload
  *   pnpm desktop:deploy -- --skip-build  # Upload existing artifacts only
- * 
+ *
  * Required env vars (in .env or apps/express-api/.env):
  *   CLOUDINARY_CLOUD_NAME
  *   CLOUDINARY_API_KEY
@@ -83,13 +83,19 @@ function cloudinaryUpload(filePath, publicId, resourceType, env) {
     const apiSecret = env.CLOUDINARY_API_SECRET;
 
     if (!cloudName || !apiKey || !apiSecret) {
-      reject(new Error('Missing Cloudinary credentials. Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET'));
+      reject(
+        new Error(
+          'Missing Cloudinary credentials. Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET'
+        )
+      );
       return;
     }
 
     const timestamp = Math.floor(Date.now() / 1000);
     const paramsToSign = `folder=velanova/releases&public_id=${publicId}&resource_type=${resourceType}&timestamp=${timestamp}`;
-    const signature = createHash('sha1').update(paramsToSign + apiSecret).digest('hex');
+    const signature = createHash('sha1')
+      .update(paramsToSign + apiSecret)
+      .digest('hex');
 
     const fileData = readFileSync(filePath);
     const boundary = '----VelanovaBoundary' + Date.now();
@@ -127,9 +133,9 @@ function cloudinaryUpload(filePath, publicId, resourceType, env) {
       },
     };
 
-    const req = https.request(options, (res) => {
+    const req = https.request(options, res => {
       let data = '';
-      res.on('data', (chunk) => (data += chunk));
+      res.on('data', chunk => (data += chunk));
       res.on('end', () => {
         try {
           const json = JSON.parse(data);
@@ -156,7 +162,17 @@ function collectArtifacts() {
     process.exit(1);
   }
 
-  const validExtensions = ['.exe', '.msi', '.dmg', '.zip', '.AppImage', '.deb', '.rpm', '.tar.gz', '.blockmap'];
+  const validExtensions = [
+    '.exe',
+    '.msi',
+    '.dmg',
+    '.zip',
+    '.AppImage',
+    '.deb',
+    '.rpm',
+    '.tar.gz',
+    '.blockmap',
+  ];
   const artifacts = [];
 
   function walk(dir) {
@@ -167,7 +183,9 @@ function collectArtifacts() {
         walk(full);
       } else if (stat.isFile()) {
         const ext = extname(entry).toLowerCase();
-        const isValidExt = validExtensions.some(ve => entry.toLowerCase().endsWith(ve.toLowerCase()));
+        const isValidExt = validExtensions.some(ve =>
+          entry.toLowerCase().endsWith(ve.toLowerCase())
+        );
         // Also grab latest.yml / latest-mac.yml / latest-linux.yml for auto-updater
         const isYml = entry.endsWith('.yml') && entry.includes('latest');
         if (isValidExt || isYml) {
@@ -207,7 +225,13 @@ function detectPlatform(filename) {
   const lower = filename.toLowerCase();
   if (lower.endsWith('.exe') || lower.endsWith('.msi') || lower.includes('win')) return 'windows';
   if (lower.endsWith('.dmg') || lower.includes('mac') || lower.includes('darwin')) return 'macos';
-  if (lower.endsWith('.appimage') || lower.endsWith('.deb') || lower.endsWith('.rpm') || lower.includes('linux')) return 'linux';
+  if (
+    lower.endsWith('.appimage') ||
+    lower.endsWith('.deb') ||
+    lower.endsWith('.rpm') ||
+    lower.includes('linux')
+  )
+    return 'linux';
   if (lower.endsWith('.yml')) return 'meta';
   return 'unknown';
 }
@@ -261,7 +285,9 @@ async function main() {
 
   // Step 3: Upload to Cloudinary
   if (!env.CLOUDINARY_CLOUD_NAME) {
-    console.error('\n❌ Cloudinary not configured. Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET');
+    console.error(
+      '\n❌ Cloudinary not configured. Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET'
+    );
     console.log('\n💡 You can still find the built artifacts in:');
     console.log(`   ${RELEASE_DIR}`);
     process.exit(1);
@@ -305,7 +331,7 @@ async function main() {
   console.log(`${'═'.repeat(50)}\n`);
 }
 
-main().catch((err) => {
+main().catch(err => {
   console.error('Fatal error:', err);
   process.exit(1);
 });

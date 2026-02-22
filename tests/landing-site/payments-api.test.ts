@@ -132,7 +132,7 @@ describe('POST /api/payments/create-checkout', () => {
 
     it('should validate plan type values', () => {
       const validPlans = ['trial', 'professional', 'team', 'enterprise'];
-      
+
       validPlans.forEach(plan => {
         expect(validPlans).toContain(plan);
       });
@@ -195,7 +195,7 @@ describe('POST /api/payments/create-checkout', () => {
     it('should set session expiration to 24 hours', () => {
       const now = Date.now();
       const expiresAt = new Date(now + 24 * 60 * 60 * 1000);
-      
+
       const hoursFromNow = (expiresAt.getTime() - now) / (1000 * 60 * 60);
       expect(hoursFromNow).toBeCloseTo(24, 0);
     });
@@ -281,16 +281,10 @@ describe('POST /api/payments/webhook', () => {
     it('should verify HMAC signature', () => {
       const verifySignature = (payload: string, signature: string, secret: string) => {
         const crypto = require('crypto');
-        const expectedSignature = crypto
-          .createHmac('sha256', secret)
-          .update(payload)
-          .digest('hex');
-        
+        const expectedSignature = crypto.createHmac('sha256', secret).update(payload).digest('hex');
+
         try {
-          return crypto.timingSafeEqual(
-            Buffer.from(signature),
-            Buffer.from(expectedSignature)
-          );
+          return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSignature));
         } catch {
           return false;
         }
@@ -299,10 +293,7 @@ describe('POST /api/payments/webhook', () => {
       const payload = '{"type":"checkout.session.completed"}';
       const secret = 'webhook_secret';
       const crypto = require('crypto');
-      const validSignature = crypto
-        .createHmac('sha256', secret)
-        .update(payload)
-        .digest('hex');
+      const validSignature = crypto.createHmac('sha256', secret).update(payload).digest('hex');
 
       expect(verifySignature(payload, validSignature, secret)).toBe(true);
       expect(verifySignature(payload, 'invalid_signature', secret)).toBe(false);
@@ -331,7 +322,7 @@ describe('POST /api/payments/webhook', () => {
         const payload = {
           userId,
           tier,
-          exp: Math.floor(Date.now() / 1000) + (expiresInDays * 24 * 60 * 60),
+          exp: Math.floor(Date.now() / 1000) + expiresInDays * 24 * 60 * 60,
           iat: Math.floor(Date.now() / 1000),
         };
         // Mock JWT generation
@@ -344,24 +335,20 @@ describe('POST /api/payments/webhook', () => {
 
     it('should set correct expiration for yearly plans', () => {
       const expiresInDays = 365;
-      const exp = Math.floor(Date.now() / 1000) + (expiresInDays * 24 * 60 * 60);
+      const exp = Math.floor(Date.now() / 1000) + expiresInDays * 24 * 60 * 60;
       const expiresAt = new Date(exp * 1000);
 
-      const daysFromNow = Math.ceil(
-        (expiresAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
-      );
+      const daysFromNow = Math.ceil((expiresAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
 
       expect(daysFromNow).toBeCloseTo(365, 1);
     });
 
     it('should set correct expiration for monthly plans', () => {
       const expiresInDays = 30;
-      const exp = Math.floor(Date.now() / 1000) + (expiresInDays * 24 * 60 * 60);
+      const exp = Math.floor(Date.now() / 1000) + expiresInDays * 24 * 60 * 60;
       const expiresAt = new Date(exp * 1000);
 
-      const daysFromNow = Math.ceil(
-        (expiresAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
-      );
+      const daysFromNow = Math.ceil((expiresAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
 
       expect(daysFromNow).toBeCloseTo(30, 1);
     });
@@ -479,7 +466,7 @@ describe('POST /api/payments/webhook', () => {
 
     it('should log payment failure', () => {
       const logPaymentFailure = jest.fn();
-      
+
       logPaymentFailure('session_123', 'Insufficient funds');
 
       expect(logPaymentFailure).toHaveBeenCalledWith('session_123', 'Insufficient funds');
@@ -588,9 +575,7 @@ describe('Billing Cycle Handling', () => {
       };
 
       const expiration = getExpiration('monthly');
-      const daysFromNow = Math.ceil(
-        (expiration.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
-      );
+      const daysFromNow = Math.ceil((expiration.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
 
       expect(daysFromNow).toBeCloseTo(30, 1);
     });
@@ -604,9 +589,7 @@ describe('Billing Cycle Handling', () => {
       };
 
       const expiration = getExpiration('yearly');
-      const daysFromNow = Math.ceil(
-        (expiration.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
-      );
+      const daysFromNow = Math.ceil((expiration.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
 
       expect(daysFromNow).toBeCloseTo(365, 1);
     });
@@ -614,7 +597,7 @@ describe('Billing Cycle Handling', () => {
     it('should calculate yearly savings', () => {
       const monthlyPrice = 4900;
       const yearlyPrice = 49000;
-      const savings = (monthlyPrice * 12) - yearlyPrice;
+      const savings = monthlyPrice * 12 - yearlyPrice;
 
       expect(savings).toBe(9800); // $98 saved
     });

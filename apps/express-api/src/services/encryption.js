@@ -32,21 +32,17 @@ export function encrypt(plaintext) {
 
   const key = getEncryptionKey();
   const iv = crypto.randomBytes(IV_LENGTH);
-  
+
   const cipher = crypto.createCipheriv(ALGORITHM, key, iv);
-  
+
   let encrypted = cipher.update(plaintext, 'utf8', 'base64');
   encrypted += cipher.final('base64');
-  
+
   const authTag = cipher.getAuthTag();
-  
+
   // Combine iv + authTag + encrypted data
-  const combined = Buffer.concat([
-    iv,
-    authTag,
-    Buffer.from(encrypted, 'base64')
-  ]);
-  
+  const combined = Buffer.concat([iv, authTag, Buffer.from(encrypted, 'base64')]);
+
   return combined.toString('base64');
 }
 
@@ -62,18 +58,18 @@ export function decrypt(encryptedData) {
 
   const key = getEncryptionKey();
   const combined = Buffer.from(encryptedData, 'base64');
-  
+
   // Extract iv, authTag, and encrypted data
   const iv = combined.subarray(0, IV_LENGTH);
   const authTag = combined.subarray(IV_LENGTH, IV_LENGTH + AUTH_TAG_LENGTH);
   const encrypted = combined.subarray(IV_LENGTH + AUTH_TAG_LENGTH);
-  
+
   const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
   decipher.setAuthTag(authTag);
-  
+
   let decrypted = decipher.update(encrypted, undefined, 'utf8');
   decrypted += decipher.final('utf8');
-  
+
   return decrypted;
 }
 
@@ -132,5 +128,5 @@ export default {
   getKeyPreview,
   isEncryptionConfigured,
   encryptJSON,
-  decryptJSON
+  decryptJSON,
 };

@@ -1,10 +1,10 @@
 /**
  * LLM Context Types - Exported for use in renderer
- * 
+ *
  * These types mirror the types defined in the main process context manager.
  */
 
-export type ContextType = 
+export type ContextType =
   | 'system_prompt'
   | 'database_schema'
   | 'knowledge_base'

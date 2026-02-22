@@ -1,6 +1,10 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { CallToolRequestSchema, ListToolsRequestSchema, Tool } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+  Tool,
+} from '@modelcontextprotocol/sdk/types.js';
 import axios, { AxiosInstance } from 'axios';
 
 let api: AxiosInstance | null = null;
@@ -12,7 +16,9 @@ function initConnection(): void {
   const repository = process.env.DOCUMENTUM_REPOSITORY;
 
   if (!baseURL || !username || !password || !repository) {
-    throw new Error('DOCUMENTUM_URL, DOCUMENTUM_USERNAME, DOCUMENTUM_PASSWORD, and DOCUMENTUM_REPOSITORY environment variables are required');
+    throw new Error(
+      'DOCUMENTUM_URL, DOCUMENTUM_USERNAME, DOCUMENTUM_PASSWORD, and DOCUMENTUM_REPOSITORY environment variables are required'
+    );
   }
 
   const basicAuth = Buffer.from(`${username}:${password}`).toString('base64');
@@ -20,7 +26,7 @@ function initConnection(): void {
   api = axios.create({
     baseURL: `${baseURL}/dctm-rest/repositories/${repository}`,
     headers: {
-      'Authorization': `Basic ${basicAuth}`,
+      Authorization: `Basic ${basicAuth}`,
       'Content-Type': 'application/json',
     },
   });
@@ -33,7 +39,11 @@ const tools: Tool[] = [
     inputSchema: {
       type: 'object',
       properties: {
-        dql: { type: 'string', description: 'DQL query string (e.g. "SELECT * FROM dm_document WHERE object_name LIKE \'%report%\'")' },
+        dql: {
+          type: 'string',
+          description:
+            'DQL query string (e.g. "SELECT * FROM dm_document WHERE object_name LIKE \'%report%\'")',
+        },
         maxResults: { type: 'number', description: 'Maximum number of results to return' },
       },
       required: ['dql'],
@@ -99,7 +109,11 @@ const tools: Tool[] = [
     inputSchema: {
       type: 'object',
       properties: {
-        method: { type: 'string', description: 'HTTP method (GET, POST, PUT, DELETE)', enum: ['GET', 'POST', 'PUT', 'DELETE'] },
+        method: {
+          type: 'string',
+          description: 'HTTP method (GET, POST, PUT, DELETE)',
+          enum: ['GET', 'POST', 'PUT', 'DELETE'],
+        },
         path: { type: 'string', description: 'API path (relative to repository base)' },
         body: { type: 'object', description: 'Request body for POST/PUT' },
       },
@@ -115,7 +129,7 @@ const server = new Server(
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools }));
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   if (!api) initConnection();
 
   const { name, arguments: args } = request.params;
@@ -161,10 +175,17 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         });
         break;
       case 'api_call':
-        r = await api!.request({ method: args!.method as string, url: args!.path as string, data: args?.body });
+        r = await api!.request({
+          method: args!.method as string,
+          url: args!.path as string,
+          data: args?.body,
+        });
         break;
       default:
-        return { content: [{ type: 'text' as const, text: `Unknown tool: ${name}` }], isError: true };
+        return {
+          content: [{ type: 'text' as const, text: `Unknown tool: ${name}` }],
+          isError: true,
+        };
     }
 
     return { content: [{ type: 'text' as const, text: JSON.stringify(r.data, null, 2) }] };

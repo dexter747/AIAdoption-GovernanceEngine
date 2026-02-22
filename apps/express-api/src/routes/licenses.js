@@ -31,11 +31,11 @@ const activateLicenseSchema = z.object({
 router.post('/validate', async (req, res, next) => {
   try {
     const { licenseKey, machineId } = validateLicenseSchema.parse(req.body);
-    
+
     logger.info({ licenseKey: licenseKey.slice(0, 8) + '...' }, 'Validating license');
-    
+
     const result = await LicenseService.validate(licenseKey, machineId);
-    
+
     if (!result.valid) {
       return res.status(200).json({
         success: true,
@@ -73,14 +73,17 @@ router.post('/validate', async (req, res, next) => {
 router.post('/activate', async (req, res, next) => {
   try {
     const { licenseKey, machineId, machineName } = activateLicenseSchema.parse(req.body);
-    
-    logger.info({ 
-      licenseKey: licenseKey.slice(0, 8) + '...',
-      machineId: machineId.slice(0, 8) + '...',
-    }, 'Activating license');
-    
+
+    logger.info(
+      {
+        licenseKey: licenseKey.slice(0, 8) + '...',
+        machineId: machineId.slice(0, 8) + '...',
+      },
+      'Activating license'
+    );
+
     const result = await LicenseService.activate(licenseKey, machineId, machineName);
-    
+
     if (!result.success) {
       return res.status(400).json({
         success: false,
@@ -115,9 +118,9 @@ router.post('/activate', async (req, res, next) => {
 router.post('/deactivate', async (req, res, next) => {
   try {
     const { licenseKey, machineId } = validateLicenseSchema.parse(req.body);
-    
+
     const result = await LicenseService.deactivate(licenseKey, machineId);
-    
+
     res.json({
       success: true,
       data: {
@@ -139,7 +142,7 @@ router.post('/deactivate', async (req, res, next) => {
 router.get('/features/:tier', (req, res) => {
   const { tier } = req.params;
   const features = LicenseService.getTierFeatures(tier);
-  
+
   res.json({
     success: true,
     data: {

@@ -17,10 +17,10 @@ export class ConnectionManager {
   async connect(config: ConnectionConfig): Promise<string> {
     const id = crypto.randomUUID();
     const connector = this.getConnector(config.type);
-    
+
     const connection = await connector.connect(config);
     this.connections.set(id, { config, connection, connector });
-    
+
     return id;
   }
 
@@ -34,7 +34,7 @@ export class ConnectionManager {
 
   async listConnections(): Promise<ConnectionStatus[]> {
     const statuses: ConnectionStatus[] = [];
-    
+
     for (const [id, conn] of this.connections) {
       statuses.push({
         id,
@@ -42,7 +42,7 @@ export class ConnectionManager {
         lastChecked: new Date(),
       });
     }
-    
+
     return statuses;
   }
 

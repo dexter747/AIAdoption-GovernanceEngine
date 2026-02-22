@@ -36,19 +36,17 @@ expect.extend({
     const pass = received >= floor && received <= ceiling;
     if (pass) {
       return {
-        message: () =>
-          `expected ${received} not to be within range ${floor} - ${ceiling}`,
+        message: () => `expected ${received} not to be within range ${floor} - ${ceiling}`,
         pass: true,
       };
     } else {
       return {
-        message: () =>
-          `expected ${received} to be within range ${floor} - ${ceiling}`,
+        message: () => `expected ${received} to be within range ${floor} - ${ceiling}`,
         pass: false,
       };
     }
   },
-  
+
   toBeValidUUID(received: string) {
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     const pass = uuidRegex.test(received);
@@ -64,7 +62,7 @@ expect.extend({
       };
     }
   },
-  
+
   toBeValidJWT(received: string) {
     const parts = received.split('.');
     const pass = parts.length === 3 && parts.every(p => p.length > 0);
@@ -75,7 +73,8 @@ expect.extend({
       };
     } else {
       return {
-        message: () => `expected ${received} to be a valid JWT (three non-empty parts separated by dots)`,
+        message: () =>
+          `expected ${received} to be a valid JWT (three non-empty parts separated by dots)`,
         pass: false,
       };
     }
@@ -90,9 +89,9 @@ expect.extend({
 if (typeof global.crypto === 'undefined') {
   (global as any).crypto = {
     randomUUID: () => {
-      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-        const r = Math.random() * 16 | 0;
-        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+        const r = (Math.random() * 16) | 0;
+        const v = c === 'x' ? r : (r & 0x3) | 0x8;
         return v.toString(16);
       });
     },

@@ -2,9 +2,9 @@
 
 /**
  * Velanova Admin Seed Script
- * 
+ *
  * Seeds the database with admin user, test data, sample licenses, etc.
- * 
+ *
  * Usage:
  *   pnpm admin:seed                       # Seed all default data
  *   pnpm admin:seed -- --admin-only       # Create admin user only
@@ -54,7 +54,7 @@ async function getSupabase(env) {
 
 async function seedAdminUser(supabase) {
   console.log('  👤 Creating admin user...');
-  
+
   const adminEmail = 'admin@velanova.ai';
   const { data: existing } = await supabase
     .from('users')
@@ -141,7 +141,14 @@ async function seedLicenses(supabase, userIds) {
       license_key: licenseKey,
       plan_type: plans[i],
       status: 'active',
-      device_limit: plans[i] === 'enterprise' ? 10 : plans[i] === 'team' ? 5 : plans[i] === 'professional' ? 3 : 1,
+      device_limit:
+        plans[i] === 'enterprise'
+          ? 10
+          : plans[i] === 'team'
+            ? 5
+            : plans[i] === 'professional'
+              ? 3
+              : 1,
       max_machines: plans[i] === 'enterprise' ? 10 : plans[i] === 'team' ? 5 : 3,
       expires_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
     });
@@ -253,7 +260,7 @@ async function main() {
   console.log(`${'═'.repeat(50)}\n`);
 }
 
-main().catch((err) => {
+main().catch(err => {
   console.error('Fatal error:', err);
   process.exit(1);
 });

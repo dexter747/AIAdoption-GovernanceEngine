@@ -11,7 +11,8 @@ import supabase from '@/lib/supabase';
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-const GOOGLE_REDIRECT_URI = process.env.GOOGLE_REDIRECT_URI || 
+const GOOGLE_REDIRECT_URI =
+  process.env.GOOGLE_REDIRECT_URI ||
   `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/auth/google/callback`;
 
 interface GoogleTokenResponse {
@@ -154,7 +155,7 @@ export async function GET(request: NextRequest) {
 
     // Set session cookies
     const cookieStore = await cookies();
-    
+
     cookieStore.set('user_session', JSON.stringify(user), {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',

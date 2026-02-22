@@ -62,10 +62,10 @@ const config: Config = {
         'slide-in-right': 'slideInRight 0.8s ease-out',
         'scale-in': 'scaleIn 0.5s ease-out',
         'bounce-slow': 'bounce 3s infinite',
-        'shimmer': 'shimmer 2s infinite',
-        'float': 'float 6s ease-in-out infinite',
+        shimmer: 'shimmer 2s infinite',
+        float: 'float 6s ease-in-out infinite',
         // Bidirectional marquee
-        'marquee': 'marquee 45s linear infinite',
+        marquee: 'marquee 45s linear infinite',
         'marquee-reverse': 'marquee-reverse 50s linear infinite',
         'marquee-slow': 'marquee 80s linear infinite',
         'marquee-reverse-slow': 'marquee-reverse 90s linear infinite',

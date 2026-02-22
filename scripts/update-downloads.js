@@ -2,15 +2,15 @@
 
 /**
  * Velanova App Update Script
- * 
+ *
  * Fetches the latest desktop app version manifest from Cloudinary,
  * downloads artifacts, and updates the landing site's download page.
- * 
+ *
  * Usage:
  *   pnpm app:update                # Fetch latest + update landing site
  *   pnpm app:update -- --version 1.3.0   # Fetch specific version
  *   pnpm app:update -- --dry-run         # Preview without writing
- * 
+ *
  * Required env vars:
  *   CLOUDINARY_CLOUD_NAME
  *   CLOUDINARY_API_KEY
@@ -52,31 +52,44 @@ function loadEnv() {
 
 function fetchJson(url) {
   return new Promise((resolve, reject) => {
-    https.get(url, (res) => {
-      if (res.statusCode === 301 || res.statusCode === 302) {
-        return fetchJson(res.headers.location).then(resolve).catch(reject);
-      }
-      let data = '';
-      res.on('data', (chunk) => (data += chunk));
-      res.on('end', () => {
-        try { resolve(JSON.parse(data)); } 
-        catch { reject(new Error(`Failed to parse JSON from ${url}: ${data.slice(0, 200)}`)); }
-      });
-    }).on('error', reject);
+    https
+      .get(url, res => {
+        if (res.statusCode === 301 || res.statusCode === 302) {
+          return fetchJson(res.headers.location).then(resolve).catch(reject);
+        }
+        let data = '';
+        res.on('data', chunk => (data += chunk));
+        res.on('end', () => {
+          try {
+            resolve(JSON.parse(data));
+          } catch {
+            reject(new Error(`Failed to parse JSON from ${url}: ${data.slice(0, 200)}`));
+          }
+        });
+      })
+      .on('error', reject);
   });
 }
 
 function downloadFile(url, destPath) {
   return new Promise((resolve, reject) => {
     const file = createWriteStream(destPath);
-    https.get(url, (res) => {
-      if (res.statusCode === 301 || res.statusCode === 302) {
+    https
+      .get(url, res => {
+        if (res.statusCode === 301 || res.statusCode === 302) {
+          file.close();
+          return downloadFile(res.headers.location, destPath).then(resolve).catch(reject);
+        }
+        res.pipe(file);
+        file.on('finish', () => {
+          file.close();
+          resolve();
+        });
+      })
+      .on('error', err => {
         file.close();
-        return downloadFile(res.headers.location, destPath).then(resolve).catch(reject);
-      }
-      res.pipe(file);
-      file.on('finish', () => { file.close(); resolve(); });
-    }).on('error', (err) => { file.close(); reject(err); });
+        reject(err);
+      });
   });
 }
 
@@ -89,9 +102,11 @@ async function fetchManifest(cloudName, version) {
 
 async function listVersions(cloudName) {
   // List available versions by checking common patterns
-  // Cloudinary doesn't have a direct "list folder" API via URL, 
+  // Cloudinary doesn't have a direct "list folder" API via URL,
   // so we try to fetch the desktop app's package.json version as the latest
-  const desktopPkg = JSON.parse(readFileSync(join(ROOT_DIR, 'apps', 'desktop-app', 'package.json'), 'utf-8'));
+  const desktopPkg = JSON.parse(
+    readFileSync(join(ROOT_DIR, 'apps', 'desktop-app', 'package.json'), 'utf-8')
+  );
   return desktopPkg.version;
 }
 
@@ -106,7 +121,9 @@ function updateDownloadPage(manifest, dryRun) {
   let content = readFileSync(DOWNLOAD_PAGE, 'utf-8');
   const version = manifest.version;
   const releaseDate = new Date(manifest.releaseDate).toLocaleDateString('en-US', {
-    year: 'numeric', month: 'long', day: 'numeric'
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
   });
 
   // Update version string
@@ -134,9 +151,8 @@ function updateDownloadPage(manifest, dryRun) {
   // Update filenames in download links to use new version
   const oldVersionPattern = /(\d+\.\d+\.\d+)/g;
   // Only replace version numbers that look like they're part of filenames
-  content = content.replace(
-    /Velanova[-_](?:Setup[-_])?(\d+\.\d+\.\d+)/g,
-    (match, oldVer) => match.replace(oldVer, version)
+  content = content.replace(/Velanova[-_](?:Setup[-_])?(\d+\.\d+\.\d+)/g, (match, oldVer) =>
+    match.replace(oldVer, version)
   );
 
   if (dryRun) {
@@ -156,7 +172,7 @@ function updateDownloadPage(manifest, dryRun) {
 
 function updateDownloadConfig(manifest, dryRun) {
   const configPath = join(LANDING_DIR, 'public', 'download-config.json');
-  
+
   const config = {
     version: manifest.version,
     releaseDate: manifest.releaseDate,
@@ -165,7 +181,7 @@ function updateDownloadConfig(manifest, dryRun) {
 
   for (const artifact of manifest.artifacts) {
     if (artifact.platform === 'meta') continue;
-    
+
     const key = `${artifact.platform}-${artifact.filename.split('.').pop()}`;
     config.downloads[key] = {
       url: artifact.cloudinaryUrl || `/downloads/${artifact.filename}`,
@@ -195,7 +211,7 @@ async function main() {
   const args = process.argv.slice(2);
   const dryRun = args.includes('--dry-run');
   let version = null;
-  
+
   const versionIdx = args.indexOf('--version');
   if (versionIdx !== -1 && args[versionIdx + 1]) {
     version = args[versionIdx + 1];
@@ -210,7 +226,7 @@ async function main() {
 
   if (!cloudName) {
     console.log('\n⚠️  Cloudinary not configured. Using local manifest if available.');
-    
+
     // Try local manifest from release directory
     const localManifest = join(ROOT_DIR, 'apps', 'desktop-app', 'release', 'manifest.json');
     if (existsSync(localManifest)) {
@@ -234,7 +250,9 @@ async function main() {
   try {
     // Fetch manifest from Cloudinary
     const manifest = await fetchManifest(cloudName, version);
-    console.log(`\n  📦 Manifest loaded: v${manifest.version} (${manifest.artifacts.length} artifacts)\n`);
+    console.log(
+      `\n  📦 Manifest loaded: v${manifest.version} (${manifest.artifacts.length} artifacts)\n`
+    );
 
     for (const artifact of manifest.artifacts) {
       console.log(`    • ${artifact.filename} (${artifact.sizeMB} MB) [${artifact.platform}]`);
@@ -248,7 +266,6 @@ async function main() {
     console.log(`✅ Landing site updated for v${version}`);
     console.log(`   Run "pnpm build:landing" and redeploy to apply.`);
     console.log(`${'═'.repeat(50)}\n`);
-
   } catch (err) {
     console.error(`\n❌ Failed to fetch manifest: ${err.message}`);
     console.log('   Make sure you ran "pnpm desktop:deploy" for this version.');
@@ -256,7 +273,7 @@ async function main() {
   }
 }
 
-main().catch((err) => {
+main().catch(err => {
   console.error('Fatal error:', err);
   process.exit(1);
 });

@@ -28,46 +28,46 @@ const MODEL_PROVIDER_MAP = {
   'gpt-4-turbo': 'openai',
   'gpt-4': 'openai',
   'gpt-3.5-turbo': 'openai',
-  'o1': 'openai',
+  o1: 'openai',
   'o1-mini': 'openai',
   'o1-preview': 'openai',
   'o3-mini': 'openai',
-  
+
   // Anthropic
   'claude-3-5-sonnet-20241022': 'anthropic',
   'claude-3-5-haiku-20241022': 'anthropic',
   'claude-3-opus-20240229': 'anthropic',
   'claude-3-sonnet-20240229': 'anthropic',
   'claude-3-haiku-20240307': 'anthropic',
-  
+
   // Google
   'gemini-2.0-flash': 'google',
   'gemini-2.0-flash-thinking': 'google',
   'gemini-1.5-pro': 'google',
   'gemini-1.5-flash': 'google',
-  
+
   // Groq
   'llama-3.3-70b-versatile': 'groq',
   'llama-3.1-8b-instant': 'groq',
   'mixtral-8x7b-32768': 'groq',
   'gemma2-9b-it': 'groq',
-  
+
   // Cohere
   'command-r-plus': 'cohere',
   'command-r': 'cohere',
-  'command': 'cohere',
-  
+  command: 'cohere',
+
   // Mistral
   'mistral-large-latest': 'mistral',
   'mistral-medium-latest': 'mistral',
   'mistral-small-latest': 'mistral',
   'codestral-latest': 'mistral',
-  
+
   // Perplexity
-  'sonar': 'perplexity',
+  sonar: 'perplexity',
   'sonar-pro': 'perplexity',
   'sonar-reasoning': 'perplexity',
-  
+
   // DeepSeek
   'deepseek-chat': 'deepseek',
   'deepseek-coder': 'deepseek',
@@ -110,10 +110,13 @@ async function getProviderConfig(providerName, userId = null) {
         };
       }
     } catch (err) {
-      logger.warn({ provider: providerName, userId, error: err.message }, 'Failed to fetch user key, falling back to platform key');
+      logger.warn(
+        { provider: providerName, userId, error: err.message },
+        'Failed to fetch user key, falling back to platform key'
+      );
     }
   }
-  
+
   // Fall back to platform keys from .env
   logger.debug({ provider: providerName, byok: false }, 'Using platform API key');
   return {
@@ -167,22 +170,22 @@ async function getProviderForUser(providerName, userId = null) {
   if (!userId) {
     return getProvider(providerName);
   }
-  
+
   const cacheKey = `${userId}-${providerName}`;
-  
+
   // Check if we already have a cached provider for this user+provider combo
   if (userProviders[cacheKey]) {
     return userProviders[cacheKey];
   }
-  
+
   // Get config (prefers user's BYOK key)
   const providerConfig = await getProviderConfig(providerName, userId);
-  
+
   // If no user key found, use platform provider
   if (!providerConfig.isUserKey) {
     return getProvider(providerName);
   }
-  
+
   // Create new provider instance with user's key
   let provider;
   switch (providerName) {
@@ -216,10 +219,10 @@ async function getProviderForUser(providerName, userId = null) {
     default:
       throw ApiError.badRequest(`Unknown provider: ${providerName}`);
   }
-  
+
   // Cache for future use (TTL: cleared on server restart or can add expiry)
   userProviders[cacheKey] = provider;
-  
+
   return provider;
 }
 
@@ -240,7 +243,7 @@ export function clearUserProviderCache(userId, providerName = null) {
 
 function selectProvider(requestedProvider, model) {
   const enabledProviders = getEnabledProviders();
-  
+
   if (enabledProviders.length === 0) {
     throw ApiError.serviceUnavailable('No AI providers configured');
   }
@@ -259,9 +262,9 @@ function selectProvider(requestedProvider, model) {
     if (!enabledProviders.includes(requestedProvider)) {
       throw ApiError.badRequest(`Provider ${requestedProvider} is not enabled`);
     }
-    return { 
-      provider: requestedProvider, 
-      model: model !== 'auto' ? model : DEFAULT_MODELS[requestedProvider] 
+    return {
+      provider: requestedProvider,
+      model: model !== 'auto' ? model : DEFAULT_MODELS[requestedProvider],
     };
   }
 
@@ -269,18 +272,18 @@ function selectProvider(requestedProvider, model) {
   const preferenceOrder = ['groq', 'anthropic', 'openai', 'google'];
   for (const providerName of preferenceOrder) {
     if (enabledProviders.includes(providerName)) {
-      return { 
-        provider: providerName, 
-        model: DEFAULT_MODELS[providerName] 
+      return {
+        provider: providerName,
+        model: DEFAULT_MODELS[providerName],
       };
     }
   }
 
   // Fallback to first enabled
   const firstProvider = enabledProviders[0];
-  return { 
-    provider: firstProvider, 
-    model: DEFAULT_MODELS[firstProvider] 
+  return {
+    provider: firstProvider,
+    model: DEFAULT_MODELS[firstProvider],
   };
 }
 
@@ -299,14 +302,17 @@ export const AIService = {
   async chat(options) {
     const { provider: providerName, model } = selectProvider(options.provider, options.model);
     const provider = await getProviderForUser(providerName, options.userId);
-    
-    logger.info({ 
-      provider: providerName, 
-      model, 
-      userId: options.userId || 'platform',
-      hasTools: !!(options.tools && options.tools.length > 0)
-    }, 'Routing chat request');
-    
+
+    logger.info(
+      {
+        provider: providerName,
+        model,
+        userId: options.userId || 'platform',
+        hasTools: !!(options.tools && options.tools.length > 0),
+      },
+      'Routing chat request'
+    );
+
     try {
       const response = await provider.chat({
         model,
@@ -315,7 +321,7 @@ export const AIService = {
         maxTokens: options.maxTokens,
         tools: options.tools, // Pass MCP tools if provided
       });
-      
+
       return {
         ...response,
         provider: providerName,
@@ -334,14 +340,17 @@ export const AIService = {
   async *chatStream(options) {
     const { provider: providerName, model } = selectProvider(options.provider, options.model);
     const provider = await getProviderForUser(providerName, options.userId);
-    
-    logger.info({ 
-      provider: providerName, 
-      model, 
-      stream: true,
-      userId: options.userId || 'platform'
-    }, 'Routing chat stream request');
-    
+
+    logger.info(
+      {
+        provider: providerName,
+        model,
+        stream: true,
+        userId: options.userId || 'platform',
+      },
+      'Routing chat stream request'
+    );
+
     const stream = await provider.chatStream({
       model,
       messages: options.messages,
@@ -349,7 +358,7 @@ export const AIService = {
       maxTokens: options.maxTokens,
       tools: options.tools,
     });
-    
+
     for await (const chunk of stream) {
       yield chunk;
     }
@@ -361,11 +370,11 @@ export const AIService = {
   async embeddings(options) {
     // Embeddings are primarily OpenAI for now
     const enabledProviders = getEnabledProviders();
-    
+
     if (!enabledProviders.includes('openai')) {
       throw ApiError.serviceUnavailable('Embeddings require OpenAI provider');
     }
-    
+
     const provider = getProvider('openai');
     return provider.embeddings(options);
   },
@@ -376,7 +385,7 @@ export const AIService = {
   getAvailableModels() {
     const enabledProviders = getEnabledProviders();
     const models = [];
-    
+
     for (const [model, provider] of Object.entries(MODEL_PROVIDER_MAP)) {
       if (enabledProviders.includes(provider)) {
         models.push({
@@ -386,7 +395,7 @@ export const AIService = {
         });
       }
     }
-    
+
     return models;
   },
 
@@ -395,7 +404,7 @@ export const AIService = {
    */
   getProviderStatus() {
     const enabledProviders = getEnabledProviders();
-    
+
     return {
       openai: { enabled: enabledProviders.includes('openai') },
       anthropic: { enabled: enabledProviders.includes('anthropic') },

@@ -1,460 +1,480 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Database, Plus, Power, PowerOff, Trash2, Settings, CheckCircle, XCircle, AlertCircle, RefreshCw } from 'lucide-react';
+import {
+  Database,
+  Plus,
+  Power,
+  PowerOff,
+  Trash2,
+  Settings,
+  CheckCircle,
+  XCircle,
+  AlertCircle,
+  RefreshCw,
+} from 'lucide-react';
 import { CONNECTION_LIBRARY } from '../config/connection-types';
 import { getFieldSchema } from '../config/connection-fields';
 
 interface MCPConnection {
- id: string;
- name: string;
- type: string;
- enabled: boolean;
- status: 'connected' | 'disconnected' | 'error';
- lastConnected?: Date;
- error?: string;
- mcpServerType: 'docker' | 'npm' | 'custom';
+  id: string;
+  name: string;
+  type: string;
+  enabled: boolean;
+  status: 'connected' | 'disconnected' | 'error';
+  lastConnected?: Date;
+  error?: string;
+  mcpServerType: 'docker' | 'npm' | 'custom';
 }
 
 export default function ConnectionsPageEnhanced() {
- const [connections, setConnections] = useState<MCPConnection[]>([]);
- const [showAddModal, setShowAddModal] = useState(false);
- const [loading, setLoading] = useState(false);
- const [dockerAvailable, setDockerAvailable] = useState(false);
+  const [connections, setConnections] = useState<MCPConnection[]>([]);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [dockerAvailable, setDockerAvailable] = useState(false);
 
- useEffect(() => {
- loadConnections();
- checkDocker();
- }, []);
+  useEffect(() => {
+    loadConnections();
+    checkDocker();
+  }, []);
 
- const loadConnections = async () => {
- try {
- const conns = await window.electron.mcp.getAllConnections();
- setConnections(conns);
- } catch (error: any) {
- // Silently handle API key errors - user might not have backend configured yet
- if (!error?.message?.includes('Invalid API key')) {
- console.error('Failed to load connections:', error);
- }
- }
- };
+  const loadConnections = async () => {
+    try {
+      const conns = await window.electron.mcp.getAllConnections();
+      setConnections(conns);
+    } catch (error: any) {
+      // Silently handle API key errors - user might not have backend configured yet
+      if (!error?.message?.includes('Invalid API key')) {
+        console.error('Failed to load connections:', error);
+      }
+    }
+  };
 
- const checkDocker = async () => {
- try {
- const available = await window.electron.mcp.checkDocker();
- setDockerAvailable(available);
- } catch (error: any) {
- // Silently handle - Docker might not be installed
- if (!error?.message?.includes('Invalid API key')) {
- console.error('Failed to check Docker:', error);
- }
- }
- };
+  const checkDocker = async () => {
+    try {
+      const available = await window.electron.mcp.checkDocker();
+      setDockerAvailable(available);
+    } catch (error: any) {
+      // Silently handle - Docker might not be installed
+      if (!error?.message?.includes('Invalid API key')) {
+        console.error('Failed to check Docker:', error);
+      }
+    }
+  };
 
- const handleToggleConnection = async (id: string, currentlyEnabled: boolean) => {
- setLoading(true);
- try {
- if (currentlyEnabled) {
- await window.electron.mcp.disableConnection(id);
- } else {
- await window.electron.mcp.enableConnection(id);
- }
- await loadConnections();
- } catch (error: any) {
- alert(`Failed to ${currentlyEnabled ? 'disable' : 'enable'} connection: ${error.message}`);
- } finally {
- setLoading(false);
- }
- };
+  const handleToggleConnection = async (id: string, currentlyEnabled: boolean) => {
+    setLoading(true);
+    try {
+      if (currentlyEnabled) {
+        await window.electron.mcp.disableConnection(id);
+      } else {
+        await window.electron.mcp.enableConnection(id);
+      }
+      await loadConnections();
+    } catch (error: any) {
+      alert(`Failed to ${currentlyEnabled ? 'disable' : 'enable'} connection: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
- const handleDeleteConnection = async (id: string) => {
- if (!confirm('Are you sure you want to delete this connection?')) {
- return;
- }
+  const handleDeleteConnection = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this connection?')) {
+      return;
+    }
 
- setLoading(true);
- try {
- await window.electron.mcp.deleteConnection(id);
- await loadConnections();
- } catch (error: any) {
- alert(`Failed to delete connection: ${error.message}`);
- } finally {
- setLoading(false);
- }
- };
+    setLoading(true);
+    try {
+      await window.electron.mcp.deleteConnection(id);
+      await loadConnections();
+    } catch (error: any) {
+      alert(`Failed to delete connection: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
- const getStatusIcon = (status: string) => {
- switch (status) {
- case 'connected':
- return <CheckCircle className="w-5 h-5 text-zinc-400" />;
- case 'disconnected':
- return <XCircle className="w-5 h-5 text-muted-foreground" />;
- case 'error':
- return <AlertCircle className="w-5 h-5 text-zinc-400" />;
- default:
- return null;
- }
- };
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'connected':
+        return <CheckCircle className="w-5 h-5 text-zinc-400" />;
+      case 'disconnected':
+        return <XCircle className="w-5 h-5 text-muted-foreground" />;
+      case 'error':
+        return <AlertCircle className="w-5 h-5 text-zinc-400" />;
+      default:
+        return null;
+    }
+  };
 
- const getTypeBadge = (type: string) => {
- const info = CONNECTION_LIBRARY[type];
- const defaultClass = 'bg-zinc-900 text-zinc-400';
- 
- return (
- <span className={`px-2 py-1 rounded-full text-xs font-medium ${defaultClass}`}>
- {info ? info.name : type.toUpperCase()}
- </span>
- );
- };
+  const getTypeBadge = (type: string) => {
+    const info = CONNECTION_LIBRARY[type];
+    const defaultClass = 'bg-zinc-900 text-zinc-400';
 
- const getMCPBadge = (serverType: string) => {
- const icons: Record<string, string> = {
- docker: '🐳',
- npm: '📦',
- custom: '⚙️',
- };
+    return (
+      <span className={`px-2 py-1 rounded-full text-xs font-medium ${defaultClass}`}>
+        {info ? info.name : type.toUpperCase()}
+      </span>
+    );
+  };
 
- return (
- <span className="px-2 py-1 rounded text-xs font-mono bg-zinc-900">
- {icons[serverType]} {serverType}
- </span>
- );
- };
+  const getMCPBadge = (serverType: string) => {
+    const icons: Record<string, string> = {
+      docker: '🐳',
+      npm: '📦',
+      custom: '⚙️',
+    };
 
- return (
- <div className="p-8 h-full flex flex-col">
- {/* Header */}
- <div className="flex items-center justify-between mb-6">
- <div>
- <h1 className="font-medium text-white">MCP Connections</h1>
- <p className="text-muted-foreground mt-1">
- Manage Model Context Protocol connections to databases and systems
- </p>
- </div>
- <button
- onClick={() => setShowAddModal(true)}
- className="px-4 py-2 bg-white text-black rounded-lg hover:bg-zinc-200 transition-colors flex items-center gap-2"
- >
- <Plus className="w-5 h-5" />
- Add Connection
- </button>
- </div>
+    return (
+      <span className="px-2 py-1 rounded text-xs font-mono bg-zinc-900">
+        {icons[serverType]} {serverType}
+      </span>
+    );
+  };
 
- {/* Docker Status Warning */}
- {!dockerAvailable && (
- <div className="mb-6 p-4 border rounded-lg flex items-start gap-3 bg-zinc-900/30 border-zinc-800">
- <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5 text-zinc-400" />
- <div>
- <p className="font-medium text-zinc-500">
- Docker not detected
- </p>
- <p className="mt-1 text-zinc-400">
- Some MCP connections require Docker. Install Docker Desktop to enable Docker-based MCP servers.
- </p>
- </div>
- </div>
- )}
+  return (
+    <div className="p-8 h-full flex flex-col">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="font-medium text-white">MCP Connections</h1>
+          <p className="text-muted-foreground mt-1">
+            Manage Model Context Protocol connections to databases and systems
+          </p>
+        </div>
+        <button
+          onClick={() => setShowAddModal(true)}
+          className="px-4 py-2 bg-white text-black rounded-lg hover:bg-zinc-200 transition-colors flex items-center gap-2"
+        >
+          <Plus className="w-5 h-5" />
+          Add Connection
+        </button>
+      </div>
 
- {/* Connections List */}
- <div className="flex-1 overflow-y-auto">
- {connections.length === 0 ? (
- <div className="h-full flex items-center justify-center">
- <div className="text-center">
- <Database className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
- <h3 className="font-medium mb-2 text-muted-foreground">
- No connections yet
- </h3>
- <p className="text-sm text-muted-foreground mb-4">
- Add your first MCP connection to get started
- </p>
- <button
- onClick={() => setShowAddModal(true)}
- className="px-4 py-2 bg-white text-black rounded-lg hover:bg-zinc-200 transition-colors inline-flex items-center gap-2"
- >
- <Plus className="w-5 h-5" />
- Add Connection
- </button>
- </div>
- </div>
- ) : (
- <div className="grid gap-4">
- {connections.map((conn) => (
- <div
- key={conn.id}
- className="rounded-xl p-6 transition-colors bg-black border-zinc-800 hover:border-zinc-800"
- >
- <div className="flex items-start justify-between">
- <div className="flex items-start gap-4 flex-1">
- {/* Status Icon */}
- <div className="p-3 rounded-lg bg-zinc-950">
- {getStatusIcon(conn.status)}
- </div>
+      {/* Docker Status Warning */}
+      {!dockerAvailable && (
+        <div className="mb-6 p-4 border rounded-lg flex items-start gap-3 bg-zinc-900/30 border-zinc-800">
+          <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5 text-zinc-400" />
+          <div>
+            <p className="font-medium text-zinc-500">Docker not detected</p>
+            <p className="mt-1 text-zinc-400">
+              Some MCP connections require Docker. Install Docker Desktop to enable Docker-based MCP
+              servers.
+            </p>
+          </div>
+        </div>
+      )}
 
- {/* Connection Info */}
- <div className="flex-1">
- <div className="flex items-center gap-3 mb-2">
- <h3 className="font-medium text-white">
- {conn.name}
- </h3>
- {getTypeBadge(conn.type)}
- {getMCPBadge(conn.mcpServerType)}
- </div>
+      {/* Connections List */}
+      <div className="flex-1 overflow-y-auto">
+        {connections.length === 0 ? (
+          <div className="h-full flex items-center justify-center">
+            <div className="text-center">
+              <Database className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
+              <h3 className="font-medium mb-2 text-muted-foreground">No connections yet</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                Add your first MCP connection to get started
+              </p>
+              <button
+                onClick={() => setShowAddModal(true)}
+                className="px-4 py-2 bg-white text-black rounded-lg hover:bg-zinc-200 transition-colors inline-flex items-center gap-2"
+              >
+                <Plus className="w-5 h-5" />
+                Add Connection
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="grid gap-4">
+            {connections.map(conn => (
+              <div
+                key={conn.id}
+                className="rounded-xl p-6 transition-colors bg-black border-zinc-800 hover:border-zinc-800"
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex items-start gap-4 flex-1">
+                    {/* Status Icon */}
+                    <div className="p-3 rounded-lg bg-zinc-950">{getStatusIcon(conn.status)}</div>
 
- <div className="space-y-1 text-sm">
- <div className="flex items-center gap-2 text-muted-foreground">
- <span className="font-medium">Status:</span>
- <span className={
- conn.status === 'connected' ? 'text-zinc-400' :
- conn.status === 'error' ? 'text-zinc-400' :
- 'text-muted-foreground'
- }>
- {conn.status}
- </span>
- </div>
+                    {/* Connection Info */}
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h3 className="font-medium text-white">{conn.name}</h3>
+                        {getTypeBadge(conn.type)}
+                        {getMCPBadge(conn.mcpServerType)}
+                      </div>
 
- {conn.lastConnected && (
- <div className="flex items-center gap-2 text-muted-foreground">
- <span className="font-medium">Last connected:</span>
- <span>{new Date(conn.lastConnected).toLocaleString()}</span>
- </div>
- )}
+                      <div className="space-y-1 text-sm">
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <span className="font-medium">Status:</span>
+                          <span
+                            className={
+                              conn.status === 'connected'
+                                ? 'text-zinc-400'
+                                : conn.status === 'error'
+                                  ? 'text-zinc-400'
+                                  : 'text-muted-foreground'
+                            }
+                          >
+                            {conn.status}
+                          </span>
+                        </div>
 
- {conn.error && (
- <div className="mt-2 p-2 border rounded bg-zinc-900/30 border-zinc-800 text-zinc-400">
- {conn.error}
- </div>
- )}
- </div>
- </div>
- </div>
+                        {conn.lastConnected && (
+                          <div className="flex items-center gap-2 text-muted-foreground">
+                            <span className="font-medium">Last connected:</span>
+                            <span>{new Date(conn.lastConnected).toLocaleString()}</span>
+                          </div>
+                        )}
 
- {/* Actions */}
- <div className="flex items-center gap-2">
- <button
- onClick={() => handleToggleConnection(conn.id, conn.enabled)}
- disabled={loading}
- className={`p-2 rounded-lg transition-colors ${ conn.enabled ? 'bg-white/5 text-zinc-400 hover:bg-white/10' : 'bg-secondary text-muted-foreground hover:bg-zinc-900'}`}
- title={conn.enabled ? 'Disable connection' : 'Enable connection'}
- >
- {loading ? (
- <RefreshCw className="w-5 h-5 animate-spin" />
- ) : conn.enabled ? (
- <Power className="w-5 h-5" />
- ) : (
- <PowerOff className="w-5 h-5" />
- )}
- </button>
+                        {conn.error && (
+                          <div className="mt-2 p-2 border rounded bg-zinc-900/30 border-zinc-800 text-zinc-400">
+                            {conn.error}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
 
- <button
- onClick={() => {/* TODO: Open edit modal */}}
- className="p-2 rounded-lg transition-colors bg-zinc-950 text-muted-foreground hover:bg-zinc-900"
- title="Edit connection"
- >
- <Settings className="w-5 h-5" />
- </button>
+                  {/* Actions */}
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => handleToggleConnection(conn.id, conn.enabled)}
+                      disabled={loading}
+                      className={`p-2 rounded-lg transition-colors ${conn.enabled ? 'bg-white/5 text-zinc-400 hover:bg-white/10' : 'bg-secondary text-muted-foreground hover:bg-zinc-900'}`}
+                      title={conn.enabled ? 'Disable connection' : 'Enable connection'}
+                    >
+                      {loading ? (
+                        <RefreshCw className="w-5 h-5 animate-spin" />
+                      ) : conn.enabled ? (
+                        <Power className="w-5 h-5" />
+                      ) : (
+                        <PowerOff className="w-5 h-5" />
+                      )}
+                    </button>
 
- <button
- onClick={() => handleDeleteConnection(conn.id)}
- disabled={loading || conn.enabled}
- className="p-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-zinc-900/40 text-zinc-400 hover:bg-zinc-900/50"
- title="Delete connection"
- >
- <Trash2 className="w-5 h-5" />
- </button>
- </div>
- </div>
- </div>
- ))}
- </div>
- )}
- </div>
+                    <button
+                      onClick={() => {
+                        /* TODO: Open edit modal */
+                      }}
+                      className="p-2 rounded-lg transition-colors bg-zinc-950 text-muted-foreground hover:bg-zinc-900"
+                      title="Edit connection"
+                    >
+                      <Settings className="w-5 h-5" />
+                    </button>
 
- {/* Add Connection Modal */}
- {showAddModal && (
- <AddConnectionModal
- onClose={() => setShowAddModal(false)}
- onSuccess={() => {
- setShowAddModal(false);
- loadConnections();
- }}
- />
- )}
- </div>
- );
+                    <button
+                      onClick={() => handleDeleteConnection(conn.id)}
+                      disabled={loading || conn.enabled}
+                      className="p-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-zinc-900/40 text-zinc-400 hover:bg-zinc-900/50"
+                      title="Delete connection"
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Add Connection Modal */}
+      {showAddModal && (
+        <AddConnectionModal
+          onClose={() => setShowAddModal(false)}
+          onSuccess={() => {
+            setShowAddModal(false);
+            loadConnections();
+          }}
+        />
+      )}
+    </div>
+  );
 }
 
 // Add Connection Modal Component
-function AddConnectionModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: () => void }) {
- const [selectedType, setSelectedType] = useState('postgresql');
- const [connectionName, setConnectionName] = useState('');
- const [fieldValues, setFieldValues] = useState<Record<string, string>>({});
- const [loading, setLoading] = useState(false);
+function AddConnectionModal({
+  onClose,
+  onSuccess,
+}: {
+  onClose: () => void;
+  onSuccess: () => void;
+}) {
+  const [selectedType, setSelectedType] = useState('postgresql');
+  const [connectionName, setConnectionName] = useState('');
+  const [fieldValues, setFieldValues] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(false);
 
- // Get the field schema for the currently selected type
- const fieldSchema = useMemo(() => getFieldSchema(selectedType), [selectedType]);
+  // Get the field schema for the currently selected type
+  const fieldSchema = useMemo(() => getFieldSchema(selectedType), [selectedType]);
 
- // When type changes, reset field values with defaults from the schema
- useEffect(() => {
- const defaults: Record<string, string> = {};
- for (const field of fieldSchema.fields) {
- if (field.defaultValue !== undefined) {
- defaults[field.key] = String(field.defaultValue);
- }
- }
- setFieldValues(defaults);
- }, [selectedType, fieldSchema]);
+  // When type changes, reset field values with defaults from the schema
+  useEffect(() => {
+    const defaults: Record<string, string> = {};
+    for (const field of fieldSchema.fields) {
+      if (field.defaultValue !== undefined) {
+        defaults[field.key] = String(field.defaultValue);
+      }
+    }
+    setFieldValues(defaults);
+  }, [selectedType, fieldSchema]);
 
- const handleFieldChange = (key: string, value: string) => {
- setFieldValues(prev => ({ ...prev, [key]: value }));
- };
+  const handleFieldChange = (key: string, value: string) => {
+    setFieldValues(prev => ({ ...prev, [key]: value }));
+  };
 
- const handleSubmit = async (e: React.FormEvent) => {
- e.preventDefault();
- setLoading(true);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
 
- try {
- // Build the config: standard ConnectionConfig fields + options for extra fields
- const config: Record<string, any> = {
- name: connectionName,
- type: selectedType,
- options: {} as Record<string, string>,
- };
+    try {
+      // Build the config: standard ConnectionConfig fields + options for extra fields
+      const config: Record<string, any> = {
+        name: connectionName,
+        type: selectedType,
+        options: {} as Record<string, string>,
+      };
 
- // Map field values to standard ConnectionConfig fields where appropriate
- const standardFields = ['host', 'port', 'database', 'username', 'password', 'ssl'];
- for (const [key, value] of Object.entries(fieldValues)) {
- if (value === undefined || value === '') continue;
- if (standardFields.includes(key)) {
- config[key] = key === 'port' ? parseInt(value, 10) : value;
- } else {
- config.options[key] = value;
- }
- }
+      // Map field values to standard ConnectionConfig fields where appropriate
+      const standardFields = ['host', 'port', 'database', 'username', 'password', 'ssl'];
+      for (const [key, value] of Object.entries(fieldValues)) {
+        if (value === undefined || value === '') continue;
+        if (standardFields.includes(key)) {
+          config[key] = key === 'port' ? parseInt(value, 10) : value;
+        } else {
+          config.options[key] = value;
+        }
+      }
 
- await window.electron.mcp.addConnection(config);
- onSuccess();
- } catch (error: any) {
- alert(`Failed to add connection: ${error.message}`);
- } finally {
- setLoading(false);
- }
- };
+      await window.electron.mcp.addConnection(config);
+      onSuccess();
+    } catch (error: any) {
+      alert(`Failed to add connection: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
- // Group fields by their group property
- const groupedFields = useMemo(() => {
- const groups = new Map<string, typeof fieldSchema.fields>();
- for (const field of fieldSchema.fields) {
- const group = field.group || 'Connection';
- if (!groups.has(group)) groups.set(group, []);
- groups.get(group)!.push(field);
- }
- return groups;
- }, [fieldSchema]);
+  // Group fields by their group property
+  const groupedFields = useMemo(() => {
+    const groups = new Map<string, typeof fieldSchema.fields>();
+    for (const field of fieldSchema.fields) {
+      const group = field.group || 'Connection';
+      if (!groups.has(group)) groups.set(group, []);
+      groups.get(group)!.push(field);
+    }
+    return groups;
+  }, [fieldSchema]);
 
- return (
- <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
- <div className="rounded-xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto bg-zinc-950">
- <div className="p-6 border-b border-zinc-800">
- <h2 className="font-medium text-white">Add MCP Connection</h2>
- </div>
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="rounded-xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto bg-zinc-950">
+        <div className="p-6 border-b border-zinc-800">
+          <h2 className="font-medium text-white">Add MCP Connection</h2>
+        </div>
 
- <form onSubmit={handleSubmit} className="p-6 space-y-4">
- {/* Connection Name */}
- <div>
- <label className="block font-medium mb-1 text-zinc-400">
- Connection Name
- </label>
- <input
- type="text"
- required
- value={connectionName}
- onChange={(e) => setConnectionName(e.target.value)}
- className="w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-zinc-600 border-zinc-800 bg-zinc-900 text-white"
- placeholder="My Connection"
- />
- </div>
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          {/* Connection Name */}
+          <div>
+            <label className="block font-medium mb-1 text-zinc-400">Connection Name</label>
+            <input
+              type="text"
+              required
+              value={connectionName}
+              onChange={e => setConnectionName(e.target.value)}
+              className="w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-zinc-600 border-zinc-800 bg-zinc-900 text-white"
+              placeholder="My Connection"
+            />
+          </div>
 
- {/* System Type Selector */}
- <div>
- <label className="block font-medium mb-1 text-zinc-400">
- System Type
- </label>
- <select
- value={selectedType}
- onChange={(e) => setSelectedType(e.target.value)}
- className="w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-zinc-600 border-zinc-800 bg-zinc-900 text-white"
- >
- {Object.entries(CONNECTION_LIBRARY).map(([key, info]) => (
- <option key={key} value={key}>{info.icon} {info.name}</option>
- ))}
- </select>
- </div>
+          {/* System Type Selector */}
+          <div>
+            <label className="block font-medium mb-1 text-zinc-400">System Type</label>
+            <select
+              value={selectedType}
+              onChange={e => setSelectedType(e.target.value)}
+              className="w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-zinc-600 border-zinc-800 bg-zinc-900 text-white"
+            >
+              {Object.entries(CONNECTION_LIBRARY).map(([key, info]) => (
+                <option key={key} value={key}>
+                  {info.icon} {info.name}
+                </option>
+              ))}
+            </select>
+          </div>
 
- {/* Dynamic Fields grouped by category */}
- {Array.from(groupedFields.entries()).map(([groupName, fields]) => (
- <fieldset key={groupName} className="space-y-3">
- {groupedFields.size > 1 && (
- <legend className="font-medium uppercase tracking-wider mb-1 text-muted-foreground">
- {groupName}
- </legend>
- )}
- <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
- {fields.map((field) => (
- <div key={field.key} className={field.type === 'textarea' ? 'sm:col-span-2' : ''}>
- <label className="block font-medium mb-1 text-zinc-400">
- {field.label}
- {field.required && <span className="text-zinc-400 ml-1">*</span>}
- </label>
- {field.type === 'select' ? (
- <select
- value={fieldValues[field.key] || ''}
- onChange={(e) => handleFieldChange(field.key, e.target.value)}
- className="w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-zinc-600 border-zinc-800 bg-zinc-900 text-white"
- >
- <option value="">Select...</option>
- <option value="true">Yes</option>
- <option value="false">No</option>
- </select>
- ) : field.type === 'textarea' ? (
- <textarea
- value={fieldValues[field.key] || ''}
- onChange={(e) => handleFieldChange(field.key, e.target.value)}
- className="w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-zinc-600 h-20 border-zinc-800 bg-zinc-900 text-white"
- placeholder={field.placeholder}
- required={field.required}
- />
- ) : (
- <input
- type={field.type === 'password' ? 'password' : field.type === 'number' ? 'number' : 'text'}
- value={fieldValues[field.key] || ''}
- onChange={(e) => handleFieldChange(field.key, e.target.value)}
- className="w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-zinc-600 border-zinc-800 bg-zinc-900 text-white"
- placeholder={field.placeholder}
- required={field.required}
- />
- )}
- </div>
- ))}
- </div>
- </fieldset>
- ))}
+          {/* Dynamic Fields grouped by category */}
+          {Array.from(groupedFields.entries()).map(([groupName, fields]) => (
+            <fieldset key={groupName} className="space-y-3">
+              {groupedFields.size > 1 && (
+                <legend className="font-medium uppercase tracking-wider mb-1 text-muted-foreground">
+                  {groupName}
+                </legend>
+              )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {fields.map(field => (
+                  <div key={field.key} className={field.type === 'textarea' ? 'sm:col-span-2' : ''}>
+                    <label className="block font-medium mb-1 text-zinc-400">
+                      {field.label}
+                      {field.required && <span className="text-zinc-400 ml-1">*</span>}
+                    </label>
+                    {field.type === 'select' ? (
+                      <select
+                        value={fieldValues[field.key] || ''}
+                        onChange={e => handleFieldChange(field.key, e.target.value)}
+                        className="w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-zinc-600 border-zinc-800 bg-zinc-900 text-white"
+                      >
+                        <option value="">Select...</option>
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                      </select>
+                    ) : field.type === 'textarea' ? (
+                      <textarea
+                        value={fieldValues[field.key] || ''}
+                        onChange={e => handleFieldChange(field.key, e.target.value)}
+                        className="w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-zinc-600 h-20 border-zinc-800 bg-zinc-900 text-white"
+                        placeholder={field.placeholder}
+                        required={field.required}
+                      />
+                    ) : (
+                      <input
+                        type={
+                          field.type === 'password'
+                            ? 'password'
+                            : field.type === 'number'
+                              ? 'number'
+                              : 'text'
+                        }
+                        value={fieldValues[field.key] || ''}
+                        onChange={e => handleFieldChange(field.key, e.target.value)}
+                        className="w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-zinc-600 border-zinc-800 bg-zinc-900 text-white"
+                        placeholder={field.placeholder}
+                        required={field.required}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </fieldset>
+          ))}
 
- <div className="flex gap-3 pt-4">
- <button
- type="button"
- onClick={onClose}
- className="flex-1 px-4 py-2 rounded-lg transition-colors border-zinc-800 text-zinc-400 hover:bg-zinc-900"
- >
- Cancel
- </button>
- <button
- type="submit"
- disabled={loading}
- className="flex-1 px-4 py-2 bg-white text-black rounded-lg hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
- >
- {loading ? 'Adding...' : 'Add Connection'}
- </button>
- </div>
- </form>
- </div>
- </div>
- );
+          <div className="flex gap-3 pt-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 px-4 py-2 rounded-lg transition-colors border-zinc-800 text-zinc-400 hover:bg-zinc-900"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="flex-1 px-4 py-2 bg-white text-black rounded-lg hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? 'Adding...' : 'Add Connection'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 }

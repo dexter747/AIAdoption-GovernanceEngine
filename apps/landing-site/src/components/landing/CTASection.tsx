@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Link from "next/link";
-import { ArrowRight, Sparkles, Check, Zap } from "lucide-react";
+import { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Link from 'next/link';
+import { ArrowRight, Sparkles, Check, Zap } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -13,10 +13,14 @@ export function CTASection() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(".cta-inner > *", {
-        opacity: 0, y: 25, duration: 0.6, stagger: 0.1, ease: "power2.out",
+      gsap.from('.cta-inner > *', {
+        opacity: 0,
+        y: 25,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: 'power2.out',
         immediateRender: false,
-        scrollTrigger: { trigger: ref.current, start: "top 88%", once: true },
+        scrollTrigger: { trigger: ref.current, start: 'top 88%', once: true },
       });
     }, ref);
     return () => ctx.revert();
@@ -36,16 +40,18 @@ export function CTASection() {
           </div>
 
           <h2 className="text-4xl md:text-6xl font-medium tracking-tight mb-7 leading-tight text-white">
-            Ready To Transform Your<br />
+            Ready To Transform Your
+            <br />
             <span className="text-shimmer">Legacy Systems With AI?</span>
           </h2>
 
           <p className="text-lg mb-10 max-w-2xl mx-auto leading-relaxed text-zinc-500">
-            Join 2,500+ enterprises using Velanova to unlock insights, automate workflows, and save 89% on data access time.
+            Join 2,500+ enterprises using Velanova to unlock insights, automate workflows, and save
+            89% on data access time.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-7 mb-12">
-            {["No credit card required", "24-hour setup", "Cancel anytime"].map((text) => (
+            {['No credit card required', '24-hour setup', 'Cancel anytime'].map(text => (
               <div key={text} className="flex items-center gap-2">
                 <Check className="w-4 h-4 text-zinc-500" />
                 <span className="text-sm font-medium text-zinc-400">{text}</span>
@@ -71,12 +77,14 @@ export function CTASection() {
           </div>
 
           <div className="mt-14 flex flex-wrap items-center justify-center gap-8">
-            {["No credit card required", "Deploy in under 5 minutes", "99.9% Uptime SLA"].map((text) => (
-              <div key={text} className="flex items-center gap-2 text-zinc-600">
-                <div className="w-1.5 h-1.5 rounded-full bg-zinc-700" />
-                <span className="text-sm">{text}</span>
-              </div>
-            ))}
+            {['No credit card required', 'Deploy in under 5 minutes', '99.9% Uptime SLA'].map(
+              text => (
+                <div key={text} className="flex items-center gap-2 text-zinc-600">
+                  <div className="w-1.5 h-1.5 rounded-full bg-zinc-700" />
+                  <span className="text-sm">{text}</span>
+                </div>
+              )
+            )}
           </div>
         </div>
       </div>

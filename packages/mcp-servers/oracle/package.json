@@ -4,7 +4,9 @@
   "description": "Model Context Protocol server for Oracle Database",
   "type": "module",
   "main": "dist/index.js",
-  "bin": { "mcp-oracle": "./dist/index.js" },
+  "bin": {
+    "mcp-oracle": "./dist/index.js"
+  },
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js"

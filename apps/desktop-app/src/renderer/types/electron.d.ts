@@ -90,8 +90,8 @@ export interface ElectronAPI {
     login: () => Promise<{ opened: boolean }>;
     logout: () => Promise<{ success: boolean }>;
     getUser: () => Promise<User | null>;
-    onSuccess: (callback: (data: AuthData) => void) => (() => void);
-    onError: (callback: (error: string) => void) => (() => void);
+    onSuccess: (callback: (data: AuthData) => void) => () => void;
+    onError: (callback: (error: string) => void) => () => void;
   };
 
   // Connection API
@@ -115,16 +115,31 @@ export interface ElectronAPI {
     getAvailableServers: () => Promise<any[]>;
     checkDocker: () => Promise<boolean>;
     // New MCP Client SDK methods
-    connect: (config: { id: string; type: string; connectionString: string; name: string; connectionParams?: Record<string, string> }) => 
-      Promise<{ success: boolean; error?: string }>;
+    connect: (config: {
+      id: string;
+      type: string;
+      connectionString: string;
+      name: string;
+      connectionParams?: Record<string, string>;
+    }) => Promise<{ success: boolean; error?: string }>;
     disconnect: (connectionId: string) => Promise<{ success: boolean }>;
-    query: (connectionId: string, sql: string) => Promise<{ success: boolean; data?: any; error?: string }>;
-    callTool: (connectionId: string, toolName: string, args: any) => 
-      Promise<{ success: boolean; data?: any; error?: string }>;
+    query: (
+      connectionId: string,
+      sql: string
+    ) => Promise<{ success: boolean; data?: any; error?: string }>;
+    callTool: (
+      connectionId: string,
+      toolName: string,
+      args: any
+    ) => Promise<{ success: boolean; data?: any; error?: string }>;
     listTables: (connectionId: string) => Promise<{ success: boolean; data?: any; error?: string }>;
-    getTableSchema: (connectionId: string, tableName: string) => 
-      Promise<{ success: boolean; data?: any; error?: string }>;
-    getTools: (connectionId: string) => Promise<Array<{ name: string; description: string; inputSchema: any }> | null>;
+    getTableSchema: (
+      connectionId: string,
+      tableName: string
+    ) => Promise<{ success: boolean; data?: any; error?: string }>;
+    getTools: (
+      connectionId: string
+    ) => Promise<Array<{ name: string; description: string; inputSchema: any }> | null>;
     getAllToolsForAI: () => Promise<Array<{ name: string; description: string; inputSchema: any }>>;
     getStatus: () => Promise<{ connections: string[]; activeCount: number }>;
     isConnected: (connectionId: string) => Promise<boolean>;
@@ -150,7 +165,10 @@ export interface ElectronAPI {
       provider?: string;
       limit?: number;
     }) => Promise<ChatConversation[]>;
-    updateConversation: (id: string, updates: Partial<ChatConversation>) => Promise<ChatConversation>;
+    updateConversation: (
+      id: string,
+      updates: Partial<ChatConversation>
+    ) => Promise<ChatConversation>;
     deleteConversation: (id: string) => Promise<void>;
     clearConversation: (id: string) => Promise<void>;
     searchConversations: (query: string) => Promise<ChatConversation[]>;
@@ -182,43 +200,66 @@ export interface ElectronAPI {
       temperature?: number;
       maxTokens?: number;
       connectionId?: string;
-    }) => Promise<ExpressResponse<{
-      response: string;
-      usage?: {
-        tokensUsed: number;
-        cost: number;
-      };
-    }>>;
-    validateLicense: (licenseKey: string, deviceId: string, deviceInfo?: any) => Promise<ExpressResponse<{
-      valid: boolean;
-      license?: any;
-    }>>;
-    
+    }) => Promise<
+      ExpressResponse<{
+        response: string;
+        usage?: {
+          tokensUsed: number;
+          cost: number;
+        };
+      }>
+    >;
+    validateLicense: (
+      licenseKey: string,
+      deviceId: string,
+      deviceInfo?: any
+    ) => Promise<
+      ExpressResponse<{
+        valid: boolean;
+        license?: any;
+      }>
+    >;
+
     // User API Keys (BYOK)
     getProvidersList: () => Promise<any[]>;
     getUserApiKeys: () => Promise<any[]>;
     getUserApiKeyByProvider: (provider: string) => Promise<any>;
-    addUserApiKey: (provider: string, apiKey: string, keyName?: string, config?: any) => Promise<any>;
+    addUserApiKey: (
+      provider: string,
+      apiKey: string,
+      keyName?: string,
+      config?: any
+    ) => Promise<any>;
     updateUserApiKey: (keyId: string, updates: any) => Promise<any>;
     deleteUserApiKey: (keyId: string) => Promise<void>;
     testUserApiKey: (keyId: string) => Promise<{ success: boolean; message?: string }>;
-    
+
     // User Database Connections
     getConnectionTypes: () => Promise<any[]>;
     getUserConnections: () => Promise<any[]>;
     getUserConnection: (connectionId: string) => Promise<any>;
-    addUserConnection: (name: string, connectionType: string, config: any, mcpServerType?: string) => Promise<any>;
+    addUserConnection: (
+      name: string,
+      connectionType: string,
+      config: any,
+      mcpServerType?: string
+    ) => Promise<any>;
     updateUserConnection: (connectionId: string, updates: any) => Promise<any>;
     deleteUserConnection: (connectionId: string) => Promise<void>;
-    testUserConnection: (connectionId: string) => Promise<{ success: boolean; message?: string; details?: any }>;
+    testUserConnection: (
+      connectionId: string
+    ) => Promise<{ success: boolean; message?: string; details?: any }>;
     startMCPServer: (connectionId: string) => Promise<any>;
-    
+
     // Usage & Subscriptions
-    getUsage: (userId: string, options?: {
-      startDate?: string;
-      endDate?: string;
-      provider?: string;
-    }) => Promise<ExpressResponse<any[]>>;
+    getUsage: (
+      userId: string,
+      options?: {
+        startDate?: string;
+        endDate?: string;
+        provider?: string;
+      }
+    ) => Promise<ExpressResponse<any[]>>;
     logUsage: (data: {
       userId: string;
       licenseId: string;
@@ -230,7 +271,7 @@ export interface ElectronAPI {
       metadata?: any;
     }) => Promise<ExpressResponse<void>>;
     getSubscription: (userId: string) => Promise<ExpressResponse<any>>;
-    
+
     // Auth
     setAuth: (userId: string, licenseKey: string, authToken?: string) => Promise<void>;
     setAuthToken: (token: string) => Promise<void>;
@@ -362,8 +403,15 @@ export interface ElectronAPI {
       }>;
     }) => Promise<any>;
     importFile: (options?: { name?: string; tags?: string[]; chunkSize?: number }) => Promise<any>;
-    importFilePath: (filePath: string, options?: { name?: string; tags?: string[]; chunkSize?: number }) => Promise<any>;
-    createMemory: (data: { conversationId: string; summary: string; keyFacts: string[] }) => Promise<any>;
+    importFilePath: (
+      filePath: string,
+      options?: { name?: string; tags?: string[]; chunkSize?: number }
+    ) => Promise<any>;
+    createMemory: (data: {
+      conversationId: string;
+      summary: string;
+      keyFacts: string[];
+    }) => Promise<any>;
     getStats: () => Promise<any>;
     exportAll: () => Promise<any>;
     importJson: (options?: { overwrite?: boolean }) => Promise<any>;

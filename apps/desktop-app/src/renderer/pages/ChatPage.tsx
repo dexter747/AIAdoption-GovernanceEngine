@@ -49,7 +49,7 @@ const ChatPage: React.FC = () => {
   // UI state
   const [showSidebar, setShowSidebar] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -73,7 +73,9 @@ const ChatPage: React.FC = () => {
   const loadConnections = async () => {
     try {
       const allConnections = await window.electron.mcp.getAllConnections();
-      const enabledConnections = allConnections.filter((c: MCPConnection) => c.enabled && c.status === 'connected');
+      const enabledConnections = allConnections.filter(
+        (c: MCPConnection) => c.enabled && c.status === 'connected'
+      );
       setConnections(enabledConnections);
       if (enabledConnections.length > 0 && !selectedConnectionId) {
         setSelectedConnectionId(enabledConnections[0].id);
@@ -93,7 +95,7 @@ const ChatPage: React.FC = () => {
         setError('Express API is not running. Please start the backend server.');
       }
     } catch (err) {
-      setError('Cannot connect to Express API. Make sure it\'s running on localhost:5500');
+      setError("Cannot connect to Express API. Make sure it's running on localhost:5500");
     }
   };
 
@@ -145,7 +147,7 @@ const ChatPage: React.FC = () => {
     };
 
     // Add user message to UI
-    setMessages((prev) => [...prev, userMessage]);
+    setMessages(prev => [...prev, userMessage]);
     setInputValue('');
     setIsLoading(true);
     setError(null);
@@ -154,7 +156,7 @@ const ChatPage: React.FC = () => {
       // Create conversation if new chat
       let conversationId = currentConversation?.id;
       if (!conversationId) {
-        const connection = connections.find((c) => c.id === selectedConnectionId);
+        const connection = connections.find(c => c.id === selectedConnectionId);
         const newConversation = await window.electron.chat.createConversation({
           connectionId: selectedConnectionId || undefined,
           connectionName: connection?.name,
@@ -178,7 +180,7 @@ const ChatPage: React.FC = () => {
         licenseId: 'default-license', // TODO: Get from license manager
         provider: selectedProvider,
         model: selectedModel,
-        messages: [...messages, userMessage].map((m) => ({
+        messages: [...messages, userMessage].map(m => ({
           role: m.role,
           content: m.content,
         })),
@@ -198,7 +200,7 @@ const ChatPage: React.FC = () => {
         };
 
         // Add assistant message to UI
-        setMessages((prev) => [...prev, assistantMessage]);
+        setMessages(prev => [...prev, assistantMessage]);
 
         // Save to conversation
         await window.electron.chat.addMessage(conversationId, {
@@ -234,7 +236,7 @@ const ChatPage: React.FC = () => {
     } catch (err: any) {
       console.error('Error sending message:', err);
       setError(err.message || 'Failed to send message. Please try again.');
-      
+
       // Add error message to UI
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -242,7 +244,7 @@ const ChatPage: React.FC = () => {
         content: `Error: ${err.message || 'Failed to get response from AI'}`,
         timestamp: new Date(),
       };
-      setMessages((prev) => [...prev, errorMessage]);
+      setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }
@@ -288,8 +290,18 @@ const ChatPage: React.FC = () => {
               onClick={() => setShowSidebar(!showSidebar)}
               className="p-2 hover:bg-white/5 rounded-xl transition-all duration-200 group"
             >
-              <svg className="w-5 h-5 text-zinc-500 group-hover:text-zinc-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              <svg
+                className="w-5 h-5 text-zinc-500 group-hover:text-zinc-400 transition-colors"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
               </svg>
             </button>
             <div>
@@ -298,7 +310,8 @@ const ChatPage: React.FC = () => {
               </h1>
               {currentConversation && (
                 <p className="text-xs text-zinc-500">
-                  {currentConversation.messages.length} messages • {formatCost(currentConversation.totalCost)}
+                  {currentConversation.messages.length} messages •{' '}
+                  {formatCost(currentConversation.totalCost)}
                 </p>
               )}
             </div>
@@ -310,12 +323,14 @@ const ChatPage: React.FC = () => {
               <span className="text-sm text-zinc-500">Database:</span>
               <select
                 value={selectedConnectionId}
-                onChange={(e) => setSelectedConnectionId(e.target.value)}
+                onChange={e => setSelectedConnectionId(e.target.value)}
                 disabled={isLoading}
                 className="px-3 py-1.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-zinc-600/60 disabled:opacity-50 hover:bg-white/10 transition-all cursor-pointer"
               >
-                <option value="" className="bg-[#1A1A1A]">None</option>
-                {connections.map((conn) => (
+                <option value="" className="bg-[#1A1A1A]">
+                  None
+                </option>
+                {connections.map(conn => (
                   <option key={conn.id} value={conn.id} className="bg-[#1A1A1A]">
                     {conn.name} ({conn.type})
                   </option>
@@ -329,45 +344,72 @@ const ChatPage: React.FC = () => {
         <div className="flex-1 overflow-y-auto relative">
           {/* Ambient Background */}
           <div className="absolute inset-0 bg-gradient-to-br from-zinc-400/[0.03] via-transparent to-zinc-500/[0.03] pointer-events-none" />
-          
+
           {messages.length === 0 ? (
             <div className="flex items-center justify-center h-full relative z-10">
               <div className="text-center max-w-3xl px-6 animate-in fade-in duration-700">
                 {/* Gradient Icon */}
                 <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-white/10 to-white/10 flex items-center justify-center backdrop-blur-xl border border-white/10">
-                  <svg className="w-10 h-10 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  <svg
+                    className="w-10 h-10 text-zinc-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                    />
                   </svg>
                 </div>
-                
+
                 <h2 className="text-3xl font-medium bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent mb-3">
                   Start a Conversation
                 </h2>
                 <p className="text-zinc-500 mb-8 text-base">
-                  Select an AI model and start chatting. Query databases, get code help, or have a general conversation.
+                  Select an AI model and start chatting. Query databases, get code help, or have a
+                  general conversation.
                 </p>
-                
+
                 {/* Feature Cards - Modern Design */}
                 <div className="grid grid-cols-2 gap-3 text-left">
                   <div className="group p-5 bg-white/[0.03] hover:bg-white/[0.06] border border-white/10 hover:border-white/20 rounded-2xl transition-all duration-300 cursor-pointer backdrop-blur-xl">
                     <div className="text-3xl mb-3">💡</div>
-                    <div className="text-sm font-medium text-white mb-1.5 group-hover:text-zinc-400 transition-colors">Query Database</div>
-                    <div className="text-xs text-zinc-500 leading-relaxed">Connect to a database and ask questions in natural language</div>
+                    <div className="text-sm font-medium text-white mb-1.5 group-hover:text-zinc-400 transition-colors">
+                      Query Database
+                    </div>
+                    <div className="text-xs text-zinc-500 leading-relaxed">
+                      Connect to a database and ask questions in natural language
+                    </div>
                   </div>
                   <div className="group p-5 bg-white/[0.03] hover:bg-white/[0.06] border border-white/10 hover:border-white/20 rounded-2xl transition-all duration-300 cursor-pointer backdrop-blur-xl">
                     <div className="text-3xl mb-3">🔧</div>
-                    <div className="text-sm font-medium text-white mb-1.5 group-hover:text-zinc-400 transition-colors">Code Assistance</div>
-                    <div className="text-xs text-zinc-500 leading-relaxed">Get help with SQL queries, debugging, and optimization</div>
+                    <div className="text-sm font-medium text-white mb-1.5 group-hover:text-zinc-400 transition-colors">
+                      Code Assistance
+                    </div>
+                    <div className="text-xs text-zinc-500 leading-relaxed">
+                      Get help with SQL queries, debugging, and optimization
+                    </div>
                   </div>
                   <div className="group p-5 bg-white/[0.03] hover:bg-white/[0.06] border border-white/10 hover:border-white/20 rounded-2xl transition-all duration-300 cursor-pointer backdrop-blur-xl">
                     <div className="text-3xl mb-3">📊</div>
-                    <div className="text-sm font-medium text-white mb-1.5 group-hover:text-zinc-400 transition-colors">Data Analysis</div>
-                    <div className="text-xs text-zinc-500 leading-relaxed">Analyze data patterns and generate insights</div>
+                    <div className="text-sm font-medium text-white mb-1.5 group-hover:text-zinc-400 transition-colors">
+                      Data Analysis
+                    </div>
+                    <div className="text-xs text-zinc-500 leading-relaxed">
+                      Analyze data patterns and generate insights
+                    </div>
                   </div>
                   <div className="group p-5 bg-white/[0.03] hover:bg-white/[0.06] border border-white/10 hover:border-white/20 rounded-2xl transition-all duration-300 cursor-pointer backdrop-blur-xl">
                     <div className="text-3xl mb-3">✨</div>
-                    <div className="text-sm font-medium text-white mb-1.5 group-hover:text-zinc-400 transition-colors">Multi-Provider</div>
-                    <div className="text-xs text-zinc-500 leading-relaxed">Choose from 15+ AI providers and 50+ models</div>
+                    <div className="text-sm font-medium text-white mb-1.5 group-hover:text-zinc-400 transition-colors">
+                      Multi-Provider
+                    </div>
+                    <div className="text-xs text-zinc-500 leading-relaxed">
+                      Choose from 15+ AI providers and 50+ models
+                    </div>
                   </div>
                 </div>
               </div>
@@ -384,23 +426,37 @@ const ChatPage: React.FC = () => {
                 >
                   {message.role === 'assistant' && (
                     <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-zinc-400 to-zinc-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-white/5">
-                      <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      <svg
+                        className="w-5 h-5 text-white"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M13 10V3L4 14h7v7l9-11h-7z"
+                        />
                       </svg>
                     </div>
                   )}
-                  <div className={`flex-1 max-w-3xl ${message.role === 'user' ? 'flex justify-end' : ''}`}>
+                  <div
+                    className={`flex-1 max-w-3xl ${message.role === 'user' ? 'flex justify-end' : ''}`}
+                  >
                     <div
                       className={`group relative ${
                         message.role === 'user'
                           ? 'px-5 py-3.5 rounded-3xl bg-gradient-to-br from-zinc-400 to-zinc-600 text-white shadow-lg shadow-white/5'
                           : message.content.startsWith('Error:')
-                          ? 'px-5 py-3.5 rounded-3xl bg-white/5 border border-zinc-700/30 text-zinc-400 backdrop-blur-xl'
-                          : 'px-5 py-3.5 rounded-3xl bg-white/[0.04] backdrop-blur-xl border border-white/10 text-white shadow-xl'
+                            ? 'px-5 py-3.5 rounded-3xl bg-white/5 border border-zinc-700/30 text-zinc-400 backdrop-blur-xl'
+                            : 'px-5 py-3.5 rounded-3xl bg-white/[0.04] backdrop-blur-xl border border-white/10 text-white shadow-xl'
                       }`}
                     >
                       <div className="prose prose-invert max-w-none">
-                        <p className="whitespace-pre-wrap leading-relaxed text-[15px]">{message.content}</p>
+                        <p className="whitespace-pre-wrap leading-relaxed text-[15px]">
+                          {message.content}
+                        </p>
                       </div>
                       <div className="flex items-center gap-3 mt-3 text-xs opacity-60">
                         <span>{formatTimestamp(message.timestamp)}</span>
@@ -421,8 +477,18 @@ const ChatPage: React.FC = () => {
                   </div>
                   {message.role === 'user' && (
                     <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center flex-shrink-0 border border-white/10">
-                      <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      <svg
+                        className="w-5 h-5 text-white"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                        />
                       </svg>
                     </div>
                   )}
@@ -431,17 +497,36 @@ const ChatPage: React.FC = () => {
               {isLoading && (
                 <div className="flex gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
                   <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-zinc-400 to-zinc-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-white/5">
-                    <svg className="w-5 h-5 text-white animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    <svg
+                      className="w-5 h-5 text-white animate-pulse"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 10V3L4 14h7v7l9-11h-7z"
+                      />
                     </svg>
                   </div>
                   <div className="flex-1 max-w-3xl">
                     <div className="px-5 py-3.5 rounded-3xl bg-white/[0.04] backdrop-blur-xl border border-white/10 shadow-xl">
                       <div className="flex items-center gap-2">
                         <div className="flex gap-1.5">
-                          <div className="w-2 h-2 bg-zinc-700 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                          <div className="w-2 h-2 bg-zinc-700 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                          <div className="w-2 h-2 bg-zinc-700 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                          <div
+                            className="w-2 h-2 bg-zinc-700 rounded-full animate-bounce"
+                            style={{ animationDelay: '0ms' }}
+                          ></div>
+                          <div
+                            className="w-2 h-2 bg-zinc-700 rounded-full animate-bounce"
+                            style={{ animationDelay: '150ms' }}
+                          ></div>
+                          <div
+                            className="w-2 h-2 bg-zinc-700 rounded-full animate-bounce"
+                            style={{ animationDelay: '300ms' }}
+                          ></div>
                         </div>
                         <span className="text-sm text-zinc-500">Thinking...</span>
                       </div>
@@ -461,8 +546,18 @@ const ChatPage: React.FC = () => {
             {error && (
               <div className="mb-4 p-4 bg-white/5 border border-zinc-700/30 rounded-2xl flex items-start gap-3 backdrop-blur-xl animate-in slide-in-from-top-2 duration-300">
                 <div className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <svg className="w-3 h-3 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <svg
+                    className="w-3 h-3 text-zinc-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </div>
                 <div className="flex-1">
@@ -473,7 +568,12 @@ const ChatPage: React.FC = () => {
                   className="text-zinc-400 hover:text-zinc-400 transition-colors"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               </div>
@@ -496,7 +596,7 @@ const ChatPage: React.FC = () => {
                 <textarea
                   ref={textareaRef}
                   value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
+                  onChange={e => setInputValue(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder="Message AI... (Shift+Enter for new line)"
                   disabled={isLoading}
@@ -517,7 +617,7 @@ const ChatPage: React.FC = () => {
               >
                 {/* Shine effect on hover */}
                 <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-                
+
                 {isLoading ? (
                   <>
                     <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
@@ -525,8 +625,18 @@ const ChatPage: React.FC = () => {
                   </>
                 ) : (
                   <>
-                    <svg className="w-5 h-5 relative" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                    <svg
+                      className="w-5 h-5 relative"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                      />
                     </svg>
                     <span className="relative">Send</span>
                   </>

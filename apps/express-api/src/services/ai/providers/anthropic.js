@@ -14,11 +14,11 @@ export class AnthropicProvider {
     if (!config.apiKey) {
       throw new Error('Anthropic API key not configured');
     }
-    
+
     this.client = new Anthropic({
       apiKey: config.apiKey,
     });
-    
+
     this.config = config;
   }
 
@@ -30,7 +30,7 @@ export class AnthropicProvider {
       // Extract system message if present
       let systemMessage = '';
       const chatMessages = [];
-      
+
       for (const msg of messages) {
         if (msg.role === 'system') {
           systemMessage += msg.content + '\n';
@@ -38,11 +38,13 @@ export class AnthropicProvider {
           // Handle tool result messages for Anthropic format
           chatMessages.push({
             role: 'user',
-            content: [{
-              type: 'tool_result',
-              tool_use_id: msg.tool_call_id,
-              content: msg.content,
-            }],
+            content: [
+              {
+                type: 'tool_result',
+                tool_use_id: msg.tool_call_id,
+                content: msg.content,
+              },
+            ],
           });
         } else {
           chatMessages.push({
@@ -59,7 +61,7 @@ export class AnthropicProvider {
         system: systemMessage.trim() || undefined,
         messages: chatMessages,
       };
-      
+
       // Add tools if provided (for MCP integration)
       if (tools && tools.length > 0) {
         requestParams.tools = tools.map(tool => ({
@@ -113,14 +115,14 @@ export class AnthropicProvider {
       };
     } catch (err) {
       logger.error({ error: err.message, model }, 'Anthropic chat failed');
-      
+
       if (err.status === 429) {
         throw ApiError.tooManyRequests('Anthropic rate limit exceeded');
       }
       if (err.status === 401) {
         throw ApiError.unauthorized('Invalid Anthropic API key');
       }
-      
+
       throw ApiError.internal(`Anthropic error: ${err.message}`);
     }
   }
@@ -130,7 +132,7 @@ export class AnthropicProvider {
       // Extract system message
       let systemMessage = '';
       const chatMessages = [];
-      
+
       for (const msg of messages) {
         if (msg.role === 'system') {
           systemMessage += msg.content + '\n';
@@ -149,7 +151,7 @@ export class AnthropicProvider {
         system: systemMessage.trim() || undefined,
         messages: chatMessages,
       };
-      
+
       // Add tools if provided
       if (tools && tools.length > 0) {
         requestParams.tools = tools.map(tool => ({

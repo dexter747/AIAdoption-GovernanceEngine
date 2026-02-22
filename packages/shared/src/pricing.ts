@@ -138,11 +138,11 @@ export function calculateTotalPrice(
   const overageTotal = overages.reduce((sum, overage) => {
     switch (overage.type) {
       case 'tokens':
-        return sum + (overage.amount * USAGE_BASED_PRICING.additionalTokens.price / 1_000_000);
+        return sum + (overage.amount * USAGE_BASED_PRICING.additionalTokens.price) / 1_000_000;
       case 'connections':
-        return sum + (overage.amount * USAGE_BASED_PRICING.additionalConnections.price);
+        return sum + overage.amount * USAGE_BASED_PRICING.additionalConnections.price;
       case 'users':
-        return sum + (overage.amount * USAGE_BASED_PRICING.additionalUsers.price);
+        return sum + overage.amount * USAGE_BASED_PRICING.additionalUsers.price;
       default:
         return sum;
     }

@@ -1,9 +1,6 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import {
-  CallToolRequestSchema,
-  ListToolsRequestSchema,
-} from '@modelcontextprotocol/sdk/types.js';
+import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import axios, { AxiosInstance } from 'axios';
 
 const SIEBEL_URL = process.env.SIEBEL_URL || '';
@@ -74,8 +71,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: 'get_record',
-        description:
-          'Get a single record by ID from a Siebel Business Component.',
+        description: 'Get a single record by ID from a Siebel Business Component.',
         inputSchema: {
           type: 'object' as const,
           properties: {
@@ -101,8 +97,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: 'create_record',
-        description:
-          'Create a new record in a Siebel Business Component.',
+        description: 'Create a new record in a Siebel Business Component.',
         inputSchema: {
           type: 'object' as const,
           properties: {
@@ -125,8 +120,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: 'update_record',
-        description:
-          'Update an existing record in a Siebel Business Component.',
+        description: 'Update an existing record in a Siebel Business Component.',
         inputSchema: {
           type: 'object' as const,
           properties: {
@@ -153,8 +147,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: 'list_business_objects',
-        description:
-          'List available Siebel Business Objects and their components.',
+        description: 'List available Siebel Business Objects and their components.',
         inputSchema: {
           type: 'object' as const,
           properties: {
@@ -168,8 +161,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: 'search_records',
-        description:
-          'Search records across a Siebel Business Component using a search expression.',
+        description: 'Search records across a Siebel Business Component using a search expression.',
         inputSchema: {
           type: 'object' as const,
           properties: {
@@ -201,7 +193,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
   };
 });
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   const { name, arguments: args } = request.params;
   const client = createClient();
 
@@ -221,10 +213,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         if (fields) params.fields = fields;
         if (pageSize) params.PageSize = pageSize;
 
-        const response = await client.get(
-          `/data/${businessObject}/${businessComponent}`,
-          { params }
-        );
+        const response = await client.get(`/data/${businessObject}/${businessComponent}`, {
+          params,
+        });
 
         return {
           content: [{ type: 'text' as const, text: JSON.stringify(response.data, null, 2) }],
@@ -259,10 +250,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           data: Record<string, unknown>;
         };
 
-        const response = await client.post(
-          `/data/${businessObject}/${businessComponent}`,
-          data
-        );
+        const response = await client.post(`/data/${businessObject}/${businessComponent}`, data);
 
         return {
           content: [{ type: 'text' as const, text: JSON.stringify(response.data, null, 2) }],
@@ -317,10 +305,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         if (fields) params.fields = fields;
         if (pageSize) params.PageSize = pageSize;
 
-        const response = await client.get(
-          `/data/${businessObject}/${businessComponent}`,
-          { params }
-        );
+        const response = await client.get(`/data/${businessObject}/${businessComponent}`, {
+          params,
+        });
 
         return {
           content: [{ type: 'text' as const, text: JSON.stringify(response.data, null, 2) }],

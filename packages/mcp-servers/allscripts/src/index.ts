@@ -2,24 +2,95 @@
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { CallToolRequestSchema, ListToolsRequestSchema, Tool } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+  Tool,
+} from '@modelcontextprotocol/sdk/types.js';
 import axios, { AxiosInstance } from 'axios';
 
 let api: AxiosInstance | null = null;
 let unityToken: string = '';
 
 const TOOLS: Tool[] = [
-  { name: 'search_patients', description: 'Search patients', inputSchema: { type: 'object', properties: { searchTerm: { type: 'string' }, appName: { type: 'string' } }, required: ['searchTerm'] } },
-  { name: 'get_patient', description: 'Get patient details', inputSchema: { type: 'object', properties: { patientId: { type: 'string' } }, required: ['patientId'] } },
-  { name: 'get_clinical_summary', description: 'Get clinical summary', inputSchema: { type: 'object', properties: { patientId: { type: 'string' } }, required: ['patientId'] } },
-  { name: 'get_medications', description: 'Get patient medications', inputSchema: { type: 'object', properties: { patientId: { type: 'string' } }, required: ['patientId'] } },
-  { name: 'get_allergies', description: 'Get patient allergies', inputSchema: { type: 'object', properties: { patientId: { type: 'string' } }, required: ['patientId'] } },
-  { name: 'get_problems', description: 'Get patient problem list', inputSchema: { type: 'object', properties: { patientId: { type: 'string' } }, required: ['patientId'] } },
-  { name: 'get_vitals', description: 'Get patient vitals', inputSchema: { type: 'object', properties: { patientId: { type: 'string' } }, required: ['patientId'] } },
-  { name: 'unity_call', description: 'Make a generic Unity API call', inputSchema: { type: 'object', properties: { action: { type: 'string' }, data: { type: 'object' } }, required: ['action'] } },
+  {
+    name: 'search_patients',
+    description: 'Search patients',
+    inputSchema: {
+      type: 'object',
+      properties: { searchTerm: { type: 'string' }, appName: { type: 'string' } },
+      required: ['searchTerm'],
+    },
+  },
+  {
+    name: 'get_patient',
+    description: 'Get patient details',
+    inputSchema: {
+      type: 'object',
+      properties: { patientId: { type: 'string' } },
+      required: ['patientId'],
+    },
+  },
+  {
+    name: 'get_clinical_summary',
+    description: 'Get clinical summary',
+    inputSchema: {
+      type: 'object',
+      properties: { patientId: { type: 'string' } },
+      required: ['patientId'],
+    },
+  },
+  {
+    name: 'get_medications',
+    description: 'Get patient medications',
+    inputSchema: {
+      type: 'object',
+      properties: { patientId: { type: 'string' } },
+      required: ['patientId'],
+    },
+  },
+  {
+    name: 'get_allergies',
+    description: 'Get patient allergies',
+    inputSchema: {
+      type: 'object',
+      properties: { patientId: { type: 'string' } },
+      required: ['patientId'],
+    },
+  },
+  {
+    name: 'get_problems',
+    description: 'Get patient problem list',
+    inputSchema: {
+      type: 'object',
+      properties: { patientId: { type: 'string' } },
+      required: ['patientId'],
+    },
+  },
+  {
+    name: 'get_vitals',
+    description: 'Get patient vitals',
+    inputSchema: {
+      type: 'object',
+      properties: { patientId: { type: 'string' } },
+      required: ['patientId'],
+    },
+  },
+  {
+    name: 'unity_call',
+    description: 'Make a generic Unity API call',
+    inputSchema: {
+      type: 'object',
+      properties: { action: { type: 'string' }, data: { type: 'object' } },
+      required: ['action'],
+    },
+  },
 ];
 
-const server = new Server({ name: 'allscripts-mcp-server', version: '1.0.0' }, { capabilities: { tools: {} } });
+const server = new Server(
+  { name: 'allscripts-mcp-server', version: '1.0.0' },
+  { capabilities: { tools: {} } }
+);
 
 async function initConnection() {
   const baseUrl = process.env.ALLSCRIPTS_URL;
@@ -28,7 +99,8 @@ async function initConnection() {
   const appPassword = process.env.ALLSCRIPTS_APP_PASSWORD || '';
 
   const tokenResp = await axios.post(`${baseUrl}/Unity/UnityService.svc/json/GetToken`, {
-    Username: appUsername, Password: appPassword,
+    Username: appUsername,
+    Password: appPassword,
   });
   unityToken = tokenResp.data;
 
@@ -60,22 +132,118 @@ async function unityCall(action: string, patientId?: string, data?: any) {
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: TOOLS }));
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   const { name, arguments: args } = request.params;
   try {
     switch (name) {
-      case 'search_patients': return { content: [{ type: 'text' as const, text: JSON.stringify(await unityCall('SearchPatients', undefined, { param1: (args as any).searchTerm }), null, 2) }] };
-      case 'get_patient': return { content: [{ type: 'text' as const, text: JSON.stringify(await unityCall('GetPatient', (args as any).patientId), null, 2) }] };
-      case 'get_clinical_summary': return { content: [{ type: 'text' as const, text: JSON.stringify(await unityCall('GetClinicalSummary', (args as any).patientId), null, 2) }] };
-      case 'get_medications': return { content: [{ type: 'text' as const, text: JSON.stringify(await unityCall('GetMedications', (args as any).patientId), null, 2) }] };
-      case 'get_allergies': return { content: [{ type: 'text' as const, text: JSON.stringify(await unityCall('GetAllergies', (args as any).patientId), null, 2) }] };
-      case 'get_problems': return { content: [{ type: 'text' as const, text: JSON.stringify(await unityCall('GetProblems', (args as any).patientId), null, 2) }] };
-      case 'get_vitals': return { content: [{ type: 'text' as const, text: JSON.stringify(await unityCall('GetVitals', (args as any).patientId), null, 2) }] };
-      case 'unity_call': return { content: [{ type: 'text' as const, text: JSON.stringify(await unityCall((args as any).action, (args as any).data?.patientId, (args as any).data), null, 2) }] };
-      default: throw new Error(`Unknown tool: ${name}`);
+      case 'search_patients':
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(
+                await unityCall('SearchPatients', undefined, { param1: (args as any).searchTerm }),
+                null,
+                2
+              ),
+            },
+          ],
+        };
+      case 'get_patient':
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(await unityCall('GetPatient', (args as any).patientId), null, 2),
+            },
+          ],
+        };
+      case 'get_clinical_summary':
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(
+                await unityCall('GetClinicalSummary', (args as any).patientId),
+                null,
+                2
+              ),
+            },
+          ],
+        };
+      case 'get_medications':
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(
+                await unityCall('GetMedications', (args as any).patientId),
+                null,
+                2
+              ),
+            },
+          ],
+        };
+      case 'get_allergies':
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(
+                await unityCall('GetAllergies', (args as any).patientId),
+                null,
+                2
+              ),
+            },
+          ],
+        };
+      case 'get_problems':
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(
+                await unityCall('GetProblems', (args as any).patientId),
+                null,
+                2
+              ),
+            },
+          ],
+        };
+      case 'get_vitals':
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(await unityCall('GetVitals', (args as any).patientId), null, 2),
+            },
+          ],
+        };
+      case 'unity_call':
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(
+                await unityCall(
+                  (args as any).action,
+                  (args as any).data?.patientId,
+                  (args as any).data
+                ),
+                null,
+                2
+              ),
+            },
+          ],
+        };
+      default:
+        throw new Error(`Unknown tool: ${name}`);
     }
   } catch (error: any) {
-    return { content: [{ type: 'text' as const, text: `Allscripts Error: ${error.message}` }], isError: true };
+    return {
+      content: [{ type: 'text' as const, text: `Allscripts Error: ${error.message}` }],
+      isError: true,
+    };
   }
 });
 

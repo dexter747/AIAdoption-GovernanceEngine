@@ -5,12 +5,14 @@
 The desktop app runs separately from the main `pnpm dev` command.
 
 ### Start in a new terminal:
+
 ```bash
 cd "AI Adoption & Governance Engine"
 pnpm --filter desktop-app dev
 ```
 
 Or from the desktop-app directory:
+
 ```bash
 cd apps/desktop-app
 pnpm dev
@@ -35,21 +37,26 @@ pnpm dev
 ## Troubleshooting
 
 ### Button doesn't do anything
+
 - **Check Electron DevTools** (opened automatically in dev mode)
 - Look for JavaScript errors in the console
 - Check if `window.electron.auth.login()` is defined
 
 ### Browser doesn't open
+
 - Check the terminal running the desktop app for errors
 - Verify the landing site is running on `http://localhost:3000`
 
 ### Deep link doesn't redirect back
+
 On **macOS**: Deep links work automatically in development
 On **Windows**: You need to build and install the app first for protocol registration
 On **Linux**: Requires protocol handler setup
 
 ### Port conflicts
+
 The desktop app now runs on port **5199** by default. If you see port conflicts:
+
 ```bash
 # Kill any processes using the port
 lsof -ti:5199 | xargs kill -9

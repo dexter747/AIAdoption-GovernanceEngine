@@ -15,8 +15,8 @@ export class LemonSqueezyPaymentsClient {
         method,
         url: `${LS_API_URL}${endpoint}`,
         headers: {
-          'Authorization': `Bearer ${this.apiKey}`,
-          'Accept': 'application/vnd.api+json',
+          Authorization: `Bearer ${this.apiKey}`,
+          Accept: 'application/vnd.api+json',
           'Content-Type': 'application/vnd.api+json',
         },
         data,
@@ -27,11 +27,7 @@ export class LemonSqueezyPaymentsClient {
     }
   }
 
-  async createCustomer(data: {
-    email: string;
-    name: string;
-    metadata?: Record<string, any>;
-  }) {
+  async createCustomer(data: { email: string; name: string; metadata?: Record<string, any> }) {
     return await this.request('POST', '/customers', {
       data: {
         type: 'customers',
@@ -51,7 +47,11 @@ export class LemonSqueezyPaymentsClient {
     return await this.request('POST', '/checkouts', {
       data: {
         type: 'checkouts',
-        attributes: { custom_price: null, product_options: {}, checkout_data: { custom: data.custom_data || {} } },
+        attributes: {
+          custom_price: null,
+          product_options: {},
+          checkout_data: { custom: data.custom_data || {} },
+        },
         relationships: {
           store: { data: { type: 'stores', id: data.store_id } },
           variant: { data: { type: 'variants', id: data.variant_id } },

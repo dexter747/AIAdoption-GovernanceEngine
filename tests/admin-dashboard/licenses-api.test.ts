@@ -172,11 +172,13 @@ describe('GET /api/licenses', () => {
         isActive: rawLicense.is_active,
         maxMachines: rawLicense.max_machines,
         activatedMachines: rawLicense.activated_machines || 0,
-        user: rawLicense.users ? {
-          id: rawLicense.users.id,
-          email: rawLicense.users.email,
-          name: rawLicense.users.full_name,
-        } : null,
+        user: rawLicense.users
+          ? {
+              id: rawLicense.users.id,
+              email: rawLicense.users.email,
+              name: rawLicense.users.full_name,
+            }
+          : null,
       };
 
       expect(formatted.id).toBe('lic-123');
@@ -231,17 +233,14 @@ describe('GET /api/licenses', () => {
     });
 
     it('should handle case-insensitive search', () => {
-      const licenses = [
-        { licenseKey: 'ABCD-EFGH', user: null },
-      ];
+      const licenses = [{ licenseKey: 'ABCD-EFGH', user: null }];
 
       const searchLower = 'abcd-efgh';
       const searchUpper = 'ABCD-EFGH';
       const searchMixed = 'AbCd-EfGh';
 
-      const filterFn = (search: string) => licenses.filter(l =>
-        l.licenseKey?.toLowerCase().includes(search.toLowerCase())
-      );
+      const filterFn = (search: string) =>
+        licenses.filter(l => l.licenseKey?.toLowerCase().includes(search.toLowerCase()));
 
       expect(filterFn(searchLower)).toHaveLength(1);
       expect(filterFn(searchUpper)).toHaveLength(1);
@@ -263,8 +262,8 @@ describe('GET /api/licenses', () => {
         { is_active: false, expires_at: null },
       ];
 
-      const active = licenses.filter(l =>
-        l.is_active && (!l.expires_at || new Date(l.expires_at) > new Date())
+      const active = licenses.filter(
+        l => l.is_active && (!l.expires_at || new Date(l.expires_at) > new Date())
       );
 
       expect(active.length).toBe(2);
@@ -278,9 +277,7 @@ describe('GET /api/licenses', () => {
         { expires_at: null },
       ];
 
-      const expired = licenses.filter(l =>
-        l.expires_at && new Date(l.expires_at) < new Date()
-      );
+      const expired = licenses.filter(l => l.expires_at && new Date(l.expires_at) < new Date());
 
       expect(expired.length).toBe(2);
     });
@@ -312,8 +309,7 @@ describe('GET /api/licenses', () => {
 
   describe('Pagination', () => {
     it('should calculate total pages', () => {
-      const calculateTotalPages = (total: number, limit: number) =>
-        Math.ceil(total / limit);
+      const calculateTotalPages = (total: number, limit: number) => Math.ceil(total / limit);
 
       expect(calculateTotalPages(100, 10)).toBe(10);
       expect(calculateTotalPages(95, 10)).toBe(10);
@@ -435,9 +431,7 @@ describe('POST /api/licenses', () => {
       const defaultDays = 365;
       const expiresAt = new Date(Date.now() + defaultDays * 24 * 60 * 60 * 1000);
 
-      const daysFromNow = Math.ceil(
-        (expiresAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
-      );
+      const daysFromNow = Math.ceil((expiresAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
 
       expect(daysFromNow).toBeCloseTo(365, 0);
     });
@@ -471,9 +465,12 @@ describe('POST /api/licenses', () => {
       const getMaxMachines = (tier: string, providedMax?: number) => {
         if (providedMax) return providedMax;
         switch (tier) {
-          case 'enterprise': return -1;
-          case 'team': return 5;
-          default: return 2;
+          case 'enterprise':
+            return -1;
+          case 'team':
+            return 5;
+          default:
+            return 2;
         }
       };
 
@@ -608,10 +605,7 @@ describe('License Management Operations', () => {
         transferred_at: new Date().toISOString(),
       });
 
-      const transferred = transferLicense(
-        { id: '1', user_id: 'old-user' },
-        'new-user'
-      );
+      const transferred = transferLicense({ id: '1', user_id: 'old-user' }, 'new-user');
 
       expect(transferred.user_id).toBe('new-user');
       expect(transferred.transferred_at).toBeDefined();

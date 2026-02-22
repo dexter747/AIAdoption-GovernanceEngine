@@ -8,10 +8,7 @@ const router = express.Router();
 let _supabase = null;
 function getSupabase() {
   if (!_supabase) {
-    _supabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_KEY
-    );
+    _supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
   }
   return _supabase;
 }
@@ -32,11 +29,13 @@ router.post('/validate', async (req, res) => {
     // Look up license in database
     const { data: license, error } = await getSupabase()
       .from('licenses')
-      .select(`
+      .select(
+        `
         *,
         users(id, email, name),
         subscriptions(plan_type, status, current_period_end)
-      `)
+      `
+      )
       .eq('license_key', licenseKey)
       .single();
 
@@ -46,9 +45,9 @@ router.post('/validate', async (req, res) => {
 
     // Check license status
     if (license.status !== 'active') {
-      return res.json({ 
-        valid: false, 
-        error: `License is ${license.status}` 
+      return res.json({
+        valid: false,
+        error: `License is ${license.status}`,
       });
     }
 
@@ -60,9 +59,9 @@ router.post('/validate', async (req, res) => {
 
     // Check subscription status
     if (license.subscriptions?.status !== 'active') {
-      return res.json({ 
-        valid: false, 
-        error: 'Subscription inactive' 
+      return res.json({
+        valid: false,
+        error: 'Subscription inactive',
       });
     }
 

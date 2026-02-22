@@ -1,6 +1,6 @@
 /**
  * Database Connections Page
- * 
+ *
  * Allows users to add, manage, and test database connections via MCP
  */
 
@@ -9,58 +9,114 @@ import { mcpIntegration } from '../services/mcp-integration';
 
 // Database connection types supported
 const DATABASE_TYPES = [
-  { 
-    id: 'postgresql', 
-    name: 'PostgreSQL', 
+  {
+    id: 'postgresql',
+    name: 'PostgreSQL',
     icon: '🐘',
     fields: [
       { name: 'host', label: 'Host', type: 'text', placeholder: 'localhost', required: true },
-      { name: 'port', label: 'Port', type: 'number', placeholder: '5432', required: true, default: '5432' },
+      {
+        name: 'port',
+        label: 'Port',
+        type: 'number',
+        placeholder: '5432',
+        required: true,
+        default: '5432',
+      },
       { name: 'database', label: 'Database', type: 'text', placeholder: 'mydb', required: true },
       { name: 'user', label: 'Username', type: 'text', placeholder: 'postgres', required: true },
-      { name: 'password', label: 'Password', type: 'password', placeholder: '••••••••', required: true },
+      {
+        name: 'password',
+        label: 'Password',
+        type: 'password',
+        placeholder: '••••••••',
+        required: true,
+      },
       { name: 'ssl', label: 'Use SSL', type: 'checkbox', required: false },
     ],
   },
-  { 
-    id: 'mysql', 
-    name: 'MySQL', 
+  {
+    id: 'mysql',
+    name: 'MySQL',
     icon: '🐬',
     fields: [
       { name: 'host', label: 'Host', type: 'text', placeholder: 'localhost', required: true },
-      { name: 'port', label: 'Port', type: 'number', placeholder: '3306', required: true, default: '3306' },
+      {
+        name: 'port',
+        label: 'Port',
+        type: 'number',
+        placeholder: '3306',
+        required: true,
+        default: '3306',
+      },
       { name: 'database', label: 'Database', type: 'text', placeholder: 'mydb', required: true },
       { name: 'user', label: 'Username', type: 'text', placeholder: 'root', required: true },
-      { name: 'password', label: 'Password', type: 'password', placeholder: '••••••••', required: true },
+      {
+        name: 'password',
+        label: 'Password',
+        type: 'password',
+        placeholder: '••••••••',
+        required: true,
+      },
     ],
   },
-  { 
-    id: 'sqlite', 
-    name: 'SQLite', 
+  {
+    id: 'sqlite',
+    name: 'SQLite',
     icon: '📁',
     fields: [
-      { name: 'path', label: 'Database File Path', type: 'text', placeholder: '/path/to/database.db', required: true },
+      {
+        name: 'path',
+        label: 'Database File Path',
+        type: 'text',
+        placeholder: '/path/to/database.db',
+        required: true,
+      },
     ],
   },
-  { 
-    id: 'sqlserver', 
-    name: 'SQL Server', 
+  {
+    id: 'sqlserver',
+    name: 'SQL Server',
     icon: '🔷',
     fields: [
       { name: 'server', label: 'Server', type: 'text', placeholder: 'localhost', required: true },
-      { name: 'port', label: 'Port', type: 'number', placeholder: '1433', required: true, default: '1433' },
+      {
+        name: 'port',
+        label: 'Port',
+        type: 'number',
+        placeholder: '1433',
+        required: true,
+        default: '1433',
+      },
       { name: 'database', label: 'Database', type: 'text', placeholder: 'mydb', required: true },
       { name: 'user', label: 'Username', type: 'text', placeholder: 'sa', required: true },
-      { name: 'password', label: 'Password', type: 'password', placeholder: '••••••••', required: true },
-      { name: 'trustServerCertificate', label: 'Trust Server Certificate', type: 'checkbox', required: false },
+      {
+        name: 'password',
+        label: 'Password',
+        type: 'password',
+        placeholder: '••••••••',
+        required: true,
+      },
+      {
+        name: 'trustServerCertificate',
+        label: 'Trust Server Certificate',
+        type: 'checkbox',
+        required: false,
+      },
     ],
   },
-  { 
-    id: 'mongodb', 
-    name: 'MongoDB', 
+  {
+    id: 'mongodb',
+    name: 'MongoDB',
     icon: '🍃',
     fields: [
-      { name: 'connectionString', label: 'Connection String', type: 'text', placeholder: 'mongodb://localhost:27017/mydb', required: true },
+      {
+        name: 'connectionString',
+        label: 'Connection String',
+        type: 'text',
+        placeholder: 'mongodb://localhost:27017/mydb',
+        required: true,
+      },
     ],
   },
 ];
@@ -86,7 +142,7 @@ function AddConnectionModal({ isOpen, onClose, onAdd }: AddConnectionModalProps)
   const [config, setConfig] = useState<Record<string, any>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   useEffect(() => {
     // Initialize default values when type changes
     const defaults: Record<string, any> = {};
@@ -101,14 +157,14 @@ function AddConnectionModal({ isOpen, onClose, onAdd }: AddConnectionModalProps)
     setConfig(defaults);
     setName(`My ${selectedType.name}`);
   }, [selectedType]);
-  
+
   if (!isOpen) return null;
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setIsLoading(true);
-    
+
     try {
       await onAdd(name, selectedType.id, config);
       onClose();
@@ -118,16 +174,16 @@ function AddConnectionModal({ isOpen, onClose, onAdd }: AddConnectionModalProps)
       setIsLoading(false);
     }
   };
-  
+
   const updateConfig = (field: string, value: any) => {
     setConfig(prev => ({ ...prev, [field]: value }));
   };
-  
+
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-zinc-900 rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
         <h2 className="text-xl font-medium text-white mb-4">Add Database Connection</h2>
-        
+
         <form onSubmit={handleSubmit}>
           {/* Connection Name */}
           <div className="mb-4">
@@ -135,13 +191,13 @@ function AddConnectionModal({ isOpen, onClose, onAdd }: AddConnectionModalProps)
             <input
               type="text"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={e => setName(e.target.value)}
               className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white"
               placeholder="My Database"
               required
             />
           </div>
-          
+
           {/* Database Type Selection */}
           <div className="mb-4">
             <label className="block text-sm text-zinc-500 mb-2">Database Type</label>
@@ -163,7 +219,7 @@ function AddConnectionModal({ isOpen, onClose, onAdd }: AddConnectionModalProps)
               ))}
             </div>
           </div>
-          
+
           {/* Connection Fields */}
           <div className="space-y-3 mb-6">
             {selectedType.fields.map(field => (
@@ -174,7 +230,7 @@ function AddConnectionModal({ isOpen, onClose, onAdd }: AddConnectionModalProps)
                     <input
                       type="checkbox"
                       checked={config[field.name] || false}
-                      onChange={(e) => updateConfig(field.name, e.target.checked)}
+                      onChange={e => updateConfig(field.name, e.target.checked)}
                       className="w-4 h-4 rounded bg-zinc-800 border-zinc-700"
                     />
                     <span className="text-zinc-400 text-sm">Enable</span>
@@ -183,7 +239,7 @@ function AddConnectionModal({ isOpen, onClose, onAdd }: AddConnectionModalProps)
                   <input
                     type={field.type}
                     value={config[field.name] || ''}
-                    onChange={(e) => updateConfig(field.name, e.target.value)}
+                    onChange={e => updateConfig(field.name, e.target.value)}
                     className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white"
                     placeholder={field.placeholder}
                     required={field.required}
@@ -192,14 +248,14 @@ function AddConnectionModal({ isOpen, onClose, onAdd }: AddConnectionModalProps)
               </div>
             ))}
           </div>
-          
+
           {/* Error message */}
           {error && (
             <div className="mb-4 p-3 bg-zinc-900/50 border border-zinc-800 rounded-lg text-zinc-400 text-sm">
               {error}
             </div>
           )}
-          
+
           {/* Buttons */}
           <div className="flex gap-3">
             <button
@@ -228,19 +284,21 @@ export default function DatabaseConnectionsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
   const [testingConnection, setTestingConnection] = useState<string | null>(null);
-  
+
   // Load connections on mount
   useEffect(() => {
     loadConnections();
   }, []);
-  
+
   const loadConnections = async () => {
     try {
       const conns = mcpIntegration.getConnections();
-      setConnections(conns.map(c => ({
-        ...c,
-        config: {}, // Don't store sensitive config in state
-      })));
+      setConnections(
+        conns.map(c => ({
+          ...c,
+          config: {}, // Don't store sensitive config in state
+        }))
+      );
     } catch (err: any) {
       // Silently handle API key errors - user might not have backend configured yet
       if (!err?.message?.includes('Invalid API key')) {
@@ -250,31 +308,34 @@ export default function DatabaseConnectionsPage() {
       setIsLoading(false);
     }
   };
-  
+
   const handleAddConnection = async (name: string, type: string, config: Record<string, any>) => {
     const id = `conn-${Date.now()}`;
     const connection = await mcpIntegration.addConnection(id, name, type as any, config);
-    
-    setConnections(prev => [...prev, {
-      ...connection,
-      config: {}, // Don't store sensitive config
-    }]);
+
+    setConnections(prev => [
+      ...prev,
+      {
+        ...connection,
+        config: {}, // Don't store sensitive config
+      },
+    ]);
   };
-  
+
   const handleRemoveConnection = async (id: string) => {
     if (!confirm('Are you sure you want to remove this connection?')) return;
-    
+
     await mcpIntegration.removeConnection(id);
     setConnections(prev => prev.filter(c => c.id !== id));
   };
-  
+
   const handleTestConnection = async (id: string) => {
     setTestingConnection(id);
-    
+
     try {
       // Try to list tables as a test
       const result = await window.electron.mcp.listTables(id);
-      
+
       if (result.success) {
         alert(`Connection successful! Found ${result.data?.length || 0} tables.`);
       } else {
@@ -286,12 +347,12 @@ export default function DatabaseConnectionsPage() {
       setTestingConnection(null);
     }
   };
-  
+
   const getDbIcon = (type: string) => {
     const dbType = DATABASE_TYPES.find(t => t.id === type);
     return dbType?.icon || '🗄️';
   };
-  
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -299,16 +360,14 @@ export default function DatabaseConnectionsPage() {
       </div>
     );
   }
-  
+
   return (
     <div className="p-6 max-w-4xl mx-auto">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-medium text-white">Database Connections</h1>
-          <p className="text-zinc-500 mt-1">
-            Connect your databases to query them with AI
-          </p>
+          <p className="text-zinc-500 mt-1">Connect your databases to query them with AI</p>
         </div>
         <button
           onClick={() => setShowAddModal(true)}
@@ -320,17 +379,21 @@ export default function DatabaseConnectionsPage() {
           Add Connection
         </button>
       </div>
-      
+
       {/* Status Banner */}
       <div className="bg-zinc-900 rounded-xl p-4 mb-6 border border-zinc-800">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <div className={`w-2 h-2 rounded-full ${
-                mcpIntegration.getStatus().backendConnected ? 'bg-zinc-800' : 'bg-zinc-800'
-              }`}></div>
+              <div
+                className={`w-2 h-2 rounded-full ${
+                  mcpIntegration.getStatus().backendConnected ? 'bg-zinc-800' : 'bg-zinc-800'
+                }`}
+              ></div>
               <span className="text-zinc-400 text-sm">
-                {mcpIntegration.getStatus().backendConnected ? 'Connected to Velanova' : 'Disconnected'}
+                {mcpIntegration.getStatus().backendConnected
+                  ? 'Connected to Velanova'
+                  : 'Disconnected'}
               </span>
             </div>
             <div className="h-4 w-px bg-zinc-800"></div>
@@ -341,7 +404,7 @@ export default function DatabaseConnectionsPage() {
           </div>
         </div>
       </div>
-      
+
       {/* Connections List */}
       {connections.length === 0 ? (
         <div className="bg-zinc-900 rounded-xl p-8 text-center border border-zinc-800">
@@ -376,23 +439,30 @@ export default function DatabaseConnectionsPage() {
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-3">
                   {/* Status indicator */}
-                  <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm ${
-                    connection.status === 'connected'
-                      ? 'bg-zinc-900/40 text-zinc-400'
-                      : connection.status === 'error'
-                      ? 'bg-zinc-900/40 text-zinc-400'
-                      : 'bg-zinc-800 text-zinc-500'
-                  }`}>
-                    <div className={`w-2 h-2 rounded-full ${
-                      connection.status === 'connected' ? 'bg-zinc-800' :
-                      connection.status === 'error' ? 'bg-zinc-800' : 'bg-zinc-700'
-                    }`}></div>
+                  <div
+                    className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm ${
+                      connection.status === 'connected'
+                        ? 'bg-zinc-900/40 text-zinc-400'
+                        : connection.status === 'error'
+                          ? 'bg-zinc-900/40 text-zinc-400'
+                          : 'bg-zinc-800 text-zinc-500'
+                    }`}
+                  >
+                    <div
+                      className={`w-2 h-2 rounded-full ${
+                        connection.status === 'connected'
+                          ? 'bg-zinc-800'
+                          : connection.status === 'error'
+                            ? 'bg-zinc-800'
+                            : 'bg-zinc-700'
+                      }`}
+                    ></div>
                     {connection.status}
                   </div>
-                  
+
                   {/* Test button */}
                   <button
                     onClick={() => handleTestConnection(connection.id)}
@@ -401,7 +471,7 @@ export default function DatabaseConnectionsPage() {
                   >
                     {testingConnection === connection.id ? 'Testing...' : 'Test'}
                   </button>
-                  
+
                   {/* Remove button */}
                   <button
                     onClick={() => handleRemoveConnection(connection.id)}
@@ -409,12 +479,17 @@ export default function DatabaseConnectionsPage() {
                     title="Remove connection"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      />
                     </svg>
                   </button>
                 </div>
               </div>
-              
+
               {/* Tools preview */}
               {connection.tools.length > 0 && (
                 <div className="mt-4 pt-4 border-t border-zinc-800">
@@ -440,7 +515,7 @@ export default function DatabaseConnectionsPage() {
           ))}
         </div>
       )}
-      
+
       {/* How it works section */}
       <div className="mt-8 bg-zinc-900/50 rounded-xl p-6 border border-zinc-800">
         <h3 className="text-lg font-medium text-white mb-4">How it works</h3>
@@ -465,7 +540,7 @@ export default function DatabaseConnectionsPage() {
           </div>
         </div>
       </div>
-      
+
       {/* Add Connection Modal */}
       <AddConnectionModal
         isOpen={showAddModal}

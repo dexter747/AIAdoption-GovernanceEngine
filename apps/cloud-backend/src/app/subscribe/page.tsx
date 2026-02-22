@@ -122,8 +122,7 @@ function SubscribeContent() {
           {/* Pricing Cards */}
           <div className="grid md:grid-cols-3 gap-8">
             {Object.entries(plans).map(([key, plan]) => {
-              const price =
-                billingPeriod === 'monthly' ? plan.monthly : plan.yearly;
+              const price = billingPeriod === 'monthly' ? plan.monthly : plan.yearly;
               const isEnterprise = key === 'enterprise';
 
               return (

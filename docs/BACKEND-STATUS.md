@@ -1,9 +1,11 @@
 # Backend Status & Next Steps
-*Updated: January 19, 2026*
+
+_Updated: January 19, 2026_
 
 ## ✅ What's Working
 
 ### Express API (port 5500)
+
 ```bash
 # Tested endpoints:
 ✅ GET  /health              → {"status":"ok"}
@@ -16,6 +18,7 @@
 ```
 
 ### Infrastructure
+
 - ✅ pnpm monorepo working
 - ✅ Supabase client connected
 - ✅ Express server starts cleanly
@@ -27,6 +30,7 @@
 ## ⚠️ Needs Configuration
 
 ### AI Provider API Keys
+
 The `apps/express-api/.env` file has placeholders. Add real API keys:
 
 ```bash
@@ -39,6 +43,7 @@ GROQ_API_KEY=gsk_...               # Get from console.groq.com (FREE!)
 **Recommendation**: Start with **Groq** - it's FREE and fast!
 
 ### Supabase Service Key
+
 ```bash
 # In apps/express-api/.env, replace:
 SUPABASE_SERVICE_KEY=your_service_role_key_here
@@ -52,6 +57,7 @@ SUPABASE_SERVICE_KEY=your_service_role_key_here
 ## 🎯 Priority Tasks
 
 ### 1. Add at least one AI API key
+
 ```bash
 # Edit apps/express-api/.env
 # Add Groq (free) or OpenAI key
@@ -63,6 +69,7 @@ curl -X POST http://localhost:5500/api/ai/query \
 ```
 
 ### 2. Get Supabase service key
+
 ```bash
 # Go to: https://supabase.com/dashboard/project/lwounfzhkuuqvgkvwxvt/settings/api
 # Copy "service_role" key (NOT anon key)
@@ -70,6 +77,7 @@ curl -X POST http://localhost:5500/api/ai/query \
 ```
 
 ### 3. Test license validation
+
 ```bash
 curl -X POST http://localhost:5500/api/licenses/validate \
   -H "Content-Type: application/json" \
@@ -77,6 +85,7 @@ curl -X POST http://localhost:5500/api/licenses/validate \
 ```
 
 ### 4. Connect Desktop App to Express API
+
 The desktop app should already be configured to use `http://localhost:5500`.
 Check: `apps/desktop-app/src/main/api/` for API calls.
 
@@ -147,11 +156,11 @@ curl -X POST http://localhost:5500/api/ai/query \
 
 ## What You DON'T Need Right Now
 
-| ❌ Skip For Now | Why |
-|----------------|-----|
-| Docker containers | Not needed for dev - run Node directly |
-| MongoDB | Supabase PostgreSQL is sufficient |
-| Redis | In-memory is fine for dev/small scale |
-| MCP Server Farm | Only for external tool integration |
-| VM/Cloud hosting | Local dev is fine until you have users |
+| ❌ Skip For Now             | Why                                       |
+| --------------------------- | ----------------------------------------- |
+| Docker containers           | Not needed for dev - run Node directly    |
+| MongoDB                     | Supabase PostgreSQL is sufficient         |
+| Redis                       | In-memory is fine for dev/small scale     |
+| MCP Server Farm             | Only for external tool integration        |
+| VM/Cloud hosting            | Local dev is fine until you have users    |
 | SAP/Epic/AS400 integrations | Build these when you have those customers |

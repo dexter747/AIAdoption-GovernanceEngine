@@ -1,9 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  transpilePackages: ['@shared/types'],  eslint: {
+  transpilePackages: ['@shared/types'],
+  eslint: {
     ignoreDuringBuilds: true,
-  },  experimental: {
+  },
+  experimental: {
     serverActions: {
       allowedOrigins: ['localhost:3000'],
     },

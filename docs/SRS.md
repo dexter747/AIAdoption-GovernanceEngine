@@ -9,10 +9,13 @@
 ## 1. Introduction
 
 ### 1.1 Purpose
+
 This document specifies the functional and non-functional requirements for Velanova, an enterprise AI adoption and governance platform delivered as a **cross-platform desktop application** that connects local legacy systems with modern AI services while maintaining data privacy and security.
 
 ### 1.2 Scope
+
 Velanova provides:
+
 - **Desktop application** (Windows, macOS, Linux) for local legacy system integration
 - Multi-provider AI model routing and optimization
 - Real-time cost tracking and ROI attribution
@@ -21,6 +24,7 @@ Velanova provides:
 - Enterprise-grade security and compliance
 
 ### 1.3 Deployment Architecture
+
 - **Client Application:** Electron-based desktop app installed on customer's machines/servers (Windows, macOS, Linux)
 - **Local Processing:** All legacy data processing happens on customer's infrastructure
 - **Cloud Backend:** Next.js full-stack application with PostgreSQL and MongoDB (authentication, billing, admin portal)
@@ -101,28 +105,28 @@ Velanova provides:
 
 #### 2.2.1 Desktop Application Components
 
-| Component | Technology | Purpose |
-|-----------|-----------|---------|
-| **UI Framework** | Electron + React | Cross-platform desktop UI |
-| **Main Process** | Node.js | Business logic, system integration |
-| **Renderer Process** | React + TailwindCSS | User interface |
-| **Database Drivers** | node-oracledb, pg, mysql2, tedious | Legacy system connectivity |
-| **AI SDKs** | OpenAI SDK, Anthropic SDK, Google AI | AI provider integration |
-| **Local Storage** | SQLite (better-sqlite3) | Encrypted local data storage |
-| **IPC** | Electron IPC | Main-Renderer communication |
-| **Auto-Updater** | electron-updater | Automatic app updates |
+| Component            | Technology                           | Purpose                            |
+| -------------------- | ------------------------------------ | ---------------------------------- |
+| **UI Framework**     | Electron + React                     | Cross-platform desktop UI          |
+| **Main Process**     | Node.js                              | Business logic, system integration |
+| **Renderer Process** | React + TailwindCSS                  | User interface                     |
+| **Database Drivers** | node-oracledb, pg, mysql2, tedious   | Legacy system connectivity         |
+| **AI SDKs**          | OpenAI SDK, Anthropic SDK, Google AI | AI provider integration            |
+| **Local Storage**    | SQLite (better-sqlite3)              | Encrypted local data storage       |
+| **IPC**              | Electron IPC                         | Main-Renderer communication        |
+| **Auto-Updater**     | electron-updater                     | Automatic app updates              |
 
 #### 2.2.2 Cloud Backend Components
 
-| Service | Technology | Purpose |
-|---------|-----------|---------|
-| **Full-Stack App** | Next.js 14+ (App Router) | Unified frontend + API routes |
-| **Auth Service** | NextAuth.js + JWT | User authentication & sessions |
-| **License Manager** | Custom JWT logic | License validation & enforcement |
-| **Payment Gateway** | Dodo Payments, PayPal, Razorpay | Multi-provider payment processing |
-| **Database (Primary)** | PostgreSQL 16 | Users, licenses, subscriptions, payments |
-| **Database (Logs)** | MongoDB 7 | Application logs, usage metrics, audit trails |
-| **ORM** | Prisma (PostgreSQL) + Mongoose (MongoDB) | Type-safe database access |
+| Service                | Technology                               | Purpose                                       |
+| ---------------------- | ---------------------------------------- | --------------------------------------------- |
+| **Full-Stack App**     | Next.js 14+ (App Router)                 | Unified frontend + API routes                 |
+| **Auth Service**       | NextAuth.js + JWT                        | User authentication & sessions                |
+| **License Manager**    | Custom JWT logic                         | License validation & enforcement              |
+| **Payment Gateway**    | Dodo Payments, PayPal, Razorpay          | Multi-provider payment processing             |
+| **Database (Primary)** | PostgreSQL 16                            | Users, licenses, subscriptions, payments      |
+| **Database (Logs)**    | MongoDB 7                                | Application logs, usage metrics, audit trails |
+| **ORM**                | Prisma (PostgreSQL) + Mongoose (MongoDB) | Type-safe database access                     |
 
 ---
 
@@ -131,6 +135,7 @@ Velanova provides:
 ### 3.1 Desktop Application Features
 
 #### FR-APP-001: Application Installation
+
 - **Description:** Users can download and install the desktop app on Windows, macOS, and Linux
 - **Platforms:**
   - Windows: MSI installer + Windows Store
@@ -143,6 +148,7 @@ Velanova provides:
 - **Priority:** Critical
 
 #### FR-APP-002: Auto-Updates
+
 - **Description:** App automatically checks and downloads updates in background
 - **Implementation:** electron-updater with delta downloads
 - **Update Frequency:** Check daily, notify user when update available
@@ -150,6 +156,7 @@ Velanova provides:
 - **Priority:** High
 
 #### FR-APP-003: Offline Mode
+
 - **Description:** Core features work without internet connectivity
 - **Offline Capabilities:**
   - Query local legacy systems
@@ -164,6 +171,7 @@ Velanova provides:
 ### 3.2 User Authentication & Licensing
 
 #### FR-AUTH-001: User Registration
+
 - **Description:** Users register via web portal or desktop app
 - **Registration Flow:**
   1. User enters email
@@ -174,6 +182,7 @@ Velanova provides:
 - **Priority:** Critical
 
 #### FR-AUTH-002: License Activation
+
 - **Description:** Desktop app requires valid license to function
 - **License Types:**
   - **Trial:** 14-day free trial, 100 AI queries
@@ -190,6 +199,7 @@ Velanova provides:
 - **Priority:** Critical
 
 #### FR-AUTH-003: License Validation
+
 - **Description:** App validates license on startup and periodically
 - **Validation Frequency:**
   - On app launch
@@ -200,6 +210,7 @@ Velanova provides:
 - **Priority:** Critical
 
 #### FR-AUTH-004: Multi-Device Support
+
 - **Description:** Single license can activate on N devices (based on plan)
 - **Device Limits:**
   - Professional: 2 devices
@@ -211,6 +222,7 @@ Velanova provides:
 ### 3.3 Payment Processing
 
 #### FR-PAY-001: Multi-Provider Support
+
 - **Description:** Support multiple payment gateways for global reach
 - **Providers:**
   - **Stripe:** Primary (US, EU, global)
@@ -220,6 +232,7 @@ Velanova provides:
 - **Priority:** Critical
 
 #### FR-PAY-002: Subscription Management
+
 - **Description:** Automated recurring billing and subscription lifecycle
 - **Features:**
   - Auto-renewal on subscription date
@@ -231,6 +244,7 @@ Velanova provides:
 - **Priority:** Critical
 
 #### FR-PAY-003: Usage-Based Billing
+
 - **Description:** Charge overages for usage beyond plan limits
 - **Billing Model:**
   - Base subscription: Fixed monthly fee
@@ -241,6 +255,7 @@ Velanova provides:
 - **Priority:** High
 
 #### FR-PAY-004: Refund Processing
+
 - **Description:** Support refund requests via admin portal
 - **Refund Window:** 30 days from purchase
 - **Refund Types:**
@@ -253,6 +268,7 @@ Velanova provides:
 ### 3.4 Legacy System Integration
 
 #### FR-LSI-001: Connection Manager (Top 10 Legacy Systems)
+
 - **Description:** UI for adding, testing, and managing legacy system connections
 - **Top 10 Supported Systems (Priority Order):**
   1. **PostgreSQL** - Most common open-source database
@@ -270,6 +286,7 @@ Velanova provides:
 - **Priority:** Critical
 
 #### FR-LSI-002: Connection Testing
+
 - **Description:** Validate connection before saving
 - **Test Operations:**
   - Network connectivity check
@@ -282,6 +299,7 @@ Velanova provides:
 - **Priority:** High
 
 #### FR-LSI-003: Credential Encryption
+
 - **Description:** All passwords and API keys encrypted at rest
 - **Encryption Method:**
   - Algorithm: AES-256-GCM
@@ -292,6 +310,7 @@ Velanova provides:
 - **Priority:** Critical
 
 #### FR-LSI-004: Connection Pooling
+
 - **Description:** Reuse database connections for performance
 - **Pool Configuration:**
   - Min connections: 1
@@ -301,6 +320,7 @@ Velanova provides:
 - **Priority:** Medium
 
 #### FR-LSI-005: Query Builder
+
 - **Description:** Visual interface for building SQL/API queries
 - **Features:**
   - Table/field picker from schema
@@ -314,6 +334,7 @@ Velanova provides:
 ### 3.5 AI Integration
 
 #### FR-AI-001: Multi-Provider Support
+
 - **Description:** Support multiple AI providers with automatic failover
 - **Providers:**
   - **OpenAI:** GPT-4o, GPT-4o-mini, o1-preview
@@ -325,6 +346,7 @@ Velanova provides:
 - **Priority:** Critical
 
 #### FR-AI-002: Automatic Model Selection
+
 - **Description:** Route queries to optimal model based on complexity and cost
 - **Selection Rules:**
   - Simple queries (<200 tokens): GPT-4o-mini, Claude Haiku
@@ -336,6 +358,7 @@ Velanova provides:
 - **Priority:** High
 
 #### FR-AI-003: Prompt Templates
+
 - **Description:** Pre-built and custom prompt templates
 - **Built-In Templates:**
   - Data summarization
@@ -348,6 +371,7 @@ Velanova provides:
 - **Priority:** Medium
 
 #### FR-AI-004: Context Window Management
+
 - **Description:** Automatically chunk large datasets to fit model context limits
 - **Chunking Strategy:**
   - GPT-4o: 128K tokens → chunk at 100K
@@ -357,6 +381,7 @@ Velanova provides:
 - **Priority:** High
 
 #### FR-AI-005: Response Streaming
+
 - **Description:** Stream AI responses in real-time for better UX
 - **Implementation:** Server-Sent Events (SSE) from AI providers
 - **UI Display:** Typewriter effect with progress indicator
@@ -366,6 +391,7 @@ Velanova provides:
 ### 3.6 Data Processing & Privacy
 
 #### FR-DATA-001: PII Detection
+
 - **Description:** Automatically detect personally identifiable information
 - **Detection Methods:**
   - **Regex Patterns:** Email, phone, SSN, credit card, IP address
@@ -375,6 +401,7 @@ Velanova provides:
 - **Priority:** Critical
 
 #### FR-DATA-002: PII Masking
+
 - **Description:** Mask or redact PII before sending to AI
 - **Masking Options:**
   - **Redact:** Replace with [EMAIL], [NAME], [SSN]
@@ -386,6 +413,7 @@ Velanova provides:
 - **Priority:** Critical
 
 #### FR-DATA-003: Data Size Limits
+
 - **Description:** Enforce limits on data sent to AI to control costs
 - **Limits:**
   - Max rows per query: 10,000 (configurable)
@@ -395,6 +423,7 @@ Velanova provides:
 - **Priority:** High
 
 #### FR-DATA-004: Local Data Processing
+
 - **Description:** All data processing happens on user's machine
 - **Guarantee:** Legacy data never transmitted to our backend
 - **Transmission:** Only anonymized metadata (query count, model used, cost)
@@ -404,15 +433,17 @@ Velanova provides:
 ### 3.7 Cost Tracking & Analytics
 
 #### FR-COST-001: Real-Time Cost Tracking
+
 - **Description:** Display cost of each AI query in real-time
 - **Cost Calculation:**
   - Fetch latest pricing from provider APIs daily
-  - Calculate: (input_tokens / 1000) * input_price + (output_tokens / 1000) * output_price
+  - Calculate: (input_tokens / 1000) _ input_price + (output_tokens / 1000) _ output_price
   - Add platform markup (10-20%)
 - **Display:** Show cost before and after query execution
 - **Priority:** High
 
 #### FR-COST-002: Usage Dashboard
+
 - **Description:** Local dashboard showing usage statistics
 - **Metrics:**
   - Total queries today/week/month
@@ -425,6 +456,7 @@ Velanova provides:
 - **Priority:** High
 
 #### FR-COST-003: Budget Alerts
+
 - **Description:** Notify user when approaching budget limits
 - **Alert Types:**
   - Daily budget exceeded
@@ -435,6 +467,7 @@ Velanova provides:
 - **Priority:** Medium
 
 #### FR-COST-004: Query History
+
 - **Description:** Searchable history of all queries and costs
 - **Storage:** SQLite database (encrypted)
 - **Retention:** 90 days default, configurable up to 365 days
@@ -445,6 +478,7 @@ Velanova provides:
 ### 3.8 Security & Compliance
 
 #### FR-SEC-001: End-to-End Encryption
+
 - **Description:** All sensitive data encrypted at rest and in transit
 - **At Rest:**
   - Connection credentials: AES-256-GCM
@@ -456,6 +490,7 @@ Velanova provides:
 - **Priority:** Critical
 
 #### FR-SEC-002: Audit Logging
+
 - **Description:** Log all security-relevant events locally
 - **Logged Events:**
   - User login/logout
@@ -468,6 +503,7 @@ Velanova provides:
 - **Priority:** High
 
 #### FR-SEC-003: Network Traffic Logging
+
 - **Description:** Optional feature to log all network requests for transparency
 - **Purpose:** Allow customers to verify no data leakage
 - **Log Contents:**
@@ -480,6 +516,7 @@ Velanova provides:
 - **Priority:** Medium
 
 #### FR-SEC-004: Compliance Certifications
+
 - **Description:** Desktop app and backend meet compliance standards
 - **Certifications:**
   - SOC 2 Type II (backend)
@@ -487,6 +524,7 @@ Velanova provides:
   - HIPAA eligible (BAA available for enterprise)
 - **Data Residency:** User data stored in region of choice (US, EU, Asia)
 - **Priority:** High
+
 ---
 
 ## 4. Database Architecture
@@ -496,6 +534,7 @@ Velanova provides:
 PostgreSQL stores user accounts, licenses, subscriptions, and payment records.
 
 #### Table: `users`
+
 ```sql
 CREATE TABLE users (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -517,6 +556,7 @@ CREATE INDEX idx_users_oauth ON users(oauth_provider, oauth_id);
 ```
 
 #### Table: `licenses`
+
 ```sql
 CREATE TABLE licenses (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -540,6 +580,7 @@ CREATE INDEX idx_licenses_status ON licenses(status);
 ```
 
 #### Table: `devices`
+
 ```sql
 CREATE TABLE devices (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -560,6 +601,7 @@ CREATE INDEX idx_devices_fingerprint ON devices(device_fingerprint);
 ```
 
 #### Table: `subscriptions`
+
 ```sql
 CREATE TABLE subscriptions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -586,6 +628,7 @@ CREATE INDEX idx_subscriptions_provider ON subscriptions(payment_provider, provi
 ```
 
 #### Table: `payments`
+
 ```sql
 CREATE TABLE payments (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -609,6 +652,7 @@ CREATE INDEX idx_payments_status ON payments(status);
 ```
 
 #### Table: `invoices`
+
 ```sql
 CREATE TABLE invoices (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -633,6 +677,7 @@ CREATE INDEX idx_invoices_number ON invoices(invoice_number);
 ```
 
 #### Table: `usage_summary`
+
 ```sql
 CREATE TABLE usage_summary (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -653,6 +698,7 @@ CREATE INDEX idx_usage_summary_license ON usage_summary(license_id);
 ```
 
 #### Table: `ai_pricing`
+
 ```sql
 CREATE TABLE ai_pricing (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -675,6 +721,7 @@ CREATE INDEX idx_ai_pricing_provider_model ON ai_pricing(provider, model_name, e
 MongoDB stores application logs, AI query logs, and audit trails.
 
 #### Collection: `app_logs`
+
 ```javascript
 {
   _id: ObjectId,
@@ -700,6 +747,7 @@ db.app_logs.createIndex({ timestamp: -1 })
 ```
 
 #### Collection: `ai_query_logs`
+
 ```javascript
 {
   _id: ObjectId,
@@ -735,6 +783,7 @@ db.ai_query_logs.createIndex({ timestamp: -1 })
 ```
 
 #### Collection: `audit_logs`
+
 ```javascript
 {
   _id: ObjectId,
@@ -765,6 +814,7 @@ db.audit_logs.createIndex({ created_at: 1 }, { expireAfterSeconds: 7776000 })
 ```
 
 #### Collection: `error_reports`
+
 ```javascript
 {
   _id: ObjectId,
@@ -853,21 +903,24 @@ failed_payment:queue → List
 ### 5.1 Desktop Application Performance
 
 #### NFR-APP-PERF-001: App Launch Time
+
 - **Requirement:** App launches within 3 seconds on modern hardware
 - **Measurement:** From click to main window visible
-- **Optimization:** 
+- **Optimization:**
   - Lazy load modules
   - Cache database drivers
   - Optimize Electron bundle size
 
 #### NFR-APP-PERF-002: UI Responsiveness
+
 - **Requirement:** UI remains responsive during background operations
-- **Implementation:** 
+- **Implementation:**
   - All heavy operations in Electron main process
   - IPC communication non-blocking
   - Loading indicators for operations > 500ms
 
 #### NFR-APP-PERF-003: Memory Usage
+
 - **Requirement:** < 500MB RAM under normal usage
 - **Measurement:** With 3 connections, 100 query history
 - **Optimization:**
@@ -876,12 +929,14 @@ failed_payment:queue → List
   - Dispose unused React components
 
 #### NFR-APP-PERF-004: Legacy Query Performance
+
 - **Requirement:** < 100ms overhead for legacy database queries
 - **Implementation:** Connection pooling, prepared statements
 
 ### 5.2 Cloud Backend Performance
 
 #### NFR-BACKEND-PERF-001: API Response Time
+
 - **Requirement:** 95th percentile < 150ms for API endpoints
 - **Endpoints:**
   - License validation: < 50ms
@@ -890,12 +945,14 @@ failed_payment:queue → List
 - **Monitoring:** Datadog APM or New Relic
 
 #### NFR-BACKEND-PERF-002: Payment Processing
+
 - **Requirement:** Payment webhooks processed within 5 seconds
 - **Implementation:**
   - Webhook queue with Bull/BullMQ
   - Retry failed webhooks with exponential backoff
 
 #### NFR-BACKEND-PERF-003: Database Query Performance
+
 - **Requirement:** All queries < 200ms at 90th percentile
 - **Implementation:**
   - Proper indexing on PostgreSQL
@@ -905,6 +962,7 @@ failed_payment:queue → List
 ### 5.3 Scalability
 
 #### NFR-SCALE-001: User Capacity
+
 - **Requirement:** Support 100,000 active users
 - **Implementation:**
   - Stateless API servers (horizontal scaling)
@@ -912,6 +970,7 @@ failed_payment:queue → List
   - Redis for session management
 
 #### NFR-SCALE-002: Concurrent Requests
+
 - **Requirement:** Handle 10,000 API requests/second
 - **Implementation:**
   - Load balancer (AWS ALB or Nginx)
@@ -919,6 +978,7 @@ failed_payment:queue → List
   - Rate limiting per user (100 req/min)
 
 #### NFR-SCALE-003: Data Storage
+
 - **Requirement:** Handle 1TB+ of logs and usage data
 - **Implementation:**
   - MongoDB sharding
@@ -928,6 +988,7 @@ failed_payment:queue → List
 ### 5.4 Availability & Reliability
 
 #### NFR-AVAIL-001: Backend Uptime SLA
+
 - **Requirement:** 99.9% uptime (8.76 hours downtime/year)
 - **Implementation:**
   - Multi-AZ deployment (AWS/Azure)
@@ -935,6 +996,7 @@ failed_payment:queue → List
   - Auto-recovery on failure
 
 #### NFR-AVAIL-002: Disaster Recovery
+
 - **Requirement:** RPO < 1 hour, RTO < 4 hours
 - **Implementation:**
   - PostgreSQL: Daily backups + WAL archiving
@@ -942,6 +1004,7 @@ failed_payment:queue → List
   - Redis: AOF persistence
 
 #### NFR-AVAIL-003: Graceful Degradation
+
 - **Requirement:** App continues working if backend unavailable
 - **Offline Capabilities:**
   - License validation (7-day cache)
@@ -952,6 +1015,7 @@ failed_payment:queue → List
 ### 5.5 Security
 
 #### NFR-SEC-001: Encryption Standards
+
 - **Requirement:** Industry-standard encryption at rest and in transit
 - **At Rest:**
   - Desktop app: AES-256-GCM for credentials
@@ -962,6 +1026,7 @@ failed_payment:queue → List
   - Certificate pinning in desktop app
 
 #### NFR-SEC-002: Authentication Security
+
 - **Requirement:** Secure authentication with modern standards
 - **Implementation:**
   - Password hashing: Argon2id
@@ -970,6 +1035,7 @@ failed_payment:queue → List
   - OAuth 2.0 for third-party auth
 
 #### NFR-SEC-003: Vulnerability Management
+
 - **Requirement:** No critical vulnerabilities in production
 - **Process:**
   - Weekly dependency scans (npm audit, Snyk)
@@ -978,6 +1044,7 @@ failed_payment:queue → List
   - 24-hour patch for critical vulns
 
 #### NFR-SEC-004: Data Privacy
+
 - **Requirement:** Comply with GDPR, CCPA, and data residency laws
 - **Implementation:**
   - Data processing agreement (DPA)
@@ -988,6 +1055,7 @@ failed_payment:queue → List
 ### 5.6 Maintainability
 
 #### NFR-MAINT-001: Code Quality
+
 - **Requirement:** Maintainable, testable codebase
 - **Standards:**
   - TypeScript for type safety
@@ -996,6 +1064,7 @@ failed_payment:queue → List
   - Code review required for all PRs
 
 #### NFR-MAINT-002: Observability
+
 - **Requirement:** Complete visibility into system health
 - **Implementation:**
   - Structured logging (Winston/Bunyan)
@@ -1004,6 +1073,7 @@ failed_payment:queue → List
   - Distributed tracing (optional)
 
 #### NFR-MAINT-003: Automated Deployment
+
 - **Requirement:** One-click deployments with rollback
 - **Implementation:**
   - CI/CD: GitHub Actions
@@ -1013,6 +1083,7 @@ failed_payment:queue → List
 ### 5.7 Usability
 
 #### NFR-USABILITY-001: Onboarding Time
+
 - **Requirement:** Users productive within 15 minutes
 - **Measurement:** From download to first AI query
 - **Implementation:**
@@ -1021,6 +1092,7 @@ failed_payment:queue → List
   - Pre-built prompt templates
 
 #### NFR-USABILITY-002: Accessibility
+
 - **Requirement:** WCAG 2.1 Level AA compliance
 - **Implementation:**
   - Keyboard navigation
@@ -1029,6 +1101,7 @@ failed_payment:queue → List
   - Resizable UI elements
 
 #### NFR-USABILITY-003: Error Messages
+
 - **Requirement:** Actionable error messages with solutions
 - **Examples:**
   - "Connection failed: Check that database is running on localhost:5432"
@@ -1042,13 +1115,14 @@ failed_payment:queue → List
 ### 6.1 Dodo Payments Integration (Primary)
 
 #### Implementation:
+
 ```javascript
 // backend/src/payment/dodo.service.js
 const { DodoPayments } = require('@dodopayments/payments-sdk');
 
 const dodo = new DodoPayments({
   apiKey: process.env.DODO_API_KEY,
-  environment: process.env.NODE_ENV === 'production' ? 'live' : 'sandbox'
+  environment: process.env.NODE_ENV === 'production' ? 'live' : 'sandbox',
 });
 
 async function createSubscription(userId, productId, paymentMethodId) {
@@ -1056,47 +1130,43 @@ async function createSubscription(userId, productId, paymentMethodId) {
   const customer = await dodo.customers.create({
     email: user.email,
     name: user.full_name,
-    metadata: { user_id: userId }
+    metadata: { user_id: userId },
   });
-  
+
   // 2. Create subscription
   const subscription = await dodo.subscriptions.create({
     customer_id: customer.id,
     product_id: productId,
     payment_method_id: paymentMethodId,
     billing_period: 'monthly',
-    metadata: { user_id: userId }
+    metadata: { user_id: userId },
   });
-  
+
   // 3. Store in database
   await db.subscriptions.create({
     user_id: userId,
     payment_provider: 'dodo',
     provider_subscription_id: subscription.id,
     provider_customer_id: customer.id,
-    status: subscription.status
+    status: subscription.status,
   });
-  
+
   return subscription;
 }
 
 // Webhook handler
 app.post('/webhooks/dodo', async (req, res) => {
   const signature = req.headers['x-dodo-signature'];
-  
+
   // Verify webhook signature
-  const isValid = dodo.webhooks.verify(
-    req.body,
-    signature,
-    process.env.DODO_WEBHOOK_SECRET
-  );
-  
+  const isValid = dodo.webhooks.verify(req.body, signature, process.env.DODO_WEBHOOK_SECRET);
+
   if (!isValid) {
     return res.status(401).json({ error: 'Invalid signature' });
   }
-  
+
   const event = req.body;
-  
+
   switch (event.type) {
     case 'payment.succeeded':
       await handlePaymentSuccess(event.data);
@@ -1114,12 +1184,13 @@ app.post('/webhooks/dodo', async (req, res) => {
       await handleSubscriptionCancelled(event.data);
       break;
   }
-  
+
   res.json({ status: 'success' });
 });
 ```
 
 #### Price IDs:
+
 ```
 Professional Monthly: price_professional_monthly_usd
 Professional Yearly: price_professional_yearly_usd
@@ -1130,6 +1201,7 @@ Team Yearly: price_team_yearly_usd
 ### 6.2 PayPal Integration (Fallback)
 
 #### Implementation:
+
 ```javascript
 // backend/src/payment/paypal.service.js
 const paypal = require('@paypal/checkout-server-sdk');
@@ -1146,34 +1218,34 @@ async function createSubscription(userId, planId) {
     plan_id: planId,
     subscriber: {
       email_address: user.email,
-      name: { given_name: user.full_name }
+      name: { given_name: user.full_name },
     },
     application_context: {
       return_url: 'https://app.velanova.com/payment/success',
-      cancel_url: 'https://app.velanova.com/payment/cancel'
-    }
+      cancel_url: 'https://app.velanova.com/payment/cancel',
+    },
   });
-  
+
   const response = await client.execute(request);
-  
+
   await db.subscriptions.create({
     user_id: userId,
     payment_provider: 'paypal',
     provider_subscription_id: response.result.id,
-    status: response.result.status
+    status: response.result.status,
   });
-  
+
   return response.result;
 }
 
 // Webhook handler
 app.post('/webhooks/paypal', async (req, res) => {
   const event = req.body;
-  
+
   // Verify webhook signature
   const isValid = await paypal.webhooks.verify(event);
   if (!isValid) return res.status(401).send('Invalid signature');
-  
+
   switch (event.event_type) {
     case 'BILLING.SUBSCRIPTION.ACTIVATED':
       await handleSubscriptionActivated(event.resource);
@@ -1185,7 +1257,7 @@ app.post('/webhooks/paypal', async (req, res) => {
       await handlePaymentSuccess(event.resource);
       break;
   }
-  
+
   res.json({ status: 'success' });
 });
 ```
@@ -1193,13 +1265,14 @@ app.post('/webhooks/paypal', async (req, res) => {
 ### 6.3 Razorpay Integration (India)
 
 #### Implementation:
+
 ```javascript
 // backend/src/payment/razorpay.service.js
 const Razorpay = require('razorpay');
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
 async function createSubscription(userId, planId) {
@@ -1207,16 +1280,16 @@ async function createSubscription(userId, planId) {
     plan_id: planId,
     customer_notify: 1,
     total_count: 12, // 12 months
-    notes: { user_id: userId }
+    notes: { user_id: userId },
   });
-  
+
   await db.subscriptions.create({
     user_id: userId,
     payment_provider: 'razorpay',
     provider_subscription_id: subscription.id,
-    status: subscription.status
+    status: subscription.status,
   });
-  
+
   return subscription;
 }
 
@@ -1224,15 +1297,13 @@ async function createSubscription(userId, planId) {
 app.post('/webhooks/razorpay', async (req, res) => {
   const secret = process.env.RAZORPAY_WEBHOOK_SECRET;
   const signature = req.headers['x-razorpay-signature'];
-  
-  const isValid = Razorpay.validateWebhookSignature(
-    JSON.stringify(req.body), signature, secret
-  );
-  
+
+  const isValid = Razorpay.validateWebhookSignature(JSON.stringify(req.body), signature, secret);
+
   if (!isValid) return res.status(401).send('Invalid signature');
-  
+
   const event = req.body;
-  
+
   switch (event.event) {
     case 'subscription.activated':
       await handleSubscriptionActivated(event.payload.subscription.entity);
@@ -1244,7 +1315,7 @@ app.post('/webhooks/razorpay', async (req, res) => {
       await handleSubscriptionCancelled(event.payload.subscription.entity);
       break;
   }
-  
+
   res.json({ status: 'ok' });
 });
 ```
@@ -1258,12 +1329,12 @@ function selectPaymentProvider(userCountry, userCurrency, userPreference) {
   if (userCountry === 'IN' || userCurrency === 'INR') {
     return 'razorpay';
   }
-  
+
   // PayPal for users who prefer it
   if (userPreference === 'paypal') {
     return 'paypal';
   }
-  
+
   // Default: Dodo Payments (AI-optimized, 150+ countries, Merchant of Record)
   return 'dodo';
 }
@@ -1281,7 +1352,7 @@ resource "aws_instance" "api_server" {
   ami           = "ami-0c55b159cbfafe1f0" # Ubuntu 22.04
   instance_type = "t3.medium"
   count         = 2 # Multiple instances for redundancy
-  
+
   user_data = <<-EOF
     #!/bin/bash
     apt-get update
@@ -1289,7 +1360,7 @@ resource "aws_instance" "api_server" {
     systemctl enable docker
     systemctl start docker
   EOF
-  
+
   tags = {
     Name = "velanova-api-${count.index}"
   }
@@ -1304,7 +1375,7 @@ resource "aws_db_instance" "postgres" {
   storage_encrypted    = true
   multi_az             = true
   backup_retention_period = 30
-  
+
   db_name  = "velanova"
   username = "admin"
   password = var.db_password
@@ -1333,7 +1404,7 @@ resource "aws_lb" "main" {
   name               = "velanova-alb"
   load_balancer_type = "application"
   subnets            = aws_subnet.public[*].id
-  
+
   tags = {
     Name = "velanova-load-balancer"
   }
@@ -1350,7 +1421,7 @@ services:
   api:
     build: ./api
     ports:
-      - "3000:3000"
+      - '3000:3000'
     environment:
       - NODE_ENV=production
       - DATABASE_URL=${POSTGRES_URL}
@@ -1364,7 +1435,7 @@ services:
       - redis
     restart: always
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      test: ['CMD', 'curl', '-f', 'http://localhost:3000/health']
       interval: 30s
       timeout: 10s
       retries: 3
@@ -1383,7 +1454,7 @@ services:
   admin:
     build: ./admin
     ports:
-      - "3001:3000"
+      - '3001:3000'
     environment:
       - NEXT_PUBLIC_API_URL=https://api.velanova.com
     restart: always
@@ -1391,7 +1462,7 @@ services:
   redis:
     image: redis:7-alpine
     ports:
-      - "6379:6379"
+      - '6379:6379'
     volumes:
       - redis-data:/data
     restart: always
@@ -1400,8 +1471,8 @@ services:
   nginx:
     image: nginx:alpine
     ports:
-      - "80:80"
-      - "443:443"
+      - '80:80'
+      - '443:443'
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - /etc/letsencrypt:/etc/letsencrypt:ro
@@ -1428,21 +1499,21 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Build Docker images
         run: |
           docker build -t velanova/api:${{ github.sha }} ./backend/api
           docker build -t velanova/worker:${{ github.sha }} ./backend/worker
-      
+
       - name: Push to Docker Hub
         run: |
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
           docker push velanova/api:${{ github.sha }}
           docker push velanova/worker:${{ github.sha }}
-      
+
       - name: Deploy to production
         uses: appleboy/ssh-action@master
         with:
@@ -1540,7 +1611,7 @@ autoUpdater.setFeedURL({
   owner: 'velanova',
   repo: 'desktop-app',
   private: true,
-  token: process.env.GH_TOKEN
+  token: process.env.GH_TOKEN,
 });
 
 // Check for updates on startup
@@ -1549,34 +1620,41 @@ app.on('ready', () => {
 });
 
 // Check every 4 hours
-setInterval(() => {
-  autoUpdater.checkForUpdatesAndNotify();
-}, 4 * 60 * 60 * 1000);
+setInterval(
+  () => {
+    autoUpdater.checkForUpdatesAndNotify();
+  },
+  4 * 60 * 60 * 1000
+);
 
-autoUpdater.on('update-available', (info) => {
-  dialog.showMessageBox({
-    type: 'info',
-    title: 'Update Available',
-    message: `Version ${info.version} is available. Download now?`,
-    buttons: ['Download', 'Later']
-  }).then((result) => {
-    if (result.response === 0) {
-      autoUpdater.downloadUpdate();
-    }
-  });
+autoUpdater.on('update-available', info => {
+  dialog
+    .showMessageBox({
+      type: 'info',
+      title: 'Update Available',
+      message: `Version ${info.version} is available. Download now?`,
+      buttons: ['Download', 'Later'],
+    })
+    .then(result => {
+      if (result.response === 0) {
+        autoUpdater.downloadUpdate();
+      }
+    });
 });
 
-autoUpdater.on('update-downloaded', (info) => {
-  dialog.showMessageBox({
-    type: 'info',
-    title: 'Update Ready',
-    message: 'Update downloaded. Restart to apply?',
-    buttons: ['Restart', 'Later']
-  }).then((result) => {
-    if (result.response === 0) {
-      autoUpdater.quitAndInstall();
-    }
-  });
+autoUpdater.on('update-downloaded', info => {
+  dialog
+    .showMessageBox({
+      type: 'info',
+      title: 'Update Ready',
+      message: 'Update downloaded. Restart to apply?',
+      buttons: ['Restart', 'Later'],
+    })
+    .then(result => {
+      if (result.response === 0) {
+        autoUpdater.quitAndInstall();
+      }
+    });
 });
 ```
 
@@ -1587,6 +1665,7 @@ autoUpdater.on('update-downloaded', (info) => {
 ### 9.1 Desktop App Testing
 
 #### Unit Tests (Jest)
+
 ```javascript
 // __tests__/legacy-connector.test.js
 const { PostgreSQLAdapter } = require('../src/adapters/postgresql');
@@ -1599,16 +1678,16 @@ describe('PostgreSQLAdapter', () => {
       port: 5432,
       database: 'test_db',
       user: 'test_user',
-      password: 'test_pass'
+      password: 'test_pass',
     });
-    
+
     expect(adapter.isConnected()).toBe(true);
   });
-  
+
   test('executes query and returns results', async () => {
     const adapter = new PostgreSQLAdapter();
     await adapter.connect(testConfig);
-    
+
     const results = await adapter.query('SELECT 1 as num');
     expect(results).toEqual([{ num: 1 }]);
   });
@@ -1616,6 +1695,7 @@ describe('PostgreSQLAdapter', () => {
 ```
 
 #### Integration Tests (Playwright)
+
 ```javascript
 // __tests__/e2e/connection-flow.spec.js
 const { test, expect, _electron } = require('@playwright/test');
@@ -1623,11 +1703,11 @@ const { test, expect, _electron } = require('@playwright/test');
 test('user can add and test PostgreSQL connection', async () => {
   const app = await _electron.launch({ args: ['.'] });
   const window = await app.firstWindow();
-  
+
   // Navigate to connections
   await window.click('text=Connections');
   await window.click('text=Add Connection');
-  
+
   // Fill form
   await window.selectOption('select[name=type]', 'postgresql');
   await window.fill('input[name=host]', 'localhost');
@@ -1635,15 +1715,15 @@ test('user can add and test PostgreSQL connection', async () => {
   await window.fill('input[name=database]', 'test_db');
   await window.fill('input[name=username]', 'test_user');
   await window.fill('input[name=password]', 'test_pass');
-  
+
   // Test connection
   await window.click('button:has-text("Test Connection")');
   await expect(window.locator('.success-message')).toContainText('Connected successfully');
-  
+
   // Save connection
   await window.click('button:has-text("Save")');
   await expect(window.locator('.connection-list')).toContainText('test_db');
-  
+
   await app.close();
 });
 ```
@@ -1651,6 +1731,7 @@ test('user can add and test PostgreSQL connection', async () => {
 ### 9.2 Backend API Testing
 
 #### API Tests (Supertest)
+
 ```javascript
 // __tests__/api/auth.test.js
 const request = require('supertest');
@@ -1658,26 +1739,22 @@ const app = require('../src/app');
 
 describe('Authentication API', () => {
   test('POST /api/auth/register - creates new user', async () => {
-    const response = await request(app)
-      .post('/api/auth/register')
-      .send({
-        email: 'test@example.com',
-        password: 'SecurePass123!',
-        full_name: 'Test User'
-      });
-    
+    const response = await request(app).post('/api/auth/register').send({
+      email: 'test@example.com',
+      password: 'SecurePass123!',
+      full_name: 'Test User',
+    });
+
     expect(response.status).toBe(201);
     expect(response.body).toHaveProperty('user_id');
   });
-  
+
   test('POST /api/auth/login - returns JWT token', async () => {
-    const response = await request(app)
-      .post('/api/auth/login')
-      .send({
-        email: 'test@example.com',
-        password: 'SecurePass123!'
-      });
-    
+    const response = await request(app).post('/api/auth/login').send({
+      email: 'test@example.com',
+      password: 'SecurePass123!',
+    });
+
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty('token');
     expect(response.body).toHaveProperty('refresh_token');
@@ -1704,21 +1781,22 @@ export const options = {
   },
 };
 
-export default function() {
-  const response = http.post('https://api.velanova.com/api/licenses/validate', 
+export default function () {
+  const response = http.post(
+    'https://api.velanova.com/api/licenses/validate',
     JSON.stringify({
-      license_key: __ENV.TEST_LICENSE_KEY
+      license_key: __ENV.TEST_LICENSE_KEY,
     }),
     {
       headers: { 'Content-Type': 'application/json' },
     }
   );
-  
+
   check(response, {
-    'status is 200': (r) => r.status === 200,
-    'response time < 150ms': (r) => r.timings.duration < 150,
+    'status is 200': r => r.status === 200,
+    'response time < 150ms': r => r.timings.duration < 150,
   });
-  
+
   sleep(1);
 }
 ```
@@ -1736,18 +1814,18 @@ const analytics = {
     await fetch('https://api.velanova.com/api/telemetry', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${getLicenseKey()}`,
-        'Content-Type': 'application/json'
+        Authorization: `Bearer ${getLicenseKey()}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         event,
         properties,
         timestamp: new Date().toISOString(),
         app_version: app.getVersion(),
-        platform: process.platform
-      })
+        platform: process.platform,
+      }),
     });
-  }
+  },
 };
 
 // Track key events
@@ -1772,7 +1850,7 @@ Sentry.init({
       delete event.request.headers;
     }
     return event;
-  }
+  },
 });
 
 // Capture errors
@@ -1781,7 +1859,7 @@ try {
 } catch (error) {
   Sentry.captureException(error, {
     tags: { component: 'legacy-connector' },
-    extra: { connection_type: config.type }
+    extra: { connection_type: config.type },
   });
   throw error;
 }
@@ -1793,39 +1871,39 @@ try {
 
 ### 11.1 Technology Stack Summary
 
-| Layer | Technology | Version | Purpose |
-|-------|-----------|---------|---------|
-| **Desktop App** | Electron | 28+ | Cross-platform desktop |
-| **UI Framework** | React | 18+ | User interface |
-| **Styling** | TailwindCSS | 3+ | UI styling |
-| **Local Storage** | SQLite (better-sqlite3) | Latest | Encrypted local data |
-| **Backend API** | Node.js + Express | 20+ | REST API |
-| **Auth** | Passport.js + JWT | Latest | Authentication |
-| **Payment** | Stripe, PayPal, Razorpay | Latest | Multi-provider billing |
-| **Primary DB** | PostgreSQL | 16 | User & subscription data |
-| **Log DB** | MongoDB (DocumentDB) | 7+ | Application & audit logs |
-| **Cache** | Redis | 7+ | Sessions & rate limiting |
-| **Monitoring** | Sentry, Datadog | Latest | Error tracking & APM |
+| Layer             | Technology               | Version | Purpose                  |
+| ----------------- | ------------------------ | ------- | ------------------------ |
+| **Desktop App**   | Electron                 | 28+     | Cross-platform desktop   |
+| **UI Framework**  | React                    | 18+     | User interface           |
+| **Styling**       | TailwindCSS              | 3+      | UI styling               |
+| **Local Storage** | SQLite (better-sqlite3)  | Latest  | Encrypted local data     |
+| **Backend API**   | Node.js + Express        | 20+     | REST API                 |
+| **Auth**          | Passport.js + JWT        | Latest  | Authentication           |
+| **Payment**       | Stripe, PayPal, Razorpay | Latest  | Multi-provider billing   |
+| **Primary DB**    | PostgreSQL               | 16      | User & subscription data |
+| **Log DB**        | MongoDB (DocumentDB)     | 7+      | Application & audit logs |
+| **Cache**         | Redis                    | 7+      | Sessions & rate limiting |
+| **Monitoring**    | Sentry, Datadog          | Latest  | Error tracking & APM     |
 
 ### 11.2 Pricing Summary
 
-| Plan | Price | Features |
-|------|-------|----------|
-| **Trial** | Free 14 days | 100 AI queries, 1 connection, all features |
-| **Professional** | $49/month | Unlimited queries, 5 connections, 2 devices |
-| **Team** | $199/month | Unlimited queries, 20 connections, 5 users |
-| **Enterprise** | Custom | Unlimited everything, SSO, dedicated support |
+| Plan             | Price        | Features                                     |
+| ---------------- | ------------ | -------------------------------------------- |
+| **Trial**        | Free 14 days | 100 AI queries, 1 connection, all features   |
+| **Professional** | $49/month    | Unlimited queries, 5 connections, 2 devices  |
+| **Team**         | $199/month   | Unlimited queries, 20 connections, 5 users   |
+| **Enterprise**   | Custom       | Unlimited everything, SSO, dedicated support |
 
 ### 11.3 Development Timeline
 
-| Phase | Duration | Deliverables |
-|-------|----------|--------------|
-| **Phase 1: MVP** | 8 weeks | Desktop app with PostgreSQL + OpenAI, basic UI |
-| **Phase 2: Payments** | 3 weeks | Stripe integration, license system |
-| **Phase 3: More Adapters** | 4 weeks | Oracle, MySQL, Salesforce connectors |
-| **Phase 4: Analytics** | 3 weeks | Cost dashboard, usage tracking |
-| **Phase 5: Polish** | 2 weeks | UI improvements, testing, docs |
-| **Total** | 20 weeks | Production-ready desktop app |
+| Phase                      | Duration | Deliverables                                   |
+| -------------------------- | -------- | ---------------------------------------------- |
+| **Phase 1: MVP**           | 8 weeks  | Desktop app with PostgreSQL + OpenAI, basic UI |
+| **Phase 2: Payments**      | 3 weeks  | Stripe integration, license system             |
+| **Phase 3: More Adapters** | 4 weeks  | Oracle, MySQL, Salesforce connectors           |
+| **Phase 4: Analytics**     | 3 weeks  | Cost dashboard, usage tracking                 |
+| **Phase 5: Polish**        | 2 weeks  | UI improvements, testing, docs                 |
+| **Total**                  | 20 weeks | Production-ready desktop app                   |
 
 ### 11.4 Glossary
 

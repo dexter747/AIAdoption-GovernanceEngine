@@ -4,10 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
 import { requireAdmin } from '@/lib/api-auth';
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const auth = await requireAdmin();
   if (auth instanceof NextResponse) return auth;
 
@@ -16,37 +13,30 @@ export async function GET(
 
     const { data: license, error } = await supabaseAdmin
       .from('licenses')
-      .select(`
+      .select(
+        `
         *,
         users:user_id (id, email, full_name),
         license_activations (*)
-      `)
+      `
+      )
       .eq('id', id)
       .single();
 
     if (error) throw error;
 
     if (!license) {
-      return NextResponse.json(
-        { error: 'License not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'License not found' }, { status: 404 });
     }
 
     return NextResponse.json({ license });
   } catch (error) {
     console.error('Error fetching license:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch license' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch license' }, { status: 500 });
   }
 }
 
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const auth = await requireAdmin();
   if (auth instanceof NextResponse) return auth;
 
@@ -84,10 +74,7 @@ export async function PATCH(
     return NextResponse.json({ license });
   } catch (error) {
     console.error('Error updating license:', error);
-    return NextResponse.json(
-      { error: 'Failed to update license' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to update license' }, { status: 500 });
   }
 }
 
@@ -104,7 +91,7 @@ export async function DELETE(
     // Soft delete - just deactivate
     const { error } = await supabaseAdmin
       .from('licenses')
-      .update({ 
+      .update({
         is_active: false,
         updated_at: new Date().toISOString(),
       })
@@ -115,9 +102,6 @@ export async function DELETE(
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error deleting license:', error);
-    return NextResponse.json(
-      { error: 'Failed to delete license' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to delete license' }, { status: 500 });
   }
 }

@@ -11,22 +11,64 @@ import { createClient } from '@supabase/supabase-js';
 const providers = {
   openai: {
     name: 'OpenAI',
-    models: ['gpt-4', 'gpt-4-turbo', 'gpt-4o', 'gpt-4o-mini', 'gpt-4.1', 'gpt-4.1-mini', 'gpt-5', 'gpt-5-mini', 'gpt-5-nano', 'gpt-5.2', 'gpt-5.2-pro', 'o1', 'o1-mini', 'o3', 'o3-mini', 'o4-mini', 'gpt-3.5-turbo'],
+    models: [
+      'gpt-4',
+      'gpt-4-turbo',
+      'gpt-4o',
+      'gpt-4o-mini',
+      'gpt-4.1',
+      'gpt-4.1-mini',
+      'gpt-5',
+      'gpt-5-mini',
+      'gpt-5-nano',
+      'gpt-5.2',
+      'gpt-5.2-pro',
+      'o1',
+      'o1-mini',
+      'o3',
+      'o3-mini',
+      'o4-mini',
+      'gpt-3.5-turbo',
+    ],
     enabled: Boolean(process.env.OPENAI_API_KEY),
   },
   anthropic: {
     name: 'Anthropic',
-    models: ['claude-3-7-sonnet-20250219', 'claude-3-5-sonnet-20241022', 'claude-3-5-haiku-20241022', 'claude-3-opus-20240229'],
+    models: [
+      'claude-3-7-sonnet-20250219',
+      'claude-3-5-sonnet-20241022',
+      'claude-3-5-haiku-20241022',
+      'claude-3-opus-20240229',
+    ],
     enabled: Boolean(process.env.ANTHROPIC_API_KEY),
   },
   google: {
     name: 'Google AI',
-    models: ['gemini-2.0-flash-exp', 'gemini-2.0-flash-thinking-exp-01-21', 'gemini-1.5-pro', 'gemini-1.5-flash'],
+    models: [
+      'gemini-2.0-flash-exp',
+      'gemini-2.0-flash-thinking-exp-01-21',
+      'gemini-1.5-pro',
+      'gemini-1.5-flash',
+    ],
     enabled: Boolean(process.env.GOOGLE_AI_API_KEY),
   },
   groq: {
     name: 'Groq',
-    models: ['llama-3.3-70b-versatile', 'llama-3.1-70b-versatile', 'llama-3.1-8b-instant', 'llama-3.2-90b-vision-preview', 'llama-4-maverick-17b-128e-instruct', 'llama-4-scout-17b-16e-instruct', 'mixtral-8x7b-32768', 'qwen/qwen3-32b', 'moonshotai/kimi-k2-instruct-0905', 'openai/gpt-oss-120b', 'openai/gpt-oss-20b', 'groq/compound', 'groq/compound-mini'],
+    models: [
+      'llama-3.3-70b-versatile',
+      'llama-3.1-70b-versatile',
+      'llama-3.1-8b-instant',
+      'llama-3.2-90b-vision-preview',
+      'llama-4-maverick-17b-128e-instruct',
+      'llama-4-scout-17b-16e-instruct',
+      'mixtral-8x7b-32768',
+      'qwen/qwen3-32b',
+      'moonshotai/kimi-k2-instruct-0905',
+      'openai/gpt-oss-120b',
+      'openai/gpt-oss-20b',
+      'groq/compound',
+      'groq/compound-mini',
+    ],
     enabled: Boolean(process.env.GROQ_API_KEY),
   },
   xai: {
@@ -77,7 +119,7 @@ if (providers.groq.enabled) {
 
 // xAI (Grok) - Uses OpenAI-compatible API
 if (providers.xai.enabled) {
-  clients.xai = new OpenAI({ 
+  clients.xai = new OpenAI({
     apiKey: process.env.XAI_API_KEY,
     baseURL: 'https://api.x.ai/v1',
   });
@@ -85,7 +127,7 @@ if (providers.xai.enabled) {
 
 // Mistral - Uses OpenAI-compatible API
 if (providers.mistral.enabled) {
-  clients.mistral = new OpenAI({ 
+  clients.mistral = new OpenAI({
     apiKey: process.env.MISTRAL_API_KEY,
     baseURL: 'https://api.mistral.ai/v1',
   });
@@ -93,7 +135,7 @@ if (providers.mistral.enabled) {
 
 // DeepSeek - Uses OpenAI-compatible API
 if (providers.deepseek.enabled) {
-  clients.deepseek = new OpenAI({ 
+  clients.deepseek = new OpenAI({
     apiKey: process.env.DEEPSEEK_API_KEY,
     baseURL: 'https://api.deepseek.com',
   });
@@ -101,7 +143,7 @@ if (providers.deepseek.enabled) {
 
 // Cohere - Uses OpenAI-compatible API
 if (providers.cohere.enabled) {
-  clients.cohere = new OpenAI({ 
+  clients.cohere = new OpenAI({
     apiKey: process.env.COHERE_API_KEY,
     baseURL: 'https://api.cohere.com/v2',
   });
@@ -109,7 +151,7 @@ if (providers.cohere.enabled) {
 
 // Perplexity - Uses OpenAI-compatible API
 if (providers.perplexity.enabled) {
-  clients.perplexity = new OpenAI({ 
+  clients.perplexity = new OpenAI({
     apiKey: process.env.PERPLEXITY_API_KEY,
     baseURL: 'https://api.perplexity.ai',
   });
@@ -119,10 +161,7 @@ if (providers.perplexity.enabled) {
 let _supabaseAiRouter = null;
 function getSupabase() {
   if (!_supabaseAiRouter && process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY) {
-    _supabaseAiRouter = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_KEY
-    );
+    _supabaseAiRouter = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
   }
   return _supabaseAiRouter;
 }
@@ -154,7 +193,9 @@ export async function routeAIRequest({
 
     // Allow if server has the key configured OR user has a BYOK key
     if (!providers[provider].enabled && !userApiKey) {
-      throw new Error(`Provider ${provider} is not configured. Please add your API key in Settings → API Keys.`);
+      throw new Error(
+        `Provider ${provider} is not configured. Please add your API key in Settings → API Keys.`
+      );
     }
 
     // Route to appropriate provider
@@ -164,7 +205,14 @@ export async function routeAIRequest({
 
     switch (provider) {
       case 'openai':
-        response = await callOpenAI({ model, messages, temperature, maxTokens, stream, userApiKey });
+        response = await callOpenAI({
+          model,
+          messages,
+          temperature,
+          maxTokens,
+          stream,
+          userApiKey,
+        });
         tokensUsed = response.usage?.total_tokens || 0;
         cost = calculateOpenAICost(model, tokensUsed);
         break;
@@ -188,31 +236,71 @@ export async function routeAIRequest({
         break;
 
       case 'xai':
-        response = await callOpenAICompatible({ provider: 'xai', model, messages, temperature, maxTokens, userApiKey, baseURL: 'https://api.x.ai/v1' });
+        response = await callOpenAICompatible({
+          provider: 'xai',
+          model,
+          messages,
+          temperature,
+          maxTokens,
+          userApiKey,
+          baseURL: 'https://api.x.ai/v1',
+        });
         tokensUsed = response.usage?.total_tokens || 0;
         cost = calculateOpenAICost(model, tokensUsed);
         break;
 
       case 'mistral':
-        response = await callOpenAICompatible({ provider: 'mistral', model, messages, temperature, maxTokens, userApiKey, baseURL: 'https://api.mistral.ai/v1' });
+        response = await callOpenAICompatible({
+          provider: 'mistral',
+          model,
+          messages,
+          temperature,
+          maxTokens,
+          userApiKey,
+          baseURL: 'https://api.mistral.ai/v1',
+        });
         tokensUsed = response.usage?.total_tokens || 0;
         cost = calculateOpenAICost(model, tokensUsed);
         break;
 
       case 'deepseek':
-        response = await callOpenAICompatible({ provider: 'deepseek', model, messages, temperature, maxTokens, userApiKey, baseURL: 'https://api.deepseek.com' });
+        response = await callOpenAICompatible({
+          provider: 'deepseek',
+          model,
+          messages,
+          temperature,
+          maxTokens,
+          userApiKey,
+          baseURL: 'https://api.deepseek.com',
+        });
         tokensUsed = response.usage?.total_tokens || 0;
         cost = calculateOpenAICost(model, tokensUsed);
         break;
 
       case 'cohere':
-        response = await callOpenAICompatible({ provider: 'cohere', model, messages, temperature, maxTokens, userApiKey, baseURL: 'https://api.cohere.com/v2' });
+        response = await callOpenAICompatible({
+          provider: 'cohere',
+          model,
+          messages,
+          temperature,
+          maxTokens,
+          userApiKey,
+          baseURL: 'https://api.cohere.com/v2',
+        });
         tokensUsed = response.usage?.total_tokens || 0;
         cost = calculateOpenAICost(model, tokensUsed);
         break;
 
       case 'perplexity':
-        response = await callOpenAICompatible({ provider: 'perplexity', model, messages, temperature, maxTokens, userApiKey, baseURL: 'https://api.perplexity.ai' });
+        response = await callOpenAICompatible({
+          provider: 'perplexity',
+          model,
+          messages,
+          temperature,
+          maxTokens,
+          userApiKey,
+          baseURL: 'https://api.perplexity.ai',
+        });
         tokensUsed = response.usage?.total_tokens || 0;
         cost = calculateOpenAICost(model, tokensUsed);
         break;
@@ -242,10 +330,9 @@ export async function routeAIRequest({
       provider,
       model,
     };
-
   } catch (error) {
     console.error('AI routing error:', error);
-    
+
     // Log error
     await logUsage({
       userId,
@@ -266,9 +353,7 @@ export async function routeAIRequest({
 // =============================================================================
 
 async function callOpenAI({ model, messages, temperature, maxTokens, stream, userApiKey }) {
-  const client = userApiKey 
-    ? new OpenAI({ apiKey: userApiKey })
-    : clients.openai;
+  const client = userApiKey ? new OpenAI({ apiKey: userApiKey }) : clients.openai;
 
   const completion = await client.chat.completions.create({
     model: model || 'gpt-3.5-turbo',
@@ -289,9 +374,7 @@ async function callOpenAI({ model, messages, temperature, maxTokens, stream, use
 }
 
 async function callAnthropic({ model, messages, temperature, maxTokens, userApiKey }) {
-  const client = userApiKey
-    ? new Anthropic({ apiKey: userApiKey })
-    : clients.anthropic;
+  const client = userApiKey ? new Anthropic({ apiKey: userApiKey }) : clients.anthropic;
 
   // Convert messages format to Anthropic format
   const systemMessage = messages.find(m => m.role === 'system');
@@ -312,9 +395,7 @@ async function callAnthropic({ model, messages, temperature, maxTokens, userApiK
 }
 
 async function callGoogle({ model, messages, temperature, maxTokens, userApiKey }) {
-  const genAI = userApiKey
-    ? new GoogleGenerativeAI(userApiKey)
-    : clients.google;
+  const genAI = userApiKey ? new GoogleGenerativeAI(userApiKey) : clients.google;
 
   // Extract system instruction for Gemini
   const systemMessage = messages.find(m => m.role === 'system');
@@ -352,9 +433,7 @@ async function callGoogle({ model, messages, temperature, maxTokens, userApiKey 
 }
 
 async function callGroq({ model, messages, temperature, maxTokens, userApiKey }) {
-  const client = userApiKey
-    ? new Groq({ apiKey: userApiKey })
-    : clients.groq;
+  const client = userApiKey ? new Groq({ apiKey: userApiKey }) : clients.groq;
 
   const completion = await client.chat.completions.create({
     model: model || 'llama2-70b-4096',
@@ -373,15 +452,23 @@ async function callGroq({ model, messages, temperature, maxTokens, userApiKey })
  * Generic OpenAI-compatible API caller
  * Works for xAI (Grok), Mistral, DeepSeek, and other OpenAI-compatible providers
  */
-async function callOpenAICompatible({ provider, model, messages, temperature, maxTokens, userApiKey, baseURL }) {
+async function callOpenAICompatible({
+  provider,
+  model,
+  messages,
+  temperature,
+  maxTokens,
+  userApiKey,
+  baseURL,
+}) {
   const envKeyMap = {
-    'xai': 'XAI_API_KEY',
-    'mistral': 'MISTRAL_API_KEY',
-    'deepseek': 'DEEPSEEK_API_KEY',
-    'cohere': 'COHERE_API_KEY',
-    'perplexity': 'PERPLEXITY_API_KEY',
+    xai: 'XAI_API_KEY',
+    mistral: 'MISTRAL_API_KEY',
+    deepseek: 'DEEPSEEK_API_KEY',
+    cohere: 'COHERE_API_KEY',
+    perplexity: 'PERPLEXITY_API_KEY',
   };
-  
+
   const client = userApiKey
     ? new OpenAI({ apiKey: userApiKey, baseURL })
     : clients[provider] || new OpenAI({ apiKey: process.env[envKeyMap[provider]], baseURL });
@@ -446,7 +533,7 @@ function calculateGoogleCost(model, totalTokens) {
 async function getUserApiKey(userId, provider) {
   const supabase = getSupabase();
   if (!supabase) return null;
-  
+
   try {
     const { data, error } = await supabase
       .from('api_keys')
@@ -474,20 +561,18 @@ async function logUsage({ userId, licenseId, provider, model, tokensUsed, cost, 
     // No database configured, skip usage logging
     return;
   }
-  
+
   try {
-    const { error } = await supabase
-      .from('usage_logs')
-      .insert({
-        user_id: userId,
-        license_id: licenseId,
-        event_type: 'ai_query',
-        provider,
-        model,
-        tokens_used: tokensUsed,
-        cost: cost.toFixed(6),
-        metadata,
-      });
+    const { error } = await supabase.from('usage_logs').insert({
+      user_id: userId,
+      license_id: licenseId,
+      event_type: 'ai_query',
+      provider,
+      model,
+      tokens_used: tokensUsed,
+      cost: cost.toFixed(6),
+      metadata,
+    });
 
     if (error) {
       console.error('Error logging usage:', error);

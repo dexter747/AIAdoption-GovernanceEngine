@@ -3,6 +3,7 @@
  * Primary payment provider for Velanova
  * API docs: https://docs.lemonsqueezy.com/api
  */
+import crypto from 'crypto';
 
 export interface LemonSqueezyConfig {
   apiKey: string;
@@ -52,8 +53,8 @@ export class LemonSqueezyClient {
 
   private get headers() {
     return {
-      'Authorization': `Bearer ${this.apiKey}`,
-      'Accept': 'application/vnd.api+json',
+      Authorization: `Bearer ${this.apiKey}`,
+      Accept: 'application/vnd.api+json',
       'Content-Type': 'application/vnd.api+json',
     };
   }
@@ -61,10 +62,15 @@ export class LemonSqueezyClient {
   /**
    * Create a checkout session for new subscription
    */
-  async createCheckoutSession(params: CreateCheckoutSessionParams): Promise<LemonSqueezyCheckoutSession> {
+  async createCheckoutSession(
+    params: CreateCheckoutSessionParams
+  ): Promise<LemonSqueezyCheckoutSession> {
     // Variant IDs should be configured per plan/billing cycle in env
     const variantMap: Record<string, Record<string, string>> = {
-      trial: { monthly: process.env.LS_VARIANT_TRIAL || '', yearly: process.env.LS_VARIANT_TRIAL || '' },
+      trial: {
+        monthly: process.env.LS_VARIANT_TRIAL || '',
+        yearly: process.env.LS_VARIANT_TRIAL || '',
+      },
       professional: {
         monthly: process.env.LS_VARIANT_PRO_MONTHLY || '',
         yearly: process.env.LS_VARIANT_PRO_YEARLY || '',
@@ -162,7 +168,10 @@ export class LemonSqueezyClient {
   /**
    * Update subscription variant (upgrade/downgrade)
    */
-  async updateSubscription(subscriptionId: string, newVariantId: string): Promise<LemonSqueezySubscription> {
+  async updateSubscription(
+    subscriptionId: string,
+    newVariantId: string
+  ): Promise<LemonSqueezySubscription> {
     const response = await fetch(`${this.baseUrl}/subscriptions/${subscriptionId}`, {
       method: 'PATCH',
       headers: this.headers,
@@ -188,16 +197,12 @@ export class LemonSqueezyClient {
    * Verify webhook signature (HMAC SHA-256 hex digest)
    */
   verifyWebhookSignature(payload: string, signature: string): boolean {
-    const crypto = require('crypto');
     const expectedSignature = crypto
       .createHmac('sha256', this.webhookSecret)
       .update(payload)
       .digest('hex');
 
-    return crypto.timingSafeEqual(
-      Buffer.from(signature),
-      Buffer.from(expectedSignature)
-    );
+    return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSignature));
   }
 
   /**

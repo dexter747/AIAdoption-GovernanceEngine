@@ -46,13 +46,13 @@ docker run -it --rm \
 
 ### Environment Variables
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `OPENAI_API_KEY` | OpenAI API key | Optional |
-| `ANTHROPIC_API_KEY` | Anthropic API key | Optional |
-| `GOOGLE_AI_API_KEY` | Google AI API key | Optional |
-| `GROQ_API_KEY` | Groq API key | Optional |
-| `SUPABASE_URL` | Supabase project URL | For governance |
+| Variable               | Description          | Required       |
+| ---------------------- | -------------------- | -------------- |
+| `OPENAI_API_KEY`       | OpenAI API key       | Optional       |
+| `ANTHROPIC_API_KEY`    | Anthropic API key    | Optional       |
+| `GOOGLE_AI_API_KEY`    | Google AI API key    | Optional       |
+| `GROQ_API_KEY`         | Groq API key         | Optional       |
+| `SUPABASE_URL`         | Supabase project URL | For governance |
 | `SUPABASE_SERVICE_KEY` | Supabase service key | For governance |
 
 ### Using with Claude Desktop
@@ -93,37 +93,37 @@ Add to your Cursor MCP config:
 
 ### AI Model Tools
 
-| Tool | Description |
-|------|-------------|
-| `query_ai` | Query AI models with intelligent routing |
+| Tool             | Description                               |
+| ---------------- | ----------------------------------------- |
+| `query_ai`       | Query AI models with intelligent routing  |
 | `list_ai_models` | List all available AI models with pricing |
-| `compare_models` | Compare multiple models on a prompt |
+| `compare_models` | Compare multiple models on a prompt       |
 
 ### Database Tools
 
-| Tool | Description |
-|------|-------------|
-| `query_database` | Query any connected database |
-| `list_databases` | List all connected databases |
-| `get_database_schema` | Get schema information |
+| Tool                  | Description                  |
+| --------------------- | ---------------------------- |
+| `query_database`      | Query any connected database |
+| `list_databases`      | List all connected databases |
+| `get_database_schema` | Get schema information       |
 
 ### Enterprise Tools
 
-| Tool | Description |
-|------|-------------|
-| `query_sap` | Query SAP S/4HANA |
-| `query_salesforce` | Query Salesforce CRM |
-| `query_epic` | Query Epic EHR (FHIR) |
+| Tool               | Description           |
+| ------------------ | --------------------- |
+| `query_sap`        | Query SAP S/4HANA     |
+| `query_salesforce` | Query Salesforce CRM  |
+| `query_epic`       | Query Epic EHR (FHIR) |
 | `query_servicenow` | Query ServiceNow ITSM |
-| `query_jira` | Query Jira issues |
+| `query_jira`       | Query Jira issues     |
 
 ### Governance Tools
 
-| Tool | Description |
-|------|-------------|
-| `get_usage_stats` | Get usage statistics |
+| Tool                | Description              |
+| ------------------- | ------------------------ |
+| `get_usage_stats`   | Get usage statistics     |
 | `get_cost_estimate` | Estimate operation costs |
-| `get_audit_log` | Retrieve audit logs |
+| `get_audit_log`     | Retrieve audit logs      |
 
 ## Architecture
 

@@ -15,7 +15,7 @@ export class PerplexityProvider {
     if (!config.apiKey) {
       throw new Error('Perplexity API key not configured');
     }
-    
+
     this.client = new OpenAI({
       apiKey: config.apiKey,
       baseURL: 'https://api.perplexity.ai',
@@ -32,7 +32,7 @@ export class PerplexityProvider {
       });
 
       const choice = response.choices[0];
-      
+
       return {
         id: response.id,
         message: {
@@ -50,14 +50,14 @@ export class PerplexityProvider {
       };
     } catch (err) {
       logger.error({ error: err.message, model }, 'Perplexity chat failed');
-      
+
       if (err.status === 429) {
         throw ApiError.tooManyRequests('Perplexity rate limit exceeded');
       }
       if (err.status === 401) {
         throw ApiError.unauthorized('Invalid Perplexity API key');
       }
-      
+
       throw ApiError.internal(`Perplexity error: ${err.message}`);
     }
   }

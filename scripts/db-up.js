@@ -2,17 +2,17 @@
 
 /**
  * Velanova Database Up Script
- * 
+ *
  * Applies the unified schema to Supabase using:
  *   1. Supabase CLI (if installed and linked)
  *   2. Direct psql connection (fallback)
  *   3. Supabase JS client (last resort - limited)
- * 
+ *
  * Usage:
  *   pnpm db:up                    # Apply full schema
  *   pnpm db:up -- --check         # Dry run, check connection only
  *   pnpm db:up -- --file schema.sql  # Apply specific file
- * 
+ *
  * Required env vars:
  *   SUPABASE_URL, SUPABASE_SERVICE_KEY (or SUPABASE_ANON_KEY)
  *   Optional: DATABASE_URL (for direct psql), SUPABASE_DB_PASSWORD
@@ -73,35 +73,42 @@ function hasSupabaseCli() {
   try {
     execSync('supabase --version', { stdio: 'pipe' });
     return true;
-  } catch { return false; }
+  } catch {
+    return false;
+  }
 }
 
 function hasPsql() {
   try {
     execSync('psql --version', { stdio: 'pipe' });
     return true;
-  } catch { return false; }
+  } catch {
+    return false;
+  }
 }
 
 function applyWithSupabaseCli(schemaFile, config) {
   console.log('🔧 Using Supabase CLI...\n');
-  
+
   try {
     // Check if linked
     execSync('supabase projects list', { stdio: 'pipe' });
   } catch {
     console.log('  Linking to project...');
-    execSync(`supabase link --project-ref ${config.projectRef}`, { 
+    execSync(`supabase link --project-ref ${config.projectRef}`, {
       stdio: 'inherit',
-      cwd: ROOT_DIR 
+      cwd: ROOT_DIR,
     });
   }
 
   console.log('  Applying schema...');
-  execSync(`supabase db push --db-url "postgresql://postgres:${config.dbPassword}@db.${config.projectRef}.supabase.co:5432/postgres"`, {
-    stdio: 'inherit',
-    cwd: ROOT_DIR,
-  });
+  execSync(
+    `supabase db push --db-url "postgresql://postgres:${config.dbPassword}@db.${config.projectRef}.supabase.co:5432/postgres"`,
+    {
+      stdio: 'inherit',
+      cwd: ROOT_DIR,
+    }
+  );
 }
 
 function applyWithPsql(schemaFile, config) {
@@ -139,7 +146,7 @@ async function applyWithSupabaseJs(schemaFile, config) {
   const supabase = createClient(config.url, config.serviceKey);
 
   const sql = readFileSync(schemaFile, 'utf-8');
-  
+
   // Split into individual statements
   const statements = sql
     .split(/;\s*$/m)
@@ -177,7 +184,7 @@ async function applyWithSupabaseJs(schemaFile, config) {
   }
 
   console.log(`\n  ✅ ${success} statements executed, ❌ ${errors} errors`);
-  
+
   if (errors > 0) {
     console.log('\n⚠️  Some statements failed. For full schema, use psql or Supabase Dashboard:');
     console.log(`   https://app.supabase.com/project/${config.projectRef}/sql/new`);
@@ -191,9 +198,10 @@ async function main() {
   const args = process.argv.slice(2);
   const checkOnly = args.includes('--check');
   const fileIdx = args.indexOf('--file');
-  const schemaFile = fileIdx !== -1 && args[fileIdx + 1]
-    ? join(ROOT_DIR, 'database', args[fileIdx + 1])
-    : SCHEMA_FILE;
+  const schemaFile =
+    fileIdx !== -1 && args[fileIdx + 1]
+      ? join(ROOT_DIR, 'database', args[fileIdx + 1])
+      : SCHEMA_FILE;
 
   console.log('╔══════════════════════════════════════════════════╗');
   console.log('║         Velanova Database Schema — UP            ║');
@@ -231,12 +239,14 @@ async function main() {
     console.error('   1. Install psql + set DATABASE_URL or SUPABASE_DB_PASSWORD');
     console.error('   2. Install Supabase CLI + set SUPABASE_DB_PASSWORD');
     console.error('   3. Set SUPABASE_SERVICE_KEY for JS-based migration');
-    console.error(`   4. Manually paste into: https://app.supabase.com/project/${config.projectRef}/sql/new`);
+    console.error(
+      `   4. Manually paste into: https://app.supabase.com/project/${config.projectRef}/sql/new`
+    );
     process.exit(1);
   }
 }
 
-main().catch((err) => {
+main().catch(err => {
   console.error('Fatal error:', err);
   process.exit(1);
 });

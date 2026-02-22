@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   // Logout - clear cookies
   const cookieStore = await cookies();
-  
+
   cookieStore.delete('user_session');
   cookieStore.delete('auth_token');
   cookieStore.delete('refresh_token');

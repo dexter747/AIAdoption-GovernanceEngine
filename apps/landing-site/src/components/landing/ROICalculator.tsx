@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Calculator, TrendingUp, Clock, DollarSign, Users } from "lucide-react";
+import { useState, useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Calculator, TrendingUp, Clock, DollarSign, Users } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,21 +16,34 @@ export default function ROICalculator() {
   const weeklySavings = employees * hoursPerWeek * hourlyRate * 0.7;
   const monthlySavings = weeklySavings * 4;
   const yearlySavings = monthlySavings * 12;
-  const yearlyROI = ((yearlySavings - (49 * 12 * employees)) / (49 * 12 * employees)) * 100;
+  const yearlyROI = ((yearlySavings - 49 * 12 * employees) / (49 * 12 * employees)) * 100;
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(".roi-header > *", {
-        opacity: 0, y: 30, duration: 0.7, stagger: 0.12, immediateRender: false,
-        scrollTrigger: { trigger: ".roi-header", start: "top 85%", once: true },
+      gsap.from('.roi-header > *', {
+        opacity: 0,
+        y: 30,
+        duration: 0.7,
+        stagger: 0.12,
+        immediateRender: false,
+        scrollTrigger: { trigger: '.roi-header', start: 'top 85%', once: true },
       });
-      gsap.from(".roi-calc-card", {
-        opacity: 0, x: -40, duration: 0.8, ease: "power3.out", immediateRender: false,
-        scrollTrigger: { trigger: ".roi-grid", start: "top 85%", once: true },
+      gsap.from('.roi-calc-card', {
+        opacity: 0,
+        x: -40,
+        duration: 0.8,
+        ease: 'power3.out',
+        immediateRender: false,
+        scrollTrigger: { trigger: '.roi-grid', start: 'top 85%', once: true },
       });
-      gsap.from(".roi-result", {
-        opacity: 0, x: 40, duration: 0.8, stagger: 0.12, ease: "power3.out", immediateRender: false,
-        scrollTrigger: { trigger: ".roi-grid", start: "top 85%", once: true },
+      gsap.from('.roi-result', {
+        opacity: 0,
+        x: 40,
+        duration: 0.8,
+        stagger: 0.12,
+        ease: 'power3.out',
+        immediateRender: false,
+        scrollTrigger: { trigger: '.roi-grid', start: 'top 85%', once: true },
       });
     }, ref);
     return () => ctx.revert();
@@ -60,29 +73,64 @@ export default function ROICalculator() {
             </h3>
             <div className="space-y-7">
               <div>
-                <label className="block text-sm font-medium mb-3 text-zinc-400">Number of Employees Querying Data</label>
+                <label className="block text-sm font-medium mb-3 text-zinc-400">
+                  Number of Employees Querying Data
+                </label>
                 <div className="flex items-center gap-4">
-                  <input type="range" min="10" max="500" value={employees} onChange={(e) => setEmployees(Number(e.target.value))} className="flex-1 h-1.5 rounded-full appearance-none cursor-pointer bg-zinc-800 accent-white" />
-                  <span className="text-2xl font-medium text-white min-w-[80px] text-right tabular-nums">{employees}</span>
+                  <input
+                    type="range"
+                    min="10"
+                    max="500"
+                    value={employees}
+                    onChange={e => setEmployees(Number(e.target.value))}
+                    className="flex-1 h-1.5 rounded-full appearance-none cursor-pointer bg-zinc-800 accent-white"
+                  />
+                  <span className="text-2xl font-medium text-white min-w-[80px] text-right tabular-nums">
+                    {employees}
+                  </span>
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-3 text-zinc-400">Average Hourly Rate ($)</label>
+                <label className="block text-sm font-medium mb-3 text-zinc-400">
+                  Average Hourly Rate ($)
+                </label>
                 <div className="flex items-center gap-4">
-                  <input type="range" min="30" max="250" step="5" value={hourlyRate} onChange={(e) => setHourlyRate(Number(e.target.value))} className="flex-1 h-1.5 rounded-full appearance-none cursor-pointer bg-zinc-800 accent-white" />
-                  <span className="text-2xl font-medium text-white min-w-[80px] text-right tabular-nums">${hourlyRate}</span>
+                  <input
+                    type="range"
+                    min="30"
+                    max="250"
+                    step="5"
+                    value={hourlyRate}
+                    onChange={e => setHourlyRate(Number(e.target.value))}
+                    className="flex-1 h-1.5 rounded-full appearance-none cursor-pointer bg-zinc-800 accent-white"
+                  />
+                  <span className="text-2xl font-medium text-white min-w-[80px] text-right tabular-nums">
+                    ${hourlyRate}
+                  </span>
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-3 text-zinc-400">Hours Spent on Data Queries per Week</label>
+                <label className="block text-sm font-medium mb-3 text-zinc-400">
+                  Hours Spent on Data Queries per Week
+                </label>
                 <div className="flex items-center gap-4">
-                  <input type="range" min="1" max="40" value={hoursPerWeek} onChange={(e) => setHoursPerWeek(Number(e.target.value))} className="flex-1 h-1.5 rounded-full appearance-none cursor-pointer bg-zinc-800 accent-white" />
-                  <span className="text-2xl font-medium text-white min-w-[80px] text-right tabular-nums">{hoursPerWeek}h</span>
+                  <input
+                    type="range"
+                    min="1"
+                    max="40"
+                    value={hoursPerWeek}
+                    onChange={e => setHoursPerWeek(Number(e.target.value))}
+                    className="flex-1 h-1.5 rounded-full appearance-none cursor-pointer bg-zinc-800 accent-white"
+                  />
+                  <span className="text-2xl font-medium text-white min-w-[80px] text-right tabular-nums">
+                    {hoursPerWeek}h
+                  </span>
                 </div>
               </div>
               <div className="pt-5 border-t border-white/[0.06]">
                 <p className="text-sm text-zinc-500">
-                  Based on industry averages, Velanova can reduce query time by <span className="font-medium text-white">70%</span>
+                  Based on industry averages, Velanova can reduce query time by{' '}
+                  <span className="font-medium text-white">70%</span>
                 </p>
               </div>
             </div>
@@ -95,10 +143,11 @@ export default function ROICalculator() {
                 Projected Annual Savings
               </div>
               <div className="text-4xl font-medium text-white mb-1 tabular-nums tracking-tight">
-                ${yearlySavings.toLocaleString("en-US")}
+                ${yearlySavings.toLocaleString('en-US')}
               </div>
               <p className="text-sm text-zinc-600">
-                ${monthlySavings.toLocaleString("en-US")}/month &middot; ${weeklySavings.toLocaleString("en-US")}/week
+                ${monthlySavings.toLocaleString('en-US')}/month &middot; $
+                {weeklySavings.toLocaleString('en-US')}/week
               </p>
             </div>
 
@@ -108,7 +157,7 @@ export default function ROICalculator() {
                 Time Saved
               </div>
               <div className="text-4xl font-medium text-white mb-1 tabular-nums tracking-tight">
-                {(employees * hoursPerWeek * 52 * 0.7).toLocaleString("en-US")}h
+                {(employees * hoursPerWeek * 52 * 0.7).toLocaleString('en-US')}h
               </div>
               <p className="text-sm text-zinc-600">Per year across your entire team</p>
             </div>
@@ -119,19 +168,23 @@ export default function ROICalculator() {
                 Return on Investment
               </div>
               <div className="text-4xl font-medium text-white mb-1 tabular-nums tracking-tight">
-                {yearlyROI > 0 ? yearlyROI.toFixed(0) : "0"}%
+                {yearlyROI > 0 ? yearlyROI.toFixed(0) : '0'}%
               </div>
               <p className="text-sm text-zinc-600">ROI in the first 12 months</p>
             </div>
-
           </div>
         </div>
 
         {/* Centered CTA below the grid */}
         <div className="roi-result mt-8 max-w-md mx-auto p-7 rounded-2xl bg-white/[0.03] border border-white/[0.06] text-center">
           <h4 className="font-medium text-white mb-2">Ready To Unlock These Savings?</h4>
-          <p className="text-sm mb-5 text-zinc-500">Start with a free 14-day trial. No credit card required.</p>
-          <a href="/download" className="block w-full bg-white text-black py-3.5 rounded-xl font-medium hover:bg-zinc-200 transition-all shadow-lg shadow-white/5">
+          <p className="text-sm mb-5 text-zinc-500">
+            Start with a free 14-day trial. No credit card required.
+          </p>
+          <a
+            href="/download"
+            className="block w-full bg-white text-black py-3.5 rounded-xl font-medium hover:bg-zinc-200 transition-all shadow-lg shadow-white/5"
+          >
             Start Free Trial
           </a>
         </div>

@@ -1,9 +1,6 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import {
-  CallToolRequestSchema,
-  ListToolsRequestSchema,
-} from '@modelcontextprotocol/sdk/types.js';
+import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import axios, { AxiosInstance } from 'axios';
 
 const PEOPLESOFT_URL = process.env.PEOPLESOFT_URL || '';
@@ -69,8 +66,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: 'get_record',
-        description:
-          'Get a single record by key from a PeopleSoft Component Interface.',
+        description: 'Get a single record by key from a PeopleSoft Component Interface.',
         inputSchema: {
           type: 'object' as const,
           properties: {
@@ -93,8 +89,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: 'create_record',
-        description:
-          'Create a new record via a PeopleSoft Component Interface.',
+        description: 'Create a new record via a PeopleSoft Component Interface.',
         inputSchema: {
           type: 'object' as const,
           properties: {
@@ -113,8 +108,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: 'update_record',
-        description:
-          'Update an existing record via a PeopleSoft Component Interface.',
+        description: 'Update an existing record via a PeopleSoft Component Interface.',
         inputSchema: {
           type: 'object' as const,
           properties: {
@@ -138,8 +132,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: 'list_components',
-        description:
-          'List available PeopleSoft Component Interfaces.',
+        description: 'List available PeopleSoft Component Interfaces.',
         inputSchema: {
           type: 'object' as const,
           properties: {
@@ -153,8 +146,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: 'run_query',
-        description:
-          'Run a PeopleSoft Query by name with optional parameters.',
+        description: 'Run a PeopleSoft Query by name with optional parameters.',
         inputSchema: {
           type: 'object' as const,
           properties: {
@@ -164,7 +156,8 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             },
             isPublic: {
               type: 'boolean',
-              description: 'Whether this is a public query (true) or private query (false). Default: true',
+              description:
+                'Whether this is a public query (true) or private query (false). Default: true',
             },
             params: {
               type: 'object',
@@ -183,7 +176,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
   };
 });
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   const { name, arguments: args } = request.params;
   const client = createClient();
 
@@ -270,10 +263,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       case 'list_components': {
         const { filter } = args as { filter?: string };
 
-        const response = await client.get(
-          '/PSIGW/RESTListeningConnector/PSFT_CS',
-          { params: filter ? { filter } : {} }
-        );
+        const response = await client.get('/PSIGW/RESTListeningConnector/PSFT_CS', {
+          params: filter ? { filter } : {},
+        });
 
         return {
           content: [{ type: 'text' as const, text: JSON.stringify(response.data, null, 2) }],

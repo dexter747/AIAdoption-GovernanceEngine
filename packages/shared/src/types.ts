@@ -136,7 +136,7 @@ export interface AIQueryOptions {
   connectionId?: string;
   projectId?: string;
   systemPrompt?: string;
-  contextIds?: string[];       // Additional context IDs to include
+  contextIds?: string[]; // Additional context IDs to include
   excludeContextIds?: string[]; // Context IDs to exclude
 }
 

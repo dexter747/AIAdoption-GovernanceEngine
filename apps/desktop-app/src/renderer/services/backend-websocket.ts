@@ -1,6 +1,6 @@
 /**
  * WebSocket Client for Desktop-Backend Communication
- * 
+ *
  * Maintains a persistent connection to the Express backend for:
  * 1. Receiving tool execution requests from AI
  * 2. Sending tool execution results back
@@ -32,40 +32,40 @@ export class BackendWebSocket extends EventEmitter {
   private isAuthenticated = false;
   private pingInterval: NodeJS.Timeout | null = null;
   private connectionId: string | null = null;
-  
+
   constructor(backendUrl: string, deviceId: string) {
     super();
     // Convert http(s) to ws(s)
     this.url = backendUrl.replace(/^http/, 'ws') + '/ws/mcp';
     this.deviceId = deviceId;
   }
-  
+
   /**
    * Connect to the backend WebSocket
    */
   connect(authToken: string): Promise<void> {
     this.authToken = authToken;
-    
+
     return new Promise((resolve, reject) => {
       try {
         this.ws = new WebSocket(this.url);
-        
+
         this.ws.onopen = () => {
           console.log('[WS] Connected to backend');
           this.reconnectAttempts = 0;
           this.startPingInterval();
-          
+
           // Authenticate immediately
           this.send({
             type: 'AUTHENTICATE',
             token: this.authToken,
             deviceId: this.deviceId,
           });
-          
+
           resolve();
         };
-        
-        this.ws.onmessage = (event) => {
+
+        this.ws.onmessage = event => {
           try {
             const message = JSON.parse(event.data as string) as WebSocketMessage;
             this.handleMessage(message);
@@ -73,67 +73,66 @@ export class BackendWebSocket extends EventEmitter {
             console.error('[WS] Failed to parse message:', err);
           }
         };
-        
-        this.ws.onclose = (event) => {
+
+        this.ws.onclose = event => {
           console.log('[WS] Connection closed:', event.code, event.reason);
           this.stopPingInterval();
           this.isAuthenticated = false;
           this.emit('disconnected', { code: event.code, reason: event.reason });
-          
+
           // Attempt reconnection
           this.scheduleReconnect();
         };
-        
-        this.ws.onerror = (error) => {
+
+        this.ws.onerror = error => {
           console.error('[WS] Error:', error);
           this.emit('error', error);
         };
-        
       } catch (err) {
         reject(err);
       }
     });
   }
-  
+
   /**
    * Disconnect from the backend
    */
   disconnect(): void {
     this.stopPingInterval();
-    
+
     if (this.ws) {
       this.ws.close(1000, 'Client disconnect');
       this.ws = null;
     }
-    
+
     this.isAuthenticated = false;
     this.connectionId = null;
   }
-  
+
   /**
    * Handle incoming WebSocket messages
    */
   private handleMessage(message: WebSocketMessage): void {
     console.log('[WS] Received:', message.type);
-    
+
     switch (message.type) {
       case 'CONNECTED':
         this.connectionId = message.connectionId;
         this.emit('connected', { connectionId: message.connectionId });
         break;
-        
+
       case 'AUTHENTICATED':
         this.isAuthenticated = true;
-        this.emit('authenticated', { 
-          userId: message.userId, 
-          connectionId: message.connectionId 
+        this.emit('authenticated', {
+          userId: message.userId,
+          connectionId: message.connectionId,
         });
         break;
-        
+
       case 'AUTH_ERROR':
         this.emit('auth_error', { message: message.message });
         break;
-        
+
       case 'EXECUTE_TOOL':
         // AI wants to execute an MCP tool
         this.emit('execute_tool', {
@@ -143,24 +142,24 @@ export class BackendWebSocket extends EventEmitter {
           timestamp: message.timestamp,
         } as ToolExecutionRequest);
         break;
-        
+
       case 'TOOLS_REGISTERED':
         this.emit('tools_registered', { count: message.count });
         break;
-        
+
       case 'PONG':
         // Heartbeat response
         break;
-        
+
       case 'ERROR':
         this.emit('backend_error', { message: message.message });
         break;
-        
+
       default:
         console.warn('[WS] Unknown message type:', message.type);
     }
   }
-  
+
   /**
    * Send a message to the backend
    */
@@ -169,11 +168,11 @@ export class BackendWebSocket extends EventEmitter {
       console.warn('[WS] Cannot send - not connected');
       return false;
     }
-    
+
     this.ws.send(JSON.stringify(message));
     return true;
   }
-  
+
   /**
    * Register available MCP tools with the backend
    */
@@ -182,13 +181,13 @@ export class BackendWebSocket extends EventEmitter {
       console.warn('[WS] Cannot register tools - not authenticated');
       return false;
     }
-    
+
     return this.send({
       type: 'REGISTER_TOOLS',
       tools,
     });
   }
-  
+
   /**
    * Send tool execution result back to backend
    */
@@ -200,18 +199,18 @@ export class BackendWebSocket extends EventEmitter {
       error,
     });
   }
-  
+
   /**
    * Start ping interval for keepalive
    */
   private startPingInterval(): void {
     this.stopPingInterval();
-    
+
     this.pingInterval = setInterval(() => {
       this.send({ type: 'PING' });
     }, 25000);
   }
-  
+
   /**
    * Stop ping interval
    */
@@ -221,7 +220,7 @@ export class BackendWebSocket extends EventEmitter {
       this.pingInterval = null;
     }
   }
-  
+
   /**
    * Schedule reconnection attempt
    */
@@ -231,33 +230,28 @@ export class BackendWebSocket extends EventEmitter {
       this.emit('max_reconnect_reached');
       return;
     }
-    
-    const delay = Math.min(
-      this.reconnectDelay * Math.pow(2, this.reconnectAttempts),
-      30000
-    );
-    
+
+    const delay = Math.min(this.reconnectDelay * Math.pow(2, this.reconnectAttempts), 30000);
+
     console.log(`[WS] Reconnecting in ${delay}ms (attempt ${this.reconnectAttempts + 1})`);
-    
+
     setTimeout(() => {
       if (this.authToken) {
         this.reconnectAttempts++;
-        this.connect(this.authToken).catch((err) => {
+        this.connect(this.authToken).catch(err => {
           console.error('[WS] Reconnection failed:', err);
         });
       }
     }, delay);
   }
-  
+
   /**
    * Check if connected and authenticated
    */
   isConnected(): boolean {
-    return this.ws !== null && 
-           this.ws.readyState === WebSocket.OPEN && 
-           this.isAuthenticated;
+    return this.ws !== null && this.ws.readyState === WebSocket.OPEN && this.isAuthenticated;
   }
-  
+
   /**
    * Get connection status
    */

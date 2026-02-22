@@ -24,11 +24,11 @@ const BASE_URL = `https://${ZENDESK_SUBDOMAIN}.zendesk.com/api/v2`;
 
 async function zendeskRequest(endpoint: string, options: RequestInit = {}) {
   const auth = Buffer.from(`${ZENDESK_EMAIL}/token:${ZENDESK_API_TOKEN}`).toString('base64');
-  
+
   const response = await fetch(`${BASE_URL}${endpoint}`, {
     ...options,
     headers: {
-      'Authorization': `Basic ${auth}`,
+      Authorization: `Basic ${auth}`,
       'Content-Type': 'application/json',
       ...options.headers,
     },
@@ -51,7 +51,10 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
         inputSchema: {
           type: 'object',
           properties: {
-            status: { type: 'string', description: 'Filter by status (new, open, pending, solved, closed)' },
+            status: {
+              type: 'string',
+              description: 'Filter by status (new, open, pending, solved, closed)',
+            },
             limit: { type: 'number', description: 'Number of tickets to return', default: 25 },
           },
         },
@@ -73,7 +76,10 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
         inputSchema: {
           type: 'object',
           properties: {
-            query: { type: 'string', description: 'Search query (e.g., "status:open priority:high")' },
+            query: {
+              type: 'string',
+              description: 'Search query (e.g., "status:open priority:high")',
+            },
           },
           required: ['query'],
         },
@@ -93,9 +99,9 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
 });
 
 // Handle tool execution
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   const { name, arguments: args } = request.params;
-  
+
   try {
     switch (name) {
       case 'zendesk_list_tickets': {
@@ -114,7 +120,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           ],
         };
       }
-      
+
       case 'zendesk_get_ticket': {
         const { id } = args as any;
         const result = await zendeskRequest(`/tickets/${id}.json`);
@@ -127,7 +133,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           ],
         };
       }
-      
+
       case 'zendesk_search': {
         const { query } = args as any;
         const result = await zendeskRequest(`/search.json?query=${encodeURIComponent(query)}`);
@@ -140,7 +146,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           ],
         };
       }
-      
+
       case 'zendesk_list_users': {
         const { role } = args as any;
         let endpoint = '/users.json';
@@ -157,7 +163,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           ],
         };
       }
-      
+
       default:
         throw new Error(`Unknown tool: ${name}`);
     }
@@ -181,7 +187,7 @@ async function main() {
   console.error('Zendesk MCP server running on stdio');
 }
 
-main().catch((error) => {
+main().catch(error => {
   console.error('Fatal error:', error);
   process.exit(1);
 });

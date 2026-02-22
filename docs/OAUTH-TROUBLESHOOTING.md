@@ -11,12 +11,14 @@
 1. **Check your environment variables** in `.env.local`:
 
    For **landing-site**:
+
    ```env
    NEXT_PUBLIC_APP_URL=http://localhost:3000
    GOOGLE_REDIRECT_URI=http://localhost:3000/api/auth/google/callback
    ```
 
    For **admin-dashboard**:
+
    ```env
    NEXT_PUBLIC_APP_URL=http://localhost:3001
    GOOGLE_REDIRECT_URI=http://localhost:3001/api/auth/google/callback
@@ -65,6 +67,7 @@
 **Error:** "OAuth consent screen is not configured"
 
 **Solution:**
+
 1. Go to Google Cloud Console
 2. Navigate to: **APIs & Services** → **OAuth consent screen**
 3. Fill in required fields:
@@ -82,10 +85,12 @@
 ## "This app hasn't been verified"
 
 **During development:**
+
 - Click "Advanced" → "Go to [App Name] (unsafe)"
 - This is normal for apps in testing mode
 
 **For production:**
+
 - Submit your app for Google verification
 - Or limit users to your organization (Google Workspace only)
 
@@ -94,6 +99,7 @@
 ## Environment Variables Not Loading
 
 **Symptoms:**
+
 - `GOOGLE_CLIENT_ID` is undefined
 - Getting "Google OAuth not configured" error
 
@@ -102,6 +108,7 @@
 1. **Check file name:** Must be `.env.local` (not `.env`)
 
 2. **Restart dev server** after adding variables:
+
    ```bash
    # Kill the server (Ctrl+C)
    # Then restart:
@@ -109,6 +116,7 @@
    ```
 
 3. **Check file location:**
+
    ```
    apps/landing-site/.env.local     ✅
    apps/landing-site/.env           ❌ (won't be loaded by Next.js)
@@ -116,13 +124,14 @@
    ```
 
 4. **Verify syntax:**
+
    ```env
    # ✅ Correct
    GOOGLE_CLIENT_ID=123456.apps.googleusercontent.com
-   
+
    # ❌ Wrong (no quotes needed)
    GOOGLE_CLIENT_ID="123456.apps.googleusercontent.com"
-   
+
    # ❌ Wrong (no spaces around =)
    GOOGLE_CLIENT_ID = 123456.apps.googleusercontent.com
    ```
@@ -132,16 +141,19 @@
 ## Different redirect URIs for different environments
 
 **Local development:**
+
 ```env
 GOOGLE_REDIRECT_URI=http://localhost:3000/api/auth/google/callback
 ```
 
 **Staging (Vercel):**
+
 ```env
 GOOGLE_REDIRECT_URI=https://your-app.vercel.app/api/auth/google/callback
 ```
 
 **Production:**
+
 ```env
 GOOGLE_REDIRECT_URI=https://your-domain.com/api/auth/google/callback
 ```
@@ -153,17 +165,20 @@ GOOGLE_REDIRECT_URI=https://your-domain.com/api/auth/google/callback
 ## Quick Debug Commands
 
 **Check if variables are loaded:**
+
 ```bash
 # In your app's dev server terminal
 echo $GOOGLE_CLIENT_ID
 ```
 
 **Test OAuth flow manually:**
+
 1. Open: `http://localhost:3000/api/auth/google`
 2. Should redirect to Google sign-in
 3. After sign-in, should redirect to: `http://localhost:3000/api/auth/google/callback?code=...`
 
 **Check Next.js environment:**
+
 ```typescript
 // Add to a test API route
 console.log({

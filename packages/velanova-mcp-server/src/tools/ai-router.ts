@@ -23,7 +23,7 @@ const MODEL_REGISTRY: Record<string, ModelInfo> = {
     maxTokens: 128000,
     capabilities: ['vision', 'code', 'reasoning', 'function_calling'],
     dataResidency: ['US'],
-    latencyMs: 1500
+    latencyMs: 1500,
   },
   'gpt-4o-mini': {
     provider: 'openai',
@@ -34,7 +34,7 @@ const MODEL_REGISTRY: Record<string, ModelInfo> = {
     maxTokens: 128000,
     capabilities: ['vision', 'code', 'function_calling'],
     dataResidency: ['US'],
-    latencyMs: 800
+    latencyMs: 800,
   },
   'gpt-4-turbo': {
     provider: 'openai',
@@ -45,9 +45,9 @@ const MODEL_REGISTRY: Record<string, ModelInfo> = {
     maxTokens: 128000,
     capabilities: ['vision', 'code', 'reasoning', 'function_calling'],
     dataResidency: ['US'],
-    latencyMs: 2000
+    latencyMs: 2000,
   },
-  'o1': {
+  o1: {
     provider: 'openai',
     displayName: 'o1',
     tier: 'frontier',
@@ -56,7 +56,7 @@ const MODEL_REGISTRY: Record<string, ModelInfo> = {
     maxTokens: 200000,
     capabilities: ['reasoning', 'code', 'math'],
     dataResidency: ['US'],
-    latencyMs: 5000
+    latencyMs: 5000,
   },
   'o1-mini': {
     provider: 'openai',
@@ -67,7 +67,7 @@ const MODEL_REGISTRY: Record<string, ModelInfo> = {
     maxTokens: 128000,
     capabilities: ['reasoning', 'code', 'math'],
     dataResidency: ['US'],
-    latencyMs: 3000
+    latencyMs: 3000,
   },
 
   // Anthropic Models
@@ -80,7 +80,7 @@ const MODEL_REGISTRY: Record<string, ModelInfo> = {
     maxTokens: 200000,
     capabilities: ['vision', 'code', 'reasoning', 'function_calling'],
     dataResidency: ['US'],
-    latencyMs: 1200
+    latencyMs: 1200,
   },
   'claude-3-5-haiku-20241022': {
     provider: 'anthropic',
@@ -91,7 +91,7 @@ const MODEL_REGISTRY: Record<string, ModelInfo> = {
     maxTokens: 200000,
     capabilities: ['code', 'function_calling'],
     dataResidency: ['US'],
-    latencyMs: 500
+    latencyMs: 500,
   },
   'claude-3-opus-20240229': {
     provider: 'anthropic',
@@ -102,7 +102,7 @@ const MODEL_REGISTRY: Record<string, ModelInfo> = {
     maxTokens: 200000,
     capabilities: ['vision', 'code', 'reasoning', 'function_calling'],
     dataResidency: ['US'],
-    latencyMs: 3000
+    latencyMs: 3000,
   },
 
   // Google Models
@@ -115,7 +115,7 @@ const MODEL_REGISTRY: Record<string, ModelInfo> = {
     maxTokens: 1000000,
     capabilities: ['vision', 'code', 'function_calling'],
     dataResidency: ['US', 'EU'],
-    latencyMs: 400
+    latencyMs: 400,
   },
   'gemini-1.5-pro': {
     provider: 'google',
@@ -126,7 +126,7 @@ const MODEL_REGISTRY: Record<string, ModelInfo> = {
     maxTokens: 2000000,
     capabilities: ['vision', 'code', 'reasoning', 'function_calling'],
     dataResidency: ['US', 'EU'],
-    latencyMs: 1500
+    latencyMs: 1500,
   },
   'gemini-1.5-flash': {
     provider: 'google',
@@ -137,7 +137,7 @@ const MODEL_REGISTRY: Record<string, ModelInfo> = {
     maxTokens: 1000000,
     capabilities: ['vision', 'code'],
     dataResidency: ['US', 'EU'],
-    latencyMs: 300
+    latencyMs: 300,
   },
 
   // Groq Models (Fast inference)
@@ -150,7 +150,7 @@ const MODEL_REGISTRY: Record<string, ModelInfo> = {
     maxTokens: 128000,
     capabilities: ['code', 'reasoning'],
     dataResidency: ['US'],
-    latencyMs: 200 // Groq is FAST
+    latencyMs: 200, // Groq is FAST
   },
   'llama-3.1-8b-instant': {
     provider: 'groq',
@@ -161,7 +161,7 @@ const MODEL_REGISTRY: Record<string, ModelInfo> = {
     maxTokens: 128000,
     capabilities: ['code'],
     dataResidency: ['US'],
-    latencyMs: 100
+    latencyMs: 100,
   },
   'mixtral-8x7b-32768': {
     provider: 'groq',
@@ -172,7 +172,7 @@ const MODEL_REGISTRY: Record<string, ModelInfo> = {
     maxTokens: 32768,
     capabilities: ['code'],
     dataResidency: ['US'],
-    latencyMs: 150
+    latencyMs: 150,
   },
 
   // Cohere Models
@@ -185,7 +185,7 @@ const MODEL_REGISTRY: Record<string, ModelInfo> = {
     maxTokens: 128000,
     capabilities: ['rag', 'code', 'function_calling'],
     dataResidency: ['US'],
-    latencyMs: 1000
+    latencyMs: 1000,
   },
   'command-r': {
     provider: 'cohere',
@@ -196,8 +196,8 @@ const MODEL_REGISTRY: Record<string, ModelInfo> = {
     maxTokens: 128000,
     capabilities: ['rag', 'code'],
     dataResidency: ['US'],
-    latencyMs: 800
-  }
+    latencyMs: 800,
+  },
 };
 
 interface ModelInfo {
@@ -264,8 +264,8 @@ export class AIRouter {
   }
 
   async query(
-    prompt: string, 
-    model?: string, 
+    prompt: string,
+    model?: string,
     requirements?: QueryRequirements,
     systemPrompt?: string
   ): Promise<QueryResult> {
@@ -274,7 +274,9 @@ export class AIRouter {
     const modelInfo = MODEL_REGISTRY[selectedModel];
 
     if (!modelInfo) {
-      throw new Error(`Unknown model: ${selectedModel}. Use list_ai_models to see available models.`);
+      throw new Error(
+        `Unknown model: ${selectedModel}. Use list_ai_models to see available models.`
+      );
     }
 
     const startTime = Date.now();
@@ -285,16 +287,32 @@ export class AIRouter {
     try {
       switch (modelInfo.provider) {
         case 'openai':
-          ({ response, inputTokens, outputTokens } = await this.queryOpenAI(selectedModel, prompt, systemPrompt));
+          ({ response, inputTokens, outputTokens } = await this.queryOpenAI(
+            selectedModel,
+            prompt,
+            systemPrompt
+          ));
           break;
         case 'anthropic':
-          ({ response, inputTokens, outputTokens } = await this.queryAnthropic(selectedModel, prompt, systemPrompt));
+          ({ response, inputTokens, outputTokens } = await this.queryAnthropic(
+            selectedModel,
+            prompt,
+            systemPrompt
+          ));
           break;
         case 'google':
-          ({ response, inputTokens, outputTokens } = await this.queryGoogle(selectedModel, prompt, systemPrompt));
+          ({ response, inputTokens, outputTokens } = await this.queryGoogle(
+            selectedModel,
+            prompt,
+            systemPrompt
+          ));
           break;
         case 'groq':
-          ({ response, inputTokens, outputTokens } = await this.queryGroq(selectedModel, prompt, systemPrompt));
+          ({ response, inputTokens, outputTokens } = await this.queryGroq(
+            selectedModel,
+            prompt,
+            systemPrompt
+          ));
           break;
         default:
           throw new Error(`Provider ${modelInfo.provider} not yet implemented`);
@@ -305,22 +323,26 @@ export class AIRouter {
     }
 
     const latencyMs = Date.now() - startTime;
-    const totalCost = (inputTokens / 1000) * modelInfo.costPer1kInput + 
-                      (outputTokens / 1000) * modelInfo.costPer1kOutput;
+    const totalCost =
+      (inputTokens / 1000) * modelInfo.costPer1kInput +
+      (outputTokens / 1000) * modelInfo.costPer1kOutput;
 
-    logger.info({ 
-      model: selectedModel, 
-      inputTokens, 
-      outputTokens, 
-      cost: totalCost, 
-      latencyMs 
-    }, 'Query completed');
+    logger.info(
+      {
+        model: selectedModel,
+        inputTokens,
+        outputTokens,
+        cost: totalCost,
+        latencyMs,
+      },
+      'Query completed'
+    );
 
     return {
       model: selectedModel,
       response,
       usage: { inputTokens, outputTokens, totalCost },
-      latencyMs
+      latencyMs,
     };
   }
 
@@ -331,35 +353,31 @@ export class AIRouter {
     if (requirements?.min_quality_tier) {
       const tierOrder = ['economy', 'standard', 'premium', 'frontier'];
       const minIndex = tierOrder.indexOf(requirements.min_quality_tier);
-      candidates = candidates.filter(([_, info]) => 
-        tierOrder.indexOf(info.tier) >= minIndex
-      );
+      candidates = candidates.filter(([_, info]) => tierOrder.indexOf(info.tier) >= minIndex);
     }
 
     // Filter by max cost
     if (requirements?.max_cost_per_1k) {
-      candidates = candidates.filter(([_, info]) => 
-        info.costPer1kInput <= requirements.max_cost_per_1k!
+      candidates = candidates.filter(
+        ([_, info]) => info.costPer1kInput <= requirements.max_cost_per_1k!
       );
     }
 
     // Filter by max latency
     if (requirements?.max_latency_ms) {
-      candidates = candidates.filter(([_, info]) => 
-        info.latencyMs <= requirements.max_latency_ms!
-      );
+      candidates = candidates.filter(([_, info]) => info.latencyMs <= requirements.max_latency_ms!);
     }
 
     // Filter by capabilities
     if (requirements?.capabilities?.length) {
-      candidates = candidates.filter(([_, info]) => 
+      candidates = candidates.filter(([_, info]) =>
         requirements.capabilities!.every(cap => info.capabilities.includes(cap))
       );
     }
 
     // Filter by data residency
     if (requirements?.data_residency && requirements.data_residency !== 'any') {
-      candidates = candidates.filter(([_, info]) => 
+      candidates = candidates.filter(([_, info]) =>
         info.dataResidency.includes(requirements.data_residency!)
       );
     }
@@ -367,11 +385,16 @@ export class AIRouter {
     // Filter by available clients
     candidates = candidates.filter(([_, info]) => {
       switch (info.provider) {
-        case 'openai': return !!this.openai;
-        case 'anthropic': return !!this.anthropic;
-        case 'google': return !!this.google;
-        case 'groq': return !!this.groq;
-        default: return false;
+        case 'openai':
+          return !!this.openai;
+        case 'anthropic':
+          return !!this.anthropic;
+        case 'google':
+          return !!this.google;
+        case 'groq':
+          return !!this.groq;
+        default:
+          return false;
       }
     });
 
@@ -395,13 +418,13 @@ export class AIRouter {
 
     const completion = await this.openai.chat.completions.create({
       model,
-      messages
+      messages,
     });
 
     return {
       response: completion.choices[0]?.message?.content ?? '',
       inputTokens: completion.usage?.prompt_tokens ?? 0,
-      outputTokens: completion.usage?.completion_tokens ?? 0
+      outputTokens: completion.usage?.completion_tokens ?? 0,
     };
   }
 
@@ -412,32 +435,32 @@ export class AIRouter {
       model,
       max_tokens: 4096,
       system: systemPrompt,
-      messages: [{ role: 'user', content: prompt }]
+      messages: [{ role: 'user', content: prompt }],
     });
 
     const textContent = message.content.find(c => c.type === 'text');
     return {
       response: textContent?.type === 'text' ? textContent.text : '',
       inputTokens: message.usage.input_tokens,
-      outputTokens: message.usage.output_tokens
+      outputTokens: message.usage.output_tokens,
     };
   }
 
   private async queryGoogle(model: string, prompt: string, systemPrompt?: string) {
     if (!this.google) throw new Error('Google AI client not initialized');
 
-    const genModel = this.google.getGenerativeModel({ 
+    const genModel = this.google.getGenerativeModel({
       model,
-      systemInstruction: systemPrompt
+      systemInstruction: systemPrompt,
     });
-    
+
     const result = await genModel.generateContent(prompt);
     const response = result.response;
-    
+
     return {
       response: response.text(),
       inputTokens: response.usageMetadata?.promptTokenCount ?? 0,
-      outputTokens: response.usageMetadata?.candidatesTokenCount ?? 0
+      outputTokens: response.usageMetadata?.candidatesTokenCount ?? 0,
     };
   }
 
@@ -452,13 +475,13 @@ export class AIRouter {
 
     const completion = await this.groq.chat.completions.create({
       model,
-      messages
+      messages,
     });
 
     return {
       response: completion.choices[0]?.message?.content ?? '',
       inputTokens: completion.usage?.prompt_tokens ?? 0,
-      outputTokens: completion.usage?.completion_tokens ?? 0
+      outputTokens: completion.usage?.completion_tokens ?? 0,
     };
   }
 
@@ -474,7 +497,7 @@ export class AIRouter {
     }
 
     if (filter?.capability) {
-      models = models.filter(([_, info]) => 
+      models = models.filter(([_, info]) =>
         info.capabilities.includes(filter.capability as string)
       );
     }
@@ -483,24 +506,27 @@ export class AIRouter {
     return models.map(([id, info]) => ({
       id,
       ...info,
-      available: this.isProviderAvailable(info.provider)
+      available: this.isProviderAvailable(info.provider),
     }));
   }
 
   private isProviderAvailable(provider: string): boolean {
     switch (provider) {
-      case 'openai': return !!this.openai;
-      case 'anthropic': return !!this.anthropic;
-      case 'google': return !!this.google;
-      case 'groq': return !!this.groq;
-      default: return false;
+      case 'openai':
+        return !!this.openai;
+      case 'anthropic':
+        return !!this.anthropic;
+      case 'google':
+        return !!this.google;
+      case 'groq':
+        return !!this.groq;
+      default:
+        return false;
     }
   }
 
   async compareModels(prompt: string, models: string[]): Promise<Record<string, unknown>[]> {
-    const results = await Promise.allSettled(
-      models.map(model => this.query(prompt, model))
-    );
+    const results = await Promise.allSettled(models.map(model => this.query(prompt, model)));
 
     return results.map((result, index) => {
       const modelName = models[index];
@@ -508,7 +534,11 @@ export class AIRouter {
         const { model, ...rest } = result.value;
         return { model: modelName, success: true, ...rest };
       } else {
-        return { model: modelName, success: false, error: result.reason?.message ?? 'Unknown error' };
+        return {
+          model: modelName,
+          success: false,
+          error: result.reason?.message ?? 'Unknown error',
+        };
       }
     });
   }
@@ -520,9 +550,9 @@ export class AIRouter {
         openai: !!this.openai,
         anthropic: !!this.anthropic,
         google: !!this.google,
-        groq: !!this.groq
+        groq: !!this.groq,
       },
-      modelsAvailable: Object.keys(MODEL_REGISTRY).length
+      modelsAvailable: Object.keys(MODEL_REGISTRY).length,
     };
   }
 }

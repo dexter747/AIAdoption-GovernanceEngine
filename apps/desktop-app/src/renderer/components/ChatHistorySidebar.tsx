@@ -100,7 +100,9 @@ const ChatHistorySidebar: React.FC<ChatHistorySidebarProps> = ({
 
   const handleDelete = async (conversationId: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (window.confirm('Are you sure you want to delete this conversation? This cannot be undone.')) {
+    if (
+      window.confirm('Are you sure you want to delete this conversation? This cannot be undone.')
+    ) {
       try {
         await window.electron.chat.deleteConversation(conversationId);
         onDeleteConversation(conversationId);
@@ -146,8 +148,8 @@ const ChatHistorySidebar: React.FC<ChatHistorySidebarProps> = ({
     return colors[provider] || 'text-zinc-500';
   };
 
-  const pinnedConversations = conversations.filter((c) => c.pinned);
-  const unpinnedConversations = conversations.filter((c) => !c.pinned);
+  const pinnedConversations = conversations.filter(c => c.pinned);
+  const unpinnedConversations = conversations.filter(c => !c.pinned);
 
   return (
     <div className="h-full flex flex-col bg-[#0A0A0A]">
@@ -168,14 +170,24 @@ const ChatHistorySidebar: React.FC<ChatHistorySidebarProps> = ({
       {/* Search */}
       <div className="p-4 border-b border-white/5">
         <div className="relative group">
-          <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 group-focus-within:text-zinc-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          <svg
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 group-focus-within:text-zinc-500 transition-colors"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
           </svg>
           <input
             type="text"
             placeholder="Search conversations..."
             value={searchQuery}
-            onChange={(e) => handleSearch(e.target.value)}
+            onChange={e => handleSearch(e.target.value)}
             className="w-full pl-10 pr-3 py-2.5 bg-white/[0.05] hover:bg-white/[0.08] focus:bg-white/[0.08] border border-white/10 focus:border-white/20 rounded-xl text-sm text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-600/40 transition-all"
           />
         </div>
@@ -208,12 +220,22 @@ const ChatHistorySidebar: React.FC<ChatHistorySidebarProps> = ({
             <input
               type="checkbox"
               checked={showArchived}
-              onChange={(e) => setShowArchived(e.target.checked)}
+              onChange={e => setShowArchived(e.target.checked)}
               className="sr-only peer"
             />
             <div className="w-4 h-4 rounded border-2 border-zinc-700 peer-checked:border-zinc-700 peer-checked:bg-zinc-800 transition-all flex items-center justify-center">
-              <svg className="w-3 h-3 text-white opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+              <svg
+                className="w-3 h-3 text-white opacity-0 peer-checked:opacity-100 transition-opacity"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={3}
+                  d="M5 13l4 4L19 7"
+                />
               </svg>
             </div>
           </div>
@@ -230,8 +252,18 @@ const ChatHistorySidebar: React.FC<ChatHistorySidebarProps> = ({
         ) : conversations.length === 0 ? (
           <div className="p-8 text-center">
             <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center">
-              <svg className="w-8 h-8 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              <svg
+                className="w-8 h-8 text-zinc-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                />
               </svg>
             </div>
             <p className="text-zinc-500 text-sm font-medium mb-1">
@@ -249,15 +281,15 @@ const ChatHistorySidebar: React.FC<ChatHistorySidebarProps> = ({
                 <div className="px-3 py-2 text-[10px] font-medium text-zinc-500 uppercase tracking-wider">
                   Pinned
                 </div>
-                {pinnedConversations.map((conversation) => (
+                {pinnedConversations.map(conversation => (
                   <ConversationItem
                     key={conversation.id}
                     conversation={conversation}
                     isSelected={conversation.id === selectedConversationId}
                     onSelect={() => onSelectConversation(conversation.id)}
-                    onTogglePin={(e) => handleTogglePin(conversation.id, e)}
-                    onToggleArchive={(e) => handleToggleArchive(conversation.id, e)}
-                    onDelete={(e) => handleDelete(conversation.id, e)}
+                    onTogglePin={e => handleTogglePin(conversation.id, e)}
+                    onToggleArchive={e => handleToggleArchive(conversation.id, e)}
+                    onDelete={e => handleDelete(conversation.id, e)}
                     formatDate={formatDate}
                     formatCost={formatCost}
                     getProviderColor={getProviderColor}
@@ -274,15 +306,15 @@ const ChatHistorySidebar: React.FC<ChatHistorySidebarProps> = ({
                     Recent
                   </div>
                 )}
-                {unpinnedConversations.map((conversation) => (
+                {unpinnedConversations.map(conversation => (
                   <ConversationItem
                     key={conversation.id}
                     conversation={conversation}
                     isSelected={conversation.id === selectedConversationId}
                     onSelect={() => onSelectConversation(conversation.id)}
-                    onTogglePin={(e) => handleTogglePin(conversation.id, e)}
-                    onToggleArchive={(e) => handleToggleArchive(conversation.id, e)}
-                    onDelete={(e) => handleDelete(conversation.id, e)}
+                    onTogglePin={e => handleTogglePin(conversation.id, e)}
+                    onToggleArchive={e => handleToggleArchive(conversation.id, e)}
+                    onDelete={e => handleDelete(conversation.id, e)}
                     formatDate={formatDate}
                     formatCost={formatCost}
                     getProviderColor={getProviderColor}
@@ -329,9 +361,11 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
       onMouseLeave={() => setShowActions(false)}
       className={`
         relative mx-2 mb-1.5 p-3 rounded-xl cursor-pointer transition-all duration-200 group
-        ${isSelected 
-          ? 'bg-gradient-to-r from-white/10 to-white/10 border border-zinc-700/40 shadow-lg shadow-white/5' 
-          : 'bg-white/[0.03] hover:bg-white/[0.06] border border-white/5 hover:border-white/10'}
+        ${
+          isSelected
+            ? 'bg-gradient-to-r from-white/10 to-white/10 border border-zinc-700/40 shadow-lg shadow-white/5'
+            : 'bg-white/[0.03] hover:bg-white/[0.06] border border-white/5 hover:border-white/10'
+        }
         ${conversation.archived ? 'opacity-60' : ''}
       `}
     >
@@ -339,14 +373,22 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1.5">
             {conversation.pinned && (
-              <svg className="w-3 h-3 text-zinc-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <svg
+                className="w-3 h-3 text-zinc-400 flex-shrink-0"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
                 <path d="M10 2a1 1 0 011 1v1.323l3.954 1.582 1.599-.8a1 1 0 01.894 1.79l-1.233.616 1.738 5.42a1 1 0 01-.285 1.05A3.989 3.989 0 0115 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.738-5.42-1.233-.617a1 1 0 01.894-1.788l1.599.799L11 4.323V3a1 1 0 011-1zm-5 8.274l-.818 2.552c-.25.78.098 1.624.799 1.959.108.05.217.094.33.132L6 18.5v-2.58l-1-3.13z" />
               </svg>
             )}
-            <h4 className="text-sm font-medium text-white truncate group-hover:text-zinc-400 transition-colors">{conversation.title}</h4>
+            <h4 className="text-sm font-medium text-white truncate group-hover:text-zinc-400 transition-colors">
+              {conversation.title}
+            </h4>
           </div>
           <div className="flex items-center gap-2 text-xs text-zinc-500 mb-1.5">
-            <span className={`${getProviderColor(conversation.provider)} font-medium`}>{conversation.provider}</span>
+            <span className={`${getProviderColor(conversation.provider)} font-medium`}>
+              {conversation.provider}
+            </span>
             <span>•</span>
             <span className="truncate">{conversation.model}</span>
           </div>
@@ -354,14 +396,19 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
             <span>{formatDate(conversation.updatedAt)}</span>
             <span>{conversation.messages.length} msgs</span>
             {conversation.totalCost > 0 && (
-              <span className="text-zinc-400 font-medium">{formatCost(conversation.totalCost)}</span>
+              <span className="text-zinc-400 font-medium">
+                {formatCost(conversation.totalCost)}
+              </span>
             )}
           </div>
         </div>
 
         {/* Actions */}
         {showActions && (
-          <div className="flex items-center gap-0.5 animate-in fade-in duration-200" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="flex items-center gap-0.5 animate-in fade-in duration-200"
+            onClick={e => e.stopPropagation()}
+          >
             <button
               onClick={onTogglePin}
               className="p-1.5 hover:bg-white/10 rounded-lg transition-colors"
@@ -372,8 +419,18 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
                   <path d="M10 2a1 1 0 011 1v1.323l3.954 1.582 1.599-.8a1 1 0 01.894 1.79l-1.233.616 1.738 5.42a1 1 0 01-.285 1.05A3.989 3.989 0 0115 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.738-5.42-1.233-.617a1 1 0 01.894-1.788l1.599.799L11 4.323V3a1 1 0 011-1zm-5 8.274l-.818 2.552c-.25.78.098 1.624.799 1.959.108.05.217.094.33.132L6 18.5v-2.58l-1-3.13z" />
                 </svg>
               ) : (
-                <svg className="w-3.5 h-3.5 text-zinc-500 hover:text-zinc-500" fill="none" viewBox="0 0 20 20" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h6a2 2 0 012 2v14l-5-3-5 3V5z" />
+                <svg
+                  className="w-3.5 h-3.5 text-zinc-500 hover:text-zinc-500"
+                  fill="none"
+                  viewBox="0 0 20 20"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 5a2 2 0 012-2h6a2 2 0 012 2v14l-5-3-5 3V5z"
+                  />
                 </svg>
               )}
             </button>
@@ -382,8 +439,18 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
               className="p-1.5 hover:bg-white/10 rounded-lg transition-colors"
               title={conversation.archived ? 'Unarchive' : 'Archive'}
             >
-              <svg className="w-3.5 h-3.5 text-zinc-500 hover:text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+              <svg
+                className="w-3.5 h-3.5 text-zinc-500 hover:text-zinc-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+                />
               </svg>
             </button>
             <button
@@ -391,8 +458,18 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
               className="p-1.5 hover:bg-white/10 rounded-lg transition-colors group/delete"
               title="Delete"
             >
-              <svg className="w-3.5 h-3.5 text-zinc-500 group-hover/delete:text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              <svg
+                className="w-3.5 h-3.5 text-zinc-500 group-hover/delete:text-zinc-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                />
               </svg>
             </button>
           </div>

@@ -2,7 +2,11 @@
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { CallToolRequestSchema, ListToolsRequestSchema, Tool } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+  Tool,
+} from '@modelcontextprotocol/sdk/types.js';
 import axios, { AxiosInstance } from 'axios';
 import OAuth from 'oauth-1.0a';
 import CryptoJS from 'crypto-js';
@@ -12,15 +16,74 @@ let oauth: OAuth | null = null;
 let tokenData: { key: string; secret: string } | null = null;
 
 const TOOLS: Tool[] = [
-  { name: 'suiteql', description: 'Execute a SuiteQL query', inputSchema: { type: 'object', properties: { query: { type: 'string', description: 'SuiteQL query' }, limit: { type: 'number' }, offset: { type: 'number' } }, required: ['query'] } },
-  { name: 'get_record', description: 'Get a NetSuite record', inputSchema: { type: 'object', properties: { type: { type: 'string', description: 'Record type (e.g., customer, salesOrder)' }, id: { type: 'string' }, fields: { type: 'array', items: { type: 'string' } } }, required: ['type', 'id'] } },
-  { name: 'search_records', description: 'Search records', inputSchema: { type: 'object', properties: { type: { type: 'string' }, filters: { type: 'array' }, columns: { type: 'array', items: { type: 'string' } } }, required: ['type'] } },
-  { name: 'create_record', description: 'Create a new record', inputSchema: { type: 'object', properties: { type: { type: 'string' }, data: { type: 'object' } }, required: ['type', 'data'] } },
-  { name: 'update_record', description: 'Update an existing record', inputSchema: { type: 'object', properties: { type: { type: 'string' }, id: { type: 'string' }, data: { type: 'object' } }, required: ['type', 'id', 'data'] } },
-  { name: 'list_record_types', description: 'List available record types', inputSchema: { type: 'object', properties: {} } },
+  {
+    name: 'suiteql',
+    description: 'Execute a SuiteQL query',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        query: { type: 'string', description: 'SuiteQL query' },
+        limit: { type: 'number' },
+        offset: { type: 'number' },
+      },
+      required: ['query'],
+    },
+  },
+  {
+    name: 'get_record',
+    description: 'Get a NetSuite record',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        type: { type: 'string', description: 'Record type (e.g., customer, salesOrder)' },
+        id: { type: 'string' },
+        fields: { type: 'array', items: { type: 'string' } },
+      },
+      required: ['type', 'id'],
+    },
+  },
+  {
+    name: 'search_records',
+    description: 'Search records',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        type: { type: 'string' },
+        filters: { type: 'array' },
+        columns: { type: 'array', items: { type: 'string' } },
+      },
+      required: ['type'],
+    },
+  },
+  {
+    name: 'create_record',
+    description: 'Create a new record',
+    inputSchema: {
+      type: 'object',
+      properties: { type: { type: 'string' }, data: { type: 'object' } },
+      required: ['type', 'data'],
+    },
+  },
+  {
+    name: 'update_record',
+    description: 'Update an existing record',
+    inputSchema: {
+      type: 'object',
+      properties: { type: { type: 'string' }, id: { type: 'string' }, data: { type: 'object' } },
+      required: ['type', 'id', 'data'],
+    },
+  },
+  {
+    name: 'list_record_types',
+    description: 'List available record types',
+    inputSchema: { type: 'object', properties: {} },
+  },
 ];
 
-const server = new Server({ name: 'netsuite-mcp-server', version: '1.0.0' }, { capabilities: { tools: {} } });
+const server = new Server(
+  { name: 'netsuite-mcp-server', version: '1.0.0' },
+  { capabilities: { tools: {} } }
+);
 
 function getAuthHeader(url: string, method: string): string {
   if (!oauth || !tokenData) throw new Error('OAuth not configured');
@@ -47,7 +110,7 @@ async function initConnection() {
   const baseURL = `https://${accountId?.replace('_', '-')}.suitetalk.api.netsuite.com/services/rest`;
   api = axios.create({ baseURL, headers: { 'Content-Type': 'application/json' } });
 
-  api.interceptors.request.use((config) => {
+  api.interceptors.request.use(config => {
     const url = `${config.baseURL}${config.url}`;
     config.headers.Authorization = getAuthHeader(url, config.method?.toUpperCase() || 'GET');
     return config;
@@ -58,20 +121,37 @@ async function initConnection() {
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: TOOLS }));
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   const { name, arguments: args } = request.params;
   if (!api) throw new Error('Not connected');
   try {
     switch (name) {
       case 'suiteql': {
-        const r = await api.post('/query/v1/suiteql', { q: (args as any).query }, {
-          params: { limit: (args as any).limit || 100, offset: (args as any).offset || 0 },
-          headers: { 'Prefer': 'transient' },
-        });
-        return { content: [{ type: 'text' as const, text: JSON.stringify({ count: r.data.count, items: r.data.items, hasMore: r.data.hasMore }, null, 2) }] };
+        const r = await api.post(
+          '/query/v1/suiteql',
+          { q: (args as any).query },
+          {
+            params: { limit: (args as any).limit || 100, offset: (args as any).offset || 0 },
+            headers: { Prefer: 'transient' },
+          }
+        );
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify(
+                { count: r.data.count, items: r.data.items, hasMore: r.data.hasMore },
+                null,
+                2
+              ),
+            },
+          ],
+        };
       }
       case 'get_record': {
-        const fields = (args as any).fields?.length ? `?fields=${(args as any).fields.join(',')}` : '';
+        const fields = (args as any).fields?.length
+          ? `?fields=${(args as any).fields.join(',')}`
+          : '';
         const r = await api.get(`/record/v1/${(args as any).type}/${(args as any).id}${fields}`);
         return { content: [{ type: 'text' as const, text: JSON.stringify(r.data, null, 2) }] };
       }
@@ -81,7 +161,14 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       }
       case 'create_record': {
         const r = await api.post(`/record/v1/${(args as any).type}`, (args as any).data);
-        return { content: [{ type: 'text' as const, text: JSON.stringify({ success: true, id: r.headers.location }, null, 2) }] };
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: JSON.stringify({ success: true, id: r.headers.location }, null, 2),
+            },
+          ],
+        };
       }
       case 'update_record': {
         await api.patch(`/record/v1/${(args as any).type}/${(args as any).id}`, (args as any).data);
@@ -91,11 +178,16 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const r = await api.get('/record/v1/metadata-catalog/');
         return { content: [{ type: 'text' as const, text: JSON.stringify(r.data, null, 2) }] };
       }
-      default: throw new Error(`Unknown tool: ${name}`);
+      default:
+        throw new Error(`Unknown tool: ${name}`);
     }
   } catch (error: any) {
-    const msg = error.response?.data?.['o:errorDetails'] || error.response?.data?.title || error.message;
-    return { content: [{ type: 'text' as const, text: `NetSuite Error: ${JSON.stringify(msg)}` }], isError: true };
+    const msg =
+      error.response?.data?.['o:errorDetails'] || error.response?.data?.title || error.message;
+    return {
+      content: [{ type: 'text' as const, text: `NetSuite Error: ${JSON.stringify(msg)}` }],
+      isError: true,
+    };
   }
 });
 

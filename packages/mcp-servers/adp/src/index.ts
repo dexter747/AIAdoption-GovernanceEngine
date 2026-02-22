@@ -1,6 +1,10 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { CallToolRequestSchema, ListToolsRequestSchema, Tool } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+  Tool,
+} from '@modelcontextprotocol/sdk/types.js';
 import axios, { AxiosInstance } from 'axios';
 
 // Environment variables
@@ -44,7 +48,7 @@ async function initConnection(): Promise<AxiosInstance> {
     },
   });
 
-  api.interceptors.request.use(async (config) => {
+  api.interceptors.request.use(async config => {
     const freshToken = await getAccessToken();
     config.headers.Authorization = `Bearer ${freshToken}`;
     return config;
@@ -96,7 +100,10 @@ const tools: Tool[] = [
       type: 'object',
       properties: {
         worker_id: { type: 'string', description: 'Optional worker ID to filter' },
-        status: { type: 'string', description: 'Filter by status (e.g., pending, approved, denied)' },
+        status: {
+          type: 'string',
+          description: 'Filter by status (e.g., pending, approved, denied)',
+        },
       },
     },
   },
@@ -116,7 +123,11 @@ const tools: Tool[] = [
     inputSchema: {
       type: 'object',
       properties: {
-        method: { type: 'string', description: 'HTTP method (GET, POST, PUT, DELETE)', enum: ['GET', 'POST', 'PUT', 'DELETE'] },
+        method: {
+          type: 'string',
+          description: 'HTTP method (GET, POST, PUT, DELETE)',
+          enum: ['GET', 'POST', 'PUT', 'DELETE'],
+        },
         path: { type: 'string', description: 'API path (e.g., /hr/v2/workers)' },
         body: { type: 'object', description: 'Request body for POST/PUT requests' },
         params: { type: 'object', description: 'Query parameters' },
@@ -135,7 +146,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
   return { tools };
 });
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   const { name, arguments: args } = request.params;
   const client = await initConnection();
 

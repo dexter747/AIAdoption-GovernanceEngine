@@ -10,16 +10,14 @@ gsap.registerPlugin(ScrollTrigger);
  * Animate children of a container as they scroll into view.
  * Each child with [data-animate] gets staggered reveal.
  */
-export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
-  options?: {
-    stagger?: number;
-    y?: number;
-    duration?: number;
-    delay?: number;
-    start?: string;
-    markers?: boolean;
-  }
-) {
+export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(options?: {
+  stagger?: number;
+  y?: number;
+  duration?: number;
+  delay?: number;
+  start?: string;
+  markers?: boolean;
+}) {
   const ref = useRef<T>(null);
 
   useEffect(() => {
@@ -51,7 +49,7 @@ export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
 
     return () => {
       tl.kill();
-      ScrollTrigger.getAll().forEach((st) => st.kill());
+      ScrollTrigger.getAll().forEach(st => st.kill());
     };
   }, []);
 
@@ -61,16 +59,14 @@ export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
 /**
  * Animate a single element on scroll.
  */
-export function useScrollFade<T extends HTMLElement = HTMLDivElement>(
-  options?: {
-    y?: number;
-    x?: number;
-    scale?: number;
-    duration?: number;
-    delay?: number;
-    start?: string;
-  }
-) {
+export function useScrollFade<T extends HTMLElement = HTMLDivElement>(options?: {
+  y?: number;
+  x?: number;
+  scale?: number;
+  duration?: number;
+  delay?: number;
+  start?: string;
+}) {
   const ref = useRef<T>(null);
 
   useEffect(() => {

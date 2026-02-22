@@ -33,29 +33,28 @@ async function runMigration() {
   try {
     // Try direct query approach
     console.log('📊 Creating tables...\n');
-    
+
     // Split into statements and execute one by one
     const statements = sql
       .split(';')
       .map(s => s.trim())
       .filter(s => s && !s.startsWith('--') && s.length > 10);
-    
+
     for (let i = 0; i < statements.length; i++) {
       const stmt = statements[i] + ';';
       console.log(`  [${i + 1}/${statements.length}] Executing...`);
-      
+
       const { data, error } = await supabase.rpc('exec', { sql: stmt });
-      
+
       if (error && error.code !== 'PGRST202') {
         console.log(`  ⚠️  Statement ${i + 1} note:`, error.message);
       }
     }
-    
+
     console.log('\n✅ Migration completed!\n');
     console.log('📊 Tables created:');
     console.log('   - user_provider_keys');
     console.log('   - user_connections\n');
-    
   } catch (err) {
     console.log('\n⚠️  Automatic migration not available\n');
     console.log('📝 Please run the SQL manually:\n');

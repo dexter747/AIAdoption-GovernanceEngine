@@ -1,6 +1,10 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { CallToolRequestSchema, ListToolsRequestSchema, Tool } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+  Tool,
+} from '@modelcontextprotocol/sdk/types.js';
 import axios, { AxiosInstance } from 'axios';
 
 let api: AxiosInstance;
@@ -51,9 +55,17 @@ const tools: Tool[] = [
     inputSchema: {
       type: 'object',
       properties: {
-        field: { type: 'string', description: 'Field to search on (e.g., name, sku)', default: 'name' },
+        field: {
+          type: 'string',
+          description: 'Field to search on (e.g., name, sku)',
+          default: 'name',
+        },
         value: { type: 'string', description: 'Search value' },
-        condition_type: { type: 'string', description: 'Condition type (eq, like, gt, lt, etc.)', default: 'like' },
+        condition_type: {
+          type: 'string',
+          description: 'Condition type (eq, like, gt, lt, etc.)',
+          default: 'like',
+        },
         pageSize: { type: 'number', description: 'Results per page', default: 20 },
         currentPage: { type: 'number', description: 'Current page number', default: 1 },
       },
@@ -122,7 +134,11 @@ const tools: Tool[] = [
     inputSchema: {
       type: 'object',
       properties: {
-        method: { type: 'string', description: 'HTTP method (GET, POST, PUT, DELETE)', default: 'GET' },
+        method: {
+          type: 'string',
+          description: 'HTTP method (GET, POST, PUT, DELETE)',
+          default: 'GET',
+        },
         endpoint: { type: 'string', description: 'API endpoint path (e.g., /products)' },
         data: { type: 'object', description: 'Request body for POST/PUT requests' },
       },
@@ -136,7 +152,9 @@ async function handleToolCall(name: string, args: Record<string, unknown>): Prom
     case 'get_products': {
       const pageSize = args.pageSize || 20;
       const currentPage = args.currentPage || 1;
-      const response = await api.get(`/products?searchCriteria[pageSize]=${pageSize}&searchCriteria[currentPage]=${currentPage}`);
+      const response = await api.get(
+        `/products?searchCriteria[pageSize]=${pageSize}&searchCriteria[currentPage]=${currentPage}`
+      );
       return JSON.stringify(response.data, null, 2);
     }
     case 'get_product': {
@@ -151,16 +169,17 @@ async function handleToolCall(name: string, args: Record<string, unknown>): Prom
       const currentPage = args.currentPage || 1;
       const response = await api.get(
         `/products?searchCriteria[filterGroups][0][filters][0][field]=${field}` +
-        `&searchCriteria[filterGroups][0][filters][0][value]=${encodeURIComponent(value as string)}` +
-        `&searchCriteria[filterGroups][0][filters][0][conditionType]=${conditionType}` +
-        `&searchCriteria[pageSize]=${pageSize}&searchCriteria[currentPage]=${currentPage}`
+          `&searchCriteria[filterGroups][0][filters][0][value]=${encodeURIComponent(value as string)}` +
+          `&searchCriteria[filterGroups][0][filters][0][conditionType]=${conditionType}` +
+          `&searchCriteria[pageSize]=${pageSize}&searchCriteria[currentPage]=${currentPage}`
       );
       return JSON.stringify(response.data, null, 2);
     }
     case 'get_orders': {
       let url = `/orders?searchCriteria[pageSize]=${args.pageSize || 20}&searchCriteria[currentPage]=${args.currentPage || 1}`;
       if (args.status) {
-        url += `&searchCriteria[filterGroups][0][filters][0][field]=status` +
+        url +=
+          `&searchCriteria[filterGroups][0][filters][0][field]=status` +
           `&searchCriteria[filterGroups][0][filters][0][value]=${args.status}` +
           `&searchCriteria[filterGroups][0][filters][0][conditionType]=eq`;
       }
@@ -174,7 +193,9 @@ async function handleToolCall(name: string, args: Record<string, unknown>): Prom
     case 'get_customers': {
       const pageSize = args.pageSize || 20;
       const currentPage = args.currentPage || 1;
-      const response = await api.get(`/customers/search?searchCriteria[pageSize]=${pageSize}&searchCriteria[currentPage]=${currentPage}`);
+      const response = await api.get(
+        `/customers/search?searchCriteria[pageSize]=${pageSize}&searchCriteria[currentPage]=${currentPage}`
+      );
       return JSON.stringify(response.data, null, 2);
     }
     case 'get_categories': {
@@ -210,7 +231,7 @@ async function main(): Promise<void> {
     tools,
   }));
 
-  server.setRequestHandler(CallToolRequestSchema, async (request) => {
+  server.setRequestHandler(CallToolRequestSchema, async request => {
     const { name, arguments: args } = request.params;
     try {
       const result = await handleToolCall(name, args as Record<string, unknown>);
@@ -231,7 +252,7 @@ async function main(): Promise<void> {
   console.error('Magento MCP server running on stdio');
 }
 
-main().catch((error) => {
+main().catch(error => {
   console.error('Fatal error:', error);
   process.exit(1);
 });

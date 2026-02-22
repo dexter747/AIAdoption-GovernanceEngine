@@ -3,13 +3,13 @@ import { verifyToken } from '@/lib/jwt-auth';
 
 export async function GET(request: NextRequest) {
   const token = request.cookies.get('auth-token')?.value;
-  
+
   if (!token) {
     return NextResponse.json({ authenticated: false });
   }
 
   const result = await verifyToken(token);
-  
+
   if (!result.success || !result.user) {
     return NextResponse.json({ authenticated: false });
   }
@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   const response = NextResponse.json({ success: true });
-  
+
   response.cookies.set('auth-token', '', {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
@@ -36,7 +36,7 @@ export async function DELETE(request: NextRequest) {
     maxAge: 0,
     path: '/',
   });
-  
+
   response.cookies.set('refresh-token', '', {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',

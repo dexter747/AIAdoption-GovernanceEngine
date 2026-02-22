@@ -15,6 +15,7 @@
 ## 🔄 In Progress
 
 ### 1. Setup Supabase Database
+
 - [ ] Go to [Supabase Dashboard](https://supabase.com/dashboard)
 - [ ] Select project: `lwounfzhkuuqvgkvwxvt`
 - [ ] Navigate to: **SQL Editor**
@@ -24,6 +25,7 @@
 - [ ] Verify in: **Database** → **Tables**
 
 ### 2. Get Supabase Service Role Key
+
 - [ ] In Supabase Dashboard: **Settings** → **API**
 - [ ] Copy **service_role** key (under "Project API keys")
 - [ ] Update `.env.local`:
@@ -32,6 +34,7 @@
   ```
 
 ### 3. Configure Google OAuth
+
 - [ ] Go to [Google Cloud Console](https://console.cloud.google.com/)
 - [ ] Create new project or select existing
 - [ ] Enable Google+ API
@@ -49,6 +52,7 @@
   ```
 
 ### 4. Configure Supabase Google Auth
+
 - [ ] In Supabase Dashboard: **Authentication** → **Providers**
 - [ ] Enable **Google** provider
 - [ ] Paste Google Client ID and Secret
@@ -57,6 +61,7 @@
 ## 📝 Pending Tasks
 
 ### 5. Test Authentication Flow
+
 - [ ] Start dev server: `pnpm dev` (in `apps/landing-site`)
 - [ ] Open: `http://localhost:3000/login`
 - [ ] Click "Sign in with Google"
@@ -66,6 +71,7 @@
 - [ ] Check user profile in: **Database** → **users** table
 
 ### 6. Payment Integration
+
 - [ ] Sign up for Dodo Payments account
 - [ ] Get API keys and webhook secret
 - [ ] Sign up for PayPal Developer account
@@ -79,6 +85,7 @@
   - `src/app/api/webhooks/razorpay/route.ts`
 
 ### 7. Email Setup
+
 - [ ] Sign up for Resend account
 - [ ] Get API key
 - [ ] Verify domain (for production)
@@ -94,6 +101,7 @@
   - Subscription expiry warning
 
 ### 8. File Storage Setup
+
 - [ ] Sign up for Cloudinary account
 - [ ] Get cloud name, API key, API secret
 - [ ] Update `.env.local`:
@@ -107,6 +115,7 @@
 ## 🚀 Deployment
 
 ### 9. Vercel Deployment
+
 - [ ] Push code to GitHub
 - [ ] Connect Vercel to GitHub repo
 - [ ] Add all environment variables in Vercel dashboard
@@ -118,6 +127,7 @@
 - [ ] Deploy to production
 
 ### 10. Express API Deployment
+
 - [ ] Create Express API routes for:
   - License validation
   - Payment webhook processing
@@ -128,6 +138,7 @@
 ## 📚 Documentation
 
 For detailed instructions, see:
+
 - [Google OAuth Setup Guide](./GOOGLE-OAUTH-SETUP.md)
 - [Deployment Architecture](./DEPLOYMENT-ARCHITECTURE.md)
 - [Database Schema](../database/schema.sql)
@@ -147,20 +158,24 @@ For detailed instructions, see:
 ## 🐛 Common Issues
 
 ### "Invalid environment variable"
+
 - Make sure `.env.local` is in `apps/landing-site/` folder
 - Restart dev server after updating `.env.local`
 
 ### "redirect_uri_mismatch"
+
 - Check Google OAuth redirect URI matches exactly
 - No trailing slashes
 - Correct port number (3000)
 
 ### "User not found in database"
+
 - Verify `create_user_profile()` trigger is created in Supabase
 - Check `SUPABASE_SERVICE_ROLE_KEY` is correct
 - Review Supabase logs for errors
 
 ### "Session undefined"
+
 - Make sure SessionProvider wraps your app
 - Check NEXTAUTH_SECRET is set
 - Clear browser cookies and try again
@@ -168,6 +183,7 @@ For detailed instructions, see:
 ## 📞 Support
 
 If you encounter issues:
+
 1. Check browser console for errors
 2. Check terminal for server errors
 3. Review Supabase logs: **Database** → **Logs**

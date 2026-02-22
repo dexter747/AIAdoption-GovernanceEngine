@@ -36,14 +36,14 @@ function verifyToken(token) {
 
     const [headerEncoded, payloadEncoded, signature] = parts;
     const expectedSignature = createSignature(`${headerEncoded}.${payloadEncoded}`, JWT_SECRET);
-    
+
     if (signature !== expectedSignature) {
       return { success: false, error: 'Invalid signature' };
     }
 
     const payload = JSON.parse(base64UrlDecode(payloadEncoded));
     const now = Math.floor(Date.now() / 1000);
-    
+
     if (payload.exp && payload.exp < now) {
       return { success: false, error: 'Token expired' };
     }
@@ -209,8 +209,11 @@ app.get('/api/licenses/auto', authMiddleware(), async (req, res) => {
     }
 
     const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    
+    const supabaseKey =
+      process.env.SUPABASE_SERVICE_ROLE_KEY ||
+      process.env.SUPABASE_ANON_KEY ||
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
     if (!supabaseUrl || !supabaseKey) {
       return res.json({ valid: true, tier: 'free', features: getPlanFeatures('free') });
     }
@@ -219,11 +222,7 @@ app.get('/api/licenses/auto', authMiddleware(), async (req, res) => {
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Check user's plan from the users table
-    const { data: user } = await supabase
-      .from('users')
-      .select('plan')
-      .eq('id', userId)
-      .single();
+    const { data: user } = await supabase.from('users').select('plan').eq('id', userId).single();
 
     const plan = user?.plan || 'free';
 
@@ -235,7 +234,7 @@ app.get('/api/licenses/auto', authMiddleware(), async (req, res) => {
       .eq('status', 'active')
       .single();
 
-    const activePlan = subscription ? (subscription.plan || plan) : plan;
+    const activePlan = subscription ? subscription.plan || plan : plan;
     const expiresAt = subscription?.current_period_end || null;
 
     res.json({
@@ -256,7 +255,16 @@ function getPlanFeatures(plan) {
     free: ['basic_chat'],
     starter: ['basic_chat', 'history', 'export'],
     professional: ['basic_chat', 'history', 'export', 'custom_prompts', 'mcp_integration'],
-    enterprise: ['basic_chat', 'history', 'export', 'custom_prompts', 'mcp_integration', 'sso', 'audit_log', 'priority_support'],
+    enterprise: [
+      'basic_chat',
+      'history',
+      'export',
+      'custom_prompts',
+      'mcp_integration',
+      'sso',
+      'audit_log',
+      'priority_support',
+    ],
   };
   return features[plan] || features.free;
 }

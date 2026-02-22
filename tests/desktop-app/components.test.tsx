@@ -22,7 +22,7 @@ describe('Loading Components', () => {
 
     it('should accept size prop values', () => {
       const sizes = ['sm', 'md', 'lg', 'xl'] as const;
-      
+
       sizes.forEach(size => {
         expect(['sm', 'md', 'lg', 'xl']).toContain(size);
       });
@@ -162,10 +162,8 @@ describe('Loading Components', () => {
     it('should generate table structure', () => {
       const rows = 3;
       const columns = 4;
-      
-      const table = Array.from({ length: rows }, () => 
-        Array.from({ length: columns })
-      );
+
+      const table = Array.from({ length: rows }, () => Array.from({ length: columns }));
 
       expect(table).toHaveLength(3);
       expect(table[0]).toHaveLength(4);
@@ -212,7 +210,7 @@ describe('ErrorBoundary Component', () => {
 
     it('should capture error in getDerivedStateFromError', () => {
       const error = new Error('Test error');
-      
+
       const getDerivedStateFromError = (error: Error) => ({
         hasError: true,
         error,
@@ -267,20 +265,20 @@ describe('ErrorBoundary Component', () => {
   describe('Error types', () => {
     it('should handle JavaScript errors', () => {
       const error = new Error('JavaScript error');
-      
+
       expect(error.message).toBe('JavaScript error');
       expect(error.name).toBe('Error');
     });
 
     it('should handle TypeError', () => {
       const error = new TypeError('Cannot read property of undefined');
-      
+
       expect(error.name).toBe('TypeError');
     });
 
     it('should handle ReferenceError', () => {
       const error = new ReferenceError('variable is not defined');
-      
+
       expect(error.name).toBe('ReferenceError');
     });
 
@@ -295,7 +293,7 @@ describe('ErrorBoundary Component', () => {
       }
 
       const error = new CustomError('Custom error', 'ERR_001');
-      
+
       expect(error.name).toBe('CustomError');
       expect(error.code).toBe('ERR_001');
     });
@@ -339,7 +337,7 @@ describe('ErrorDisplay Component', () => {
 
   it('should call retry function on click', () => {
     const retry = jest.fn();
-    
+
     retry();
 
     expect(retry).toHaveBeenCalled();
@@ -394,7 +392,7 @@ describe('EmptyState Component', () => {
 
   it('should call action onClick when clicked', () => {
     const onClick = jest.fn();
-    
+
     onClick();
 
     expect(onClick).toHaveBeenCalled();
@@ -440,7 +438,9 @@ describe('Toast Components', () => {
         return context;
       };
 
-      expect(() => useToastOutsideProvider()).toThrow('useToast must be used within a ToastProvider');
+      expect(() => useToastOutsideProvider()).toThrow(
+        'useToast must be used within a ToastProvider'
+      );
     });
 
     it('should return toast functions', () => {
@@ -535,7 +535,7 @@ describe('Toast Components', () => {
   describe('addToast function', () => {
     it('should add toast to array', () => {
       const toasts: any[] = [];
-      
+
       const addToast = (toast: any) => {
         toasts.push({ ...toast, id: `toast-${Date.now()}` });
       };
@@ -547,7 +547,7 @@ describe('Toast Components', () => {
 
     it('should generate unique ID', () => {
       const generateId = () => `toast-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-      
+
       const id1 = generateId();
       const id2 = generateId();
 
@@ -561,7 +561,7 @@ describe('Toast Components', () => {
         { id: 'toast-1', type: 'success', title: 'Toast 1' },
         { id: 'toast-2', type: 'error', title: 'Toast 2' },
       ];
-      
+
       const removeToast = (id: string) => {
         toasts = toasts.filter(t => t.id !== id);
       };
@@ -576,16 +576,16 @@ describe('Toast Components', () => {
   describe('Auto-dismiss', () => {
     it('should set timeout for auto-dismiss', () => {
       jest.useFakeTimers();
-      
+
       const dismiss = jest.fn();
       const duration = 5000;
 
       setTimeout(() => dismiss('toast-1'), duration);
-      
+
       jest.advanceTimersByTime(5000);
 
       expect(dismiss).toHaveBeenCalledWith('toast-1');
-      
+
       jest.useRealTimers();
     });
 
@@ -599,11 +599,11 @@ describe('Toast Components', () => {
     it('should clear timeout on manual dismiss', () => {
       const clearTimeoutSpy = jest.spyOn(global, 'clearTimeout');
       const timeoutId = setTimeout(() => {}, 5000);
-      
+
       clearTimeout(timeoutId);
 
       expect(clearTimeoutSpy).toHaveBeenCalled();
-      
+
       clearTimeoutSpy.mockRestore();
     });
   });

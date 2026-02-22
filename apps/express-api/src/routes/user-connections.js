@@ -16,145 +16,159 @@ const logger = createLogger('user-connections');
 
 // Supported database types
 const SUPPORTED_CONNECTION_TYPES = [
-  'postgresql', 'mysql', 'mongodb', 'sqlserver', 'oracle',
-  'sap_hana', 'mariadb', 'sqlite', 'redis', 'elasticsearch',
-  'salesforce', 'servicenow', 'jira', 'zendesk', 'workday'
+  'postgresql',
+  'mysql',
+  'mongodb',
+  'sqlserver',
+  'oracle',
+  'sap_hana',
+  'mariadb',
+  'sqlite',
+  'redis',
+  'elasticsearch',
+  'salesforce',
+  'servicenow',
+  'jira',
+  'zendesk',
+  'workday',
 ];
 
 // Connection type info
 const CONNECTION_TYPE_INFO = {
-  postgresql: { 
-    name: 'PostgreSQL', 
-    icon: '🐘', 
+  postgresql: {
+    name: 'PostgreSQL',
+    icon: '🐘',
     defaultPort: 5432,
     fields: ['host', 'port', 'database', 'username', 'password', 'ssl'],
-    mcpPackage: '@modelcontextprotocol/server-postgres'
+    mcpPackage: '@modelcontextprotocol/server-postgres',
   },
-  mysql: { 
-    name: 'MySQL', 
-    icon: '🐬', 
+  mysql: {
+    name: 'MySQL',
+    icon: '🐬',
     defaultPort: 3306,
     fields: ['host', 'port', 'database', 'username', 'password', 'ssl'],
-    mcpPackage: null // TODO: Add MySQL MCP package
+    mcpPackage: null, // TODO: Add MySQL MCP package
   },
-  mongodb: { 
-    name: 'MongoDB', 
-    icon: '🍃', 
+  mongodb: {
+    name: 'MongoDB',
+    icon: '🍃',
     defaultPort: 27017,
     fields: ['connectionString'],
-    mcpPackage: null
+    mcpPackage: null,
   },
-  sqlserver: { 
-    name: 'SQL Server', 
-    icon: '🗄️', 
+  sqlserver: {
+    name: 'SQL Server',
+    icon: '🗄️',
     defaultPort: 1433,
     fields: ['host', 'port', 'database', 'username', 'password', 'encrypt'],
-    mcpPackage: null
+    mcpPackage: null,
   },
-  oracle: { 
-    name: 'Oracle', 
-    icon: '☀️', 
+  oracle: {
+    name: 'Oracle',
+    icon: '☀️',
     defaultPort: 1521,
     fields: ['host', 'port', 'serviceName', 'username', 'password'],
-    mcpPackage: null
+    mcpPackage: null,
   },
-  sap_hana: { 
-    name: 'SAP HANA', 
-    icon: '💎', 
+  sap_hana: {
+    name: 'SAP HANA',
+    icon: '💎',
     defaultPort: 30015,
     fields: ['host', 'port', 'schema', 'username', 'password'],
-    mcpPackage: null
+    mcpPackage: null,
   },
-  mariadb: { 
-    name: 'MariaDB', 
-    icon: '🦭', 
+  mariadb: {
+    name: 'MariaDB',
+    icon: '🦭',
     defaultPort: 3306,
     fields: ['host', 'port', 'database', 'username', 'password', 'ssl'],
-    mcpPackage: null
+    mcpPackage: null,
   },
-  sqlite: { 
-    name: 'SQLite', 
-    icon: '📦', 
+  sqlite: {
+    name: 'SQLite',
+    icon: '📦',
     defaultPort: null,
     fields: ['filePath'],
-    mcpPackage: '@modelcontextprotocol/server-sqlite'
+    mcpPackage: '@modelcontextprotocol/server-sqlite',
   },
-  redis: { 
-    name: 'Redis', 
-    icon: '🔴', 
+  redis: {
+    name: 'Redis',
+    icon: '🔴',
     defaultPort: 6379,
     fields: ['host', 'port', 'password'],
-    mcpPackage: null
+    mcpPackage: null,
   },
-  elasticsearch: { 
-    name: 'Elasticsearch', 
-    icon: '🔍', 
+  elasticsearch: {
+    name: 'Elasticsearch',
+    icon: '🔍',
     defaultPort: 9200,
     fields: ['host', 'port', 'username', 'password', 'ssl'],
-    mcpPackage: null
+    mcpPackage: null,
   },
   salesforce: {
     name: 'Salesforce',
     icon: '☁️',
     defaultPort: null,
     fields: ['instanceUrl', 'accessToken', 'refreshToken'],
-    mcpPackage: null
+    mcpPackage: null,
   },
   servicenow: {
     name: 'ServiceNow',
     icon: '🔧',
     defaultPort: null,
     fields: ['instanceUrl', 'username', 'password'],
-    mcpPackage: null
+    mcpPackage: null,
   },
   jira: {
     name: 'Jira',
     icon: '📋',
     defaultPort: null,
     fields: ['cloudId', 'email', 'apiToken'],
-    mcpPackage: null
+    mcpPackage: null,
   },
   zendesk: {
     name: 'Zendesk',
     icon: '🎫',
     defaultPort: null,
     fields: ['subdomain', 'email', 'apiToken'],
-    mcpPackage: null
+    mcpPackage: null,
   },
   workday: {
     name: 'Workday',
     icon: '📊',
     defaultPort: null,
     fields: ['tenant', 'clientId', 'clientSecret'],
-    mcpPackage: null
-  }
+    mcpPackage: null,
+  },
 };
 
 // Validation schemas
-const connectionConfigSchema = z.object({
-  host: z.string().optional(),
-  port: z.number().optional(),
-  database: z.string().optional(),
-  username: z.string().optional(),
-  password: z.string().optional(),
-  ssl: z.boolean().optional(),
-  connectionString: z.string().optional(),
-  filePath: z.string().optional(),
-  // Add other fields as needed
-}).passthrough(); // Allow additional fields
+const connectionConfigSchema = z
+  .object({
+    host: z.string().optional(),
+    port: z.number().optional(),
+    database: z.string().optional(),
+    username: z.string().optional(),
+    password: z.string().optional(),
+    ssl: z.boolean().optional(),
+    connectionString: z.string().optional(),
+    filePath: z.string().optional(),
+    // Add other fields as needed
+  })
+  .passthrough(); // Allow additional fields
 
 const addConnectionSchema = z.object({
   name: z.string().min(1).max(100),
   connection_type: z.enum(SUPPORTED_CONNECTION_TYPES),
   config: connectionConfigSchema,
-  mcp_server_type: z.enum(['npm', 'docker', 'custom']).optional().default('npm')
+  mcp_server_type: z.enum(['npm', 'docker', 'custom']).optional().default('npm'),
 });
 
 const updateConnectionSchema = z.object({
   name: z.string().min(1).max(100).optional(),
   config: connectionConfigSchema.optional(),
   is_active: z.boolean().optional(),
-  mcp_server_type: z.enum(['npm', 'docker', 'custom']).optional()
+  mcp_server_type: z.enum(['npm', 'docker', 'custom']).optional(),
 });
 
 /**
@@ -164,12 +178,12 @@ const updateConnectionSchema = z.object({
 router.get('/types', (req, res) => {
   const types = SUPPORTED_CONNECTION_TYPES.map(id => ({
     id,
-    ...CONNECTION_TYPE_INFO[id]
+    ...CONNECTION_TYPE_INFO[id],
   }));
-  
+
   res.json({
     success: true,
-    data: types
+    data: types,
   });
 });
 
@@ -180,27 +194,29 @@ router.get('/types', (req, res) => {
 router.get('/', validateJwt, async (req, res, next) => {
   try {
     const supabase = createSupabaseClient();
-    
+
     const { data, error } = await supabase
       .from('user_connections')
-      .select('id, name, connection_type, is_active, is_connected, last_connected_at, last_error, mcp_server_type, created_at')
+      .select(
+        'id, name, connection_type, is_active, is_connected, last_connected_at, last_error, mcp_server_type, created_at'
+      )
       .eq('user_id', req.user.id)
       .order('created_at', { ascending: false });
-    
+
     if (error) {
       logger.error({ error }, 'Failed to fetch user connections');
       throw new ApiError(500, 'Failed to fetch connections');
     }
-    
+
     // Add connection type info to each connection
     const connectionsWithInfo = data.map(conn => ({
       ...conn,
-      type_info: CONNECTION_TYPE_INFO[conn.connection_type]
+      type_info: CONNECTION_TYPE_INFO[conn.connection_type],
     }));
-    
+
     res.json({
       success: true,
-      data: connectionsWithInfo
+      data: connectionsWithInfo,
     });
   } catch (err) {
     next(err);
@@ -214,25 +230,25 @@ router.get('/', validateJwt, async (req, res, next) => {
 router.get('/:id', validateJwt, async (req, res, next) => {
   try {
     const { id } = req.params;
-    
+
     const supabase = createSupabaseClient();
-    
+
     const { data, error } = await supabase
       .from('user_connections')
       .select('*')
       .eq('id', id)
       .eq('user_id', req.user.id)
       .single();
-    
+
     if (error && error.code !== 'PGRST116') {
       logger.error({ error }, 'Failed to fetch connection');
       throw new ApiError(500, 'Failed to fetch connection');
     }
-    
+
     if (!data) {
       throw new ApiError(404, 'Connection not found');
     }
-    
+
     // Decrypt config
     let decryptedConfig = {};
     try {
@@ -253,15 +269,15 @@ router.get('/:id', validateJwt, async (req, res, next) => {
     } catch (e) {
       logger.warn({ e }, 'Failed to decrypt config');
     }
-    
+
     res.json({
       success: true,
       data: {
         ...data,
         encrypted_config: undefined, // Don't send encrypted config
         config: decryptedConfig,
-        type_info: CONNECTION_TYPE_INFO[data.connection_type]
-      }
+        type_info: CONNECTION_TYPE_INFO[data.connection_type],
+      },
     });
   } catch (err) {
     next(err);
@@ -275,12 +291,12 @@ router.get('/:id', validateJwt, async (req, res, next) => {
 router.post('/', validateJwt, async (req, res, next) => {
   try {
     const validated = addConnectionSchema.parse(req.body);
-    
+
     // Encrypt the config (contains sensitive data like passwords)
     const encryptedConfig = encrypt(JSON.stringify(validated.config));
-    
+
     const supabase = createSupabaseClient();
-    
+
     // Check if connection name already exists
     const { data: existing } = await supabase
       .from('user_connections')
@@ -288,11 +304,11 @@ router.post('/', validateJwt, async (req, res, next) => {
       .eq('user_id', req.user.id)
       .eq('name', validated.name)
       .single();
-    
+
     if (existing) {
       throw new ApiError(409, `Connection "${validated.name}" already exists`);
     }
-    
+
     // Insert new connection
     const { data, error } = await supabase
       .from('user_connections')
@@ -303,25 +319,28 @@ router.post('/', validateJwt, async (req, res, next) => {
         encrypted_config: encryptedConfig,
         mcp_server_type: validated.mcp_server_type,
         is_active: true,
-        is_connected: false
+        is_connected: false,
       })
       .select('id, name, connection_type, is_active, is_connected, mcp_server_type, created_at')
       .single();
-    
+
     if (error) {
       logger.error({ error }, 'Failed to create connection');
       throw new ApiError(500, 'Failed to create connection');
     }
-    
-    logger.info({ connectionId: data.id, name: validated.name, type: validated.connection_type }, 'Connection created');
-    
+
+    logger.info(
+      { connectionId: data.id, name: validated.name, type: validated.connection_type },
+      'Connection created'
+    );
+
     res.status(201).json({
       success: true,
       message: 'Connection created successfully',
       data: {
         ...data,
-        type_info: CONNECTION_TYPE_INFO[data.connection_type]
-      }
+        type_info: CONNECTION_TYPE_INFO[data.connection_type],
+      },
     });
   } catch (err) {
     next(err);
@@ -336,9 +355,9 @@ router.patch('/:id', validateJwt, async (req, res, next) => {
   try {
     const { id } = req.params;
     const validated = updateConnectionSchema.parse(req.body);
-    
+
     const supabase = createSupabaseClient();
-    
+
     // Check if connection exists and belongs to user
     const { data: existing } = await supabase
       .from('user_connections')
@@ -346,18 +365,18 @@ router.patch('/:id', validateJwt, async (req, res, next) => {
       .eq('id', id)
       .eq('user_id', req.user.id)
       .single();
-    
+
     if (!existing) {
       throw new ApiError(404, 'Connection not found');
     }
-    
+
     // Build update object
     const updateData = {};
-    
+
     if (validated.name !== undefined) {
       updateData.name = validated.name;
     }
-    
+
     if (validated.config !== undefined) {
       // Merge with existing config or replace
       let existingConfig = {};
@@ -366,19 +385,19 @@ router.patch('/:id', validateJwt, async (req, res, next) => {
       } catch (e) {
         // Ignore decrypt errors
       }
-      
+
       const newConfig = { ...existingConfig, ...validated.config };
       updateData.encrypted_config = encrypt(JSON.stringify(newConfig));
     }
-    
+
     if (validated.is_active !== undefined) {
       updateData.is_active = validated.is_active;
     }
-    
+
     if (validated.mcp_server_type !== undefined) {
       updateData.mcp_server_type = validated.mcp_server_type;
     }
-    
+
     // Perform update
     const { data, error } = await supabase
       .from('user_connections')
@@ -387,21 +406,21 @@ router.patch('/:id', validateJwt, async (req, res, next) => {
       .eq('user_id', req.user.id)
       .select('id, name, connection_type, is_active, is_connected, mcp_server_type, created_at')
       .single();
-    
+
     if (error) {
       logger.error({ error }, 'Failed to update connection');
       throw new ApiError(500, 'Failed to update connection');
     }
-    
+
     logger.info({ connectionId: id }, 'Connection updated');
-    
+
     res.json({
       success: true,
       message: 'Connection updated successfully',
       data: {
         ...data,
-        type_info: CONNECTION_TYPE_INFO[data.connection_type]
-      }
+        type_info: CONNECTION_TYPE_INFO[data.connection_type],
+      },
     });
   } catch (err) {
     next(err);
@@ -415,9 +434,9 @@ router.patch('/:id', validateJwt, async (req, res, next) => {
 router.delete('/:id', validateJwt, async (req, res, next) => {
   try {
     const { id } = req.params;
-    
+
     const supabase = createSupabaseClient();
-    
+
     // Check if connection exists and belongs to user
     const { data: existing } = await supabase
       .from('user_connections')
@@ -425,28 +444,28 @@ router.delete('/:id', validateJwt, async (req, res, next) => {
       .eq('id', id)
       .eq('user_id', req.user.id)
       .single();
-    
+
     if (!existing) {
       throw new ApiError(404, 'Connection not found');
     }
-    
+
     // Delete connection
     const { error } = await supabase
       .from('user_connections')
       .delete()
       .eq('id', id)
       .eq('user_id', req.user.id);
-    
+
     if (error) {
       logger.error({ error }, 'Failed to delete connection');
       throw new ApiError(500, 'Failed to delete connection');
     }
-    
+
     logger.info({ connectionId: id, name: existing.name }, 'Connection deleted');
-    
+
     res.json({
       success: true,
-      message: 'Connection deleted successfully'
+      message: 'Connection deleted successfully',
     });
   } catch (err) {
     next(err);
@@ -460,9 +479,9 @@ router.delete('/:id', validateJwt, async (req, res, next) => {
 router.post('/:id/test', validateJwt, async (req, res, next) => {
   try {
     const { id } = req.params;
-    
+
     const supabase = createSupabaseClient();
-    
+
     // Get connection
     const { data: connection } = await supabase
       .from('user_connections')
@@ -470,11 +489,11 @@ router.post('/:id/test', validateJwt, async (req, res, next) => {
       .eq('id', id)
       .eq('user_id', req.user.id)
       .single();
-    
+
     if (!connection) {
       throw new ApiError(404, 'Connection not found');
     }
-    
+
     // Decrypt config
     let config;
     try {
@@ -482,30 +501,35 @@ router.post('/:id/test', validateJwt, async (req, res, next) => {
     } catch (e) {
       throw new ApiError(500, 'Failed to decrypt connection config');
     }
-    
+
     // Test connection based on type
     let testResult = { success: false, message: 'Unknown connection type' };
-    
+
     if (connection.connection_type === 'postgresql') {
       testResult = await testPostgresConnection(config);
     } else {
-      testResult = { success: false, message: `Testing ${connection.connection_type} is not yet implemented` };
+      testResult = {
+        success: false,
+        message: `Testing ${connection.connection_type} is not yet implemented`,
+      };
     }
-    
+
     // Update connection status
     await supabase
       .from('user_connections')
       .update({
         is_connected: testResult.success,
-        last_connected_at: testResult.success ? new Date().toISOString() : connection.last_connected_at,
-        last_error: testResult.success ? null : testResult.message
+        last_connected_at: testResult.success
+          ? new Date().toISOString()
+          : connection.last_connected_at,
+        last_error: testResult.success ? null : testResult.message,
       })
       .eq('id', id);
-    
+
     res.json({
       success: testResult.success,
       message: testResult.message,
-      data: testResult.details || null
+      data: testResult.details || null,
     });
   } catch (err) {
     next(err);
@@ -519,7 +543,7 @@ router.post('/:id/test', validateJwt, async (req, res, next) => {
 router.post('/:id/start-mcp', validateJwt, async (req, res, next) => {
   try {
     const { id } = req.params;
-    
+
     // This will be handled by the MCP orchestrator
     // For now, return a placeholder
     res.json({
@@ -527,8 +551,8 @@ router.post('/:id/start-mcp', validateJwt, async (req, res, next) => {
       message: 'MCP server start requested',
       data: {
         connectionId: id,
-        status: 'pending'
-      }
+        status: 'pending',
+      },
     });
   } catch (err) {
     next(err);
@@ -543,7 +567,7 @@ async function testPostgresConnection(config) {
   try {
     const { default: pg } = await import('pg');
     const { Client } = pg;
-    
+
     const client = new Client({
       host: config.host,
       port: config.port || 5432,
@@ -551,29 +575,29 @@ async function testPostgresConnection(config) {
       user: config.username,
       password: config.password,
       ssl: config.ssl ? { rejectUnauthorized: false } : false,
-      connectionTimeoutMillis: 10000
+      connectionTimeoutMillis: 10000,
     });
-    
+
     await client.connect();
-    
+
     // Run a simple query
     const result = await client.query('SELECT version(), current_database()');
-    
+
     await client.end();
-    
+
     return {
       success: true,
       message: 'Connection successful',
       details: {
         version: result.rows[0].version,
-        database: result.rows[0].current_database
-      }
+        database: result.rows[0].current_database,
+      },
     };
   } catch (error) {
     logger.error({ error }, 'PostgreSQL connection test failed');
     return {
       success: false,
-      message: error.message
+      message: error.message,
     };
   }
 }

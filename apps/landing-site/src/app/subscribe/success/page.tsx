@@ -8,7 +8,7 @@ import { CheckCircle, Download, ArrowRight, Loader2, Copy, Check } from 'lucide-
 function SuccessContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('session_id');
-  
+
   const [loading, setLoading] = useState(true);
   const [subscription, setSubscription] = useState<any>(null);
   const [licenseKey, setLicenseKey] = useState<string | null>(null);
@@ -25,7 +25,9 @@ function SuccessContent() {
         });
         // TODO: Fetch real license key from backend after payment verification
         // Generate mock license key for demo
-        setLicenseKey(`AINX-${Math.random().toString(36).slice(2, 6).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`);
+        setLicenseKey(
+          `AINX-${Math.random().toString(36).slice(2, 6).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`
+        );
         setLoading(false);
       }, 1500);
     } else {
@@ -60,9 +62,7 @@ function SuccessContent() {
           <div className="inline-flex items-center justify-center w-20 h-20 bg-white/10 rounded-full mb-6">
             <CheckCircle className="w-10 h-10 text-zinc-400" />
           </div>
-          <h1 className="text-4xl font-medium text-white mb-2">
-            Welcome to Velanova!
-          </h1>
+          <h1 className="text-4xl font-medium text-white mb-2">Welcome to Velanova!</h1>
           <p className="text-xl text-zinc-500">
             Your subscription has been activated successfully.
           </p>
@@ -79,7 +79,9 @@ function SuccessContent() {
               </div>
               <div className="flex justify-between">
                 <span className="text-zinc-500">Billing Cycle</span>
-                <span className="text-white font-medium capitalize">{subscription.billingCycle}</span>
+                <span className="text-white font-medium capitalize">
+                  {subscription.billingCycle}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-zinc-500">Next Billing Date</span>
@@ -146,7 +148,9 @@ function SuccessContent() {
               </span>
               <div>
                 <p className="text-white font-medium">Connect Your Databases</p>
-                <p className="text-sm text-zinc-500">Add your database connections and start querying with AI.</p>
+                <p className="text-sm text-zinc-500">
+                  Add your database connections and start querying with AI.
+                </p>
               </div>
             </li>
           </ol>
@@ -172,7 +176,10 @@ function SuccessContent() {
 
         {/* Support */}
         <p className="text-center text-zinc-500 text-sm mt-12">
-          Need help? <a href="mailto:support@velanova.com" className="text-zinc-400 hover:underline">Contact our support team</a>
+          Need help?{' '}
+          <a href="mailto:support@velanova.com" className="text-zinc-400 hover:underline">
+            Contact our support team
+          </a>
         </p>
       </div>
     </div>
@@ -181,11 +188,13 @@ function SuccessContent() {
 
 export default function SuccessPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-gray-800 to-zinc-950 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-zinc-300 animate-spin" />
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-gray-800 to-zinc-950 flex items-center justify-center">
+          <Loader2 className="w-8 h-8 text-zinc-300 animate-spin" />
+        </div>
+      }
+    >
       <SuccessContent />
     </Suspense>
   );

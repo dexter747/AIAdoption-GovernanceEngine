@@ -1,6 +1,10 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { CallToolRequestSchema, ListToolsRequestSchema, Tool } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+  Tool,
+} from '@modelcontextprotocol/sdk/types.js';
 import axios, { AxiosInstance } from 'axios';
 
 let api: AxiosInstance;
@@ -12,7 +16,9 @@ function initConnection(): void {
   const apiUrl = process.env.QUICKBOOKS_API_URL || 'https://quickbooks.api.intuit.com';
 
   if (!accessToken || !realmId) {
-    throw new Error('QUICKBOOKS_ACCESS_TOKEN and QUICKBOOKS_REALM_ID environment variables are required');
+    throw new Error(
+      'QUICKBOOKS_ACCESS_TOKEN and QUICKBOOKS_REALM_ID environment variables are required'
+    );
   }
 
   api = axios.create({
@@ -28,7 +34,8 @@ function initConnection(): void {
 const tools: Tool[] = [
   {
     name: 'query',
-    description: 'Execute a QuickBooks Online SQL-like query (e.g., "SELECT * FROM Invoice WHERE TotalAmt > 100")',
+    description:
+      'Execute a QuickBooks Online SQL-like query (e.g., "SELECT * FROM Invoice WHERE TotalAmt > 100")',
     inputSchema: {
       type: 'object',
       properties: {
@@ -44,7 +51,11 @@ const tools: Tool[] = [
       type: 'object',
       properties: {
         maxResults: { type: 'number', description: 'Maximum number of results', default: 100 },
-        startPosition: { type: 'number', description: 'Starting position for pagination', default: 1 },
+        startPosition: {
+          type: 'number',
+          description: 'Starting position for pagination',
+          default: 1,
+        },
         where: { type: 'string', description: 'Optional WHERE clause (e.g., "Active = true")' },
       },
     },
@@ -56,7 +67,11 @@ const tools: Tool[] = [
       type: 'object',
       properties: {
         maxResults: { type: 'number', description: 'Maximum number of results', default: 100 },
-        startPosition: { type: 'number', description: 'Starting position for pagination', default: 1 },
+        startPosition: {
+          type: 'number',
+          description: 'Starting position for pagination',
+          default: 1,
+        },
         where: { type: 'string', description: 'Optional WHERE clause (e.g., "Balance > 0")' },
       },
     },
@@ -68,7 +83,11 @@ const tools: Tool[] = [
       type: 'object',
       properties: {
         maxResults: { type: 'number', description: 'Maximum number of results', default: 100 },
-        startPosition: { type: 'number', description: 'Starting position for pagination', default: 1 },
+        startPosition: {
+          type: 'number',
+          description: 'Starting position for pagination',
+          default: 1,
+        },
         where: { type: 'string', description: 'Optional WHERE clause' },
       },
     },
@@ -80,8 +99,15 @@ const tools: Tool[] = [
       type: 'object',
       properties: {
         maxResults: { type: 'number', description: 'Maximum number of results', default: 100 },
-        startPosition: { type: 'number', description: 'Starting position for pagination', default: 1 },
-        accountType: { type: 'string', description: 'Filter by account type (e.g., "Bank", "Expense")' },
+        startPosition: {
+          type: 'number',
+          description: 'Starting position for pagination',
+          default: 1,
+        },
+        accountType: {
+          type: 'string',
+          description: 'Filter by account type (e.g., "Bank", "Expense")',
+        },
       },
     },
   },
@@ -92,7 +118,11 @@ const tools: Tool[] = [
       type: 'object',
       properties: {
         maxResults: { type: 'number', description: 'Maximum number of results', default: 100 },
-        startPosition: { type: 'number', description: 'Starting position for pagination', default: 1 },
+        startPosition: {
+          type: 'number',
+          description: 'Starting position for pagination',
+          default: 1,
+        },
         where: { type: 'string', description: 'Optional WHERE clause' },
       },
     },
@@ -115,7 +145,11 @@ const tools: Tool[] = [
     inputSchema: {
       type: 'object',
       properties: {
-        method: { type: 'string', description: 'HTTP method (GET, POST, PUT, DELETE)', default: 'GET' },
+        method: {
+          type: 'string',
+          description: 'HTTP method (GET, POST, PUT, DELETE)',
+          default: 'GET',
+        },
         endpoint: { type: 'string', description: 'API endpoint path (e.g., /query, /invoice/1)' },
         data: { type: 'object', description: 'Request body for POST/PUT requests' },
       },
@@ -198,7 +232,7 @@ async function main(): Promise<void> {
     tools,
   }));
 
-  server.setRequestHandler(CallToolRequestSchema, async (request) => {
+  server.setRequestHandler(CallToolRequestSchema, async request => {
     const { name, arguments: args } = request.params;
     try {
       const result = await handleToolCall(name, args as Record<string, unknown>);
@@ -219,7 +253,7 @@ async function main(): Promise<void> {
   console.error('QuickBooks MCP server running on stdio');
 }
 
-main().catch((error) => {
+main().catch(error => {
   console.error('Fatal error:', error);
   process.exit(1);
 });

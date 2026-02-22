@@ -37,10 +37,13 @@ function base64UrlEncode(str: string): string {
   return utf8.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 }
 
-export async function signToken(payload: Partial<JWTPayload>, expiresIn: number = 3600): Promise<string> {
+export async function signToken(
+  payload: Partial<JWTPayload>,
+  expiresIn: number = 3600
+): Promise<string> {
   const secret = process.env.JWT_SECRET || JWT_SECRET;
   const now = Math.floor(Date.now() / 1000);
-  
+
   const header = { alg: 'HS256', typ: 'JWT' };
   const fullPayload = {
     ...payload,
@@ -52,16 +55,21 @@ export async function signToken(payload: Partial<JWTPayload>, expiresIn: number 
   const headerEncoded = base64UrlEncode(JSON.stringify(header));
   const payloadEncoded = base64UrlEncode(JSON.stringify(fullPayload));
   const signature = await createSignature(`${headerEncoded}.${payloadEncoded}`, secret);
-  
+
   return `${headerEncoded}.${payloadEncoded}.${signature}`;
 }
 
-export async function generateTokenPair(user: { id: string; email: string; name?: string; image?: string }) {
+export async function generateTokenPair(user: {
+  id: string;
+  email: string;
+  name?: string;
+  image?: string;
+}) {
   // Check if admin
   if (!ADMIN_EMAILS.includes(user.email)) {
     throw new Error('Not authorized as admin');
   }
-  
+
   const accessPayload: Partial<JWTPayload> = {
     sub: user.id,
     email: user.email,
@@ -70,7 +78,7 @@ export async function generateTokenPair(user: { id: string; email: string; name?
     role: 'admin',
     type: 'access',
   };
-  
+
   const refreshPayload: Partial<JWTPayload> = {
     sub: user.id,
     email: user.email,
@@ -93,17 +101,21 @@ async function createSignature(data: string, secret: string): Promise<string> {
   const encoder = new TextEncoder();
   const keyData = encoder.encode(secret);
   const messageData = encoder.encode(data);
-  
+
   const key = await crypto.subtle.importKey(
-    'raw', keyData, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
+    'raw',
+    keyData,
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
   );
-  
+
   const signature = await crypto.subtle.sign('HMAC', key, messageData);
   const signatureArray = new Uint8Array(signature);
-  
+
   let binary = '';
-  signatureArray.forEach(byte => binary += String.fromCharCode(byte));
-  
+  signatureArray.forEach(byte => (binary += String.fromCharCode(byte)));
+
   return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 }
 
@@ -118,14 +130,14 @@ export async function verifyToken(token: string): Promise<AuthResult> {
 
     const [headerEncoded, payloadEncoded, signature] = parts;
     const expectedSignature = await createSignature(`${headerEncoded}.${payloadEncoded}`, secret);
-    
+
     if (signature !== expectedSignature) {
       return { success: false, error: 'Invalid signature' };
     }
 
     const payload: JWTPayload = JSON.parse(base64UrlDecode(payloadEncoded));
     const now = Math.floor(Date.now() / 1000);
-    
+
     if (payload.exp && payload.exp < now) {
       return { success: false, error: 'Token expired' };
     }

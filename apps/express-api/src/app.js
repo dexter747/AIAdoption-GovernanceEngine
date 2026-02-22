@@ -27,30 +27,34 @@ export function createApp() {
   // ==========================================================================
   // SECURITY MIDDLEWARE
   // ==========================================================================
-  
+
   // API-specific security headers
   app.use(apiSecurityHeaders);
-  
+
   // Helmet - Security headers
-  app.use(helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        styleSrc: ["'self'", "'unsafe-inline'"],
-        scriptSrc: ["'self'"],
-        imgSrc: ["'self'", "data:", "https:"],
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          styleSrc: ["'self'", "'unsafe-inline'"],
+          scriptSrc: ["'self'"],
+          imgSrc: ["'self'", 'data:', 'https:'],
+        },
       },
-    },
-    crossOriginEmbedderPolicy: false,
-  }));
+      crossOriginEmbedderPolicy: false,
+    })
+  );
 
   // CORS
-  app.use(cors({
-    origin: config.cors.origins,
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-API-Key', 'X-License-Key'],
-  }));
+  app.use(
+    cors({
+      origin: config.cors.origins,
+      credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'X-API-Key', 'X-License-Key'],
+    })
+  );
 
   // Rate limiting
   const limiter = rateLimit({
@@ -63,7 +67,7 @@ export function createApp() {
       message: 'You have exceeded the rate limit. Please try again later.',
       retryAfter: Math.ceil(config.rateLimit.windowMs / 1000),
     },
-    skip: (req) => {
+    skip: req => {
       // Skip rate limiting for health checks
       return req.path === '/health' || req.path === '/ready';
     },
@@ -73,26 +77,26 @@ export function createApp() {
   // ==========================================================================
   // PARSING MIDDLEWARE
   // ==========================================================================
-  
+
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-  
+
   // Sanitize all incoming requests
   app.use(sanitizeRequest);
-  
+
   // CSRF origin verification for state-changing requests
   app.use(verifyCsrfOrigin(config.cors.origins));
 
   // ==========================================================================
   // LOGGING MIDDLEWARE
   // ==========================================================================
-  
+
   app.use(requestLogger);
 
   // ==========================================================================
   // ROUTES
   // ==========================================================================
-  
+
   // Health checks (no auth required)
   app.use('/', healthRoutes);
 
@@ -116,7 +120,7 @@ export function createApp() {
   // ==========================================================================
   // ERROR HANDLING
   // ==========================================================================
-  
+
   app.use(notFoundHandler);
   app.use(errorHandler);
 

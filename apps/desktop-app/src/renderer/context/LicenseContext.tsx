@@ -31,7 +31,16 @@ const TIER_FEATURES: Record<string, string[]> = {
   free: ['basic_chat'],
   starter: ['basic_chat', 'history', 'export'],
   pro: ['basic_chat', 'history', 'export', 'custom_prompts', 'mcp_integration'],
-  enterprise: ['basic_chat', 'history', 'export', 'custom_prompts', 'mcp_integration', 'sso', 'audit_log', 'priority_support'],
+  enterprise: [
+    'basic_chat',
+    'history',
+    'export',
+    'custom_prompts',
+    'mcp_integration',
+    'sso',
+    'audit_log',
+    'priority_support',
+  ],
 };
 
 export function LicenseProvider({ children }: { children: ReactNode }) {
@@ -97,7 +106,7 @@ export function LicenseProvider({ children }: { children: ReactNode }) {
     setIsLoading(true);
     try {
       const result = await window.electron?.license.validate(key);
-      
+
       if (!result) {
         return { success: false, error: 'Failed to connect to license server' };
       }
@@ -114,16 +123,16 @@ export function LicenseProvider({ children }: { children: ReactNode }) {
           maxMachines: result.maxMachines || 1,
           activeMachines: result.activeMachines || 1,
         };
-        
+
         setLicense(newLicense);
-        
+
         // Store license locally
-        await window.electron?.settings.set('license', { 
-          key, 
+        await window.electron?.settings.set('license', {
+          key,
           id: newLicense.id,
-          activatedAt: new Date().toISOString() 
+          activatedAt: new Date().toISOString(),
         });
-        
+
         return { success: true };
       } else {
         return { success: false, error: result.reason || result.error || 'Invalid license key' };
@@ -146,22 +155,26 @@ export function LicenseProvider({ children }: { children: ReactNode }) {
 
   const refreshLicense = async () => {
     if (!license?.key) return;
-    
+
     setIsLoading(true);
     try {
       // Re-validate the current license key
       const result = await window.electron?.license.validate(license.key);
       if (result?.valid) {
         const tier = result.tier || license.tier;
-        setLicense(prev => prev ? {
-          ...prev,
-          tier,
-          status: 'active',
-          expiresAt: result.expiresAt || prev.expiresAt,
-          features: result.features || TIER_FEATURES[tier] || prev.features,
-        } : null);
+        setLicense(prev =>
+          prev
+            ? {
+                ...prev,
+                tier,
+                status: 'active',
+                expiresAt: result.expiresAt || prev.expiresAt,
+                features: result.features || TIER_FEATURES[tier] || prev.features,
+              }
+            : null
+        );
       } else {
-        setLicense(prev => prev ? { ...prev, status: 'expired' } : null);
+        setLicense(prev => (prev ? { ...prev, status: 'expired' } : null));
       }
     } catch (error) {
       console.error('Failed to refresh license:', error);
@@ -175,8 +188,11 @@ export function LicenseProvider({ children }: { children: ReactNode }) {
     return license.features.includes(feature);
   };
 
-  const daysRemaining = license?.expiresAt 
-    ? Math.max(0, Math.ceil((new Date(license.expiresAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+  const daysRemaining = license?.expiresAt
+    ? Math.max(
+        0,
+        Math.ceil((new Date(license.expiresAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+      )
     : null;
 
   const isValid = license?.status === 'active';
@@ -185,19 +201,21 @@ export function LicenseProvider({ children }: { children: ReactNode }) {
   const isTrial = license?.tier === 'free';
 
   return (
-    <LicenseContext.Provider value={{
-      license,
-      isLoading,
-      isValid,
-      isPro,
-      isEnterprise,
-      isTrial,
-      daysRemaining,
-      activateLicense,
-      deactivateLicense,
-      refreshLicense,
-      hasFeature,
-    }}>
+    <LicenseContext.Provider
+      value={{
+        license,
+        isLoading,
+        isValid,
+        isPro,
+        isEnterprise,
+        isTrial,
+        daysRemaining,
+        activateLicense,
+        deactivateLicense,
+        refreshLicense,
+        hasFeature,
+      }}
+    >
       {children}
     </LicenseContext.Provider>
   );

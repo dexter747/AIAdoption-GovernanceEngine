@@ -31,16 +31,19 @@ velanova-monorepo/
 ### Installation
 
 1. **Clone the repository:**
+
    ```bash
    cd "AI Adoption & Governance Engine"
    ```
 
 2. **Install dependencies:**
+
    ```bash
    pnpm install
    ```
 
 3. **Setup environment variables:**
+
    ```bash
    # Cloud backend
    cd apps/cloud-backend
@@ -49,11 +52,12 @@ velanova-monorepo/
    ```
 
 4. **Setup databases:**
+
    ```bash
    # Generate Prisma client
    cd apps/cloud-backend
    pnpm prisma generate
-   
+
    # Run migrations
    pnpm prisma migrate dev
    ```
@@ -96,6 +100,7 @@ pnpm build:linux
 ## 📦 Tech Stack
 
 ### Desktop App
+
 - **Framework:** Electron 28
 - **UI:** React 18 + TailwindCSS
 - **State:** Zustand
@@ -103,6 +108,7 @@ pnpm build:linux
 - **AI SDKs:** openai, anthropic, google-ai, cohere, mistral, groq, ollama
 
 ### Cloud Backend
+
 - **Framework:** Next.js 14 (App Router)
 - **Database:** PostgreSQL (Prisma) + MongoDB (Mongoose)
 - **Auth:** NextAuth.js 5
@@ -110,6 +116,7 @@ pnpm build:linux
 - **Email:** Nodemailer (SMTP)
 
 ### Shared
+
 - **Language:** TypeScript 5
 - **Build Tool:** Turborepo
 - **Package Manager:** pnpm 8
@@ -185,6 +192,7 @@ SMTP_PASS="..."
 Builds are automatically created for Windows, macOS, and Linux using electron-builder.
 
 Distribution channels:
+
 - Direct download from website
 - Microsoft Store (Windows)
 - Mac App Store (macOS)
@@ -200,6 +208,7 @@ vercel deploy --prod
 ```
 
 Or use:
+
 - AWS (EC2, ECS, Lambda)
 - Docker containers
 - Other cloud providers
@@ -224,5 +233,6 @@ Proprietary - All rights reserved
 ## 🆘 Support
 
 For issues and questions:
+
 - Email: support@velanova.com
 - Documentation: https://docs.velanova.com

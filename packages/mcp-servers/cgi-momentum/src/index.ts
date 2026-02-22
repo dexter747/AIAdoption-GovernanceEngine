@@ -1,6 +1,10 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { CallToolRequestSchema, ListToolsRequestSchema, Tool } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+  Tool,
+} from '@modelcontextprotocol/sdk/types.js';
 import axios, { AxiosInstance } from 'axios';
 
 let api: AxiosInstance | null = null;
@@ -16,9 +20,9 @@ async function initConnection(): Promise<void> {
   api = axios.create({
     baseURL,
     headers: {
-      'Authorization': `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
-      'Accept': 'application/json',
+      Accept: 'application/json',
     },
   });
 }
@@ -26,7 +30,8 @@ async function initConnection(): Promise<void> {
 const TOOLS: Tool[] = [
   {
     name: 'get_accounts',
-    description: 'Retrieve chart of accounts or specific account details from CGI Advantage/Momentum',
+    description:
+      'Retrieve chart of accounts or specific account details from CGI Advantage/Momentum',
     inputSchema: {
       type: 'object',
       properties: {
@@ -39,7 +44,8 @@ const TOOLS: Tool[] = [
   },
   {
     name: 'get_budget',
-    description: 'Retrieve budget information including appropriations, allocations, and remaining balances',
+    description:
+      'Retrieve budget information including appropriations, allocations, and remaining balances',
     inputSchema: {
       type: 'object',
       properties: {
@@ -93,7 +99,8 @@ const TOOLS: Tool[] = [
   },
   {
     name: 'get_grants',
-    description: 'Retrieve grant management information including awards, drawdowns, and compliance',
+    description:
+      'Retrieve grant management information including awards, drawdowns, and compliance',
     inputSchema: {
       type: 'object',
       properties: {
@@ -110,7 +117,11 @@ const TOOLS: Tool[] = [
     inputSchema: {
       type: 'object',
       properties: {
-        method: { type: 'string', description: 'HTTP method (GET, POST, PUT, DELETE)', enum: ['GET', 'POST', 'PUT', 'DELETE'] },
+        method: {
+          type: 'string',
+          description: 'HTTP method (GET, POST, PUT, DELETE)',
+          enum: ['GET', 'POST', 'PUT', 'DELETE'],
+        },
         endpoint: { type: 'string', description: 'API endpoint path' },
         params: { type: 'object', description: 'Query parameters' },
         body: { type: 'object', description: 'Request body for POST/PUT' },
@@ -129,7 +140,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
   return { tools: TOOLS };
 });
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   const { name, arguments: args } = request.params;
 
   if (!api) {
@@ -162,7 +173,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       }
 
       case 'get_purchase_orders': {
-        const endpoint = args?.po_number ? `/purchase-orders/${args.po_number}` : '/purchase-orders';
+        const endpoint = args?.po_number
+          ? `/purchase-orders/${args.po_number}`
+          : '/purchase-orders';
         const params: Record<string, string> = {};
         if (args?.vendor_id) params.vendor_id = args.vendor_id as string;
         if (args?.status) params.status = args.status as string;
@@ -203,7 +216,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       }
 
       case 'api_call': {
-        const method = (args?.method as string || 'GET').toLowerCase();
+        const method = ((args?.method as string) || 'GET').toLowerCase();
         const endpoint = args?.endpoint as string;
         response = await api!.request({
           method,
@@ -227,10 +240,12 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   } catch (error: unknown) {
     const err = error as Error & { response?: { status: number; data: unknown } };
     return {
-      content: [{
-        type: 'text',
-        text: `Error: ${err.message}${err.response ? `\nStatus: ${err.response.status}\nData: ${JSON.stringify(err.response.data)}` : ''}`,
-      }],
+      content: [
+        {
+          type: 'text',
+          text: `Error: ${err.message}${err.response ? `\nStatus: ${err.response.status}\nData: ${JSON.stringify(err.response.data)}` : ''}`,
+        },
+      ],
       isError: true,
     };
   }

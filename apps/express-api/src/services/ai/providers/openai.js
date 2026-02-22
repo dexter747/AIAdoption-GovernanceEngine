@@ -14,12 +14,12 @@ export class OpenAIProvider {
     if (!config.apiKey) {
       throw new Error('OpenAI API key not configured');
     }
-    
+
     this.client = new OpenAI({
       apiKey: config.apiKey,
       organization: config.orgId || undefined,
     });
-    
+
     this.config = config;
   }
 
@@ -34,7 +34,7 @@ export class OpenAIProvider {
         temperature,
         max_tokens: maxTokens,
       };
-      
+
       // Add tools if provided (for MCP integration)
       if (tools && tools.length > 0) {
         requestParams.tools = tools.map(tool => ({
@@ -47,10 +47,10 @@ export class OpenAIProvider {
         }));
         requestParams.tool_choice = 'auto';
       }
-      
+
       const response = await this.client.chat.completions.create(requestParams);
       const choice = response.choices[0];
-      
+
       // Check if AI wants to call a tool
       if (choice.finish_reason === 'tool_calls' && choice.message.tool_calls) {
         return {
@@ -76,7 +76,7 @@ export class OpenAIProvider {
           requiresToolExecution: true,
         };
       }
-      
+
       return {
         id: response.id,
         message: {
@@ -92,14 +92,14 @@ export class OpenAIProvider {
       };
     } catch (err) {
       logger.error({ error: err.message, model }, 'OpenAI chat failed');
-      
+
       if (err.status === 429) {
         throw ApiError.tooManyRequests('OpenAI rate limit exceeded');
       }
       if (err.status === 401) {
         throw ApiError.unauthorized('Invalid OpenAI API key');
       }
-      
+
       throw ApiError.internal(`OpenAI error: ${err.message}`);
     }
   }
@@ -113,7 +113,7 @@ export class OpenAIProvider {
         max_tokens: maxTokens,
         stream: true,
       };
-      
+
       // Add tools if provided
       if (tools && tools.length > 0) {
         requestParams.tools = tools.map(tool => ({
@@ -126,12 +126,12 @@ export class OpenAIProvider {
         }));
         requestParams.tool_choice = 'auto';
       }
-      
+
       const stream = await this.client.chat.completions.create(requestParams);
 
       for await (const chunk of stream) {
         const delta = chunk.choices[0]?.delta;
-        
+
         // Handle tool calls in streaming
         if (delta?.tool_calls) {
           yield {

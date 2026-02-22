@@ -17,24 +17,21 @@ export async function POST(request: NextRequest) {
     }
 
     const ls = getLemonSqueezyClient();
-    
+
     // Verify webhook signature
     if (!ls.verifyWebhookSignature(payload, signature)) {
       return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
     }
 
     const event = JSON.parse(payload);
-    
+
     // Process webhook event
     await processWebhookEvent(event);
 
     return NextResponse.json({ received: true });
   } catch (error: any) {
     console.error('Lemon Squeezy webhook error:', error);
-    return NextResponse.json(
-      { error: error.message },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
@@ -48,13 +45,13 @@ async function processWebhookEvent(event: any) {
   switch (eventName) {
     case 'order_created': {
       const userId = customData.user_id;
-      
+
       // Update payment session
       await supabase
         .from('payment_sessions')
         .update({ status: 'completed' })
         .eq('session_id', data.id);
-      
+
       console.log(`Order created for user ${userId}`);
       break;
     }
@@ -72,7 +69,7 @@ async function processWebhookEvent(event: any) {
         current_period_start: new Date(attrs.created_at),
         current_period_end: new Date(attrs.renews_at),
       });
-      
+
       console.log(`License created for subscription ${data.id}`);
       break;
     }
@@ -86,17 +83,14 @@ async function processWebhookEvent(event: any) {
           current_period_end: new Date(attrs.renews_at),
         })
         .eq('subscription_id', data.id);
-      
+
       break;
     }
 
     case 'subscription_cancelled': {
       // Deactivate license
-      await supabase
-        .from('licenses')
-        .update({ status: 'canceled' })
-        .eq('subscription_id', data.id);
-      
+      await supabase.from('licenses').update({ status: 'canceled' }).eq('subscription_id', data.id);
+
       break;
     }
 
@@ -110,7 +104,7 @@ async function processWebhookEvent(event: any) {
         status: 'succeeded',
         paid_at: new Date(attrs.created_at),
       });
-      
+
       break;
     }
 
@@ -123,7 +117,7 @@ async function processWebhookEvent(event: any) {
         currency: attrs.currency,
         status: 'failed',
       });
-      
+
       // TODO: Send notification to user
       break;
     }

@@ -61,7 +61,7 @@ class LicenseManager {
       const path = require('path');
       const userDataPath = app.getPath('userData');
       const licensePath = path.join(userDataPath, '.license');
-      fs.writeFileSync(licensePath, licenseKey,{ encoding: 'utf8' });
+      fs.writeFileSync(licensePath, licenseKey, { encoding: 'utf8' });
     }
   }
 
@@ -98,7 +98,7 @@ class LicenseManager {
     } catch (error) {
       console.error('Failed to delete license:', error);
     }
-    
+
     // Also delete fallback
     try {
       const fs = require('fs');
@@ -153,7 +153,7 @@ class LicenseManager {
    */
   async activateLicense(licenseKey: string): Promise<LicenseValidationResponse> {
     const validation = await this.validateLicense(licenseKey);
-    
+
     if (validation.valid && validation.license) {
       this.license = validation.license;
       await this.storeLicense(licenseKey);
@@ -167,14 +167,14 @@ class LicenseManager {
    */
   async loadLicense(): Promise<boolean> {
     const licenseKey = await this.retrieveLicense();
-    
+
     if (!licenseKey) {
       return false;
     }
 
     // Try online validation
     const validation = await this.validateLicense(licenseKey);
-    
+
     if (validation.valid) {
       return true;
     }
@@ -192,9 +192,7 @@ class LicenseManager {
       const parts = licenseKey.split('.');
       if (parts.length !== 3) return false;
 
-      const payload = JSON.parse(
-        Buffer.from(parts[1], 'base64').toString('utf8')
-      );
+      const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString('utf8'));
 
       // Check expiration
       if (payload.exp && payload.exp < Date.now() / 1000) {
@@ -203,10 +201,9 @@ class LicenseManager {
 
       // Grace period: allow 7 days of offline use
       if (this.license?.lastValidatedAt) {
-        const daysSinceValidation = 
-          (Date.now() - new Date(this.license.lastValidatedAt).getTime()) / 
-          (1000 * 60 * 60 * 24);
-        
+        const daysSinceValidation =
+          (Date.now() - new Date(this.license.lastValidatedAt).getTime()) / (1000 * 60 * 60 * 24);
+
         if (daysSinceValidation > 7) {
           return false;
         }
@@ -232,7 +229,7 @@ class LicenseManager {
   isLicenseValid(): boolean {
     if (!this.license) return false;
     if (this.license.status !== 'active') return false;
-    
+
     const expiresAt = new Date(this.license.expiresAt);
     if (expiresAt < new Date()) return false;
 
@@ -252,13 +249,15 @@ class LicenseManager {
    * Get usage limits for current plan
    */
   getLimits() {
-    return this.license?.features || {
-      maxAIProviders: 0,
-      maxDatabases: 0,
-      maxUsers: 0,
-      maxTokensPerMonth: 0,
-      maxQueriesPerDay: 0,
-    };
+    return (
+      this.license?.features || {
+        maxAIProviders: 0,
+        maxDatabases: 0,
+        maxUsers: 0,
+        maxTokensPerMonth: 0,
+        maxQueriesPerDay: 0,
+      }
+    );
   }
 
   /**
@@ -298,8 +297,7 @@ class LicenseManager {
     if (!this.license) return null;
 
     const daysRemaining = Math.ceil(
-      (new Date(this.license.expiresAt).getTime() - Date.now()) / 
-      (1000 * 60 * 60 * 24)
+      (new Date(this.license.expiresAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
     );
 
     return {

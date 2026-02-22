@@ -1,27 +1,69 @@
-"use client";
+'use client';
 
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Cpu } from "lucide-react";
+import { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Cpu } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const llmModels = [
-  { name: "OpenAI GPT-4o", subtext: "gpt-4o · o3", logo: "/llm-logos/openai.svg", bg: "bg-white/[0.04]" },
-  { name: "Claude 3.7", subtext: "Anthropic · Sonnet", logo: "/llm-logos/claude-ai.svg", bg: "bg-white/[0.04]" },
-  { name: "Gemini 2.0", subtext: "Google · Flash Pro", logo: "/llm-logos/gemini-color.svg", bg: "bg-white/[0.04]" },
-  { name: "Grok 3", subtext: "xAI · Colossus", logo: "/llm-logos/grok.svg", bg: "bg-white/[0.04]" },
-  { name: "DeepSeek R1", subtext: "DeepSeek · V3", logo: "/llm-logos/deepseek-color.svg", bg: "bg-white/[0.04]" },
-  { name: "Mistral Large", subtext: "Mistral AI · 2.1", logo: "/llm-logos/mistral-rainbow.svg", bg: "bg-white/[0.04]" },
-  { name: "Llama 3.3", subtext: "Meta · 70B / 405B", logo: "/llm-logos/meta.svg", bg: "bg-white/[0.04]" },
-  { name: "Groq Inference", subtext: "LPU · 800 tok/s", logo: "/llm-logos/groq.svg", bg: "bg-white/[0.04]" },
-  { name: "Qwen 2.5", subtext: "Alibaba · 72B", logo: "/llm-logos/qwen.svg", bg: "bg-white/[0.04]" },
+  {
+    name: 'OpenAI GPT-4o',
+    subtext: 'gpt-4o · o3',
+    logo: '/llm-logos/openai.svg',
+    bg: 'bg-white/[0.04]',
+  },
+  {
+    name: 'Claude 3.7',
+    subtext: 'Anthropic · Sonnet',
+    logo: '/llm-logos/claude-ai.svg',
+    bg: 'bg-white/[0.04]',
+  },
+  {
+    name: 'Gemini 2.0',
+    subtext: 'Google · Flash Pro',
+    logo: '/llm-logos/gemini-color.svg',
+    bg: 'bg-white/[0.04]',
+  },
+  { name: 'Grok 3', subtext: 'xAI · Colossus', logo: '/llm-logos/grok.svg', bg: 'bg-white/[0.04]' },
+  {
+    name: 'DeepSeek R1',
+    subtext: 'DeepSeek · V3',
+    logo: '/llm-logos/deepseek-color.svg',
+    bg: 'bg-white/[0.04]',
+  },
+  {
+    name: 'Mistral Large',
+    subtext: 'Mistral AI · 2.1',
+    logo: '/llm-logos/mistral-rainbow.svg',
+    bg: 'bg-white/[0.04]',
+  },
+  {
+    name: 'Llama 3.3',
+    subtext: 'Meta · 70B / 405B',
+    logo: '/llm-logos/meta.svg',
+    bg: 'bg-white/[0.04]',
+  },
+  {
+    name: 'Groq Inference',
+    subtext: 'LPU · 800 tok/s',
+    logo: '/llm-logos/groq.svg',
+    bg: 'bg-white/[0.04]',
+  },
+  {
+    name: 'Qwen 2.5',
+    subtext: 'Alibaba · 72B',
+    logo: '/llm-logos/qwen.svg',
+    bg: 'bg-white/[0.04]',
+  },
 ];
 
-function ModelCard({ model }: { model: typeof llmModels[0] }) {
+function ModelCard({ model }: { model: (typeof llmModels)[0] }) {
   return (
-    <div className={`flex-shrink-0 flex items-center gap-4 px-6 py-4 rounded-2xl border border-white/[0.06] ${model.bg} min-w-[200px]`}>
+    <div
+      className={`flex-shrink-0 flex items-center gap-4 px-6 py-4 rounded-2xl border border-white/[0.06] ${model.bg} min-w-[200px]`}
+    >
       <div className="w-10 h-10 rounded-xl bg-white/[0.08] flex items-center justify-center flex-shrink-0 p-1.5">
         <img src={model.logo} alt={model.name} className="w-full h-full object-contain" />
       </div>
@@ -41,14 +83,24 @@ export function LLMParallaxSection() {
 
   // Duplicate models for both rows with offset start
   const row1Models = [...llmModels, ...llmModels, ...llmModels];
-  const row2Models = [...llmModels.slice(4), ...llmModels.slice(0, 4), ...llmModels.slice(4), ...llmModels.slice(0, 4), ...llmModels];
+  const row2Models = [
+    ...llmModels.slice(4),
+    ...llmModels.slice(0, 4),
+    ...llmModels.slice(4),
+    ...llmModels.slice(0, 4),
+    ...llmModels,
+  ];
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       // Header entrance
       gsap.from(headerRef.current, {
-        opacity: 0, y: 40, duration: 0.8, ease: "power3.out", immediateRender: false,
-        scrollTrigger: { trigger: headerRef.current, start: "top 85%", once: true },
+        opacity: 0,
+        y: 40,
+        duration: 0.8,
+        ease: 'power3.out',
+        immediateRender: false,
+        scrollTrigger: { trigger: headerRef.current, start: 'top 85%', once: true },
       });
 
       // Row 1: slides RIGHT as user scrolls (parallax left-to-right)
@@ -57,11 +109,11 @@ export function LLMParallaxSection() {
         { x: -80 },
         {
           x: 80,
-          ease: "none",
+          ease: 'none',
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: "top bottom",
-            end: "bottom top",
+            start: 'top bottom',
+            end: 'bottom top',
             scrub: 1,
           },
         }
@@ -73,11 +125,11 @@ export function LLMParallaxSection() {
         { x: 80 },
         {
           x: -80,
-          ease: "none",
+          ease: 'none',
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: "top bottom",
-            end: "bottom top",
+            start: 'top bottom',
+            end: 'bottom top',
             scrub: 1,
           },
         }
@@ -100,12 +152,12 @@ export function LLMParallaxSection() {
           <span className="text-sm font-medium text-zinc-500">Universal AI Integration</span>
         </div>
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white mb-4">
-          Every Leading AI Model,{" "}
-          <br className="hidden sm:block" />
+          Every Leading AI Model, <br className="hidden sm:block" />
           <span className="text-shimmer">Connected To Your Legacy Systems</span>
         </h2>
         <p className="text-lg text-zinc-500 max-w-2xl mx-auto">
-          Velanova bridges any LLM with your existing Oracle, SAP, Salesforce, or any enterprise system — no migration needed.
+          Velanova bridges any LLM with your existing Oracle, SAP, Salesforce, or any enterprise
+          system — no migration needed.
         </p>
       </div>
 

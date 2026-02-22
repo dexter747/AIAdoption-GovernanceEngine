@@ -14,7 +14,7 @@ export class CohereProvider {
     if (!config.apiKey) {
       throw new Error('Cohere API key not configured');
     }
-    
+
     this.client = new CohereClient({
       token: config.apiKey,
     });
@@ -44,19 +44,20 @@ export class CohereProvider {
         usage: {
           inputTokens: response.meta?.tokens?.inputTokens || 0,
           outputTokens: response.meta?.tokens?.outputTokens || 0,
-          totalTokens: (response.meta?.tokens?.inputTokens || 0) + (response.meta?.tokens?.outputTokens || 0),
+          totalTokens:
+            (response.meta?.tokens?.inputTokens || 0) + (response.meta?.tokens?.outputTokens || 0),
         },
       };
     } catch (err) {
       logger.error({ error: err.message, model }, 'Cohere chat failed');
-      
+
       if (err.status === 429) {
         throw ApiError.tooManyRequests('Cohere rate limit exceeded');
       }
       if (err.status === 401) {
         throw ApiError.unauthorized('Invalid Cohere API key');
       }
-      
+
       throw ApiError.internal(`Cohere error: ${err.message}`);
     }
   }
@@ -101,7 +102,7 @@ export class CohereProvider {
 
     for (let i = 0; i < messages.length; i++) {
       const msg = messages[i];
-      
+
       if (msg.role === 'system') {
         preamble += msg.content + '\n';
       } else if (i === messages.length - 1 && msg.role === 'user') {

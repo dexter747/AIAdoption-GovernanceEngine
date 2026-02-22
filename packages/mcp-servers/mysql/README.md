@@ -40,7 +40,9 @@ The desktop app will spawn this MCP server as a child process when a MySQL conne
 ## Available Tools
 
 ### query
+
 Execute a SQL query
+
 ```json
 {
   "name": "query",
@@ -51,7 +53,9 @@ Execute a SQL query
 ```
 
 ### list_tables
+
 List all tables in the current database
+
 ```json
 {
   "name": "list_tables",
@@ -60,7 +64,9 @@ List all tables in the current database
 ```
 
 ### describe_table
+
 Get the schema of a specific table
+
 ```json
 {
   "name": "describe_table",
@@ -71,7 +77,9 @@ Get the schema of a specific table
 ```
 
 ### show_databases
+
 List all databases
+
 ```json
 {
   "name": "show_databases",

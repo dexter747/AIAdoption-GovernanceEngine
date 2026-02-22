@@ -11,7 +11,7 @@
     "start:stdio": "node dist/server.js --transport stdio",
     "start:sse": "node dist/server.js --transport sse --port 3100",
     "lint": "eslint src/",
-    "test": "vitest",
+    "test": "vitest --passWithNoTests run",
     "clean": "rm -rf dist"
   },
   "keywords": [

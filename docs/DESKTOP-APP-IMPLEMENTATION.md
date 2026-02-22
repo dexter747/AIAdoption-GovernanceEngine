@@ -3,9 +3,11 @@
 ## ✅ What Was Implemented
 
 ### 1. **Express API Client** (Complete)
+
 **File**: `/apps/desktop-app/src/main/api/express-client.ts`
 
 Connects desktop app to Express backend (localhost:5500):
+
 - ✅ Health checks
 - ✅ License validation with device tracking
 - ✅ AI provider management
@@ -16,23 +18,26 @@ Connects desktop app to Express backend (localhost:5500):
 - ✅ Usage logging
 
 **Key Methods**:
+
 ```typescript
-expressClient.checkHealth()
-expressClient.validateLicense(key, deviceId, deviceInfo)
-expressClient.getAvailableProviders()
-expressClient.queryAI(request)
-expressClient.getUserApiKeys(userId)
-expressClient.addUserApiKey(userId, provider, apiKey)
-expressClient.getUsage(userId, options)
-expressClient.getSubscription(userId)
+expressClient.checkHealth();
+expressClient.validateLicense(key, deviceId, deviceInfo);
+expressClient.getAvailableProviders();
+expressClient.queryAI(request);
+expressClient.getUserApiKeys(userId);
+expressClient.addUserApiKey(userId, provider, apiKey);
+expressClient.getUsage(userId, options);
+expressClient.getSubscription(userId);
 ```
 
 ---
 
 ### 2. **MCP Connection Manager** (Complete)
+
 **File**: `/apps/desktop-app/src/main/mcp/mcp-manager.ts`
 
 Manages Model Context Protocol connections to databases:
+
 - ✅ Add/update/delete MCP connections
 - ✅ Enable/disable connections (start/stop MCP servers)
 - ✅ Docker-based MCP servers (PostgreSQL, MySQL, MongoDB, Oracle, SQL Server)
@@ -42,6 +47,7 @@ Manages Model Context Protocol connections to databases:
 - ✅ Automatic MCP server type selection
 
 **Supported Databases**:
+
 - PostgreSQL (npm: `@modelcontextprotocol/server-postgres`)
 - MySQL (Docker)
 - MongoDB (Docker)
@@ -50,6 +56,7 @@ Manages Model Context Protocol connections to databases:
 - Jira (npm: `mcp-server-jira`)
 
 **Features**:
+
 - Auto-pull Docker images
 - Start/stop Docker containers
 - Encrypted credentials storage (electron-store)
@@ -60,9 +67,11 @@ Manages Model Context Protocol connections to databases:
 ---
 
 ### 3. **Chat History Manager** (Complete)
+
 **File**: `/apps/desktop-app/src/main/chat/chat-history-manager.ts`
 
 Local storage for all chat conversations:
+
 - ✅ Create conversations with metadata
 - ✅ Add messages to conversations
 - ✅ Track tokens and costs per conversation
@@ -75,6 +84,7 @@ Local storage for all chat conversations:
 - ✅ Cleanup old conversations (90+ days)
 
 **Data Structure**:
+
 ```typescript
 interface ChatConversation {
   id: string;
@@ -98,64 +108,70 @@ interface ChatConversation {
 ---
 
 ### 4. **IPC Handlers** (Extended)
+
 **File**: `/apps/desktop-app/src/main/ipc-handlers.ts`
 
 Added handlers for all new features:
 
 **MCP Connection Handlers** (10):
+
 ```typescript
-'mcp:add-connection'
-'mcp:enable-connection'
-'mcp:disable-connection'
-'mcp:test-connection'
-'mcp:get-all-connections'
-'mcp:get-connection'
-'mcp:update-connection'
-'mcp:delete-connection'
-'mcp:get-available-servers'
-'mcp:check-docker'
+'mcp:add-connection';
+'mcp:enable-connection';
+'mcp:disable-connection';
+'mcp:test-connection';
+'mcp:get-all-connections';
+'mcp:get-connection';
+'mcp:update-connection';
+'mcp:delete-connection';
+'mcp:get-available-servers';
+'mcp:check-docker';
 ```
 
 **Chat History Handlers** (13):
+
 ```typescript
-'chat:create-conversation'
-'chat:add-message'
-'chat:get-conversation'
-'chat:get-all-conversations'
-'chat:update-conversation'
-'chat:delete-conversation'
-'chat:clear-conversation'
-'chat:search-conversations'
-'chat:get-stats'
-'chat:export-conversation'
-'chat:import-conversation'
-'chat:toggle-pin'
-'chat:toggle-archive'
-'chat:get-recent'
-'chat:cleanup-old'
+'chat:create-conversation';
+'chat:add-message';
+'chat:get-conversation';
+'chat:get-all-conversations';
+'chat:update-conversation';
+'chat:delete-conversation';
+'chat:clear-conversation';
+'chat:search-conversations';
+'chat:get-stats';
+'chat:export-conversation';
+'chat:import-conversation';
+'chat:toggle-pin';
+'chat:toggle-archive';
+'chat:get-recent';
+'chat:cleanup-old';
 ```
 
 **Express API Handlers** (11):
+
 ```typescript
-'express:check-health'
-'express:get-providers'
-'express:query-ai'
-'express:validate-license'
-'express:get-user-api-keys'
-'express:add-user-api-key'
-'express:get-usage'
-'express:log-usage'
-'express:get-subscription'
-'express:set-auth'
-'express:update-config'
+'express:check-health';
+'express:get-providers';
+'express:query-ai';
+'express:validate-license';
+'express:get-user-api-keys';
+'express:add-user-api-key';
+'express:get-usage';
+'express:log-usage';
+'express:get-subscription';
+'express:set-auth';
+'express:update-config';
 ```
 
 ---
 
 ### 5. **Preload Script** (Extended)
+
 **File**: `/apps/desktop-app/src/main/preload.ts`
 
 Exposed all new APIs to renderer process:
+
 - ✅ `window.electron.mcp.*` - MCP connection management
 - ✅ `window.electron.chat.*` - Chat history management
 - ✅ `window.electron.express.*` - Express API communication
@@ -165,9 +181,11 @@ Exposed all new APIs to renderer process:
 ---
 
 ### 6. **Enhanced Connections Page** (Complete)
+
 **File**: `/apps/desktop-app/src/renderer/pages/ConnectionsPageEnhanced.tsx`
 
 Full MCP connection management UI:
+
 - ✅ List all MCP connections with status
 - ✅ Enable/disable connections (toggle button)
 - ✅ Status indicators (connected/disconnected/error)
@@ -181,6 +199,7 @@ Full MCP connection management UI:
 - ✅ Empty state with call-to-action
 
 **Features**:
+
 - Real-time status updates
 - Loading states
 - Error handling
@@ -195,17 +214,20 @@ Full MCP connection management UI:
 ### Connect Desktop App to Express Backend
 
 1. **Start Express Server**:
+
 ```bash
 cd apps/express-api
 npm run dev  # Runs on localhost:5500
 ```
 
 2. **Desktop App Auto-Connects**:
+
 - Express client initialized automatically
 - Health check on startup
 - Falls back gracefully if server unavailable
 
 3. **Test Connection**:
+
 ```typescript
 // In renderer (React components)
 const health = await window.electron.express.checkHealth();
@@ -237,32 +259,36 @@ console.log(health); // { status: 'ok', timestamp: '...' }
 ### Use Chat History
 
 1. **Create Conversation**:
+
 ```typescript
 const conversation = await window.electron.chat.createConversation({
   connectionId: 'conn-id',
   connectionName: 'Production DB',
   provider: 'openai',
   model: 'gpt-4',
-  initialMessage: 'Show me all users'
+  initialMessage: 'Show me all users',
 });
 ```
 
 2. **Add Messages**:
+
 ```typescript
 await window.electron.chat.addMessage(conversation.id, {
   role: 'assistant',
   content: 'Here is the SQL...',
   tokens: 150,
-  cost: 0.0045
+  cost: 0.0045,
 });
 ```
 
 3. **Get Recent Conversations**:
+
 ```typescript
 const recent = await window.electron.chat.getRecent(10);
 ```
 
 4. **Search Conversations**:
+
 ```typescript
 const results = await window.electron.chat.searchConversations('user query');
 ```
@@ -272,23 +298,23 @@ const results = await window.electron.chat.searchConversations('user query');
 ### Query AI via Express
 
 1. **Get Available Providers**:
+
 ```typescript
 const providers = await window.electron.express.getProviders();
 // Returns: [{ id: 'openai', name: 'OpenAI', models: [...] }, ...]
 ```
 
 2. **Send AI Query**:
+
 ```typescript
 const result = await window.electron.express.queryAI({
   userId: 'user-uuid',
   licenseId: 'license-uuid',
   provider: 'openai',
   model: 'gpt-3.5-turbo',
-  messages: [
-    { role: 'user', content: 'Translate this to SQL: Show all users' }
-  ],
+  messages: [{ role: 'user', content: 'Translate this to SQL: Show all users' }],
   temperature: 0.7,
-  maxTokens: 1000
+  maxTokens: 1000,
 });
 
 console.log(result.response); // AI response
@@ -296,6 +322,7 @@ console.log(result.usage); // { tokensUsed: 150, cost: 0.0045 }
 ```
 
 3. **Log Usage**:
+
 ```typescript
 await window.electron.express.logUsage({
   userId: 'user-uuid',
@@ -305,7 +332,7 @@ await window.electron.express.logUsage({
   model: 'gpt-3.5-turbo',
   tokensUsed: 150,
   cost: 0.0045,
-  metadata: { connectionId: 'conn-id' }
+  metadata: { connectionId: 'conn-id' },
 });
 ```
 
@@ -314,6 +341,7 @@ await window.electron.express.logUsage({
 ## 📊 Current Implementation Status
 
 ### ✅ Complete (100%):
+
 - Express API client
 - MCP connection manager
 - Chat history manager
@@ -322,6 +350,7 @@ await window.electron.express.logUsage({
 - Enhanced Connections page UI
 
 ### 🔄 Needs UI Implementation:
+
 1. **AI Chat Page** - Full chat interface with:
    - Model selector dropdown
    - Provider selector
@@ -350,6 +379,7 @@ await window.electron.express.logUsage({
 ### 1. Create AI Chat Page (High Priority)
 
 Create `/apps/desktop-app/src/renderer/pages/ChatPage.tsx` with:
+
 - Model selector (OpenAI, Anthropic, Google, Groq, etc.)
 - Connection selector (enabled MCP connections)
 - Chat interface (messages list)
@@ -361,6 +391,7 @@ Create `/apps/desktop-app/src/renderer/pages/ChatPage.tsx` with:
 ### 2. Integrate into App Router
 
 Update `/apps/desktop-app/src/renderer/App.tsx`:
+
 ```typescript
 import ChatPage from './pages/ChatPage';
 import ConnectionsPageEnhanced from './pages/ConnectionsPageEnhanced';
@@ -388,12 +419,14 @@ import ConnectionsPageEnhanced from './pages/ConnectionsPageEnhanced';
 ## 📝 Dependencies to Install
 
 ### Desktop App:
+
 ```bash
 cd apps/desktop-app
 npm install electron-store
 ```
 
 ### Express API (Already Done):
+
 ```bash
 cd apps/express-api
 # Already have all dependencies
@@ -404,11 +437,13 @@ cd apps/express-api
 ## 🔧 Configuration
 
 ### Desktop App `.env`:
+
 ```env
 EXPRESS_API_URL=http://localhost:5500
 ```
 
 ### Express API `.env`:
+
 ```env
 PORT=5500
 SUPABASE_URL=https://lwounfzhkuuqvgkvwxvt.supabase.co
@@ -435,6 +470,7 @@ GOOGLE_AI_API_KEY=AIzaSy-xxx
 ## 🎉 Summary
 
 The desktop app now has:
+
 - ✅ Full Express API integration
 - ✅ MCP connection management (with Docker support)
 - ✅ Local chat history storage

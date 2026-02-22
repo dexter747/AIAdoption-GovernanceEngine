@@ -17,11 +17,18 @@ const logger = createLogger('ai-routes');
 // Validation schemas
 const chatRequestSchema = z.object({
   model: z.string().optional().default('auto'),
-  provider: z.enum(['openai', 'anthropic', 'google', 'groq', 'cohere', 'mistral', 'auto']).optional().default('auto'),
-  messages: z.array(z.object({
-    role: z.enum(['system', 'user', 'assistant']),
-    content: z.string(),
-  })).min(1),
+  provider: z
+    .enum(['openai', 'anthropic', 'google', 'groq', 'cohere', 'mistral', 'auto'])
+    .optional()
+    .default('auto'),
+  messages: z
+    .array(
+      z.object({
+        role: z.enum(['system', 'user', 'assistant']),
+        content: z.string(),
+      })
+    )
+    .min(1),
   temperature: z.number().min(0).max(2).optional().default(0.7),
   maxTokens: z.number().min(1).max(128000).optional().default(4096),
   stream: z.boolean().optional().default(false),
@@ -40,17 +47,20 @@ router.post('/chat', optionalJwt, async (req, res, next) => {
   try {
     // Validate request
     const validated = chatRequestSchema.parse(req.body);
-    
+
     // Get user ID for BYOK (Bring Your Own Key)
     const userId = req.user?.id || null;
-    
-    logger.info({
-      provider: validated.provider,
-      model: validated.model,
-      messageCount: validated.messages.length,
-      userId: userId || 'anonymous',
-      byok: !!userId,
-    }, 'Chat request received');
+
+    logger.info(
+      {
+        provider: validated.provider,
+        model: validated.model,
+        messageCount: validated.messages.length,
+        userId: userId || 'anonymous',
+        byok: !!userId,
+      },
+      'Chat request received'
+    );
 
     // Handle streaming
     if (validated.stream) {
@@ -62,11 +72,11 @@ router.post('/chat', optionalJwt, async (req, res, next) => {
         ...validated,
         userId, // Pass user ID for BYOK
       });
-      
+
       for await (const chunk of stream) {
         res.write(`data: ${JSON.stringify(chunk)}\n\n`);
       }
-      
+
       res.write('data: [DONE]\n\n');
       res.end();
       return;
@@ -120,7 +130,7 @@ router.post('/chat', optionalJwt, async (req, res, next) => {
 router.post('/embeddings', optionalJwt, async (req, res, next) => {
   try {
     const validated = embeddingsRequestSchema.parse(req.body);
-    
+
     const response = await AIService.embeddings(validated);
 
     res.json({
@@ -141,7 +151,7 @@ router.post('/embeddings', optionalJwt, async (req, res, next) => {
  */
 router.get('/models', (req, res) => {
   const models = AIService.getAvailableModels();
-  
+
   res.json({
     success: true,
     data: models,
@@ -154,7 +164,7 @@ router.get('/models', (req, res) => {
  */
 router.get('/providers', (req, res) => {
   const providers = AIService.getProviderStatus();
-  
+
   res.json({
     success: true,
     data: providers,

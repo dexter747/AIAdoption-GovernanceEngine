@@ -15,7 +15,7 @@ export class OpenRouterProvider {
     if (!config.apiKey) {
       throw new Error('OpenRouter API key not configured');
     }
-    
+
     this.client = new OpenAI({
       apiKey: config.apiKey,
       baseURL: 'https://openrouter.ai/api/v1',
@@ -36,7 +36,7 @@ export class OpenRouterProvider {
       });
 
       const choice = response.choices[0];
-      
+
       return {
         id: response.id,
         message: {
@@ -52,14 +52,14 @@ export class OpenRouterProvider {
       };
     } catch (err) {
       logger.error({ error: err.message, model }, 'OpenRouter chat failed');
-      
+
       if (err.status === 429) {
         throw ApiError.tooManyRequests('OpenRouter rate limit exceeded');
       }
       if (err.status === 401) {
         throw ApiError.unauthorized('Invalid OpenRouter API key');
       }
-      
+
       throw ApiError.internal(`OpenRouter error: ${err.message}`);
     }
   }

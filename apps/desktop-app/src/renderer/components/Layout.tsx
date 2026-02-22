@@ -22,7 +22,11 @@ export default function Layout({ children }: LayoutProps) {
           <NavLink to="/" icon={<LayoutDashboard size={20} />} active={isActive('/')}>
             Dashboard
           </NavLink>
-          <NavLink to="/connections" icon={<Database size={20} />} active={isActive('/connections')}>
+          <NavLink
+            to="/connections"
+            icon={<Database size={20} />}
+            active={isActive('/connections')}
+          >
             Connections
           </NavLink>
           <NavLink to="/queries" icon={<Sparkles size={20} />} active={isActive('/queries')}>

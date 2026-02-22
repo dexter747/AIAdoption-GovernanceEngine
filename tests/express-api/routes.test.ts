@@ -220,7 +220,16 @@ describe('License Routes', () => {
           free: ['basic_chat'],
           starter: ['basic_chat', 'history', 'export'],
           pro: ['basic_chat', 'history', 'export', 'custom_prompts', 'mcp_integration'],
-          enterprise: ['basic_chat', 'history', 'export', 'custom_prompts', 'mcp_integration', 'sso', 'audit_log', 'priority_support'],
+          enterprise: [
+            'basic_chat',
+            'history',
+            'export',
+            'custom_prompts',
+            'mcp_integration',
+            'sso',
+            'audit_log',
+            'priority_support',
+          ],
         };
 
         const mockResponse = {
@@ -260,10 +269,21 @@ describe('User API Keys Routes', () => {
   describe('GET /api/user/api-keys/providers', () => {
     it('should return list of supported providers', () => {
       const expectedProviders = [
-        'openai', 'anthropic', 'google', 'groq', 'cohere',
-        'mistral', 'perplexity', 'deepseek', 'together',
-        'replicate', 'huggingface', 'openrouter',
-        'azure_openai', 'aws_bedrock', 'ollama'
+        'openai',
+        'anthropic',
+        'google',
+        'groq',
+        'cohere',
+        'mistral',
+        'perplexity',
+        'deepseek',
+        'together',
+        'replicate',
+        'huggingface',
+        'openrouter',
+        'azure_openai',
+        'aws_bedrock',
+        'ollama',
       ];
 
       const mockResponse = {
@@ -418,9 +438,11 @@ describe('User API Keys Routes', () => {
         provider: z.enum(['openai', 'anthropic', 'google']),
         key_name: z.string().min(1).max(100).default('Default Key'),
         api_key: z.string().min(10).max(500),
-        config: z.object({
-          endpoint: z.string().url().optional(),
-        }).optional(),
+        config: z
+          .object({
+            endpoint: z.string().url().optional(),
+          })
+          .optional(),
       });
 
       expect(() => schema.parse(validPayload)).not.toThrow();
@@ -582,8 +604,16 @@ describe('User Connections Routes', () => {
   describe('GET /api/user/connections/types', () => {
     it('should return supported connection types', () => {
       const expectedTypes = [
-        'postgresql', 'mysql', 'sqlserver', 'oracle', 'mongodb',
-        'sap-hana', 'salesforce', 'servicenow', 'jira', 'sqlite'
+        'postgresql',
+        'mysql',
+        'sqlserver',
+        'oracle',
+        'mongodb',
+        'sap-hana',
+        'salesforce',
+        'servicenow',
+        'jira',
+        'sqlite',
       ];
 
       const mockResponse = {
@@ -746,10 +776,14 @@ describe('AI Routes', () => {
       const schema = z.object({
         provider: z.string(),
         model: z.string(),
-        messages: z.array(z.object({
-          role: z.enum(['system', 'user', 'assistant']),
-          content: z.string(),
-        })).min(1),
+        messages: z
+          .array(
+            z.object({
+              role: z.enum(['system', 'user', 'assistant']),
+              content: z.string(),
+            })
+          )
+          .min(1),
         temperature: z.number().min(0).max(2).optional(),
         maxTokens: z.number().positive().optional(),
       });
@@ -849,15 +883,13 @@ describe('Usage Routes', () => {
           summary: {
             totalRequests: 1500,
             totalTokens: 500000,
-            totalCost: 12.50,
+            totalCost: 12.5,
           },
           byProvider: {
-            openai: { requests: 1000, tokens: 400000, cost: 10.00 },
-            anthropic: { requests: 500, tokens: 100000, cost: 2.50 },
+            openai: { requests: 1000, tokens: 400000, cost: 10.0 },
+            anthropic: { requests: 500, tokens: 100000, cost: 2.5 },
           },
-          byDay: [
-            { date: '2026-01-30', requests: 100, tokens: 30000, cost: 0.75 },
-          ],
+          byDay: [{ date: '2026-01-30', requests: 100, tokens: 30000, cost: 0.75 }],
         },
       };
 

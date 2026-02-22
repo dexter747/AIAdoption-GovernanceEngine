@@ -3,14 +3,28 @@
 import Link from 'next/link';
 import { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Sparkles, ArrowLeft, CheckCircle2, Zap, Users, Building2, ChevronDown } from 'lucide-react';
+import {
+  Sparkles,
+  ArrowLeft,
+  CheckCircle2,
+  Zap,
+  Users,
+  Building2,
+  ChevronDown,
+} from 'lucide-react';
 
 function SubscribeContent() {
   const searchParams = useSearchParams();
   // normalize incoming ?plan= value — 'pro' and 'professional' both map to 'professional'
   const rawPlan = searchParams.get('plan') || 'professional';
-  const PLAN_ALIASES: Record<string, string> = { pro: 'professional', starter: 'trial', free: 'trial' };
-  const initialPlan = PLAN_ALIASES[rawPlan] ?? (rawPlan in { trial: 1, professional: 1, team: 1, enterprise: 1 } ? rawPlan : 'professional');
+  const PLAN_ALIASES: Record<string, string> = {
+    pro: 'professional',
+    starter: 'trial',
+    free: 'trial',
+  };
+  const initialPlan =
+    PLAN_ALIASES[rawPlan] ??
+    (rawPlan in { trial: 1, professional: 1, team: 1, enterprise: 1 } ? rawPlan : 'professional');
   const [selectedPlan, setSelectedPlan] = useState(initialPlan);
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('annual');
   const [showFAQ, setShowFAQ] = useState<string | null>(null);
@@ -98,27 +112,32 @@ function SubscribeContent() {
     {
       id: 'trial',
       question: 'How does the free trial work?',
-      answer: 'Start your 14-day free trial with no credit card required. You\'ll have full access to all Pro features. If you don\'t upgrade before the trial ends, you\'ll be moved to the Free plan.',
+      answer:
+        "Start your 14-day free trial with no credit card required. You'll have full access to all Pro features. If you don't upgrade before the trial ends, you'll be moved to the Free plan.",
     },
     {
       id: 'cancel',
       question: 'Can I cancel anytime?',
-      answer: 'Yes! You can cancel your subscription at any time. You\'ll retain access until the end of your current billing period.',
+      answer:
+        "Yes! You can cancel your subscription at any time. You'll retain access until the end of your current billing period.",
     },
     {
       id: 'upgrade',
       question: 'Can I upgrade or downgrade my plan?',
-      answer: 'Absolutely. You can change your plan at any time. Upgrades take effect immediately (prorated). Downgrades take effect at the next billing cycle.',
+      answer:
+        'Absolutely. You can change your plan at any time. Upgrades take effect immediately (prorated). Downgrades take effect at the next billing cycle.',
     },
     {
       id: 'payment',
       question: 'What payment methods do you accept?',
-      answer: 'We accept all major credit cards (Visa, Mastercard, American Express) and PayPal. Enterprise customers can pay via invoice.',
+      answer:
+        'We accept all major credit cards (Visa, Mastercard, American Express) and PayPal. Enterprise customers can pay via invoice.',
     },
     {
       id: 'refund',
-      question: 'What\'s your refund policy?',
-      answer: 'We offer a 30-day money-back guarantee on your first payment. If you\'re not satisfied, contact us for a full refund.',
+      question: "What's your refund policy?",
+      answer:
+        "We offer a 30-day money-back guarantee on your first payment. If you're not satisfied, contact us for a full refund.",
     },
   ];
 
@@ -129,9 +148,10 @@ function SubscribeContent() {
     return null;
   }
   const price = billingCycle === 'annual' ? currentPlan.annualPrice : currentPlan.monthlyPrice;
-  const savings = billingCycle === 'annual' && currentPlan.monthlyPrice 
-    ? Math.round((1 - (currentPlan.annualPrice! / currentPlan.monthlyPrice)) * 100)
-    : 0;
+  const savings =
+    billingCycle === 'annual' && currentPlan.monthlyPrice
+      ? Math.round((1 - currentPlan.annualPrice! / currentPlan.monthlyPrice) * 100)
+      : 0;
 
   return (
     <main className="container mx-auto px-4 py-16">
@@ -148,8 +168,8 @@ function SubscribeContent() {
           <button
             onClick={() => setBillingCycle('monthly')}
             className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              billingCycle === 'monthly' 
-                ? 'bg-primary text-white' 
+              billingCycle === 'monthly'
+                ? 'bg-primary text-white'
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >
@@ -158,13 +178,15 @@ function SubscribeContent() {
           <button
             onClick={() => setBillingCycle('annual')}
             className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
-              billingCycle === 'annual' 
-                ? 'bg-primary text-white' 
+              billingCycle === 'annual'
+                ? 'bg-primary text-white'
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >
             Annual
-            <span className="text-xs bg-zinc-800 text-white px-2 py-0.5 rounded-full">Save 20%</span>
+            <span className="text-xs bg-zinc-800 text-white px-2 py-0.5 rounded-full">
+              Save 20%
+            </span>
           </button>
         </div>
 
@@ -175,8 +197,8 @@ function SubscribeContent() {
               key={key}
               onClick={() => setSelectedPlan(key)}
               className={`relative p-6 rounded-2xl border-2 text-left transition-all ${
-                selectedPlan === key 
-                  ? 'border-primary bg-primary/5 shadow-lg' 
+                selectedPlan === key
+                  ? 'border-primary bg-primary/5 shadow-lg'
                   : 'border-border hover:border-primary/50'
               }`}
             >
@@ -185,9 +207,11 @@ function SubscribeContent() {
                   MOST POPULAR
                 </span>
               )}
-              <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-4 ${
-                selectedPlan === key ? 'bg-primary text-white' : 'bg-primary/10 text-primary'
-              }`}>
+              <div
+                className={`w-10 h-10 rounded-lg flex items-center justify-center mb-4 ${
+                  selectedPlan === key ? 'bg-primary text-white' : 'bg-primary/10 text-primary'
+                }`}
+              >
                 {plan.icon}
               </div>
               <h3 className="text-lg font-medium text-foreground mb-1">{plan.name}</h3>
@@ -233,30 +257,39 @@ function SubscribeContent() {
                   </div>
                   {savings > 0 && (
                     <p className="text-zinc-300 text-sm mt-1">
-                      Save {savings}% with annual billing (${currentPlan.monthlyPrice! * 12 - currentPlan.annualPrice! * 12}/year)
+                      Save {savings}% with annual billing ($
+                      {currentPlan.monthlyPrice! * 12 - currentPlan.annualPrice! * 12}/year)
                     </p>
                   )}
                 </div>
               ) : (
                 <div className="mb-6">
                   <span className="text-4xl font-medium text-foreground">Custom Pricing</span>
-                  <p className="text-muted-foreground mt-1">Tailored to your organization&apos;s needs</p>
+                  <p className="text-muted-foreground mt-1">
+                    Tailored to your organization&apos;s needs
+                  </p>
                 </div>
               )}
 
               <Link
-                href={selectedPlan === 'enterprise' ? '/contact' : selectedPlan === 'trial' ? '/download' : '/login'}
+                href={
+                  selectedPlan === 'enterprise'
+                    ? '/contact'
+                    : selectedPlan === 'trial'
+                      ? '/download'
+                      : '/login'
+                }
                 className="inline-flex items-center justify-center w-full lg:w-auto px-8 py-4 bg-primary text-white rounded-xl hover:bg-primary/90 transition-colors font-medium text-lg"
               >
                 {currentPlan.cta}
               </Link>
 
               <p className="text-sm text-muted-foreground mt-4">
-                {selectedPlan === 'trial' 
-                  ? 'No credit card required' 
+                {selectedPlan === 'trial'
+                  ? 'No credit card required'
                   : selectedPlan === 'enterprise'
-                  ? "We'll get back to you within 24 hours"
-                  : 'No credit card required for trial'}
+                    ? "We'll get back to you within 24 hours"
+                    : 'No credit card required for trial'}
               </p>
             </div>
 
@@ -276,16 +309,20 @@ function SubscribeContent() {
 
         {/* FAQs */}
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-2xl font-medium text-foreground text-center mb-8">Frequently Asked Questions</h2>
+          <h2 className="text-2xl font-medium text-foreground text-center mb-8">
+            Frequently Asked Questions
+          </h2>
           <div className="space-y-4">
-            {faqs.map((faq) => (
+            {faqs.map(faq => (
               <div key={faq.id} className="border border-border rounded-xl overflow-hidden">
                 <button
                   onClick={() => setShowFAQ(showFAQ === faq.id ? null : faq.id)}
                   className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-muted/50 transition-colors"
                 >
                   <span className="font-medium text-foreground">{faq.question}</span>
-                  <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform ${showFAQ === faq.id ? 'rotate-180' : ''}`} />
+                  <ChevronDown
+                    className={`w-5 h-5 text-muted-foreground transition-transform ${showFAQ === faq.id ? 'rotate-180' : ''}`}
+                  />
                 </button>
                 {showFAQ === faq.id && (
                   <div className="px-6 pb-4">
@@ -301,7 +338,9 @@ function SubscribeContent() {
         <div className="mt-16 text-center">
           <p className="text-sm text-muted-foreground mb-4">Secure payments powered by</p>
           <div className="flex items-center justify-center gap-8 opacity-60">
-            <span className="text-lg font-medium text-muted-foreground">PayPal & Lemon Squeezy</span>
+            <span className="text-lg font-medium text-muted-foreground">
+              PayPal & Lemon Squeezy
+            </span>
             <span className="text-lg font-medium text-muted-foreground">256-bit SSL</span>
           </div>
         </div>
@@ -319,16 +358,23 @@ export default function SubscribePage() {
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="flex items-center gap-2">
               <Sparkles className="w-8 h-8 text-primary" />
-              <span className="text-xl font-medium bg-gradient-to-r from-primary to-zinc-600 bg-clip-text text-transparent">Velanova</span>
+              <span className="text-xl font-medium bg-gradient-to-r from-primary to-zinc-600 bg-clip-text text-transparent">
+                Velanova
+              </span>
             </Link>
-            <Link href="/" className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-2">
+            <Link
+              href="/"
+              className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-2"
+            >
               <ArrowLeft className="w-4 h-4" /> Back to Home
             </Link>
           </div>
         </div>
       </nav>
 
-      <Suspense fallback={<div className="container mx-auto px-4 py-16 text-center">Loading...</div>}>
+      <Suspense
+        fallback={<div className="container mx-auto px-4 py-16 text-center">Loading...</div>}
+      >
         <SubscribeContent />
       </Suspense>
 
@@ -337,9 +383,15 @@ export default function SubscribePage() {
         <div className="container mx-auto px-4 text-center">
           <p className="text-sm text-muted-foreground">© 2025 Velanova. All rights reserved.</p>
           <div className="flex justify-center gap-6 mt-4">
-            <Link href="/privacy" className="text-sm text-muted-foreground hover:text-foreground">Privacy Policy</Link>
-            <Link href="/terms" className="text-sm text-muted-foreground hover:text-foreground">Terms of Service</Link>
-            <Link href="/refund" className="text-sm text-muted-foreground hover:text-foreground">Refund Policy</Link>
+            <Link href="/privacy" className="text-sm text-muted-foreground hover:text-foreground">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="text-sm text-muted-foreground hover:text-foreground">
+              Terms of Service
+            </Link>
+            <Link href="/refund" className="text-sm text-muted-foreground hover:text-foreground">
+              Refund Policy
+            </Link>
           </div>
         </div>
       </footer>

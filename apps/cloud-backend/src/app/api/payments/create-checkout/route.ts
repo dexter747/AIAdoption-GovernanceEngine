@@ -23,14 +23,11 @@ export async function POST(request: NextRequest) {
     const { planType, billingCycle } = body;
 
     if (!planType || !billingCycle) {
-      return NextResponse.json(
-        { error: 'planType and billingCycle required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'planType and billingCycle required' }, { status: 400 });
     }
 
     const ls = getLemonSqueezyClient();
-    
+
     const session = await ls.createCheckoutSession({
       userId: user.sub,
       email: user.email,
@@ -49,9 +46,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (error: any) {
     console.error('Checkout error:', error);
-    return NextResponse.json(
-      { error: error.message },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

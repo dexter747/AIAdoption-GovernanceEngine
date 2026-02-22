@@ -175,6 +175,7 @@ pnpm dev
 ### 2. Configure API Keys
 
 Edit `apps/express-api/.env`:
+
 ```env
 # At least one provider required
 OPENAI_API_KEY=sk-proj-xxx
@@ -201,6 +202,7 @@ pnpm dev
 ## File Summary
 
 ### Created Files (7)
+
 ```
 apps/desktop-app/src/
 ├── renderer/
@@ -224,6 +226,7 @@ docs/
 ```
 
 ### Modified Files (5)
+
 ```
 apps/desktop-app/src/
 ├── renderer/
@@ -236,6 +239,7 @@ apps/desktop-app/src/
 ```
 
 ### Total New Code
+
 - **~2,500 lines** of production-ready TypeScript/React
 - **100% type-safe** with full TypeScript definitions
 - **Zero external dependencies** (uses existing stack)
@@ -276,6 +280,7 @@ Use this to verify everything works:
 **Solution**: Add API keys to `apps/express-api/.env`
 
 Recommended free option:
+
 ```env
 GROQ_API_KEY=gsk-xxx
 ```
@@ -285,6 +290,7 @@ Get free Groq API key: https://console.groq.com/keys
 ### "Cannot connect to Express API"
 
 **Solution**: Make sure Express backend is running:
+
 ```bash
 cd apps/express-api
 pnpm dev
@@ -293,6 +299,7 @@ pnpm dev
 ### TypeScript errors on `window.electron`
 
 **Solution**: Restart TypeScript server in VS Code:
+
 - `Cmd+Shift+P` → "TypeScript: Restart TS Server"
 
 ---
@@ -341,7 +348,7 @@ Your chat interface is production-ready when:
 ✅ Search finds relevant conversations  
 ✅ Pin/archive/delete actions work correctly  
 ✅ Error handling is clear and helpful  
-✅ UI is responsive and beautiful  
+✅ UI is responsive and beautiful
 
 ---
 
@@ -362,6 +369,7 @@ All guides are in `/docs`:
 Your AI chat interface is **100% complete** and ready to use!
 
 **What you have now**:
+
 - ✅ Full-featured chat interface
 - ✅ 15 AI providers, 50+ models
 - ✅ Local conversation persistence

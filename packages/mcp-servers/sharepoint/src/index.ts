@@ -1,6 +1,10 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { CallToolRequestSchema, ListToolsRequestSchema, Tool } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+  Tool,
+} from '@modelcontextprotocol/sdk/types.js';
 import axios, { AxiosInstance } from 'axios';
 
 let api: AxiosInstance | null = null;
@@ -13,7 +17,9 @@ async function initConnection(): Promise<void> {
   const siteUrl = process.env.SHAREPOINT_SITE_URL;
 
   if (!tenantId || !clientId || !clientSecret) {
-    throw new Error('SHAREPOINT_TENANT_ID, SHAREPOINT_CLIENT_ID, and SHAREPOINT_CLIENT_SECRET environment variables are required');
+    throw new Error(
+      'SHAREPOINT_TENANT_ID, SHAREPOINT_CLIENT_ID, and SHAREPOINT_CLIENT_SECRET environment variables are required'
+    );
   }
 
   // OAuth 2.0 client_credentials flow
@@ -33,7 +39,7 @@ async function initConnection(): Promise<void> {
   api = axios.create({
     baseURL: 'https://graph.microsoft.com/v1.0',
     headers: {
-      'Authorization': `Bearer ${accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
       'Content-Type': 'application/json',
     },
   });
@@ -80,7 +86,10 @@ const tools: Tool[] = [
       properties: {
         siteId: { type: 'string', description: 'The site ID (uses default if not provided)' },
         driveId: { type: 'string', description: 'The drive/library ID' },
-        folderId: { type: 'string', description: 'Folder ID to list items from (root if not provided)' },
+        folderId: {
+          type: 'string',
+          description: 'Folder ID to list items from (root if not provided)',
+        },
       },
     },
   },
@@ -104,7 +113,11 @@ const tools: Tool[] = [
       type: 'object',
       properties: {
         query: { type: 'string', description: 'Search query string' },
-        entityTypes: { type: 'array', items: { type: 'string' }, description: 'Entity types to search (driveItem, listItem, site, etc.)' },
+        entityTypes: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'Entity types to search (driveItem, listItem, site, etc.)',
+        },
       },
       required: ['query'],
     },
@@ -140,8 +153,15 @@ const tools: Tool[] = [
     inputSchema: {
       type: 'object',
       properties: {
-        method: { type: 'string', description: 'HTTP method (GET, POST, PUT, DELETE)', enum: ['GET', 'POST', 'PUT', 'DELETE'] },
-        path: { type: 'string', description: 'API path (relative to https://graph.microsoft.com/v1.0)' },
+        method: {
+          type: 'string',
+          description: 'HTTP method (GET, POST, PUT, DELETE)',
+          enum: ['GET', 'POST', 'PUT', 'DELETE'],
+        },
+        path: {
+          type: 'string',
+          description: 'API path (relative to https://graph.microsoft.com/v1.0)',
+        },
         body: { type: 'object', description: 'Request body for POST/PUT' },
       },
       required: ['method', 'path'],
@@ -156,7 +176,7 @@ const server = new Server(
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools }));
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   if (!api) await initConnection();
 
   const { name, arguments: args } = request.params;
@@ -191,10 +211,12 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       }
       case 'search_content':
         r = await api!.post('/search/query', {
-          requests: [{
-            entityTypes: args?.entityTypes || ['driveItem', 'listItem'],
-            query: { queryString: args!.query },
-          }],
+          requests: [
+            {
+              entityTypes: args?.entityTypes || ['driveItem', 'listItem'],
+              query: { queryString: args!.query },
+            },
+          ],
         });
         break;
       case 'upload_document': {
@@ -214,10 +236,17 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         r = await api!.get(`/sites/${resolvedSiteId}/lists`);
         break;
       case 'api_call':
-        r = await api!.request({ method: args!.method as string, url: args!.path as string, data: args?.body });
+        r = await api!.request({
+          method: args!.method as string,
+          url: args!.path as string,
+          data: args?.body,
+        });
         break;
       default:
-        return { content: [{ type: 'text' as const, text: `Unknown tool: ${name}` }], isError: true };
+        return {
+          content: [{ type: 'text' as const, text: `Unknown tool: ${name}` }],
+          isError: true,
+        };
     }
 
     return { content: [{ type: 'text' as const, text: JSON.stringify(r.data, null, 2) }] };

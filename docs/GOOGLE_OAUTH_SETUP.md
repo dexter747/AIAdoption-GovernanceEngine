@@ -3,6 +3,7 @@
 ## Current Configuration
 
 The Google OAuth credentials are already in `.env.local`:
+
 - **Client ID**: `1050526800573-q1dp83a3e9ud0riblc1jj6r8pqh7hslj.apps.googleusercontent.com`
 - **Client Secret**: `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`
 
@@ -11,6 +12,7 @@ The Google OAuth credentials are already in `.env.local`:
 You need to add these redirect URIs in the Google Cloud Console:
 
 ### For Development:
+
 1. Go to [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
 2. Find your OAuth 2.0 Client ID
 3. Click Edit
@@ -22,7 +24,9 @@ You need to add these redirect URIs in the Google Cloud Console:
 5. Click Save
 
 ### For Production:
+
 Add your production domain:
+
 ```
 https://yourdomain.com/api/auth/callback/google
 ```
@@ -30,12 +34,14 @@ https://yourdomain.com/api/auth/callback/google
 ## Testing the Auth Flow
 
 1. **Restart the dev servers** (environment variables need to be loaded):
+
    ```bash
    # Stop the current pnpm dev process (Ctrl+C)
    pnpm dev
    ```
 
 2. **Open the desktop app** (if not already running):
+
    ```bash
    pnpm --filter desktop-app dev
    ```
@@ -54,19 +60,23 @@ https://yourdomain.com/api/auth/callback/google
 ## Common Errors
 
 ### "redirect_uri_mismatch"
+
 **Cause**: The redirect URI in Google Cloud Console doesn't match the one being used.
 
 **Solution**: Make sure you added `http://localhost:3000/api/auth/callback/google` to Authorized redirect URIs.
 
 ### "Access blocked: This app's request is invalid"
+
 **Cause**: OAuth consent screen not configured or missing scopes.
 
-**Solution**: 
+**Solution**:
+
 1. Go to [OAuth consent screen](https://console.cloud.google.com/apis/credentials/consent)
 2. Configure the consent screen
 3. Add test users (your email) if in "Testing" mode
 
 ### "Error: Missing or invalid Google credentials"
+
 **Cause**: Environment variables not loaded.
 
 **Solution**: Restart the dev server.
@@ -74,6 +84,7 @@ https://yourdomain.com/api/auth/callback/google
 ## Environment Variables Checklist
 
 Landing site `.env.local` should have:
+
 - ✅ `NEXTAUTH_URL=http://localhost:3000`
 - ✅ `NEXTAUTH_SECRET` (any random string)
 - ✅ `GOOGLE_CLIENT_ID` (from Google Cloud Console)

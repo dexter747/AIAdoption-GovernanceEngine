@@ -28,20 +28,20 @@ async function getRedisClient() {
   }
 
   const url = process.env.REDIS_URL || 'redis://localhost:6379';
-  
+
   redisClient = createClient({
     url,
     socket: {
       connectTimeout: 10000,
-      reconnectStrategy: (retries) => Math.min(retries * 100, 3000),
+      reconnectStrategy: retries => Math.min(retries * 100, 3000),
     },
   });
 
-  redisClient.on('error', (err) => console.error('Redis Client Error:', err));
-  
+  redisClient.on('error', err => console.error('Redis Client Error:', err));
+
   await redisClient.connect();
   console.error('Connected to Redis:', url);
-  
+
   return redisClient;
 }
 
@@ -94,7 +94,11 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
         inputSchema: {
           type: 'object',
           properties: {
-            pattern: { type: 'string', description: 'Pattern to match (e.g., user:*, *)', default: '*' },
+            pattern: {
+              type: 'string',
+              description: 'Pattern to match (e.g., user:*, *)',
+              default: '*',
+            },
           },
         },
       },
@@ -124,12 +128,12 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
 });
 
 // Handle tool execution
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   const { name, arguments: args } = request.params;
-  
+
   try {
     const client = await getRedisClient();
-    
+
     switch (name) {
       case 'redis_get': {
         const value = await client.get((args as any).key);
@@ -142,7 +146,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           ],
         };
       }
-      
+
       case 'redis_set': {
         const { key, value, ttl } = args as any;
         if (ttl) {
@@ -159,7 +163,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           ],
         };
       }
-      
+
       case 'redis_del': {
         const count = await client.del((args as any).keys);
         return {
@@ -171,7 +175,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           ],
         };
       }
-      
+
       case 'redis_keys': {
         const pattern = (args as any)?.pattern || '*';
         const keys = await client.keys(pattern);
@@ -184,7 +188,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           ],
         };
       }
-      
+
       case 'redis_hgetall': {
         const hash = await client.hGetAll((args as any).key);
         return {
@@ -196,7 +200,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           ],
         };
       }
-      
+
       case 'redis_info': {
         const section = (args as any)?.section;
         const info = await client.info(section);
@@ -209,7 +213,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           ],
         };
       }
-      
+
       default:
         throw new Error(`Unknown tool: ${name}`);
     }
@@ -233,7 +237,7 @@ async function main() {
   console.error('Redis MCP server running on stdio');
 }
 
-main().catch((error) => {
+main().catch(error => {
   console.error('Fatal error:', error);
   process.exit(1);
 });

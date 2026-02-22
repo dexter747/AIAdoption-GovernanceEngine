@@ -84,10 +84,7 @@ export async function PATCH(request: NextRequest) {
     const { planType, billingCycle } = body;
 
     if (!planType || !billingCycle) {
-      return NextResponse.json(
-        { error: 'planType and billingCycle required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'planType and billingCycle required' }, { status: 400 });
     }
 
     // In production, update via payment provider and database

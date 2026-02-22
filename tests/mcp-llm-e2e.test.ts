@@ -8,7 +8,7 @@ const MCP_SERVERS_DIR = path.join(PROJECT_ROOT, 'packages/mcp-servers');
 
 /**
  * MCP + LLM End-to-End Tests
- * 
+ *
  * Validates the complete pipeline:
  * 1. MCP server packages — all 64 servers validated
  * 2. MCP protocol compliance — JSON-RPC over stdio
@@ -21,7 +21,7 @@ const MCP_SERVERS_DIR = path.join(PROJECT_ROOT, 'packages/mcp-servers');
 // All 64 MCP Server Packages
 // ============================================================================
 
-const ALL_MCP_SERVERS = fs.readdirSync(MCP_SERVERS_DIR).filter((dir) => {
+const ALL_MCP_SERVERS = fs.readdirSync(MCP_SERVERS_DIR).filter(dir => {
   return fs.statSync(path.join(MCP_SERVERS_DIR, dir)).isDirectory();
 });
 
@@ -31,7 +31,7 @@ describe('MCP Server Complete Coverage', () => {
       expect(ALL_MCP_SERVERS.length).toBe(64);
     });
 
-    ALL_MCP_SERVERS.forEach((server) => {
+    ALL_MCP_SERVERS.forEach(server => {
       describe(`${server} MCP server`, () => {
         const serverDir = path.join(MCP_SERVERS_DIR, server);
 
@@ -86,7 +86,7 @@ describe('MCP Server Complete Coverage', () => {
 describe('MCP Protocol Compliance', () => {
   const PROTOCOL_TEST_SERVERS = ['mysql', 'postgresql', 'mongodb', 'redis'];
 
-  PROTOCOL_TEST_SERVERS.forEach((server) => {
+  PROTOCOL_TEST_SERVERS.forEach(server => {
     describe(`${server} — JSON-RPC protocol`, () => {
       let serverProcess: ChildProcess | null = null;
 
@@ -97,7 +97,7 @@ describe('MCP Protocol Compliance', () => {
         }
       });
 
-      it('responds to initialize request or exits gracefully', (done) => {
+      it('responds to initialize request or exits gracefully', done => {
         const distPath = path.join(MCP_SERVERS_DIR, server, 'dist/index.js');
         if (!fs.existsSync(distPath)) {
           done();
@@ -112,7 +112,7 @@ describe('MCP Protocol Compliance', () => {
           env: { ...process.env, NODE_ENV: 'test' },
         });
 
-        serverProcess.stdout?.on('data', (data) => {
+        serverProcess.stdout?.on('data', data => {
           output += data.toString();
           // MCP protocol response should be JSON-RPC
           if (output.includes('"jsonrpc"') && !resolved) {
@@ -135,10 +135,16 @@ describe('MCP Protocol Compliance', () => {
           }
         });
 
-        serverProcess.stderr?.on('data', (data) => {
+        serverProcess.stderr?.on('data', data => {
           // MCP servers log to stderr — this is expected behavior
           const msg = data.toString();
-          if ((msg.includes('listening') || msg.includes('started') || msg.includes('error') || msg.includes('connect')) && !resolved) {
+          if (
+            (msg.includes('listening') ||
+              msg.includes('started') ||
+              msg.includes('error') ||
+              msg.includes('connect')) &&
+            !resolved
+          ) {
             resolved = true;
             done();
           }
@@ -236,7 +242,7 @@ describe('MCP Client Manager — LLM Tool Format', () => {
   });
 
   it('tracks connection status', () => {
-    expect(mcpClientSource).toContain("status");
+    expect(mcpClientSource).toContain('status');
     expect(mcpClientSource).toContain("'connected'");
     expect(mcpClientSource).toContain("'disconnected'");
   });
@@ -251,8 +257,14 @@ describe('Connection Env Var Mapping', () => {
   let connectionFieldsSource: string;
 
   beforeAll(() => {
-    const envMapPath = path.join(PROJECT_ROOT, 'apps/desktop-app/src/main/mcp/connection-env-map.ts');
-    const fieldsPath = path.join(PROJECT_ROOT, 'apps/desktop-app/src/renderer/config/connection-fields.ts');
+    const envMapPath = path.join(
+      PROJECT_ROOT,
+      'apps/desktop-app/src/main/mcp/connection-env-map.ts'
+    );
+    const fieldsPath = path.join(
+      PROJECT_ROOT,
+      'apps/desktop-app/src/renderer/config/connection-fields.ts'
+    );
     envMapSource = fs.readFileSync(envMapPath, 'utf-8');
     connectionFieldsSource = fs.readFileSync(fieldsPath, 'utf-8');
   });
@@ -262,7 +274,21 @@ describe('Connection Env Var Mapping', () => {
   });
 
   it('has env mappings for all database system types', () => {
-    const dbTypes = ['mysql', 'postgresql', 'mongodb', 'redis', 'sqlserver', 'oracle', 'mariadb', 'cassandra', 'elasticsearch', 'neo4j', 'couchdb', 'dynamodb', 'sap-hana'];
+    const dbTypes = [
+      'mysql',
+      'postgresql',
+      'mongodb',
+      'redis',
+      'sqlserver',
+      'oracle',
+      'mariadb',
+      'cassandra',
+      'elasticsearch',
+      'neo4j',
+      'couchdb',
+      'dynamodb',
+      'sap-hana',
+    ];
     for (const dbType of dbTypes) {
       expect(envMapSource.toLowerCase()).toContain(dbType.toLowerCase());
     }
@@ -277,7 +303,15 @@ describe('Connection Env Var Mapping', () => {
   });
 
   it('has connection field definitions for all system types', () => {
-    const systemTypes = ['mysql', 'postgresql', 'mongodb', 'redis', 'salesforce', 'servicenow', 'jira'];
+    const systemTypes = [
+      'mysql',
+      'postgresql',
+      'mongodb',
+      'redis',
+      'salesforce',
+      'servicenow',
+      'jira',
+    ];
     for (const type of systemTypes) {
       expect(connectionFieldsSource.toLowerCase()).toContain(type.toLowerCase());
     }
@@ -323,7 +357,10 @@ describe('LLM Provider Integration', () => {
 
   it('handles tool/function calling in AI responses', () => {
     // The Express API has an MCP orchestrator service for tool calling
-    const orchestratorPath = path.join(PROJECT_ROOT, 'apps/express-api/src/services/mcp-orchestrator.js');
+    const orchestratorPath = path.join(
+      PROJECT_ROOT,
+      'apps/express-api/src/services/mcp-orchestrator.js'
+    );
     expect(fs.existsSync(orchestratorPath)).toBe(true);
     const source = fs.readFileSync(orchestratorPath, 'utf-8');
     expect(source).toMatch(/tool/i);
@@ -393,7 +430,7 @@ describe('IPC Handlers — MCP + AI Pipeline', () => {
     'mcp:get-status',
   ];
 
-  mcpChannels.forEach((channel) => {
+  mcpChannels.forEach(channel => {
     it(`registers IPC handler for ${channel}`, () => {
       expect(handlersSource).toContain(`'${channel}'`);
     });
@@ -463,7 +500,10 @@ describe('Avatar Proxy — Google Image 429 Fix', () => {
   });
 
   it('Landing site has avatar proxy API route', () => {
-    const routePath = path.join(PROJECT_ROOT, 'apps/landing-site/src/app/api/avatar/proxy/route.ts');
+    const routePath = path.join(
+      PROJECT_ROOT,
+      'apps/landing-site/src/app/api/avatar/proxy/route.ts'
+    );
     expect(fs.existsSync(routePath)).toBe(true);
     const source = fs.readFileSync(routePath, 'utf-8');
     expect(source).toContain('Cache-Control');
@@ -498,13 +538,19 @@ describe('Auto-License System', () => {
   });
 
   it('LicenseContext tries auto-license before manual key', () => {
-    const ctxPath = path.join(PROJECT_ROOT, 'apps/desktop-app/src/renderer/context/LicenseContext.tsx');
+    const ctxPath = path.join(
+      PROJECT_ROOT,
+      'apps/desktop-app/src/renderer/context/LicenseContext.tsx'
+    );
     const source = fs.readFileSync(ctxPath, 'utf-8');
     expect(source).toContain('getAutoLicense');
   });
 
   it('OAuth callback sets plan to free (not trial)', () => {
-    const callbackPath = path.join(PROJECT_ROOT, 'apps/landing-site/src/app/api/auth/google/callback/route.ts');
+    const callbackPath = path.join(
+      PROJECT_ROOT,
+      'apps/landing-site/src/app/api/auth/google/callback/route.ts'
+    );
     const source = fs.readFileSync(callbackPath, 'utf-8');
     expect(source).toContain("plan: 'free'");
     expect(source).not.toMatch(/plan:\s*['"]trial['"]/);
@@ -560,7 +606,23 @@ describe('BYOK Route Wiring', () => {
   it('modular route file supports all 15 AI providers', () => {
     const routePath = path.join(PROJECT_ROOT, 'apps/express-api/src/routes/user-api-keys.js');
     const source = fs.readFileSync(routePath, 'utf-8');
-    const providers = ['openai', 'anthropic', 'google', 'groq', 'cohere', 'mistral', 'perplexity', 'deepseek', 'together', 'replicate', 'huggingface', 'openrouter', 'azure_openai', 'aws_bedrock', 'ollama'];
+    const providers = [
+      'openai',
+      'anthropic',
+      'google',
+      'groq',
+      'cohere',
+      'mistral',
+      'perplexity',
+      'deepseek',
+      'together',
+      'replicate',
+      'huggingface',
+      'openrouter',
+      'azure_openai',
+      'aws_bedrock',
+      'ollama',
+    ];
     for (const provider of providers) {
       expect(source).toContain(provider);
     }
@@ -597,14 +659,20 @@ describe('Landing Page — Premium Clean Design', () => {
   });
 
   it('hero section uses solid blue accent (no gradients)', () => {
-    const heroPath = path.join(PROJECT_ROOT, 'apps/landing-site/src/components/landing/HeroSection.tsx');
+    const heroPath = path.join(
+      PROJECT_ROOT,
+      'apps/landing-site/src/components/landing/HeroSection.tsx'
+    );
     const source = fs.readFileSync(heroPath, 'utf-8');
     expect(source).toContain('text-blue-600');
     expect(source).not.toMatch(/bg-gradient-to|from-blue.*to-purple/);
   });
 
   it('CTA section uses solid blue background', () => {
-    const ctaPath = path.join(PROJECT_ROOT, 'apps/landing-site/src/components/landing/CTASection.tsx');
+    const ctaPath = path.join(
+      PROJECT_ROOT,
+      'apps/landing-site/src/components/landing/CTASection.tsx'
+    );
     const source = fs.readFileSync(ctaPath, 'utf-8');
     expect(source).toContain('bg-blue-600');
     expect(source).not.toMatch(/bg-gradient-to/);
@@ -612,8 +680,12 @@ describe('Landing Page — Premium Clean Design', () => {
 
   it('all components support dark mode', () => {
     const components = [
-      'Navbar.tsx', 'HeroSection.tsx', 'FeaturesSection.tsx',
-      'PricingSection.tsx', 'CTASection.tsx', 'Footer.tsx',
+      'Navbar.tsx',
+      'HeroSection.tsx',
+      'FeaturesSection.tsx',
+      'PricingSection.tsx',
+      'CTASection.tsx',
+      'Footer.tsx',
     ];
     for (const comp of components) {
       const compPath = path.join(PROJECT_ROOT, 'apps/landing-site/src/components/landing', comp);

@@ -26,9 +26,9 @@ const usageQuerySchema = z.object({
 router.get('/', validateJwt, async (req, res, next) => {
   try {
     const query = usageQuerySchema.parse(req.query);
-    
+
     const usage = await UsageService.getUsage(req.user.id, query);
-    
+
     res.json({
       success: true,
       data: usage,
@@ -48,7 +48,7 @@ router.get('/', validateJwt, async (req, res, next) => {
 router.get('/summary', validateJwt, async (req, res, next) => {
   try {
     const summary = await UsageService.getSummary(req.user.id);
-    
+
     res.json({
       success: true,
       data: summary,
@@ -65,7 +65,7 @@ router.get('/summary', validateJwt, async (req, res, next) => {
 router.get('/limits', validateJwt, async (req, res, next) => {
   try {
     const limits = await UsageService.getLimits(req.user.id);
-    
+
     res.json({
       success: true,
       data: limits,
@@ -83,7 +83,7 @@ router.get('/cost', validateJwt, async (req, res, next) => {
   try {
     const query = usageQuerySchema.parse(req.query);
     const cost = await UsageService.getCostBreakdown(req.user.id, query);
-    
+
     res.json({
       success: true,
       data: cost,

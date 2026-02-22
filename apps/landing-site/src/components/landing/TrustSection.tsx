@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Lock, Globe, Users, Zap, Key, ShieldCheck, LucideIcon } from "lucide-react";
+import { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Lock, Globe, Users, Zap, Key, ShieldCheck, LucideIcon } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,32 +14,46 @@ interface TrustBadge {
 }
 
 const trustBadges: TrustBadge[] = [
-  { icon: ShieldCheck, title: "Zero-Knowledge", description: "Your data never touches our servers" },
-  { icon: Key, title: "BYOK Support", description: "Bring your own AI API keys" },
-  { icon: Lock, title: "AES-256-GCM", description: "Military-grade encryption at rest" },
-  { icon: Zap, title: "Air-Gap Ready", description: "On-premise deployment available" },
-  { icon: Globe, title: "99.9% Uptime", description: "Enterprise-grade reliability SLA" },
-  { icon: Users, title: "2,500+ Enterprises", description: "Trusted by Fortune 500 companies" },
+  {
+    icon: ShieldCheck,
+    title: 'Zero-Knowledge',
+    description: 'Your data never touches our servers',
+  },
+  { icon: Key, title: 'BYOK Support', description: 'Bring your own AI API keys' },
+  { icon: Lock, title: 'AES-256-GCM', description: 'Military-grade encryption at rest' },
+  { icon: Zap, title: 'Air-Gap Ready', description: 'On-premise deployment available' },
+  { icon: Globe, title: '99.9% Uptime', description: 'Enterprise-grade reliability SLA' },
+  { icon: Users, title: '2,500+ Enterprises', description: 'Trusted by Fortune 500 companies' },
 ];
-
-
 
 export function TrustSection() {
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(".trust-header > *", {
-        opacity: 0, y: 30, duration: 0.7, stagger: 0.12, immediateRender: false,
-        scrollTrigger: { trigger: ".trust-header", start: "top 85%", once: true },
+      gsap.from('.trust-header > *', {
+        opacity: 0,
+        y: 30,
+        duration: 0.7,
+        stagger: 0.12,
+        immediateRender: false,
+        scrollTrigger: { trigger: '.trust-header', start: 'top 85%', once: true },
       });
-      gsap.from(".trust-badge-card", {
-        opacity: 0, y: 30, duration: 0.5, stagger: 0.08, ease: "power3.out", immediateRender: false,
-        scrollTrigger: { trigger: ".trust-grid", start: "top 85%", once: true },
+      gsap.from('.trust-badge-card', {
+        opacity: 0,
+        y: 30,
+        duration: 0.5,
+        stagger: 0.08,
+        ease: 'power3.out',
+        immediateRender: false,
+        scrollTrigger: { trigger: '.trust-grid', start: 'top 85%', once: true },
       });
-      gsap.from(".security-banner", {
-        opacity: 0, y: 20, duration: 0.6, immediateRender: false,
-        scrollTrigger: { trigger: ".security-banner", start: "top 90%", once: true },
+      gsap.from('.security-banner', {
+        opacity: 0,
+        y: 20,
+        duration: 0.6,
+        immediateRender: false,
+        scrollTrigger: { trigger: '.security-banner', start: 'top 90%', once: true },
       });
     }, ref);
     return () => ctx.revert();
@@ -52,8 +66,7 @@ export function TrustSection() {
       <div className="relative max-w-7xl mx-auto px-6">
         <div className="trust-header text-center mb-10">
           <h2 className="text-3xl md:text-5xl font-medium tracking-tight text-white mb-4">
-            Enterprise-Grade{" "}
-            <span className="text-shimmer">Security By Design</span>
+            Enterprise-Grade <span className="text-shimmer">Security By Design</span>
           </h2>
           <p className="text-lg text-zinc-500">
             Built for the world&apos;s most security-conscious organizations
@@ -61,7 +74,7 @@ export function TrustSection() {
         </div>
 
         <div className="trust-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-12">
-          {trustBadges.map((badge) => {
+          {trustBadges.map(badge => {
             const Icon = badge.icon;
             return (
               <div
@@ -82,8 +95,13 @@ export function TrustSection() {
           <div className="inline-flex items-center gap-4 px-7 py-5 rounded-2xl border bg-white/[0.02] border-white/[0.06] backdrop-blur-sm">
             <Lock className="w-6 h-6 text-zinc-400 flex-shrink-0" />
             <div className="text-left">
-              <div className="font-medium text-white text-sm">Your data never leaves your infrastructure</div>
-              <div className="text-sm text-zinc-500">Zero-knowledge architecture with AES-256-GCM encryption. Air-gapped deployment available.</div>
+              <div className="font-medium text-white text-sm">
+                Your data never leaves your infrastructure
+              </div>
+              <div className="text-sm text-zinc-500">
+                Zero-knowledge architecture with AES-256-GCM encryption. Air-gapped deployment
+                available.
+              </div>
             </div>
           </div>
         </div>

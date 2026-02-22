@@ -2,25 +2,121 @@
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { CallToolRequestSchema, ListToolsRequestSchema, Tool } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+  Tool,
+} from '@modelcontextprotocol/sdk/types.js';
 import axios, { AxiosInstance } from 'axios';
 
 let api: AxiosInstance | null = null;
 
 const TOOLS: Tool[] = [
-  { name: 'search_patients', description: 'Search for patients', inputSchema: { type: 'object', properties: { name: { type: 'string' }, birthdate: { type: 'string' }, identifier: { type: 'string' }, family: { type: 'string' }, given: { type: 'string' } } } },
-  { name: 'get_patient', description: 'Get patient by ID', inputSchema: { type: 'object', properties: { id: { type: 'string' } }, required: ['id'] } },
-  { name: 'get_encounters', description: 'Get patient encounters', inputSchema: { type: 'object', properties: { patientId: { type: 'string' }, status: { type: 'string' }, date: { type: 'string' } }, required: ['patientId'] } },
-  { name: 'get_conditions', description: 'Get patient conditions/diagnoses', inputSchema: { type: 'object', properties: { patientId: { type: 'string' }, category: { type: 'string' } }, required: ['patientId'] } },
-  { name: 'get_medications', description: 'Get patient medication requests', inputSchema: { type: 'object', properties: { patientId: { type: 'string' }, status: { type: 'string' } }, required: ['patientId'] } },
-  { name: 'get_observations', description: 'Get patient observations (labs, vitals)', inputSchema: { type: 'object', properties: { patientId: { type: 'string' }, category: { type: 'string', description: 'vital-signs, laboratory, social-history' }, code: { type: 'string' } }, required: ['patientId'] } },
-  { name: 'get_allergies', description: 'Get patient allergies', inputSchema: { type: 'object', properties: { patientId: { type: 'string' } }, required: ['patientId'] } },
-  { name: 'get_procedures', description: 'Get patient procedures', inputSchema: { type: 'object', properties: { patientId: { type: 'string' } }, required: ['patientId'] } },
-  { name: 'get_diagnostic_reports', description: 'Get diagnostic reports', inputSchema: { type: 'object', properties: { patientId: { type: 'string' }, category: { type: 'string' } }, required: ['patientId'] } },
-  { name: 'fhir_search', description: 'Generic FHIR resource search', inputSchema: { type: 'object', properties: { resourceType: { type: 'string' }, params: { type: 'object' } }, required: ['resourceType'] } },
+  {
+    name: 'search_patients',
+    description: 'Search for patients',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        birthdate: { type: 'string' },
+        identifier: { type: 'string' },
+        family: { type: 'string' },
+        given: { type: 'string' },
+      },
+    },
+  },
+  {
+    name: 'get_patient',
+    description: 'Get patient by ID',
+    inputSchema: { type: 'object', properties: { id: { type: 'string' } }, required: ['id'] },
+  },
+  {
+    name: 'get_encounters',
+    description: 'Get patient encounters',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        patientId: { type: 'string' },
+        status: { type: 'string' },
+        date: { type: 'string' },
+      },
+      required: ['patientId'],
+    },
+  },
+  {
+    name: 'get_conditions',
+    description: 'Get patient conditions/diagnoses',
+    inputSchema: {
+      type: 'object',
+      properties: { patientId: { type: 'string' }, category: { type: 'string' } },
+      required: ['patientId'],
+    },
+  },
+  {
+    name: 'get_medications',
+    description: 'Get patient medication requests',
+    inputSchema: {
+      type: 'object',
+      properties: { patientId: { type: 'string' }, status: { type: 'string' } },
+      required: ['patientId'],
+    },
+  },
+  {
+    name: 'get_observations',
+    description: 'Get patient observations (labs, vitals)',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        patientId: { type: 'string' },
+        category: { type: 'string', description: 'vital-signs, laboratory, social-history' },
+        code: { type: 'string' },
+      },
+      required: ['patientId'],
+    },
+  },
+  {
+    name: 'get_allergies',
+    description: 'Get patient allergies',
+    inputSchema: {
+      type: 'object',
+      properties: { patientId: { type: 'string' } },
+      required: ['patientId'],
+    },
+  },
+  {
+    name: 'get_procedures',
+    description: 'Get patient procedures',
+    inputSchema: {
+      type: 'object',
+      properties: { patientId: { type: 'string' } },
+      required: ['patientId'],
+    },
+  },
+  {
+    name: 'get_diagnostic_reports',
+    description: 'Get diagnostic reports',
+    inputSchema: {
+      type: 'object',
+      properties: { patientId: { type: 'string' }, category: { type: 'string' } },
+      required: ['patientId'],
+    },
+  },
+  {
+    name: 'fhir_search',
+    description: 'Generic FHIR resource search',
+    inputSchema: {
+      type: 'object',
+      properties: { resourceType: { type: 'string' }, params: { type: 'object' } },
+      required: ['resourceType'],
+    },
+  },
 ];
 
-const server = new Server({ name: 'epic-fhir-mcp-server', version: '1.0.0' }, { capabilities: { tools: {} } });
+const server = new Server(
+  { name: 'epic-fhir-mcp-server', version: '1.0.0' },
+  { capabilities: { tools: {} } }
+);
 
 async function initConnection() {
   const baseUrl = process.env.EPIC_FHIR_URL; // e.g., https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4
@@ -28,7 +124,7 @@ async function initConnection() {
 
   api = axios.create({
     baseURL: baseUrl,
-    headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/fhir+json' },
+    headers: { Authorization: `Bearer ${token}`, Accept: 'application/fhir+json' },
   });
   console.error(`Connected to Epic FHIR: ${baseUrl}`);
 }
@@ -45,7 +141,7 @@ async function fhirGet(resource: string, params?: Record<string, any>) {
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: TOOLS }));
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   const { name, arguments: args } = request.params;
   try {
     switch (name) {
@@ -107,10 +203,19 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const result = await fhirGet((args as any).resourceType, (args as any).params || {});
         return { content: [{ type: 'text' as const, text: JSON.stringify(result, null, 2) }] };
       }
-      default: throw new Error(`Unknown tool: ${name}`);
+      default:
+        throw new Error(`Unknown tool: ${name}`);
     }
   } catch (error: any) {
-    return { content: [{ type: 'text' as const, text: `Epic FHIR Error: ${error.response?.data?.issue?.[0]?.diagnostics || error.message}` }], isError: true };
+    return {
+      content: [
+        {
+          type: 'text' as const,
+          text: `Epic FHIR Error: ${error.response?.data?.issue?.[0]?.diagnostics || error.message}`,
+        },
+      ],
+      isError: true,
+    };
   }
 });
 

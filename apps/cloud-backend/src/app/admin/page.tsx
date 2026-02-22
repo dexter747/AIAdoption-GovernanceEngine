@@ -2,15 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import {
-  Users,
-  Key,
-  CreditCard,
-  Activity,
-  Settings,
-  Database,
-  LogOut,
-} from 'lucide-react';
+import { Users, Key, CreditCard, Activity, Settings, Database, LogOut } from 'lucide-react';
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState('users');
@@ -107,9 +99,7 @@ function NavItem({
     <button
       onClick={onClick}
       className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-        active
-          ? 'bg-blue-500/10 text-blue-400'
-          : 'text-gray-300 hover:bg-white/10'
+        active ? 'bg-blue-500/10 text-blue-400' : 'text-gray-300 hover:bg-white/10'
       }`}
     >
       <span className="w-5 h-5">{icon}</span>

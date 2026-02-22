@@ -50,14 +50,14 @@ The Local Context Storage System provides persistent storage for LLM contexts on
 
 ## Context Types
 
-| Type | Description | Priority | Auto-include |
-|------|-------------|----------|--------------|
-| `system_prompt` | Custom instructions for AI behavior | High (100) | Optional |
-| `database_schema` | Auto-generated from connected databases | High (80) | Per-connection |
-| `knowledge_base` | Imported documents and files | Medium (30) | Optional |
-| `memory_summary` | Compressed conversation memory | Medium (40) | Optional |
-| `project` | Project-specific context | Medium (50) | Per-project |
-| `template` | Reusable prompt templates | Varies | Optional |
+| Type              | Description                             | Priority    | Auto-include   |
+| ----------------- | --------------------------------------- | ----------- | -------------- |
+| `system_prompt`   | Custom instructions for AI behavior     | High (100)  | Optional       |
+| `database_schema` | Auto-generated from connected databases | High (80)   | Per-connection |
+| `knowledge_base`  | Imported documents and files            | Medium (30) | Optional       |
+| `memory_summary`  | Compressed conversation memory          | Medium (40) | Optional       |
+| `project`         | Project-specific context                | Medium (50) | Per-project    |
+| `template`        | Reusable prompt templates               | Varies      | Optional       |
 
 ## Usage
 
@@ -67,14 +67,8 @@ The Local Context Storage System provides persistent storage for LLM contexts on
 import { useContexts, useCompiledContext } from '../hooks/useContexts';
 
 function MyComponent() {
-  const { 
-    contexts, 
-    loading, 
-    createContext, 
-    deleteContext,
-    toggleActive,
-    importKnowledgeFile 
-  } = useContexts();
+  const { contexts, loading, createContext, deleteContext, toggleActive, importKnowledgeFile } =
+    useContexts();
 
   // Create a new system prompt
   const handleCreate = async () => {
@@ -147,11 +141,11 @@ The context system automatically compiles relevant contexts when making AI queri
 
 The compilation respects token budgets for each model:
 
-| Model | Context Window | Reserved for Response | Reserved for Conversation |
-|-------|---------------|----------------------|---------------------------|
-| GPT-4o | 128K | 4K | 32K |
-| Claude 3.5 Sonnet | 200K | 8K | 50K |
-| Gemini 1.5 Pro | 1M | 8K | 100K |
+| Model             | Context Window | Reserved for Response | Reserved for Conversation |
+| ----------------- | -------------- | --------------------- | ------------------------- |
+| GPT-4o            | 128K           | 4K                    | 32K                       |
+| Claude 3.5 Sonnet | 200K           | 8K                    | 50K                       |
+| Gemini 1.5 Pro    | 1M             | 8K                    | 100K                      |
 
 ## API Reference
 
@@ -231,11 +225,13 @@ window.electron.context.getStats();
 ## Storage Location
 
 Contexts are stored in the Electron user data directory:
+
 - **macOS**: `~/Library/Application Support/velanova/llm-contexts.json`
 - **Windows**: `%APPDATA%/velanova/llm-contexts.json`
 - **Linux**: `~/.config/velanova/llm-contexts.json`
 
 Knowledge base files are stored in:
+
 - `<userData>/knowledge-base/`
 
 ## Default Templates
@@ -249,6 +245,7 @@ The system initializes with default templates if none exist:
 ## Token Estimation
 
 Tokens are estimated using a hybrid approach:
+
 ```
 tokens ≈ (words × 1.3 + characters / 4) / 2
 ```

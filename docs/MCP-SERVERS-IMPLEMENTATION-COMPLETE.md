@@ -9,28 +9,28 @@
 
 ### ✅ **Built & Ready (8/15)**
 
-| # | System | Package Location | Status |
-|---|--------|------------------|--------|
-| 1 | **MySQL** | `packages/mcp-servers/mysql` | ✅ Built |
-| 2 | **MongoDB** | `packages/mcp-servers/mongodb` | ✅ Built |
-| 3 | **SQL Server** | `packages/mcp-servers/sqlserver` | ✅ Built |
-| 4 | **Oracle** | `packages/mcp-servers/oracle` | ✅ Built |
-| 5 | **SAP HANA** | `packages/mcp-servers/sap-hana` | ✅ Built |
-| 6 | **Salesforce** | `packages/mcp-servers/salesforce` | ✅ Built |
-| 7 | **ServiceNow** | `packages/mcp-servers/servicenow` | ✅ Built |
-| 8 | **Jira** | `packages/mcp-servers/jira` | ✅ Built |
+| #   | System         | Package Location                  | Status   |
+| --- | -------------- | --------------------------------- | -------- |
+| 1   | **MySQL**      | `packages/mcp-servers/mysql`      | ✅ Built |
+| 2   | **MongoDB**    | `packages/mcp-servers/mongodb`    | ✅ Built |
+| 3   | **SQL Server** | `packages/mcp-servers/sqlserver`  | ✅ Built |
+| 4   | **Oracle**     | `packages/mcp-servers/oracle`     | ✅ Built |
+| 5   | **SAP HANA**   | `packages/mcp-servers/sap-hana`   | ✅ Built |
+| 6   | **Salesforce** | `packages/mcp-servers/salesforce` | ✅ Built |
+| 7   | **ServiceNow** | `packages/mcp-servers/servicenow` | ✅ Built |
+| 8   | **Jira**       | `packages/mcp-servers/jira`       | ✅ Built |
 
 ### ⏳ **Pending (7/15)**
 
-| # | System | Status | Priority |
-|---|--------|--------|----------|
-| 9 | **PostgreSQL** | Using `@modelcontextprotocol/server-postgres` | ✅ Installed |
-| 10 | **MariaDB** | Can use MySQL server (compatible) | ⚠️ Low |
-| 11 | **SQLite** | Official package deprecated | ⚠️ To build |
-| 12 | **Redis** | Need to implement | 🔧 Medium |
-| 13 | **Elasticsearch** | Need to implement | 🔧 Medium |
-| 14 | **Zendesk** | Need to implement | 🔧 Low |
-| 15 | **Workday** | Need to implement | 🔧 Low |
+| #   | System            | Status                                        | Priority     |
+| --- | ----------------- | --------------------------------------------- | ------------ |
+| 9   | **PostgreSQL**    | Using `@modelcontextprotocol/server-postgres` | ✅ Installed |
+| 10  | **MariaDB**       | Can use MySQL server (compatible)             | ⚠️ Low       |
+| 11  | **SQLite**        | Official package deprecated                   | ⚠️ To build  |
+| 12  | **Redis**         | Need to implement                             | 🔧 Medium    |
+| 13  | **Elasticsearch** | Need to implement                             | 🔧 Medium    |
+| 14  | **Zendesk**       | Need to implement                             | 🔧 Low       |
+| 15  | **Workday**       | Need to implement                             | 🔧 Low       |
 
 ---
 
@@ -77,6 +77,7 @@ private mcpServers = {
 Each MCP server accepts connection config via environment variables:
 
 **MySQL:**
+
 ```bash
 MYSQL_HOST=localhost
 MYSQL_PORT=3306
@@ -86,11 +87,13 @@ MYSQL_DATABASE=mydb
 ```
 
 **MongoDB:**
+
 ```bash
 MONGODB_URI=mongodb://user:pass@localhost:27017/db
 ```
 
 **Oracle:**
+
 ```bash
 ORACLE_USER=system
 ORACLE_PASSWORD=oracle
@@ -100,6 +103,7 @@ ORACLE_SERVICE=XEPDB1
 ```
 
 **SAP HANA:**
+
 ```bash
 SAP_HANA_HOST=localhost
 SAP_HANA_PORT=39013
@@ -109,6 +113,7 @@ SAP_HANA_ENCRYPT=true
 ```
 
 **Salesforce:**
+
 ```bash
 SALESFORCE_INSTANCE_URL=https://login.salesforce.com
 SALESFORCE_ACCESS_TOKEN=<token>
@@ -116,6 +121,7 @@ SALESFORCE_USERNAME=user@example.com
 ```
 
 **ServiceNow:**
+
 ```bash
 SERVICENOW_INSTANCE_URL=https://dev12345.service-now.com
 SERVICENOW_USERNAME=admin
@@ -123,6 +129,7 @@ SERVICENOW_PASSWORD=password
 ```
 
 **Jira:**
+
 ```bash
 JIRA_BASE_URL=https://company.atlassian.net
 JIRA_EMAIL=user@example.com
@@ -130,6 +137,7 @@ JIRA_API_TOKEN=<token>
 ```
 
 **SQL Server:**
+
 ```bash
 SQLSERVER_HOST=localhost
 SQLSERVER_PORT=1433
@@ -154,15 +162,18 @@ SQLSERVER_TRUST_CERT=true
 ### Enterprise Systems (Salesforce, ServiceNow, Jira)
 
 **Salesforce:**
+
 - `query` - Execute SOQL queries
 - `list_objects` - List all Salesforce objects
 - `describe_object` - Get object schema
 
 **ServiceNow:**
+
 - `query_table` - Query ServiceNow table
 - `get_incident` - Get incident by ID
 
 **Jira:**
+
 - `search_issues` - Search with JQL
 - `get_issue` - Get issue by key
 - `list_projects` - List all projects
@@ -172,11 +183,13 @@ SQLSERVER_TRUST_CERT=true
 ## 📦 Dependencies
 
 ### Shared Dependencies (All Servers)
+
 - `@modelcontextprotocol/sdk` ^1.0.0
 - `typescript` ^5.3.3
 - `@types/node` ^20.10.6
 
 ### Database-Specific
+
 - **MySQL:** `mysql2` ^3.7.1
 - **MongoDB:** `mongodb` ^6.3.0
 - **SQL Server:** `tedious` ^16.7.1
@@ -219,6 +232,7 @@ cd jira && pnpm install && pnpm build && cd ..
 ```
 
 Or use the workspace root:
+
 ```bash
 cd /home/dexter747/Desktop/AIAdoption-GovernanceEngine
 pnpm install -r
@@ -271,15 +285,15 @@ Desktop app calls `mcpConnectionManager.enableConnection(id)`:
 ```typescript
 async enableConnection(id: string) {
   const connection = this.connections.get(id);
-  
+
   // Get MCP server config
   const serverInfo = this.mcpServers[connection.type];
-  
+
   // Spawn MCP server process
   if (serverInfo.localPath) {
     const mcpServerPath = resolve(__dirname, serverInfo.localPath);
     const serverProcess = spawn('node', [mcpServerPath], { env });
-    
+
     connection.isConnected = true;
     connection.mcpServerInfo.processId = serverProcess.pid;
   }
@@ -301,11 +315,13 @@ When user asks AI to query the database:
 ## 🔐 Security
 
 ### Credential Storage
+
 - All passwords encrypted with AES-256-GCM
 - Encryption key: `ENCRYPTION_KEY` in `.env`
 - Stored in `user_connections` table with RLS policies
 
 ### MCP Server Isolation
+
 - Each MCP server runs as separate process
 - No network exposure (stdio only)
 - Credentials passed via environment variables
@@ -316,6 +332,7 @@ When user asks AI to query the database:
 ## 📈 Next Steps
 
 ### Phase 1: Complete Remaining MCP Servers (1 week)
+
 - [ ] Implement SQLite MCP server
 - [ ] Implement Redis MCP server
 - [ ] Implement Elasticsearch MCP server
@@ -323,6 +340,7 @@ When user asks AI to query the database:
 - [ ] Implement Workday MCP server
 
 ### Phase 2: Testing & Integration (1 week)
+
 - [ ] Test all 15 MCP servers with real databases
 - [ ] Test spawning from desktop app
 - [ ] Test AI query execution via MCP
@@ -330,6 +348,7 @@ When user asks AI to query the database:
 - [ ] Error handling improvements
 
 ### Phase 3: Production Ready (1 week)
+
 - [ ] Add logging and monitoring
 - [ ] Health checks for MCP servers
 - [ ] Auto-restart on failure
@@ -345,7 +364,7 @@ When user asks AI to query the database:
 **Phase 1 (BYOK):** ✅ 100% Complete  
 **Phase 2 (MCP Servers):** 🟡 53% Complete  
 **Phase 3 (Payment/Licensing):** ⚪ 0% Complete  
-**Phase 4 (Polish):** ⚪ 0% Complete  
+**Phase 4 (Polish):** ⚪ 0% Complete
 
 **Project Completion:** ~60-65%
 
@@ -370,6 +389,7 @@ To reach MVP:
 ## 📝 Files Modified
 
 ### New Directories Created
+
 - `packages/mcp-servers/` (parent directory)
 - `packages/mcp-servers/mysql/`
 - `packages/mcp-servers/mongodb/`
@@ -381,13 +401,16 @@ To reach MVP:
 - `packages/mcp-servers/jira/`
 
 ### Files Created (24 total)
+
 Each server has:
+
 - `package.json`
 - `tsconfig.json`
 - `src/index.ts`
 - `dist/index.js` (compiled)
 
 ### Files Modified
+
 - `apps/desktop-app/src/main/mcp/mcp-manager.ts` - Updated to use local MCP servers
 - `database/schema-v3-byok.sql` - Connection types match MCP servers
 
@@ -411,6 +434,7 @@ Each server has:
 This represents a significant milestone - the core MCP infrastructure is now in place. The remaining 7 servers are lower priority and can be implemented as needed.
 
 **Key systems now supported:**
+
 - All major databases (MySQL, MongoDB, Oracle, SQL Server, SAP HANA)
 - Enterprise CRM (Salesforce)
 - IT Service Management (ServiceNow)

@@ -58,7 +58,10 @@ export async function POST(request: NextRequest) {
 
     if (!adminPasswordHash) {
       console.error('ADMIN_PASSWORD_HASH env var is not set');
-      return NextResponse.json({ error: 'Server misconfiguration — ADMIN_PASSWORD_HASH not set' }, { status: 500 });
+      return NextResponse.json(
+        { error: 'Server misconfiguration — ADMIN_PASSWORD_HASH not set' },
+        { status: 500 }
+      );
     }
 
     const normalizedEmail = email.toLowerCase().trim();

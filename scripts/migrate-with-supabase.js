@@ -35,10 +35,14 @@ if (!SUPABASE_URL) {
 if (!SUPABASE_SERVICE_KEY || SUPABASE_SERVICE_KEY === 'your_service_role_key_here') {
   console.error('\n❌ Error: SUPABASE_SERVICE_KEY not configured');
   console.error('\n📝 To fix this:');
-  console.error('   1. Go to https://supabase.com/dashboard/project/lwounfzhkuuqvgkvwxvt/settings/api');
+  console.error(
+    '   1. Go to https://supabase.com/dashboard/project/lwounfzhkuuqvgkvwxvt/settings/api'
+  );
   console.error('   2. Copy the "service_role" key (not the anon key)');
   console.error('   3. Update SUPABASE_SERVICE_KEY in apps/express-api/.env');
-  console.error('\n   OR run with: SUPABASE_SERVICE_KEY=your_key node scripts/migrate-with-supabase.js\n');
+  console.error(
+    '\n   OR run with: SUPABASE_SERVICE_KEY=your_key node scripts/migrate-with-supabase.js\n'
+  );
   process.exit(1);
 }
 
@@ -66,23 +70,23 @@ console.log(`\n🚀 Executing ${statements.length} SQL statements...\n`);
 
 // Use pg-promise style approach via PostgREST
 const data = JSON.stringify({
-  query: sqlContent
+  query: sqlContent,
 });
 
 const options = {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
-    'apikey': SUPABASE_SERVICE_KEY,
-    'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
-    'Prefer': 'return=minimal'
-  }
+    apikey: SUPABASE_SERVICE_KEY,
+    Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+    Prefer: 'return=minimal',
+  },
 };
 
-const req = https.request(url, options, (res) => {
+const req = https.request(url, options, res => {
   let responseData = '';
 
-  res.on('data', (chunk) => {
+  res.on('data', chunk => {
     responseData += chunk;
   });
 
@@ -104,7 +108,7 @@ const req = https.request(url, options, (res) => {
   });
 });
 
-req.on('error', (error) => {
+req.on('error', error => {
   console.error('❌ Request failed:', error.message);
   console.log('\n💡 Please run the SQL manually in Supabase SQL Editor:');
   console.log('   1. Go to https://supabase.com/dashboard/project/lwounfzhkuuqvgkvwxvt/sql/new');

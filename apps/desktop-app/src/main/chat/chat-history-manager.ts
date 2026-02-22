@@ -35,11 +35,14 @@ export interface ChatHistoryStats {
   totalMessages: number;
   totalTokens: number;
   totalCost: number;
-  providerBreakdown: Record<AIProvider, {
-    conversations: number;
-    tokens: number;
-    cost: number;
-  }>;
+  providerBreakdown: Record<
+    AIProvider,
+    {
+      conversations: number;
+      tokens: number;
+      cost: number;
+    }
+  >;
 }
 
 export class ChatHistoryManager {
@@ -120,10 +123,7 @@ export class ChatHistoryManager {
   }
 
   // Add message to conversation
-  addMessage(
-    conversationId: string,
-    message: Omit<ChatMessage, 'id' | 'timestamp'>
-  ): ChatMessage {
+  addMessage(conversationId: string, message: Omit<ChatMessage, 'id' | 'timestamp'>): ChatMessage {
     const conversation = this.conversations.get(conversationId);
     if (!conversation) {
       throw new Error('Conversation not found');
@@ -248,9 +248,7 @@ export class ChatHistoryManager {
           return true;
         }
         // Search in messages
-        return conv.messages.some(msg =>
-          msg.content.toLowerCase().includes(lowerQuery)
-        );
+        return conv.messages.some(msg => msg.content.toLowerCase().includes(lowerQuery));
       })
       .sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
   }
@@ -258,7 +256,7 @@ export class ChatHistoryManager {
   // Get statistics
   getStats(): ChatHistoryStats {
     const conversations = Array.from(this.conversations.values());
-    
+
     const providerBreakdown: Record<string, any> = {};
     let totalMessages = 0;
     let totalTokens = 0;
@@ -304,7 +302,7 @@ export class ChatHistoryManager {
   // Import conversation from JSON
   importConversation(json: string): ChatConversation {
     const data = JSON.parse(json);
-    
+
     // Generate new ID
     const id = crypto.randomUUID();
     const conversation: ChatConversation = {
@@ -329,10 +327,10 @@ export class ChatHistoryManager {
   private generateTitle(content: string): string {
     // Take first 50 characters
     let title = content.substring(0, 50);
-    
+
     // Clean up
     title = title.replace(/\n/g, ' ').trim();
-    
+
     // Add ellipsis if truncated
     if (content.length > 50) {
       title += '...';

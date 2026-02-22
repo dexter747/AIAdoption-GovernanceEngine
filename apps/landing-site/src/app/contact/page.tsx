@@ -2,7 +2,17 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { Sparkles, ArrowLeft, Mail, MessageSquare, Phone, MapPin, Send, Loader2, CheckCircle2 } from 'lucide-react';
+import {
+  Sparkles,
+  ArrowLeft,
+  Mail,
+  MessageSquare,
+  Phone,
+  MapPin,
+  Send,
+  Loader2,
+  CheckCircle2,
+} from 'lucide-react';
 
 export default function ContactPage() {
   const [formState, setFormState] = useState<'idle' | 'submitting' | 'success'>('idle');
@@ -10,13 +20,13 @@ export default function ContactPage() {
     name: '',
     email: '',
     subject: '',
-    message: ''
+    message: '',
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormState('submitting');
-    
+
     // Simulate form submission
     await new Promise(resolve => setTimeout(resolve, 1500));
     setFormState('success');
@@ -30,9 +40,14 @@ export default function ContactPage() {
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="flex items-center gap-2">
               <Sparkles className="w-8 h-8 text-primary" />
-              <span className="text-xl font-medium bg-gradient-to-r from-primary to-zinc-600 bg-clip-text text-transparent">Velanova</span>
+              <span className="text-xl font-medium bg-gradient-to-r from-primary to-zinc-600 bg-clip-text text-transparent">
+                Velanova
+              </span>
             </Link>
-            <Link href="/" className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-2">
+            <Link
+              href="/"
+              className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-2"
+            >
               <ArrowLeft className="w-4 h-4" /> Back to Home
             </Link>
           </div>
@@ -44,7 +59,8 @@ export default function ContactPage() {
           <div className="text-center mb-16">
             <h1 className="text-4xl font-medium text-foreground mb-4">Get in Touch</h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Have a question or need help? We&apos;re here for you. Choose how you&apos;d like to reach us.
+              Have a question or need help? We&apos;re here for you. Choose how you&apos;d like to
+              reach us.
             </p>
           </div>
 
@@ -54,8 +70,12 @@ export default function ContactPage() {
                 <Mail className="w-6 h-6 text-primary" />
               </div>
               <h3 className="font-medium text-foreground mb-2">Email Us</h3>
-              <p className="text-muted-foreground text-sm mb-4">For general inquiries and support</p>
-              <a href="mailto:hello@velanova.com" className="text-primary hover:underline">hello@velanova.com</a>
+              <p className="text-muted-foreground text-sm mb-4">
+                For general inquiries and support
+              </p>
+              <a href="mailto:hello@velanova.com" className="text-primary hover:underline">
+                hello@velanova.com
+              </a>
             </div>
 
             <div className="bg-muted/30 border border-border rounded-2xl p-6 text-center hover:border-primary/50 transition-colors">
@@ -72,8 +92,12 @@ export default function ContactPage() {
                 <Phone className="w-6 h-6 text-primary" />
               </div>
               <h3 className="font-medium text-foreground mb-2">Sales</h3>
-              <p className="text-muted-foreground text-sm mb-4">For enterprise and partnership inquiries</p>
-              <a href="mailto:sales@velanova.com" className="text-primary hover:underline">sales@velanova.com</a>
+              <p className="text-muted-foreground text-sm mb-4">
+                For enterprise and partnership inquiries
+              </p>
+              <a href="mailto:sales@velanova.com" className="text-primary hover:underline">
+                sales@velanova.com
+              </a>
             </div>
           </div>
 
@@ -81,13 +105,15 @@ export default function ContactPage() {
             {/* Contact Form */}
             <div>
               <h2 className="text-2xl font-medium text-foreground mb-6">Send us a Message</h2>
-              
+
               {formState === 'success' ? (
                 <div className="bg-white/5 border border-zinc-700/30 rounded-2xl p-8 text-center">
                   <CheckCircle2 className="w-12 h-12 text-zinc-400 mx-auto mb-4" />
                   <h3 className="text-xl font-medium text-foreground mb-2">Message Sent!</h3>
-                  <p className="text-muted-foreground mb-6">Thanks for reaching out. We&apos;ll get back to you within 24 hours.</p>
-                  <button 
+                  <p className="text-muted-foreground mb-6">
+                    Thanks for reaching out. We&apos;ll get back to you within 24 hours.
+                  </p>
+                  <button
                     onClick={() => {
                       setFormState('idle');
                       setFormData({ name: '', email: '', subject: '', message: '' });
@@ -101,25 +127,35 @@ export default function ContactPage() {
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
-                      <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">Name</label>
+                      <label
+                        htmlFor="name"
+                        className="block text-sm font-medium text-foreground mb-2"
+                      >
+                        Name
+                      </label>
                       <input
                         type="text"
                         id="name"
                         required
                         value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        onChange={e => setFormData({ ...formData, name: e.target.value })}
                         className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors"
                         placeholder="Your name"
                       />
                     </div>
                     <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">Email</label>
+                      <label
+                        htmlFor="email"
+                        className="block text-sm font-medium text-foreground mb-2"
+                      >
+                        Email
+                      </label>
                       <input
                         type="email"
                         id="email"
                         required
                         value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        onChange={e => setFormData({ ...formData, email: e.target.value })}
                         className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors"
                         placeholder="you@example.com"
                       />
@@ -127,12 +163,17 @@ export default function ContactPage() {
                   </div>
 
                   <div>
-                    <label htmlFor="subject" className="block text-sm font-medium text-foreground mb-2">Subject</label>
+                    <label
+                      htmlFor="subject"
+                      className="block text-sm font-medium text-foreground mb-2"
+                    >
+                      Subject
+                    </label>
                     <select
                       id="subject"
                       required
                       value={formData.subject}
-                      onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                      onChange={e => setFormData({ ...formData, subject: e.target.value })}
                       className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors"
                     >
                       <option value="">Select a topic</option>
@@ -146,13 +187,18 @@ export default function ContactPage() {
                   </div>
 
                   <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-foreground mb-2">Message</label>
+                    <label
+                      htmlFor="message"
+                      className="block text-sm font-medium text-foreground mb-2"
+                    >
+                      Message
+                    </label>
                     <textarea
                       id="message"
                       required
                       rows={5}
                       value={formData.message}
-                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      onChange={e => setFormData({ ...formData, message: e.target.value })}
                       className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors resize-none"
                       placeholder="Tell us how we can help..."
                     />
@@ -182,7 +228,7 @@ export default function ContactPage() {
             {/* Office Info */}
             <div>
               <h2 className="text-2xl font-medium text-foreground mb-6">Our Office</h2>
-              
+
               <div className="bg-muted/30 border border-border rounded-2xl p-6 mb-8">
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
@@ -191,8 +237,10 @@ export default function ContactPage() {
                   <div>
                     <h3 className="font-medium text-foreground mb-2">Headquarters</h3>
                     <p className="text-muted-foreground">
-                      123 Tech Street, Suite 500<br />
-                      San Francisco, CA 94105<br />
+                      123 Tech Street, Suite 500
+                      <br />
+                      San Francisco, CA 94105
+                      <br />
                       United States
                     </p>
                   </div>
@@ -203,15 +251,24 @@ export default function ContactPage() {
               <div className="space-y-4">
                 <div className="bg-muted/30 border border-border rounded-xl p-4">
                   <h4 className="font-medium text-foreground mb-2">How long does support take?</h4>
-                  <p className="text-muted-foreground text-sm">We typically respond within 24 hours for general inquiries and 4 hours for urgent technical issues.</p>
+                  <p className="text-muted-foreground text-sm">
+                    We typically respond within 24 hours for general inquiries and 4 hours for
+                    urgent technical issues.
+                  </p>
                 </div>
                 <div className="bg-muted/30 border border-border rounded-xl p-4">
                   <h4 className="font-medium text-foreground mb-2">Do you offer demos?</h4>
-                  <p className="text-muted-foreground text-sm">Yes! Contact our sales team to schedule a personalized demo for your organization.</p>
+                  <p className="text-muted-foreground text-sm">
+                    Yes! Contact our sales team to schedule a personalized demo for your
+                    organization.
+                  </p>
                 </div>
                 <div className="bg-muted/30 border border-border rounded-xl p-4">
                   <h4 className="font-medium text-foreground mb-2">Can I get a custom plan?</h4>
-                  <p className="text-muted-foreground text-sm">Absolutely. Our Enterprise plan is fully customizable to your needs. Let&apos;s talk!</p>
+                  <p className="text-muted-foreground text-sm">
+                    Absolutely. Our Enterprise plan is fully customizable to your needs. Let&apos;s
+                    talk!
+                  </p>
                 </div>
               </div>
             </div>
@@ -224,9 +281,15 @@ export default function ContactPage() {
         <div className="container mx-auto px-4 text-center">
           <p className="text-sm text-muted-foreground">© 2025 Velanova. All rights reserved.</p>
           <div className="flex justify-center gap-6 mt-4">
-            <Link href="/privacy" className="text-sm text-muted-foreground hover:text-foreground">Privacy Policy</Link>
-            <Link href="/terms" className="text-sm text-muted-foreground hover:text-foreground">Terms of Service</Link>
-            <Link href="/contact" className="text-sm text-primary hover:underline">Contact</Link>
+            <Link href="/privacy" className="text-sm text-muted-foreground hover:text-foreground">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="text-sm text-muted-foreground hover:text-foreground">
+              Terms of Service
+            </Link>
+            <Link href="/contact" className="text-sm text-primary hover:underline">
+              Contact
+            </Link>
           </div>
         </div>
       </footer>

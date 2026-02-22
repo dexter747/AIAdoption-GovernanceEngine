@@ -14,7 +14,7 @@ export class MistralProvider {
     if (!config.apiKey) {
       throw new Error('Mistral API key not configured');
     }
-    
+
     this.client = new Mistral({
       apiKey: config.apiKey,
     });
@@ -30,7 +30,7 @@ export class MistralProvider {
       });
 
       const choice = response.choices[0];
-      
+
       return {
         id: response.id,
         message: {
@@ -46,14 +46,14 @@ export class MistralProvider {
       };
     } catch (err) {
       logger.error({ error: err.message, model }, 'Mistral chat failed');
-      
+
       if (err.status === 429) {
         throw ApiError.tooManyRequests('Mistral rate limit exceeded');
       }
       if (err.status === 401) {
         throw ApiError.unauthorized('Invalid Mistral API key');
       }
-      
+
       throw ApiError.internal(`Mistral error: ${err.message}`);
     }
   }

@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Star, Quote } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Star, Quote } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -19,12 +19,66 @@ interface Testimonial {
 }
 
 const testimonials: Testimonial[] = [
-  { quote: "Velanova transformed how our team accesses data. What used to take days now takes minutes. The ROI was immediate - we saved 40 hours per week in the first month alone.", author: "Sarah Chen", role: "VP of Engineering", company: "TechCorp Global", avatar: "SC", rating: 5, results: "89% faster data access" },
-  { quote: "The security features are enterprise-grade. Our team was impressed with the BYOK implementation and zero-knowledge architecture — our data never leaves our infrastructure.", author: "Michael Rodriguez", role: "CISO", company: "SecureBank", avatar: "MR", rating: 5, results: "Zero-knowledge deployment" },
-  { quote: "We connected 12 legacy systems in one day. The natural language interface means our business analysts can query data directly without waiting for IT.", author: "Emily Watson", role: "Chief Data Officer", company: "RetailCo", avatar: "EW", rating: 5, results: "12 systems integrated" },
-  { quote: "The BYOK feature saved us $40K/month in AI costs. We use our own OpenAI credits and have complete visibility into usage.", author: "David Kim", role: "Head of Finance Systems", company: "FinanceHub", avatar: "DK", rating: 5, results: "$480K annual savings" },
-  { quote: "Implementation was shockingly fast. We went from POC to production in 48 hours. The desktop app approach means zero infrastructure changes.", author: "Lisa Thompson", role: "Director of IT", company: "HealthTech Solutions", avatar: "LT", rating: 5, results: "48hr implementation" },
-  { quote: "The multi-database query capability is phenomenal. We can join data from Oracle, PostgreSQL, and MongoDB in a single query.", author: "James Park", role: "Senior Data Architect", company: "DataFlow Industries", avatar: "JP", rating: 5, results: "3 databases, 1 query" },
+  {
+    quote:
+      'Velanova transformed how our team accesses data. What used to take days now takes minutes. The ROI was immediate - we saved 40 hours per week in the first month alone.',
+    author: 'Sarah Chen',
+    role: 'VP of Engineering',
+    company: 'TechCorp Global',
+    avatar: 'SC',
+    rating: 5,
+    results: '89% faster data access',
+  },
+  {
+    quote:
+      'The security features are enterprise-grade. Our team was impressed with the BYOK implementation and zero-knowledge architecture — our data never leaves our infrastructure.',
+    author: 'Michael Rodriguez',
+    role: 'CISO',
+    company: 'SecureBank',
+    avatar: 'MR',
+    rating: 5,
+    results: 'Zero-knowledge deployment',
+  },
+  {
+    quote:
+      'We connected 12 legacy systems in one day. The natural language interface means our business analysts can query data directly without waiting for IT.',
+    author: 'Emily Watson',
+    role: 'Chief Data Officer',
+    company: 'RetailCo',
+    avatar: 'EW',
+    rating: 5,
+    results: '12 systems integrated',
+  },
+  {
+    quote:
+      'The BYOK feature saved us $40K/month in AI costs. We use our own OpenAI credits and have complete visibility into usage.',
+    author: 'David Kim',
+    role: 'Head of Finance Systems',
+    company: 'FinanceHub',
+    avatar: 'DK',
+    rating: 5,
+    results: '$480K annual savings',
+  },
+  {
+    quote:
+      'Implementation was shockingly fast. We went from POC to production in 48 hours. The desktop app approach means zero infrastructure changes.',
+    author: 'Lisa Thompson',
+    role: 'Director of IT',
+    company: 'HealthTech Solutions',
+    avatar: 'LT',
+    rating: 5,
+    results: '48hr implementation',
+  },
+  {
+    quote:
+      'The multi-database query capability is phenomenal. We can join data from Oracle, PostgreSQL, and MongoDB in a single query.',
+    author: 'James Park',
+    role: 'Senior Data Architect',
+    company: 'DataFlow Industries',
+    avatar: 'JP',
+    rating: 5,
+    results: '3 databases, 1 query',
+  },
 ];
 
 const row1 = [...testimonials.slice(0, 3), ...testimonials.slice(3, 6)];
@@ -58,7 +112,9 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
         </div>
         <div className="min-w-0">
           <div className="font-medium text-white text-sm">{testimonial.author}</div>
-          <div className="text-xs text-zinc-600">{testimonial.role} &middot; {testimonial.company}</div>
+          <div className="text-xs text-zinc-600">
+            {testimonial.role} &middot; {testimonial.company}
+          </div>
         </div>
       </div>
     </div>
@@ -69,9 +125,9 @@ function MarqueeRow({ items, reverse = false }: { items: Testimonial[]; reverse?
   const doubled = [...items, ...items];
   return (
     <div className="relative flex overflow-hidden">
-      <div className={cn("flex w-max", reverse ? "animate-marquee-reverse" : "animate-marquee")}>
+      <div className={cn('flex w-max', reverse ? 'animate-marquee-reverse' : 'animate-marquee')}>
         {doubled.map((t, i) => (
-          <TestimonialCard key={t.author + "-" + i} testimonial={t} />
+          <TestimonialCard key={t.author + '-' + i} testimonial={t} />
         ))}
       </div>
     </div>
@@ -83,17 +139,27 @@ export function TestimonialsSection() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(".test-header > *", {
-        opacity: 0, y: 30, duration: 0.7, stagger: 0.12, immediateRender: false,
-        scrollTrigger: { trigger: ".test-header", start: "top 85%", once: true },
+      gsap.from('.test-header > *', {
+        opacity: 0,
+        y: 30,
+        duration: 0.7,
+        stagger: 0.12,
+        immediateRender: false,
+        scrollTrigger: { trigger: '.test-header', start: 'top 85%', once: true },
       });
-      gsap.from(".test-marquee", {
-        opacity: 0, duration: 1, immediateRender: false,
-        scrollTrigger: { trigger: ".test-marquee", start: "top 90%", once: true },
+      gsap.from('.test-marquee', {
+        opacity: 0,
+        duration: 1,
+        immediateRender: false,
+        scrollTrigger: { trigger: '.test-marquee', start: 'top 90%', once: true },
       });
-      gsap.from(".test-stat", {
-        opacity: 0, y: 20, duration: 0.5, stagger: 0.1, immediateRender: false,
-        scrollTrigger: { trigger: ".test-stats", start: "top 90%", once: true },
+      gsap.from('.test-stat', {
+        opacity: 0,
+        y: 20,
+        duration: 0.5,
+        stagger: 0.1,
+        immediateRender: false,
+        scrollTrigger: { trigger: '.test-stats', start: 'top 90%', once: true },
       });
     }, ref);
     return () => ctx.revert();
@@ -131,10 +197,10 @@ export function TestimonialsSection() {
       <div className="test-stats relative max-w-7xl mx-auto px-6 mt-16">
         <div className="flex flex-wrap items-center justify-center gap-10">
           {[
-            { value: "4.9/5", label: "Average Rating" },
-            { value: "2,500+", label: "Enterprise Customers" },
-            { value: "98%", label: "Customer Satisfaction" },
-            { value: "10M+", label: "Queries Processed" },
+            { value: '4.9/5', label: 'Average Rating' },
+            { value: '2,500+', label: 'Enterprise Customers' },
+            { value: '98%', label: 'Customer Satisfaction' },
+            { value: '10M+', label: 'Queries Processed' },
           ].map((stat, i, arr) => (
             <div key={stat.label} className="test-stat flex items-center gap-10">
               <div className="text-center">

@@ -16,10 +16,10 @@ export class LicenseManager {
       if (response.data.valid) {
         this.cachedLicense = response.data.license;
         this.lastValidation = new Date();
-        
+
         // Store license key in settings
         // TODO: Implement secure storage
-        
+
         return { valid: true, license: response.data.license };
       }
 
@@ -41,7 +41,7 @@ export class LicenseManager {
     if (this.lastValidation) {
       const daysSinceValidation =
         (Date.now() - this.lastValidation.getTime()) / (1000 * 60 * 60 * 24);
-      
+
       if (daysSinceValidation < 7) {
         return { valid: true, license: this.cachedLicense! };
       }

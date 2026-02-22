@@ -84,8 +84,16 @@ export const uuidSchema = z.string().uuid('Invalid UUID format');
 
 // Pagination schema
 export const paginationSchema = z.object({
-  page: z.string().optional().transform(v => parseInt(v || '1', 10)).pipe(z.number().min(1)),
-  limit: z.string().optional().transform(v => parseInt(v || '20', 10)).pipe(z.number().min(1).max(100)),
+  page: z
+    .string()
+    .optional()
+    .transform(v => parseInt(v || '1', 10))
+    .pipe(z.number().min(1)),
+  limit: z
+    .string()
+    .optional()
+    .transform(v => parseInt(v || '20', 10))
+    .pipe(z.number().min(1).max(100)),
   sortBy: z.string().optional(),
   sortOrder: z.enum(['asc', 'desc']).optional().default('desc'),
 });
@@ -94,21 +102,27 @@ export const paginationSchema = z.object({
 export const licenseKeySchema = z.object({
   licenseKey: z.string().min(8, 'License key must be at least 8 characters').max(256),
   deviceId: z.string().min(1, 'Device ID is required').max(256),
-  deviceInfo: z.object({
-    platform: z.string().optional(),
-    arch: z.string().optional(),
-    hostname: z.string().optional(),
-  }).optional(),
+  deviceInfo: z
+    .object({
+      platform: z.string().optional(),
+      arch: z.string().optional(),
+      hostname: z.string().optional(),
+    })
+    .optional(),
 });
 
 // AI Query schema
 export const aiQuerySchema = z.object({
   provider: z.string().min(1, 'Provider is required'),
   model: z.string().min(1, 'Model is required'),
-  messages: z.array(z.object({
-    role: z.enum(['system', 'user', 'assistant']),
-    content: z.string().min(1),
-  })).min(1, 'At least one message is required'),
+  messages: z
+    .array(
+      z.object({
+        role: z.enum(['system', 'user', 'assistant']),
+        content: z.string().min(1),
+      })
+    )
+    .min(1, 'At least one message is required'),
   temperature: z.number().min(0).max(2).optional().default(0.7),
   maxTokens: z.number().min(1).max(128000).optional(),
   connectionId: z.string().optional(),
@@ -120,19 +134,29 @@ export const userApiKeySchema = z.object({
   provider: z.string().min(1, 'Provider is required'),
   apiKey: z.string().min(8, 'API key must be at least 8 characters'),
   keyName: z.string().max(100).optional(),
-  config: z.object({
-    orgId: z.string().optional(),
-    baseUrl: z.string().url().optional(),
-    version: z.string().optional(),
-  }).optional(),
+  config: z
+    .object({
+      orgId: z.string().optional(),
+      baseUrl: z.string().url().optional(),
+      version: z.string().optional(),
+    })
+    .optional(),
 });
 
 // User Connection schema
 export const userConnectionSchema = z.object({
   name: z.string().min(1, 'Connection name is required').max(100),
   connectionType: z.enum([
-    'postgresql', 'mysql', 'sqlserver', 'oracle', 'mongodb',
-    'sap-hana', 'salesforce', 'servicenow', 'jira', 'sqlite'
+    'postgresql',
+    'mysql',
+    'sqlserver',
+    'oracle',
+    'mongodb',
+    'sap-hana',
+    'salesforce',
+    'servicenow',
+    'jira',
+    'sqlite',
   ]),
   config: z.object({
     host: z.string().optional(),

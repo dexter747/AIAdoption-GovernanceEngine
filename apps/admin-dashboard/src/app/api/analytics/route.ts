@@ -11,7 +11,7 @@ export async function GET() {
   try {
     const now = new Date();
     const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-    
+
     // Get daily user signups for the last 30 days
     const { data: usersData } = await supabaseAdmin
       .from('users')
@@ -35,9 +35,7 @@ export async function GET() {
       .order('activated_at', { ascending: true });
 
     // Get plan distribution from subscriptions
-    const { data: plansData } = await supabaseAdmin
-      .from('subscriptions')
-      .select('plan');
+    const { data: plansData } = await supabaseAdmin.from('subscriptions').select('plan');
 
     // Process into daily data
     const dailyUsers: Record<string, number> = {};
@@ -126,9 +124,6 @@ export async function GET() {
     });
   } catch (error) {
     console.error('Error fetching analytics:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch analytics' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch analytics' }, { status: 500 });
   }
 }

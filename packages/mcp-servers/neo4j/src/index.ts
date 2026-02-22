@@ -2,21 +2,59 @@
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { CallToolRequestSchema, ListToolsRequestSchema, Tool } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+  Tool,
+} from '@modelcontextprotocol/sdk/types.js';
 import neo4j, { Driver } from 'neo4j-driver';
 
 let driver: Driver | null = null;
 
 const TOOLS: Tool[] = [
-  { name: 'query', description: 'Execute a Cypher query', inputSchema: { type: 'object', properties: { cypher: { type: 'string', description: 'Cypher query' }, params: { type: 'object', description: 'Query parameters' } }, required: ['cypher'] } },
-  { name: 'list_labels', description: 'List all node labels', inputSchema: { type: 'object', properties: {} } },
-  { name: 'list_relationship_types', description: 'List all relationship types', inputSchema: { type: 'object', properties: {} } },
-  { name: 'get_schema', description: 'Get database schema visualization', inputSchema: { type: 'object', properties: {} } },
-  { name: 'get_indexes', description: 'List all indexes', inputSchema: { type: 'object', properties: {} } },
-  { name: 'get_constraints', description: 'List all constraints', inputSchema: { type: 'object', properties: {} } },
+  {
+    name: 'query',
+    description: 'Execute a Cypher query',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        cypher: { type: 'string', description: 'Cypher query' },
+        params: { type: 'object', description: 'Query parameters' },
+      },
+      required: ['cypher'],
+    },
+  },
+  {
+    name: 'list_labels',
+    description: 'List all node labels',
+    inputSchema: { type: 'object', properties: {} },
+  },
+  {
+    name: 'list_relationship_types',
+    description: 'List all relationship types',
+    inputSchema: { type: 'object', properties: {} },
+  },
+  {
+    name: 'get_schema',
+    description: 'Get database schema visualization',
+    inputSchema: { type: 'object', properties: {} },
+  },
+  {
+    name: 'get_indexes',
+    description: 'List all indexes',
+    inputSchema: { type: 'object', properties: {} },
+  },
+  {
+    name: 'get_constraints',
+    description: 'List all constraints',
+    inputSchema: { type: 'object', properties: {} },
+  },
 ];
 
-const server = new Server({ name: 'neo4j-mcp-server', version: '1.0.0' }, { capabilities: { tools: {} } });
+const server = new Server(
+  { name: 'neo4j-mcp-server', version: '1.0.0' },
+  { capabilities: { tools: {} } }
+);
 
 async function initConnection() {
   const uri = process.env.NEO4J_URI || 'bolt://localhost:7687';
@@ -40,7 +78,7 @@ async function runCypher(cypher: string, params?: Record<string, any>) {
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: TOOLS }));
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   const { name, arguments: args } = request.params;
   try {
     switch (name) {
@@ -68,7 +106,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const rows = await runCypher('SHOW CONSTRAINTS');
         return { content: [{ type: 'text' as const, text: JSON.stringify(rows, null, 2) }] };
       }
-      default: throw new Error(`Unknown tool: ${name}`);
+      default:
+        throw new Error(`Unknown tool: ${name}`);
     }
   } catch (error: any) {
     return { content: [{ type: 'text' as const, text: `Error: ${error.message}` }], isError: true };

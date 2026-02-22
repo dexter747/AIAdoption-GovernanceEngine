@@ -6,11 +6,17 @@ function Toggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
   return (
     <button
       onClick={onToggle}
-      className={cn('w-9 h-5 rounded-full transition-colors relative flex-shrink-0',
-        on ? 'bg-emerald-600/80' : 'bg-white/[0.08]')}
+      className={cn(
+        'w-9 h-5 rounded-full transition-colors relative flex-shrink-0',
+        on ? 'bg-emerald-600/80' : 'bg-white/[0.08]'
+      )}
     >
-      <span className={cn('absolute top-0.5 w-4 h-4 bg-white/90 rounded-full shadow transition-all',
-        on ? 'left-4' : 'left-0.5')} />
+      <span
+        className={cn(
+          'absolute top-0.5 w-4 h-4 bg-white/90 rounded-full shadow transition-all',
+          on ? 'left-4' : 'left-0.5'
+        )}
+      />
     </button>
   );
 }
@@ -37,10 +43,10 @@ export default function SettingsPage() {
   });
 
   const tabs = [
-    { id: 'general',       name: 'General',       icon: Database },
-    { id: 'ai',            name: 'AI Provider',   icon: Key },
+    { id: 'general', name: 'General', icon: Database },
+    { id: 'ai', name: 'AI Provider', icon: Key },
     { id: 'notifications', name: 'Notifications', icon: Bell },
-    { id: 'security',      name: 'Security',      icon: Shield },
+    { id: 'security', name: 'Security', icon: Shield },
   ];
 
   // Load settings + connections on mount
@@ -50,7 +56,8 @@ export default function SettingsPage() {
         setLoading(true);
         const [allSettings, conns] = await Promise.all([
           window.electron.settings?.getAll?.(),
-          window.electron.mcp?.getAllConnections?.()
+          window.electron.mcp
+            ?.getAllConnections?.()
             .catch(() => window.electron.express?.getUserConnections?.())
             .catch(() => []),
         ]);
@@ -98,17 +105,28 @@ export default function SettingsPage() {
   }, []);
 
   // Update state + persist
-  const updateSetting = useCallback((key: string, value: any) => {
-    setSettings(prev => ({ ...prev, [key]: value }));
-    persist(key, value);
-  }, [persist]);
+  const updateSetting = useCallback(
+    (key: string, value: any) => {
+      setSettings(prev => ({ ...prev, [key]: value }));
+      persist(key, value);
+    },
+    [persist]
+  );
 
   // Clear all data
   const handleClearData = async () => {
     if (!confirm('This will remove all connections, history, and settings. Continue?')) return;
     try {
       // Clear settings
-      const keys = ['defaultDatabase', 'autoConnect', 'saveHistory', 'apiProvider', 'apiKey', 'notifications', 'soundEffects'];
+      const keys = [
+        'defaultDatabase',
+        'autoConnect',
+        'saveHistory',
+        'apiProvider',
+        'apiKey',
+        'notifications',
+        'soundEffects',
+      ];
       for (const key of keys) {
         await window.electron.settings?.set?.(key, null);
       }
@@ -170,7 +188,9 @@ export default function SettingsPage() {
     <div className="h-full flex flex-col overflow-hidden">
       {/* Toolbar */}
       <div className="toolbar app-region-drag">
-        <h1 className="text-[13px] font-medium text-white/80 app-region-no-drag select-none">Settings</h1>
+        <h1 className="text-[13px] font-medium text-white/80 app-region-no-drag select-none">
+          Settings
+        </h1>
         {saved && (
           <span className="ml-3 flex items-center gap-1 text-[11px] text-emerald-400/70 app-region-no-drag">
             <CheckCircle className="w-3 h-3" /> Saved
@@ -179,10 +199,16 @@ export default function SettingsPage() {
         <div className="w-px h-4 bg-white/[0.08] mx-3" />
         <div className="flex items-center gap-0.5 app-region-no-drag">
           {tabs.map(tab => (
-            <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-              className={cn('tab-strip-item flex items-center gap-1.5',
-                activeTab === tab.id ? 'is-active' : '')}>
-              <tab.icon className="w-3 h-3" />{tab.name}
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={cn(
+                'tab-strip-item flex items-center gap-1.5',
+                activeTab === tab.id ? 'is-active' : ''
+              )}
+            >
+              <tab.icon className="w-3 h-3" />
+              {tab.name}
             </button>
           ))}
         </div>
@@ -191,13 +217,16 @@ export default function SettingsPage() {
       {/* Content */}
       <div className="flex-1 overflow-auto p-6 bg-[#0b0b0b]">
         <div className="max-w-md space-y-5">
-
           {activeTab === 'general' && (
             <>
               <div>
-                <label className="block text-[11px] font-medium text-white/40 uppercase tracking-wider mb-1.5">Default Database</label>
+                <label className="block text-[11px] font-medium text-white/40 uppercase tracking-wider mb-1.5">
+                  Default Database
+                </label>
                 {connections.length === 0 ? (
-                  <p className="text-[12px] text-white/30">No connections — add one in the Connections page</p>
+                  <p className="text-[12px] text-white/30">
+                    No connections — add one in the Connections page
+                  </p>
                 ) : (
                   <select
                     value={settings.defaultDatabase}
@@ -205,22 +234,43 @@ export default function SettingsPage() {
                     className="input-desktop w-full"
                   >
                     {connections.map(c => (
-                      <option key={c.id} value={c.id}>{c.name} ({c.type})</option>
+                      <option key={c.id} value={c.id}>
+                        {c.name} ({c.type})
+                      </option>
                     ))}
                   </select>
                 )}
               </div>
               <div className="rounded-lg border border-white/[0.06] overflow-hidden">
-                {([
-                  { key: 'autoConnect', label: 'Auto-connect on startup',  desc: 'Connect to the default database at launch' },
-                  { key: 'saveHistory', label: 'Save query history',        desc: 'Store your previous queries locally' },
-                ] as const).map(({ key, label, desc }, i) => (
-                  <div key={key} className={cn('flex items-center justify-between px-4 py-3', i === 0 && 'border-b border-white/[0.04]')}>
+                {(
+                  [
+                    {
+                      key: 'autoConnect',
+                      label: 'Auto-connect on startup',
+                      desc: 'Connect to the default database at launch',
+                    },
+                    {
+                      key: 'saveHistory',
+                      label: 'Save query history',
+                      desc: 'Store your previous queries locally',
+                    },
+                  ] as const
+                ).map(({ key, label, desc }, i) => (
+                  <div
+                    key={key}
+                    className={cn(
+                      'flex items-center justify-between px-4 py-3',
+                      i === 0 && 'border-b border-white/[0.04]'
+                    )}
+                  >
                     <div>
                       <p className="text-[12px] font-medium text-white/70">{label}</p>
                       <p className="text-[10.5px] text-white/30">{desc}</p>
                     </div>
-                    <Toggle on={settings[key]} onToggle={() => updateSetting(key, !settings[key])} />
+                    <Toggle
+                      on={settings[key]}
+                      onToggle={() => updateSetting(key, !settings[key])}
+                    />
                   </div>
                 ))}
               </div>
@@ -230,7 +280,9 @@ export default function SettingsPage() {
           {activeTab === 'ai' && (
             <>
               <div>
-                <label className="block text-[11px] font-medium text-white/40 uppercase tracking-wider mb-1.5">AI Provider</label>
+                <label className="block text-[11px] font-medium text-white/40 uppercase tracking-wider mb-1.5">
+                  AI Provider
+                </label>
                 <select
                   value={settings.apiProvider}
                   onChange={e => updateSetting('apiProvider', e.target.value)}
@@ -249,29 +301,47 @@ export default function SettingsPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-[11px] font-medium text-white/40 uppercase tracking-wider mb-1.5">API Key</label>
+                <label className="block text-[11px] font-medium text-white/40 uppercase tracking-wider mb-1.5">
+                  API Key
+                </label>
                 <input
                   type="password"
                   value={settings.apiKey}
                   onChange={e => {
                     setSettings(prev => ({ ...prev, apiKey: e.target.value }));
                   }}
-                  onBlur={e => { if (e.target.value) persist('apiKey', e.target.value); }}
+                  onBlur={e => {
+                    if (e.target.value) persist('apiKey', e.target.value);
+                  }}
                   placeholder="sk-..."
                   className="input-desktop w-full"
                 />
-                <p className="text-[10.5px] text-white/25 mt-1.5">Stored securely on this device only</p>
+                <p className="text-[10.5px] text-white/25 mt-1.5">
+                  Stored securely on this device only
+                </p>
               </div>
             </>
           )}
 
           {activeTab === 'notifications' && (
             <div className="rounded-lg border border-white/[0.06] overflow-hidden">
-              {([
-                { key: 'notifications', label: 'Desktop notifications', desc: 'Show in-app toast messages' },
-                { key: 'soundEffects',  label: 'Sound effects',         desc: 'Play sounds for actions' },
-              ] as const).map(({ key, label, desc }, i) => (
-                <div key={key} className={cn('flex items-center justify-between px-4 py-3', i === 0 && 'border-b border-white/[0.04]')}>
+              {(
+                [
+                  {
+                    key: 'notifications',
+                    label: 'Desktop notifications',
+                    desc: 'Show in-app toast messages',
+                  },
+                  { key: 'soundEffects', label: 'Sound effects', desc: 'Play sounds for actions' },
+                ] as const
+              ).map(({ key, label, desc }, i) => (
+                <div
+                  key={key}
+                  className={cn(
+                    'flex items-center justify-between px-4 py-3',
+                    i === 0 && 'border-b border-white/[0.04]'
+                  )}
+                >
                   <div>
                     <p className="text-[12px] font-medium text-white/70">{label}</p>
                     <p className="text-[10.5px] text-white/30">{desc}</p>
@@ -288,7 +358,9 @@ export default function SettingsPage() {
                 <Shield className="w-4 h-4 text-white/25 flex-shrink-0" />
                 <div>
                   <p className="text-[12px] font-medium text-white/70">AES-256 Encryption</p>
-                  <p className="text-[10.5px] text-white/30">All sensitive data is encrypted locally</p>
+                  <p className="text-[10.5px] text-white/30">
+                    All sensitive data is encrypted locally
+                  </p>
                 </div>
               </div>
               <button
@@ -296,7 +368,9 @@ export default function SettingsPage() {
                 className="w-full text-left px-4 py-3 rounded-lg border border-white/[0.06] bg-white/[0.015] hover:bg-white/[0.03] transition-colors"
               >
                 <p className="text-[12px] font-medium text-white/70">Clear all stored data</p>
-                <p className="text-[10.5px] text-white/30">Remove all connections, history, and settings</p>
+                <p className="text-[10.5px] text-white/30">
+                  Remove all connections, history, and settings
+                </p>
               </button>
               <button
                 onClick={handleExportData}
@@ -304,13 +378,14 @@ export default function SettingsPage() {
               >
                 <div className="flex-1">
                   <p className="text-[12px] font-medium text-white/70">Export data</p>
-                  <p className="text-[10.5px] text-white/30">Download all your data in JSON format</p>
+                  <p className="text-[10.5px] text-white/30">
+                    Download all your data in JSON format
+                  </p>
                 </div>
                 <Download className="w-4 h-4 text-white/25 flex-shrink-0" />
               </button>
             </div>
           )}
-
         </div>
       </div>
     </div>

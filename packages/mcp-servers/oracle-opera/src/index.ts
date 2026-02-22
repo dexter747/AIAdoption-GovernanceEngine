@@ -1,6 +1,10 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { CallToolRequestSchema, ListToolsRequestSchema, Tool } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+  Tool,
+} from '@modelcontextprotocol/sdk/types.js';
 import axios, { AxiosInstance } from 'axios';
 
 const API_URL = process.env.OPERA_API_URL || '';
@@ -24,7 +28,7 @@ async function getOAuthToken(): Promise<string> {
     {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': `Basic ${Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString('base64')}`,
+        Authorization: `Basic ${Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString('base64')}`,
       },
     }
   );
@@ -41,12 +45,12 @@ async function initConnection(): Promise<void> {
     baseURL: API_URL,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
       'x-hotelId': PROPERTY_ID,
     },
   });
 
-  api.interceptors.request.use(async (config) => {
+  api.interceptors.request.use(async config => {
     const freshToken = await getOAuthToken();
     config.headers['Authorization'] = `Bearer ${freshToken}`;
     return config;
@@ -64,7 +68,10 @@ const tools: Tool[] = [
         arrivalDate: { type: 'string', description: 'Arrival date (YYYY-MM-DD)' },
         departureDate: { type: 'string', description: 'Departure date (YYYY-MM-DD)' },
         confirmationNumber: { type: 'string', description: 'Confirmation number' },
-        status: { type: 'string', description: 'Reservation status (e.g. RESERVED, CHECKED_IN, CHECKED_OUT)' },
+        status: {
+          type: 'string',
+          description: 'Reservation status (e.g. RESERVED, CHECKED_IN, CHECKED_OUT)',
+        },
         limit: { type: 'number', description: 'Max results to return' },
       },
     },
@@ -113,7 +120,10 @@ const tools: Tool[] = [
       properties: {
         roomType: { type: 'string', description: 'Room type code filter' },
         floor: { type: 'string', description: 'Floor number filter' },
-        status: { type: 'string', description: 'Room status (e.g. CLEAN, DIRTY, INSPECTED, OCCUPIED, VACANT)' },
+        status: {
+          type: 'string',
+          description: 'Room status (e.g. CLEAN, DIRTY, INSPECTED, OCCUPIED, VACANT)',
+        },
       },
     },
   },
@@ -138,7 +148,11 @@ const tools: Tool[] = [
     inputSchema: {
       type: 'object',
       properties: {
-        method: { type: 'string', description: 'HTTP method', enum: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'] },
+        method: {
+          type: 'string',
+          description: 'HTTP method',
+          enum: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+        },
         path: { type: 'string', description: 'API path' },
         body: { type: 'object', description: 'Request body' },
         params: { type: 'object', description: 'Query parameters' },
@@ -155,10 +169,18 @@ const server = new Server(
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools }));
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   await initConnection();
   if (!api) {
-    return { content: [{ type: 'text', text: 'Oracle OPERA API connection not initialized. Check environment variables.' }], isError: true };
+    return {
+      content: [
+        {
+          type: 'text',
+          text: 'Oracle OPERA API connection not initialized. Check environment variables.',
+        },
+      ],
+      isError: true,
+    };
   }
 
   const { name, arguments: args } = request.params;
@@ -173,13 +195,17 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         if (args?.confirmationNumber) params.confirmationNumber = args.confirmationNumber as string;
         if (args?.status) params.reservationStatus = args.status as string;
         if (args?.limit) params.limit = args.limit as number;
-        const response = await api.get('/rsv/v1/hotels/' + PROPERTY_ID + '/reservations', { params });
+        const response = await api.get('/rsv/v1/hotels/' + PROPERTY_ID + '/reservations', {
+          params,
+        });
         return { content: [{ type: 'text', text: JSON.stringify(response.data, null, 2) }] };
       }
 
       case 'get_reservation': {
         const reservationId = args?.reservationId as string;
-        const response = await api.get(`/rsv/v1/hotels/${PROPERTY_ID}/reservations/${reservationId}`);
+        const response = await api.get(
+          `/rsv/v1/hotels/${PROPERTY_ID}/reservations/${reservationId}`
+        );
         return { content: [{ type: 'text', text: JSON.stringify(response.data, null, 2) }] };
       }
 
@@ -237,7 +263,10 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     }
   } catch (error: any) {
     const message = error.response?.data ? JSON.stringify(error.response.data) : error.message;
-    return { content: [{ type: 'text', text: `Oracle OPERA API error: ${message}` }], isError: true };
+    return {
+      content: [{ type: 'text', text: `Oracle OPERA API error: ${message}` }],
+      isError: true,
+    };
   }
 });
 
@@ -247,7 +276,7 @@ async function main(): Promise<void> {
   console.error('Oracle OPERA MCP server running on stdio');
 }
 
-main().catch((error) => {
+main().catch(error => {
   console.error('Fatal error:', error);
   process.exit(1);
 });

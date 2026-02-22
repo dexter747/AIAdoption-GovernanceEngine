@@ -1,24 +1,32 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import {
-  MessageSquare, Settings,
-  CreditCard, LogOut,
-  Key, UserCircle, Shield, Library, FolderOpen,
-  PanelLeftClose, PanelLeft, Brain,
+  MessageSquare,
+  Settings,
+  CreditCard,
+  LogOut,
+  Key,
+  UserCircle,
+  Shield,
+  Library,
+  FolderOpen,
+  PanelLeftClose,
+  PanelLeft,
+  Brain,
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 const workspaceNav = [
-  { name: 'Library',        href: '/library',        icon: Library },
+  { name: 'Library', href: '/library', icon: Library },
   { name: 'My Connections', href: '/my-connections', icon: FolderOpen },
-  { name: 'Contexts',       href: '/contexts',       icon: Brain },
+  { name: 'Contexts', href: '/contexts', icon: Brain },
 ];
 
 const settingsNav = [
-  { name: 'Profile',   href: '/profile-settings', icon: UserCircle },
-  { name: 'API Keys',  href: '/settings/api-keys', icon: Key },
-  { name: 'License',   href: '/license',           icon: Shield },
-  { name: 'Settings',  href: '/settings',          icon: Settings },
+  { name: 'Profile', href: '/profile-settings', icon: UserCircle },
+  { name: 'API Keys', href: '/settings/api-keys', icon: Key },
+  { name: 'License', href: '/license', icon: Shield },
+  { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
 interface SidebarProps {
@@ -31,15 +39,8 @@ export default function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
   const { user, logout } = useAuth();
 
   /** Renders a single nav link — reused across sections */
-  const navLink = (
-    href: string,
-    Icon: React.ElementType,
-    label: string,
-    exact = true,
-  ) => {
-    const isActive = exact
-      ? location.pathname === href
-      : location.pathname.startsWith(href);
+  const navLink = (href: string, Icon: React.ElementType, label: string, exact = true) => {
+    const isActive = exact ? location.pathname === href : location.pathname.startsWith(href);
     return (
       <Link
         to={href}
@@ -49,14 +50,14 @@ export default function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
           collapsed && 'justify-center px-0 w-full',
           isActive
             ? 'bg-white/[0.08] text-white'
-            : 'text-zinc-500 hover:text-zinc-200 hover:bg-white/[0.04]',
+            : 'text-zinc-500 hover:text-zinc-200 hover:bg-white/[0.04]'
         )}
       >
         {isActive && <span className="nav-active-line" />}
         <Icon
           className={cn(
             'w-[15px] h-[15px] flex-shrink-0',
-            isActive ? 'text-white' : 'text-zinc-500',
+            isActive ? 'text-white' : 'text-zinc-500'
           )}
         />
         {!collapsed && <span>{label}</span>}
@@ -69,20 +70,20 @@ export default function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
       className={cn(
         'relative flex flex-col h-screen transition-all duration-300 ease-in-out',
         'bg-[#080808] border-r border-white/[0.055]',
-        collapsed ? 'w-[52px]' : 'w-[220px]',
+        collapsed ? 'w-[52px]' : 'w-[220px]'
       )}
     >
       {/* ── Header: Logo + collapse toggle ── */}
       <div
         className={cn(
           'h-[52px] flex items-center border-b border-white/[0.055] app-region-drag flex-shrink-0',
-          collapsed ? 'justify-center px-0' : 'justify-between px-3',
+          collapsed ? 'justify-center px-0' : 'justify-between px-3'
         )}
       >
         <div
           className={cn(
             'flex items-center gap-2.5 app-region-no-drag',
-            collapsed && 'justify-center w-full',
+            collapsed && 'justify-center w-full'
           )}
         >
           <div className="relative flex-shrink-0">
@@ -94,9 +95,7 @@ export default function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
             />
           </div>
           {!collapsed && (
-            <span className="text-[14px] font-medium tracking-tight text-white/90">
-              Velanova
-            </span>
+            <span className="text-[14px] font-medium tracking-tight text-white/90">Velanova</span>
           )}
         </div>
         {onToggle && !collapsed && (
@@ -138,7 +137,7 @@ export default function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
           <div className="h-px bg-white/[0.055] mx-auto mb-2" />
         )}
         <div className="space-y-0.5">
-          {workspaceNav.map((item) => (
+          {workspaceNav.map(item => (
             <div key={item.href}>{navLink(item.href, item.icon, item.name)}</div>
           ))}
         </div>
@@ -154,7 +153,7 @@ export default function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
           <div className="h-px bg-white/[0.055] mx-auto mb-2" />
         )}
         <div className="space-y-0.5">
-          {settingsNav.map((item) => (
+          {settingsNav.map(item => (
             <div key={item.href}>{navLink(item.href, item.icon, item.name)}</div>
           ))}
         </div>
@@ -204,7 +203,7 @@ export default function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
       <div
         className={cn(
           'border-t border-white/[0.055] px-2 py-2 flex-shrink-0',
-          collapsed && 'px-1.5',
+          collapsed && 'px-1.5'
         )}
       >
         {collapsed ? (
@@ -214,25 +213,41 @@ export default function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
             title={user?.name || 'Profile'}
           >
             {user?.image ? (
-              <img src={user.image} alt={user.name} className="w-7 h-7 rounded-full ring-1 ring-white/10" />
+              <img
+                src={user.image}
+                alt={user.name}
+                className="w-7 h-7 rounded-full ring-1 ring-white/10"
+              />
             ) : (
               <div className="w-7 h-7 bg-white/[0.08] rounded-full flex items-center justify-center ring-1 ring-white/[0.07]">
-                <span className="text-white text-xs font-medium">{user?.name?.charAt(0)?.toUpperCase() || 'U'}</span>
+                <span className="text-white text-xs font-medium">
+                  {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                </span>
               </div>
             )}
           </Link>
         ) : (
           <div className="flex items-center gap-2 px-1">
             {user?.image ? (
-              <img src={user.image} alt={user.name} className="w-7 h-7 rounded-full ring-1 ring-white/10 flex-shrink-0" />
+              <img
+                src={user.image}
+                alt={user.name}
+                className="w-7 h-7 rounded-full ring-1 ring-white/10 flex-shrink-0"
+              />
             ) : (
               <div className="w-7 h-7 bg-white/[0.08] rounded-full flex items-center justify-center ring-1 ring-white/[0.07] flex-shrink-0">
-                <span className="text-white text-xs font-medium">{user?.name?.charAt(0)?.toUpperCase() || 'U'}</span>
+                <span className="text-white text-xs font-medium">
+                  {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                </span>
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <p className="text-[12px] font-medium text-white/80 truncate leading-tight">{user?.name || 'User'}</p>
-              <p className="text-[10.5px] text-zinc-600 truncate leading-tight">{user?.email || ''}</p>
+              <p className="text-[12px] font-medium text-white/80 truncate leading-tight">
+                {user?.name || 'User'}
+              </p>
+              <p className="text-[10.5px] text-zinc-600 truncate leading-tight">
+                {user?.email || ''}
+              </p>
             </div>
             <button
               onClick={logout}

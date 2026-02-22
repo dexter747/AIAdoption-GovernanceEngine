@@ -1,6 +1,10 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { CallToolRequestSchema, ListToolsRequestSchema, Tool } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+  Tool,
+} from '@modelcontextprotocol/sdk/types.js';
 import axios, { AxiosInstance } from 'axios';
 
 // Environment variables
@@ -16,7 +20,7 @@ function initConnection(): void {
     baseURL: AS400_HOST,
     headers: {
       'Content-Type': 'application/json',
-      'Accept': 'application/json',
+      Accept: 'application/json',
     },
     auth: {
       username: AS400_USERNAME,
@@ -75,7 +79,11 @@ const tools: Tool[] = [
             type: 'object',
             properties: {
               value: { type: 'string', description: 'Parameter value' },
-              type: { type: 'string', description: 'Parameter type (char, dec, int)', default: 'char' },
+              type: {
+                type: 'string',
+                description: 'Parameter type (char, dec, int)',
+                default: 'char',
+              },
               length: { type: 'number', description: 'Parameter length' },
               direction: { type: 'string', enum: ['in', 'out', 'inout'], default: 'in' },
             },
@@ -95,7 +103,11 @@ const tools: Tool[] = [
       properties: {
         dataQueue: { type: 'string', description: 'Data queue name' },
         library: { type: 'string', description: 'Library containing the data queue' },
-        wait: { type: 'number', description: 'Wait time in seconds (0 = no wait, -1 = indefinite)', default: 0 },
+        wait: {
+          type: 'number',
+          description: 'Wait time in seconds (0 = no wait, -1 = indefinite)',
+          default: 0,
+        },
       },
       required: ['dataQueue', 'library'],
     },
@@ -106,7 +118,11 @@ const tools: Tool[] = [
     inputSchema: {
       type: 'object',
       properties: {
-        jobName: { type: 'string', description: 'Job name (e.g., 123456/QUSER/JOBNAME). If omitted, returns current job log.' },
+        jobName: {
+          type: 'string',
+          description:
+            'Job name (e.g., 123456/QUSER/JOBNAME). If omitted, returns current job log.',
+        },
         limit: { type: 'number', description: 'Maximum number of log entries', default: 50 },
       },
     },
@@ -117,7 +133,11 @@ const tools: Tool[] = [
     inputSchema: {
       type: 'object',
       properties: {
-        method: { type: 'string', enum: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], description: 'HTTP method' },
+        method: {
+          type: 'string',
+          enum: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+          description: 'HTTP method',
+        },
         path: { type: 'string', description: 'API path (relative to base URL)' },
         data: { type: 'object', description: 'Request body for POST/PUT/PATCH' },
         params: { type: 'object', description: 'Query parameters' },
@@ -134,11 +154,18 @@ const server = new Server(
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools }));
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   const { name, arguments: args } = request.params;
 
   if (!api) {
-    return { content: [{ type: 'text', text: 'Error: AS/400 connection not initialized. Check AS400_HOST, AS400_USERNAME, and AS400_PASSWORD.' }] };
+    return {
+      content: [
+        {
+          type: 'text',
+          text: 'Error: AS/400 connection not initialized. Check AS400_HOST, AS400_USERNAME, and AS400_PASSWORD.',
+        },
+      ],
+    };
   }
 
   try {

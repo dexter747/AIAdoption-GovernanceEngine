@@ -22,25 +22,30 @@
 ### Fill in the form:
 
 **App Information:**
+
 - App name: `Velanova`
 - User support email: `your-email@domain.com`
 - App logo: (Optional) Upload your logo
 
 **App Domain:**
+
 - Application home page: `https://your-domain.com` (or localhost for testing)
 - Application privacy policy link: `https://your-domain.com/privacy`
 - Application terms of service link: `https://your-domain.com/terms`
 
 **Authorized domains:**
+
 - Add: `your-domain.com`
 - For local testing, you can skip this
 
 **Developer contact information:**
+
 - Email addresses: `your-email@domain.com`
 
 4. Click **Save and Continue**
 
 ### Scopes (Step 2):
+
 - Click **Add or Remove Scopes**
 - Select:
   - `.../auth/userinfo.email`
@@ -48,6 +53,7 @@
 - Click **Update** → **Save and Continue**
 
 ### Test users (Step 3):
+
 - Add your email for testing: `your-email@gmail.com`
 - Click **Save and Continue**
 
@@ -59,6 +65,7 @@
 4. Name: `Velanova Web Client`
 
 ### Authorized JavaScript origins:
+
 ```
 http://localhost:3000
 https://your-production-domain.com
@@ -66,6 +73,7 @@ https://your-staging-domain.vercel.app
 ```
 
 ### Authorized redirect URIs:
+
 ```
 http://localhost:3000/api/auth/google/callback
 http://localhost:3001/api/auth/google/callback
@@ -118,6 +126,7 @@ GOOGLE_REDIRECT_URI=http://localhost:3001/api/auth/google/callback
 5. **⚠️ WARNING:** This key bypasses Row Level Security - keep it secret!
 
 Update `.env.local`:
+
 ```env
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
 ```
@@ -131,6 +140,7 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
 5. Verify tables created: **Database** → **Tables**
 
 You should see:
+
 - `users`
 - `licenses`
 - `device_activations`
@@ -149,6 +159,7 @@ You should see:
 ## Step 9: Test the Authentication Flow
 
 1. Start the dev server:
+
    ```bash
    cd apps/landing-site
    pnpm dev
@@ -171,22 +182,26 @@ You should see:
 ## Troubleshooting
 
 ### Error: "redirect_uri_mismatch"
+
 - Make sure the redirect URI in Google Console exactly matches:
   `http://localhost:3000/api/auth/callback/google`
 - No trailing slashes
 - Exact port number
 
 ### Error: "Invalid client"
+
 - Check that GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET are correct
 - No extra spaces or quotes
 - Make sure they're in `.env.local` not `.env`
 
 ### User not appearing in Supabase
+
 - Check that SUPABASE_SERVICE_ROLE_KEY is correct
 - Make sure the `create_user_profile()` trigger is created
 - Check Supabase logs for errors
 
 ### Session not persisting
+
 - Make sure NEXTAUTH_SECRET is set
 - Clear browser cookies and try again
 - Check browser console for errors
@@ -219,6 +234,7 @@ You should see:
 ## Next Steps
 
 Once authentication is working:
+
 1. Implement payment integration (Dodo, PayPal, Razorpay)
 2. Create license generation system
 3. Build desktop app activation flow

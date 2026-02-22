@@ -14,7 +14,7 @@ export class GroqProvider {
     if (!config.apiKey) {
       throw new Error('Groq API key not configured');
     }
-    
+
     this.client = new Groq({
       apiKey: config.apiKey,
     });
@@ -30,7 +30,7 @@ export class GroqProvider {
       });
 
       const choice = response.choices[0];
-      
+
       return {
         id: response.id,
         message: {
@@ -46,14 +46,14 @@ export class GroqProvider {
       };
     } catch (err) {
       logger.error({ error: err.message, model }, 'Groq chat failed');
-      
+
       if (err.status === 429) {
         throw ApiError.tooManyRequests('Groq rate limit exceeded');
       }
       if (err.status === 401) {
         throw ApiError.unauthorized('Invalid Groq API key');
       }
-      
+
       throw ApiError.internal(`Groq error: ${err.message}`);
     }
   }

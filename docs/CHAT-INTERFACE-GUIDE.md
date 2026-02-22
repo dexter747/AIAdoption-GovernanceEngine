@@ -22,6 +22,7 @@
 ### Prerequisites
 
 1. **Express Backend Running**
+
    ```bash
    cd apps/express-api
    pnpm install
@@ -34,13 +35,14 @@
    - Make sure Docker is running
 
 3. **Environment Variables**
-   
+
    **Express API** (`apps/express-api/.env`):
+
    ```env
    PORT=5500
    SUPABASE_URL=https://lwounfzhkuuqvgkvwxvt.supabase.co
    SUPABASE_SERVICE_KEY=your-service-key
-   
+
    # AI Provider Keys (at least one required)
    OPENAI_API_KEY=sk-proj-xxx
    GROQ_API_KEY=gsk-xxx
@@ -117,6 +119,7 @@ pnpm dev
    - "Free Model" badge if cost is $0
 
 **Recommended for Testing**:
+
 - **Groq** - Free, fast responses
 - **OpenAI GPT-3.5** - Low cost, reliable
 
@@ -174,6 +177,7 @@ pnpm dev
 ## 🎯 Features to Test
 
 ### Model Selection
+
 - [ ] Load AI providers from Express API
 - [ ] Switch between providers (OpenAI, Groq, Anthropic, etc.)
 - [ ] Switch between models
@@ -181,6 +185,7 @@ pnpm dev
 - [ ] Identify free models (Groq)
 
 ### Chat Functionality
+
 - [ ] Send messages and receive responses
 - [ ] See loading state while AI is responding
 - [ ] View token count per message
@@ -189,6 +194,7 @@ pnpm dev
 - [ ] Error handling (invalid API key, network error)
 
 ### Conversation Management
+
 - [ ] Auto-save conversations locally
 - [ ] Auto-generate conversation titles
 - [ ] Create new conversations
@@ -199,11 +205,13 @@ pnpm dev
 - [ ] Search conversations by keywords
 
 ### MCP Integration
+
 - [ ] Select database connection (if enabled)
 - [ ] Query AI about database-related tasks
 - [ ] Context from MCP connection used in responses
 
 ### UI/UX
+
 - [ ] Sidebar toggle (hamburger menu)
 - [ ] Auto-scroll to new messages
 - [ ] Textarea auto-resize
@@ -221,6 +229,7 @@ pnpm dev
 **Problem**: Express backend is not running or unreachable
 
 **Solution**:
+
 ```bash
 cd apps/express-api
 pnpm dev
@@ -233,6 +242,7 @@ curl http://localhost:5500/api/health
 **Problem**: No API keys configured in Express backend
 
 **Solution**:
+
 1. Check `apps/express-api/.env`
 2. Add at least one AI provider key:
    ```env
@@ -247,12 +257,14 @@ curl http://localhost:5500/api/health
 **Problem**: Docker is not installed or not running
 
 **Solution**:
+
 1. Install Docker Desktop
 2. Start Docker
 3. Verify: `docker --version`
 4. Try enabling the connection again
 
 **Alternative**: Use npm-based MCP servers (PostgreSQL):
+
 - These don't require Docker
 - Will be installed automatically via npm
 
@@ -261,6 +273,7 @@ curl http://localhost:5500/api/health
 **Problem**: Chat history manager not initialized
 
 **Solution**:
+
 1. Check browser console for errors
 2. Restart the desktop app
 3. Verify electron-store is installed:
@@ -274,6 +287,7 @@ curl http://localhost:5500/api/health
 **Problem**: `window.electron` not recognized
 
 **Solution**:
+
 - The `electron.d.ts` file should provide types
 - Restart TypeScript server in VS Code:
   - Cmd+Shift+P → "TypeScript: Restart TS Server"
@@ -283,6 +297,7 @@ curl http://localhost:5500/api/health
 ## 📊 Testing Checklist
 
 ### Basic Flow
+
 - [ ] Start Express backend
 - [ ] Start desktop app
 - [ ] Login successfully
@@ -293,6 +308,7 @@ curl http://localhost:5500/api/health
 - [ ] View token/cost information
 
 ### Advanced Flow
+
 - [ ] Add MCP connection
 - [ ] Enable MCP connection
 - [ ] Select database in chat
@@ -304,6 +320,7 @@ curl http://localhost:5500/api/health
 - [ ] Export conversation (future feature)
 
 ### Edge Cases
+
 - [ ] Send message without selecting model (should show error)
 - [ ] Send empty message (button should be disabled)
 - [ ] Network error during AI request (should show error message)
@@ -318,34 +335,38 @@ curl http://localhost:5500/api/health
 ### Enable Developer Tools
 
 **In Electron App**:
+
 - Press `Cmd+Option+I` (macOS) or `Ctrl+Shift+I` (Windows/Linux)
 - Check Console tab for errors
 
 ### Check IPC Communication
 
 **In Console**:
+
 ```javascript
 // Test Express API health
-await window.electron.express.checkHealth()
+await window.electron.express.checkHealth();
 
 // Test get providers
-await window.electron.express.getProviders()
+await window.electron.express.getProviders();
 
 // Test chat history
-await window.electron.chat.getStats()
+await window.electron.chat.getStats();
 
 // Test MCP connections
-await window.electron.mcp.getAllConnections()
+await window.electron.mcp.getAllConnections();
 ```
 
 ### Check Local Storage
 
 **Chat History Location**:
+
 - macOS: `~/Library/Application Support/velanova/chat-history.json`
 - Windows: `%APPDATA%/velanova/chat-history.json`
 - Linux: `~/.config/velanova/chat-history.json`
 
 **MCP Connections Location**:
+
 - Same directory, `mcp-connections.json`
 
 ---
@@ -376,6 +397,7 @@ await window.electron.mcp.getAllConnections()
 ## 🎨 UI/UX Validation
 
 ### Desktop Experience
+
 - [ ] Window is resizable
 - [ ] Minimum width maintains layout
 - [ ] Sidebar can be toggled
@@ -383,12 +405,14 @@ await window.electron.mcp.getAllConnections()
 - [ ] Theme persists across restarts
 
 ### Responsive Design
+
 - [ ] Chat bubbles wrap text properly
 - [ ] Long model names don't break layout
 - [ ] Connection selector fits in header
 - [ ] Sidebar scales with window height
 
 ### Accessibility
+
 - [ ] All buttons have hover states
 - [ ] Focus states visible
 - [ ] Error messages are clear
@@ -424,6 +448,7 @@ await window.electron.mcp.getAllConnections()
 ## 🚦 Production Readiness
 
 ### Before Production
+
 - [ ] Add user authentication integration
 - [ ] Replace hardcoded "default-user" with real user ID
 - [ ] Replace hardcoded "default-license" with actual license
@@ -435,6 +460,7 @@ await window.electron.mcp.getAllConnections()
 - [ ] Add BYOK (Bring Your Own Key) UI
 
 ### Security
+
 - [ ] API keys stored securely (done via Express backend)
 - [ ] No sensitive data in chat history (user responsibility)
 - [ ] IPC communication is secure (contextBridge used)
@@ -534,6 +560,7 @@ The chat interface is working correctly when:
 ## 🎊 You're Ready!
 
 Your AI chat interface is now complete with:
+
 - 15+ AI providers (OpenAI, Anthropic, Google, Groq, etc.)
 - 50+ AI models to choose from
 - Local conversation persistence

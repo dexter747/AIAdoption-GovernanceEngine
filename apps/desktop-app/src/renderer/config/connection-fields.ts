@@ -9,9 +9,9 @@
  */
 
 export interface ConnectionField {
-  key: string;          // internal key – stored in ConnectionConfig.options
-  label: string;        // UI label
-  placeholder: string;  // UI placeholder text
+  key: string; // internal key – stored in ConnectionConfig.options
+  label: string; // UI label
+  placeholder: string; // UI placeholder text
   type: 'text' | 'password' | 'number' | 'url' | 'email' | 'select' | 'textarea';
   required: boolean;
   defaultValue?: string | number;
@@ -29,19 +29,62 @@ export interface ConnectionFieldSchema {
  * Values are stored in ConnectionConfig.options and mapped to env vars at spawn time.
  */
 export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
-
   // ═══════════════════════════════════════════════════════════════════════
   // DATABASE SERVERS
   // ═══════════════════════════════════════════════════════════════════════
 
   postgresql: {
     fields: [
-      { key: 'host', label: 'Host', placeholder: 'localhost', type: 'text', required: true, defaultValue: 'localhost', group: 'connection' },
-      { key: 'port', label: 'Port', placeholder: '5432', type: 'number', required: true, defaultValue: 5432, group: 'connection' },
-      { key: 'database', label: 'Database', placeholder: 'mydb', type: 'text', required: true, group: 'connection' },
-      { key: 'username', label: 'Username', placeholder: 'postgres', type: 'text', required: true, group: 'auth' },
-      { key: 'password', label: 'Password', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
-      { key: 'ssl', label: 'SSL Mode', placeholder: 'disable', type: 'text', required: false, group: 'advanced' },
+      {
+        key: 'host',
+        label: 'Host',
+        placeholder: 'localhost',
+        type: 'text',
+        required: true,
+        defaultValue: 'localhost',
+        group: 'connection',
+      },
+      {
+        key: 'port',
+        label: 'Port',
+        placeholder: '5432',
+        type: 'number',
+        required: true,
+        defaultValue: 5432,
+        group: 'connection',
+      },
+      {
+        key: 'database',
+        label: 'Database',
+        placeholder: 'mydb',
+        type: 'text',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'username',
+        label: 'Username',
+        placeholder: 'postgres',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'password',
+        label: 'Password',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'ssl',
+        label: 'SSL Mode',
+        placeholder: 'disable',
+        type: 'text',
+        required: false,
+        group: 'advanced',
+      },
     ],
     envMap: {
       host: 'PGHOST',
@@ -55,11 +98,48 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   mysql: {
     fields: [
-      { key: 'host', label: 'Host', placeholder: 'localhost', type: 'text', required: true, defaultValue: 'localhost', group: 'connection' },
-      { key: 'port', label: 'Port', placeholder: '3306', type: 'number', required: true, defaultValue: 3306, group: 'connection' },
-      { key: 'database', label: 'Database', placeholder: 'mydb', type: 'text', required: true, group: 'connection' },
-      { key: 'username', label: 'Username', placeholder: 'root', type: 'text', required: true, group: 'auth' },
-      { key: 'password', label: 'Password', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'host',
+        label: 'Host',
+        placeholder: 'localhost',
+        type: 'text',
+        required: true,
+        defaultValue: 'localhost',
+        group: 'connection',
+      },
+      {
+        key: 'port',
+        label: 'Port',
+        placeholder: '3306',
+        type: 'number',
+        required: true,
+        defaultValue: 3306,
+        group: 'connection',
+      },
+      {
+        key: 'database',
+        label: 'Database',
+        placeholder: 'mydb',
+        type: 'text',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'username',
+        label: 'Username',
+        placeholder: 'root',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'password',
+        label: 'Password',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       host: 'MYSQL_HOST',
@@ -72,11 +152,48 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   mariadb: {
     fields: [
-      { key: 'host', label: 'Host', placeholder: 'localhost', type: 'text', required: true, defaultValue: 'localhost', group: 'connection' },
-      { key: 'port', label: 'Port', placeholder: '3306', type: 'number', required: true, defaultValue: 3306, group: 'connection' },
-      { key: 'database', label: 'Database', placeholder: 'mydb', type: 'text', required: true, group: 'connection' },
-      { key: 'username', label: 'Username', placeholder: 'root', type: 'text', required: true, group: 'auth' },
-      { key: 'password', label: 'Password', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'host',
+        label: 'Host',
+        placeholder: 'localhost',
+        type: 'text',
+        required: true,
+        defaultValue: 'localhost',
+        group: 'connection',
+      },
+      {
+        key: 'port',
+        label: 'Port',
+        placeholder: '3306',
+        type: 'number',
+        required: true,
+        defaultValue: 3306,
+        group: 'connection',
+      },
+      {
+        key: 'database',
+        label: 'Database',
+        placeholder: 'mydb',
+        type: 'text',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'username',
+        label: 'Username',
+        placeholder: 'root',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'password',
+        label: 'Password',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       host: 'MARIADB_HOST',
@@ -89,13 +206,65 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   sqlserver: {
     fields: [
-      { key: 'host', label: 'Host', placeholder: 'localhost', type: 'text', required: true, defaultValue: 'localhost', group: 'connection' },
-      { key: 'port', label: 'Port', placeholder: '1433', type: 'number', required: true, defaultValue: 1433, group: 'connection' },
-      { key: 'database', label: 'Database', placeholder: 'master', type: 'text', required: true, group: 'connection' },
-      { key: 'username', label: 'Username', placeholder: 'sa', type: 'text', required: true, group: 'auth' },
-      { key: 'password', label: 'Password', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
-      { key: 'encrypt', label: 'Encrypt', placeholder: 'true', type: 'text', required: false, defaultValue: 'true', group: 'advanced' },
-      { key: 'trustCert', label: 'Trust Server Certificate', placeholder: 'false', type: 'text', required: false, group: 'advanced' },
+      {
+        key: 'host',
+        label: 'Host',
+        placeholder: 'localhost',
+        type: 'text',
+        required: true,
+        defaultValue: 'localhost',
+        group: 'connection',
+      },
+      {
+        key: 'port',
+        label: 'Port',
+        placeholder: '1433',
+        type: 'number',
+        required: true,
+        defaultValue: 1433,
+        group: 'connection',
+      },
+      {
+        key: 'database',
+        label: 'Database',
+        placeholder: 'master',
+        type: 'text',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'username',
+        label: 'Username',
+        placeholder: 'sa',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'password',
+        label: 'Password',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'encrypt',
+        label: 'Encrypt',
+        placeholder: 'true',
+        type: 'text',
+        required: false,
+        defaultValue: 'true',
+        group: 'advanced',
+      },
+      {
+        key: 'trustCert',
+        label: 'Trust Server Certificate',
+        placeholder: 'false',
+        type: 'text',
+        required: false,
+        group: 'advanced',
+      },
     ],
     envMap: {
       host: 'SQLSERVER_HOST',
@@ -110,11 +279,47 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   oracle: {
     fields: [
-      { key: 'host', label: 'Host', placeholder: 'localhost', type: 'text', required: true, group: 'connection' },
-      { key: 'port', label: 'Port', placeholder: '1521', type: 'number', required: true, defaultValue: 1521, group: 'connection' },
-      { key: 'service', label: 'Service Name', placeholder: 'ORCL', type: 'text', required: true, group: 'connection' },
-      { key: 'username', label: 'Username', placeholder: 'system', type: 'text', required: true, group: 'auth' },
-      { key: 'password', label: 'Password', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'host',
+        label: 'Host',
+        placeholder: 'localhost',
+        type: 'text',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'port',
+        label: 'Port',
+        placeholder: '1521',
+        type: 'number',
+        required: true,
+        defaultValue: 1521,
+        group: 'connection',
+      },
+      {
+        key: 'service',
+        label: 'Service Name',
+        placeholder: 'ORCL',
+        type: 'text',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'username',
+        label: 'Username',
+        placeholder: 'system',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'password',
+        label: 'Password',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       host: 'ORACLE_HOST',
@@ -127,8 +332,22 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   mongodb: {
     fields: [
-      { key: 'uri', label: 'Connection URI', placeholder: 'mongodb://localhost:27017/mydb', type: 'url', required: true, group: 'connection' },
-      { key: 'database', label: 'Database', placeholder: 'mydb', type: 'text', required: false, group: 'connection' },
+      {
+        key: 'uri',
+        label: 'Connection URI',
+        placeholder: 'mongodb://localhost:27017/mydb',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'database',
+        label: 'Database',
+        placeholder: 'mydb',
+        type: 'text',
+        required: false,
+        group: 'connection',
+      },
     ],
     envMap: {
       uri: 'MONGODB_URI',
@@ -138,10 +357,39 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   'sap-hana': {
     fields: [
-      { key: 'host', label: 'Host', placeholder: 'hana-server.example.com', type: 'text', required: true, group: 'connection' },
-      { key: 'port', label: 'Port', placeholder: '30015', type: 'number', required: true, defaultValue: 30015, group: 'connection' },
-      { key: 'username', label: 'Username', placeholder: 'SYSTEM', type: 'text', required: true, group: 'auth' },
-      { key: 'password', label: 'Password', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'host',
+        label: 'Host',
+        placeholder: 'hana-server.example.com',
+        type: 'text',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'port',
+        label: 'Port',
+        placeholder: '30015',
+        type: 'number',
+        required: true,
+        defaultValue: 30015,
+        group: 'connection',
+      },
+      {
+        key: 'username',
+        label: 'Username',
+        placeholder: 'SYSTEM',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'password',
+        label: 'Password',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       host: 'SAP_HANA_HOST',
@@ -153,7 +401,15 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   redis: {
     fields: [
-      { key: 'url', label: 'Redis URL', placeholder: 'redis://localhost:6379', type: 'url', required: true, defaultValue: 'redis://localhost:6379', group: 'connection' },
+      {
+        key: 'url',
+        label: 'Redis URL',
+        placeholder: 'redis://localhost:6379',
+        type: 'url',
+        required: true,
+        defaultValue: 'redis://localhost:6379',
+        group: 'connection',
+      },
     ],
     envMap: {
       url: 'REDIS_URL',
@@ -162,9 +418,31 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   elasticsearch: {
     fields: [
-      { key: 'url', label: 'Elasticsearch URL', placeholder: 'http://localhost:9200', type: 'url', required: true, defaultValue: 'http://localhost:9200', group: 'connection' },
-      { key: 'username', label: 'Username', placeholder: 'elastic', type: 'text', required: false, group: 'auth' },
-      { key: 'password', label: 'Password', placeholder: '••••••••', type: 'password', required: false, group: 'auth' },
+      {
+        key: 'url',
+        label: 'Elasticsearch URL',
+        placeholder: 'http://localhost:9200',
+        type: 'url',
+        required: true,
+        defaultValue: 'http://localhost:9200',
+        group: 'connection',
+      },
+      {
+        key: 'username',
+        label: 'Username',
+        placeholder: 'elastic',
+        type: 'text',
+        required: false,
+        group: 'auth',
+      },
+      {
+        key: 'password',
+        label: 'Password',
+        placeholder: '••••••••',
+        type: 'password',
+        required: false,
+        group: 'auth',
+      },
     ],
     envMap: {
       url: 'ELASTICSEARCH_URL',
@@ -175,11 +453,47 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   cassandra: {
     fields: [
-      { key: 'contactPoints', label: 'Contact Points', placeholder: 'host1,host2,host3', type: 'text', required: true, group: 'connection' },
-      { key: 'datacenter', label: 'Local Datacenter', placeholder: 'datacenter1', type: 'text', required: true, defaultValue: 'datacenter1', group: 'connection' },
-      { key: 'keyspace', label: 'Keyspace', placeholder: 'my_keyspace', type: 'text', required: false, group: 'connection' },
-      { key: 'username', label: 'Username', placeholder: 'cassandra', type: 'text', required: false, group: 'auth' },
-      { key: 'password', label: 'Password', placeholder: '••••••••', type: 'password', required: false, group: 'auth' },
+      {
+        key: 'contactPoints',
+        label: 'Contact Points',
+        placeholder: 'host1,host2,host3',
+        type: 'text',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'datacenter',
+        label: 'Local Datacenter',
+        placeholder: 'datacenter1',
+        type: 'text',
+        required: true,
+        defaultValue: 'datacenter1',
+        group: 'connection',
+      },
+      {
+        key: 'keyspace',
+        label: 'Keyspace',
+        placeholder: 'my_keyspace',
+        type: 'text',
+        required: false,
+        group: 'connection',
+      },
+      {
+        key: 'username',
+        label: 'Username',
+        placeholder: 'cassandra',
+        type: 'text',
+        required: false,
+        group: 'auth',
+      },
+      {
+        key: 'password',
+        label: 'Password',
+        placeholder: '••••••••',
+        type: 'password',
+        required: false,
+        group: 'auth',
+      },
     ],
     envMap: {
       contactPoints: 'CASSANDRA_CONTACT_POINTS',
@@ -192,7 +506,15 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   couchdb: {
     fields: [
-      { key: 'url', label: 'CouchDB URL', placeholder: 'http://localhost:5984', type: 'url', required: true, defaultValue: 'http://localhost:5984', group: 'connection' },
+      {
+        key: 'url',
+        label: 'CouchDB URL',
+        placeholder: 'http://localhost:5984',
+        type: 'url',
+        required: true,
+        defaultValue: 'http://localhost:5984',
+        group: 'connection',
+      },
     ],
     envMap: {
       url: 'COUCHDB_URL',
@@ -201,9 +523,32 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   neo4j: {
     fields: [
-      { key: 'uri', label: 'Neo4j URI', placeholder: 'bolt://localhost:7687', type: 'url', required: true, defaultValue: 'bolt://localhost:7687', group: 'connection' },
-      { key: 'username', label: 'Username', placeholder: 'neo4j', type: 'text', required: true, defaultValue: 'neo4j', group: 'auth' },
-      { key: 'password', label: 'Password', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'uri',
+        label: 'Neo4j URI',
+        placeholder: 'bolt://localhost:7687',
+        type: 'url',
+        required: true,
+        defaultValue: 'bolt://localhost:7687',
+        group: 'connection',
+      },
+      {
+        key: 'username',
+        label: 'Username',
+        placeholder: 'neo4j',
+        type: 'text',
+        required: true,
+        defaultValue: 'neo4j',
+        group: 'auth',
+      },
+      {
+        key: 'password',
+        label: 'Password',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       uri: 'NEO4J_URI',
@@ -214,10 +559,39 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   dynamodb: {
     fields: [
-      { key: 'region', label: 'AWS Region', placeholder: 'us-east-1', type: 'text', required: true, defaultValue: 'us-east-1', group: 'connection' },
-      { key: 'endpoint', label: 'Endpoint (optional)', placeholder: 'http://localhost:8000', type: 'url', required: false, group: 'connection' },
-      { key: 'accessKeyId', label: 'AWS Access Key ID', placeholder: 'AKIAxxxxxxxxxxxxxxxx', type: 'text', required: true, group: 'auth' },
-      { key: 'secretAccessKey', label: 'AWS Secret Access Key', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'region',
+        label: 'AWS Region',
+        placeholder: 'us-east-1',
+        type: 'text',
+        required: true,
+        defaultValue: 'us-east-1',
+        group: 'connection',
+      },
+      {
+        key: 'endpoint',
+        label: 'Endpoint (optional)',
+        placeholder: 'http://localhost:8000',
+        type: 'url',
+        required: false,
+        group: 'connection',
+      },
+      {
+        key: 'accessKeyId',
+        label: 'AWS Access Key ID',
+        placeholder: 'AKIAxxxxxxxxxxxxxxxx',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'secretAccessKey',
+        label: 'AWS Secret Access Key',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       region: 'AWS_REGION',
@@ -233,12 +607,55 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   salesforce: {
     fields: [
-      { key: 'instanceUrl', label: 'Instance URL', placeholder: 'https://myorg.salesforce.com', type: 'url', required: true, group: 'connection' },
-      { key: 'username', label: 'Username', placeholder: 'user@example.com', type: 'email', required: true, group: 'auth' },
-      { key: 'password', label: 'Password', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
-      { key: 'securityToken', label: 'Security Token', placeholder: 'AbCdEf123456', type: 'password', required: false, group: 'auth' },
-      { key: 'accessToken', label: 'Access Token (alternative)', placeholder: 'Bearer ...', type: 'password', required: false, group: 'auth' },
-      { key: 'apiVersion', label: 'API Version', placeholder: 'v58.0', type: 'text', required: false, defaultValue: 'v58.0', group: 'advanced' },
+      {
+        key: 'instanceUrl',
+        label: 'Instance URL',
+        placeholder: 'https://myorg.salesforce.com',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'username',
+        label: 'Username',
+        placeholder: 'user@example.com',
+        type: 'email',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'password',
+        label: 'Password',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'securityToken',
+        label: 'Security Token',
+        placeholder: 'AbCdEf123456',
+        type: 'password',
+        required: false,
+        group: 'auth',
+      },
+      {
+        key: 'accessToken',
+        label: 'Access Token (alternative)',
+        placeholder: 'Bearer ...',
+        type: 'password',
+        required: false,
+        group: 'auth',
+      },
+      {
+        key: 'apiVersion',
+        label: 'API Version',
+        placeholder: 'v58.0',
+        type: 'text',
+        required: false,
+        defaultValue: 'v58.0',
+        group: 'advanced',
+      },
     ],
     envMap: {
       instanceUrl: 'SALESFORCE_INSTANCE_URL',
@@ -252,8 +669,22 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   hubspot: {
     fields: [
-      { key: 'accessToken', label: 'Access Token', placeholder: 'pat-xxx-xxx-xxx', type: 'password', required: true, group: 'auth' },
-      { key: 'apiKey', label: 'API Key (legacy)', placeholder: 'xxx-xxx-xxx', type: 'password', required: false, group: 'auth' },
+      {
+        key: 'accessToken',
+        label: 'Access Token',
+        placeholder: 'pat-xxx-xxx-xxx',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'apiKey',
+        label: 'API Key (legacy)',
+        placeholder: 'xxx-xxx-xxx',
+        type: 'password',
+        required: false,
+        group: 'auth',
+      },
     ],
     envMap: {
       accessToken: 'HUBSPOT_ACCESS_TOKEN',
@@ -263,9 +694,30 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   'oracle-siebel': {
     fields: [
-      { key: 'url', label: 'Siebel REST URL', placeholder: 'https://siebel.example.com/siebel/v1.0', type: 'url', required: true, group: 'connection' },
-      { key: 'username', label: 'Username', placeholder: 'SADMIN', type: 'text', required: true, group: 'auth' },
-      { key: 'password', label: 'Password', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'url',
+        label: 'Siebel REST URL',
+        placeholder: 'https://siebel.example.com/siebel/v1.0',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'username',
+        label: 'Username',
+        placeholder: 'SADMIN',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'password',
+        label: 'Password',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       url: 'SIEBEL_URL',
@@ -276,10 +728,38 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   dynamics365: {
     fields: [
-      { key: 'tenantId', label: 'Tenant ID', placeholder: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', type: 'text', required: true, group: 'connection' },
-      { key: 'clientId', label: 'Client ID', placeholder: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', type: 'text', required: true, group: 'auth' },
-      { key: 'clientSecret', label: 'Client Secret', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
-      { key: 'resourceUrl', label: 'Resource URL', placeholder: 'https://myorg.crm.dynamics.com', type: 'url', required: true, group: 'connection' },
+      {
+        key: 'tenantId',
+        label: 'Tenant ID',
+        placeholder: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+        type: 'text',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'clientId',
+        label: 'Client ID',
+        placeholder: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'clientSecret',
+        label: 'Client Secret',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'resourceUrl',
+        label: 'Resource URL',
+        placeholder: 'https://myorg.crm.dynamics.com',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
     ],
     envMap: {
       tenantId: 'DYNAMICS365_TENANT_ID',
@@ -295,9 +775,30 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   servicenow: {
     fields: [
-      { key: 'instanceUrl', label: 'Instance URL', placeholder: 'https://myinstance.service-now.com', type: 'url', required: true, group: 'connection' },
-      { key: 'username', label: 'Username', placeholder: 'admin', type: 'text', required: true, group: 'auth' },
-      { key: 'password', label: 'Password', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'instanceUrl',
+        label: 'Instance URL',
+        placeholder: 'https://myinstance.service-now.com',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'username',
+        label: 'Username',
+        placeholder: 'admin',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'password',
+        label: 'Password',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       instanceUrl: 'SERVICENOW_INSTANCE_URL',
@@ -308,9 +809,30 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   jira: {
     fields: [
-      { key: 'baseUrl', label: 'Jira URL', placeholder: 'https://myorg.atlassian.net', type: 'url', required: true, group: 'connection' },
-      { key: 'email', label: 'Email', placeholder: 'you@example.com', type: 'email', required: true, group: 'auth' },
-      { key: 'apiToken', label: 'API Token', placeholder: 'ATATTxxxxxxx', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'baseUrl',
+        label: 'Jira URL',
+        placeholder: 'https://myorg.atlassian.net',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'email',
+        label: 'Email',
+        placeholder: 'you@example.com',
+        type: 'email',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'apiToken',
+        label: 'API Token',
+        placeholder: 'ATATTxxxxxxx',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       baseUrl: 'JIRA_BASE_URL',
@@ -321,9 +843,30 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   zendesk: {
     fields: [
-      { key: 'subdomain', label: 'Subdomain', placeholder: 'mycompany', type: 'text', required: true, group: 'connection' },
-      { key: 'email', label: 'Email', placeholder: 'you@example.com', type: 'email', required: true, group: 'auth' },
-      { key: 'apiToken', label: 'API Token', placeholder: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'subdomain',
+        label: 'Subdomain',
+        placeholder: 'mycompany',
+        type: 'text',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'email',
+        label: 'Email',
+        placeholder: 'you@example.com',
+        type: 'email',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'apiToken',
+        label: 'API Token',
+        placeholder: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       subdomain: 'ZENDESK_SUBDOMAIN',
@@ -338,11 +881,46 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   netsuite: {
     fields: [
-      { key: 'accountId', label: 'Account ID', placeholder: '123456_SB1', type: 'text', required: true, group: 'connection' },
-      { key: 'consumerKey', label: 'Consumer Key', placeholder: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', type: 'text', required: true, group: 'auth' },
-      { key: 'consumerSecret', label: 'Consumer Secret', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
-      { key: 'tokenId', label: 'Token ID', placeholder: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', type: 'text', required: true, group: 'auth' },
-      { key: 'tokenSecret', label: 'Token Secret', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'accountId',
+        label: 'Account ID',
+        placeholder: '123456_SB1',
+        type: 'text',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'consumerKey',
+        label: 'Consumer Key',
+        placeholder: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'consumerSecret',
+        label: 'Consumer Secret',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'tokenId',
+        label: 'Token ID',
+        placeholder: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'tokenSecret',
+        label: 'Token Secret',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       accountId: 'NETSUITE_ACCOUNT_ID',
@@ -355,10 +933,38 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   'infor-cloudsuite': {
     fields: [
-      { key: 'apiUrl', label: 'ION API URL', placeholder: 'https://mingle-ionapi.inforcloudsuite.com', type: 'url', required: true, group: 'connection' },
-      { key: 'tokenUrl', label: 'Token URL', placeholder: 'https://mingle-sso.inforcloudsuite.com/...', type: 'url', required: true, group: 'auth' },
-      { key: 'clientId', label: 'Client ID', placeholder: 'InforIntegration_xxx', type: 'text', required: true, group: 'auth' },
-      { key: 'clientSecret', label: 'Client Secret', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'apiUrl',
+        label: 'ION API URL',
+        placeholder: 'https://mingle-ionapi.inforcloudsuite.com',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'tokenUrl',
+        label: 'Token URL',
+        placeholder: 'https://mingle-sso.inforcloudsuite.com/...',
+        type: 'url',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'clientId',
+        label: 'Client ID',
+        placeholder: 'InforIntegration_xxx',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'clientSecret',
+        label: 'Client Secret',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       apiUrl: 'INFOR_API_URL',
@@ -370,10 +976,38 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   'jd-edwards': {
     fields: [
-      { key: 'aisUrl', label: 'AIS Server URL', placeholder: 'https://jde-server:port/jderest', type: 'url', required: true, group: 'connection' },
-      { key: 'username', label: 'Username', placeholder: 'JDE_USER', type: 'text', required: true, group: 'auth' },
-      { key: 'password', label: 'Password', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
-      { key: 'environment', label: 'Environment', placeholder: 'JDV920', type: 'text', required: false, group: 'advanced' },
+      {
+        key: 'aisUrl',
+        label: 'AIS Server URL',
+        placeholder: 'https://jde-server:port/jderest',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'username',
+        label: 'Username',
+        placeholder: 'JDE_USER',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'password',
+        label: 'Password',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'environment',
+        label: 'Environment',
+        placeholder: 'JDV920',
+        type: 'text',
+        required: false,
+        group: 'advanced',
+      },
     ],
     envMap: {
       aisUrl: 'JDE_AIS_URL',
@@ -385,11 +1019,46 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   epicor: {
     fields: [
-      { key: 'url', label: 'Epicor REST URL', placeholder: 'https://epicor-server/api/v2', type: 'url', required: true, group: 'connection' },
-      { key: 'apiKey', label: 'API Key', placeholder: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', type: 'password', required: false, group: 'auth' },
-      { key: 'username', label: 'Username', placeholder: 'manager', type: 'text', required: true, group: 'auth' },
-      { key: 'password', label: 'Password', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
-      { key: 'company', label: 'Company', placeholder: 'EPIC06', type: 'text', required: false, group: 'advanced' },
+      {
+        key: 'url',
+        label: 'Epicor REST URL',
+        placeholder: 'https://epicor-server/api/v2',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'apiKey',
+        label: 'API Key',
+        placeholder: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+        type: 'password',
+        required: false,
+        group: 'auth',
+      },
+      {
+        key: 'username',
+        label: 'Username',
+        placeholder: 'manager',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'password',
+        label: 'Password',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'company',
+        label: 'Company',
+        placeholder: 'EPIC06',
+        type: 'text',
+        required: false,
+        group: 'advanced',
+      },
     ],
     envMap: {
       url: 'EPICOR_URL',
@@ -402,11 +1071,46 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   'sage-intacct': {
     fields: [
-      { key: 'senderId', label: 'Sender ID', placeholder: 'MyWebServicesID', type: 'text', required: true, group: 'auth' },
-      { key: 'senderPassword', label: 'Sender Password', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
-      { key: 'companyId', label: 'Company ID', placeholder: 'mycompany', type: 'text', required: true, group: 'connection' },
-      { key: 'userId', label: 'User ID', placeholder: 'xml_gateway', type: 'text', required: true, group: 'auth' },
-      { key: 'userPassword', label: 'User Password', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'senderId',
+        label: 'Sender ID',
+        placeholder: 'MyWebServicesID',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'senderPassword',
+        label: 'Sender Password',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'companyId',
+        label: 'Company ID',
+        placeholder: 'mycompany',
+        type: 'text',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'userId',
+        label: 'User ID',
+        placeholder: 'xml_gateway',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'userPassword',
+        label: 'User Password',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       senderId: 'INTACCT_SENDER_ID',
@@ -419,9 +1123,30 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   'oracle-peoplesoft': {
     fields: [
-      { key: 'url', label: 'PeopleSoft URL', placeholder: 'https://psft-server:port', type: 'url', required: true, group: 'connection' },
-      { key: 'username', label: 'Username', placeholder: 'PS_USER', type: 'text', required: true, group: 'auth' },
-      { key: 'password', label: 'Password', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'url',
+        label: 'PeopleSoft URL',
+        placeholder: 'https://psft-server:port',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'username',
+        label: 'Username',
+        placeholder: 'PS_USER',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'password',
+        label: 'Password',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       url: 'PEOPLESOFT_URL',
@@ -432,10 +1157,38 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   'oracle-opera': {
     fields: [
-      { key: 'apiUrl', label: 'Opera API URL', placeholder: 'https://opera-server/api', type: 'url', required: true, group: 'connection' },
-      { key: 'clientId', label: 'Client ID', placeholder: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', type: 'text', required: true, group: 'auth' },
-      { key: 'clientSecret', label: 'Client Secret', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
-      { key: 'propertyId', label: 'Property ID', placeholder: 'HOTEL1', type: 'text', required: true, group: 'connection' },
+      {
+        key: 'apiUrl',
+        label: 'Opera API URL',
+        placeholder: 'https://opera-server/api',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'clientId',
+        label: 'Client ID',
+        placeholder: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'clientSecret',
+        label: 'Client Secret',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'propertyId',
+        label: 'Property ID',
+        placeholder: 'HOTEL1',
+        type: 'text',
+        required: true,
+        group: 'connection',
+      },
     ],
     envMap: {
       apiUrl: 'OPERA_API_URL',
@@ -451,9 +1204,30 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   workday: {
     fields: [
-      { key: 'tenant', label: 'Tenant', placeholder: 'mycompany', type: 'text', required: true, group: 'connection' },
-      { key: 'username', label: 'Username', placeholder: 'ISU_User', type: 'text', required: true, group: 'auth' },
-      { key: 'password', label: 'Password', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'tenant',
+        label: 'Tenant',
+        placeholder: 'mycompany',
+        type: 'text',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'username',
+        label: 'Username',
+        placeholder: 'ISU_User',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'password',
+        label: 'Password',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       tenant: 'WORKDAY_TENANT',
@@ -464,10 +1238,38 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   'sap-successfactors': {
     fields: [
-      { key: 'apiUrl', label: 'API URL', placeholder: 'https://api4.successfactors.com', type: 'url', required: true, group: 'connection' },
-      { key: 'companyId', label: 'Company ID', placeholder: 'myCompanyId', type: 'text', required: true, group: 'connection' },
-      { key: 'username', label: 'API Username', placeholder: 'admin_user', type: 'text', required: true, group: 'auth' },
-      { key: 'password', label: 'API Password', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'apiUrl',
+        label: 'API URL',
+        placeholder: 'https://api4.successfactors.com',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'companyId',
+        label: 'Company ID',
+        placeholder: 'myCompanyId',
+        type: 'text',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'username',
+        label: 'API Username',
+        placeholder: 'admin_user',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'password',
+        label: 'API Password',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       apiUrl: 'SF_API_URL',
@@ -479,10 +1281,39 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   adp: {
     fields: [
-      { key: 'apiUrl', label: 'ADP API URL', placeholder: 'https://api.adp.com', type: 'url', required: true, defaultValue: 'https://api.adp.com', group: 'connection' },
-      { key: 'clientId', label: 'Client ID', placeholder: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', type: 'text', required: true, group: 'auth' },
-      { key: 'clientSecret', label: 'Client Secret', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
-      { key: 'tokenUrl', label: 'Token URL', placeholder: 'https://accounts.adp.com/auth/oauth/v2/token', type: 'url', required: false, group: 'advanced' },
+      {
+        key: 'apiUrl',
+        label: 'ADP API URL',
+        placeholder: 'https://api.adp.com',
+        type: 'url',
+        required: true,
+        defaultValue: 'https://api.adp.com',
+        group: 'connection',
+      },
+      {
+        key: 'clientId',
+        label: 'Client ID',
+        placeholder: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'clientSecret',
+        label: 'Client Secret',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'tokenUrl',
+        label: 'Token URL',
+        placeholder: 'https://accounts.adp.com/auth/oauth/v2/token',
+        type: 'url',
+        required: false,
+        group: 'advanced',
+      },
     ],
     envMap: {
       apiUrl: 'ADP_API_URL',
@@ -494,10 +1325,38 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   'ukg-kronos': {
     fields: [
-      { key: 'apiUrl', label: 'UKG API URL', placeholder: 'https://mycompany.kronos.net/api', type: 'url', required: true, group: 'connection' },
-      { key: 'username', label: 'Username', placeholder: 'api_user', type: 'text', required: true, group: 'auth' },
-      { key: 'password', label: 'Password', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
-      { key: 'apiKey', label: 'API Key', placeholder: 'xxxxxxxxxxxxxxxx', type: 'password', required: false, group: 'auth' },
+      {
+        key: 'apiUrl',
+        label: 'UKG API URL',
+        placeholder: 'https://mycompany.kronos.net/api',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'username',
+        label: 'Username',
+        placeholder: 'api_user',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'password',
+        label: 'Password',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'apiKey',
+        label: 'API Key',
+        placeholder: 'xxxxxxxxxxxxxxxx',
+        type: 'password',
+        required: false,
+        group: 'auth',
+      },
     ],
     envMap: {
       apiUrl: 'UKG_API_URL',
@@ -509,8 +1368,22 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   'sap-concur': {
     fields: [
-      { key: 'baseUrl', label: 'Concur Base URL', placeholder: 'https://us.api.concursolutions.com', type: 'url', required: true, group: 'connection' },
-      { key: 'accessToken', label: 'Access Token', placeholder: 'eyJhbGci...', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'baseUrl',
+        label: 'Concur Base URL',
+        placeholder: 'https://us.api.concursolutions.com',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'accessToken',
+        label: 'Access Token',
+        placeholder: 'eyJhbGci...',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       baseUrl: 'CONCUR_BASE_URL',
@@ -524,8 +1397,22 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   'epic-fhir': {
     fields: [
-      { key: 'fhirUrl', label: 'FHIR Base URL', placeholder: 'https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4', type: 'url', required: true, group: 'connection' },
-      { key: 'accessToken', label: 'Access Token', placeholder: 'Bearer eyJhbGci...', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'fhirUrl',
+        label: 'FHIR Base URL',
+        placeholder: 'https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'accessToken',
+        label: 'Access Token',
+        placeholder: 'Bearer eyJhbGci...',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       fhirUrl: 'EPIC_FHIR_URL',
@@ -535,8 +1422,22 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   cerner: {
     fields: [
-      { key: 'fhirUrl', label: 'FHIR Base URL', placeholder: 'https://fhir-ehr.cerner.com/r4/tenantid', type: 'url', required: true, group: 'connection' },
-      { key: 'accessToken', label: 'Access Token', placeholder: 'Bearer eyJhbGci...', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'fhirUrl',
+        label: 'FHIR Base URL',
+        placeholder: 'https://fhir-ehr.cerner.com/r4/tenantid',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'accessToken',
+        label: 'Access Token',
+        placeholder: 'Bearer eyJhbGci...',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       fhirUrl: 'CERNER_FHIR_URL',
@@ -546,8 +1447,22 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   meditech: {
     fields: [
-      { key: 'fhirUrl', label: 'FHIR URL', placeholder: 'https://meditech-server/fhir', type: 'url', required: true, group: 'connection' },
-      { key: 'accessToken', label: 'Access Token', placeholder: 'Bearer ...', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'fhirUrl',
+        label: 'FHIR URL',
+        placeholder: 'https://meditech-server/fhir',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'accessToken',
+        label: 'Access Token',
+        placeholder: 'Bearer ...',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       fhirUrl: 'MEDITECH_FHIR_URL',
@@ -557,10 +1472,38 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   allscripts: {
     fields: [
-      { key: 'url', label: 'Allscripts Unity URL', placeholder: 'https://open.allscripts.com/api', type: 'url', required: true, group: 'connection' },
-      { key: 'appName', label: 'App Name', placeholder: 'MyApp', type: 'text', required: true, group: 'auth' },
-      { key: 'appUsername', label: 'App Username', placeholder: 'app_user', type: 'text', required: true, group: 'auth' },
-      { key: 'appPassword', label: 'App Password', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'url',
+        label: 'Allscripts Unity URL',
+        placeholder: 'https://open.allscripts.com/api',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'appName',
+        label: 'App Name',
+        placeholder: 'MyApp',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'appUsername',
+        label: 'App Username',
+        placeholder: 'app_user',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'appPassword',
+        label: 'App Password',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       url: 'ALLSCRIPTS_URL',
@@ -576,10 +1519,38 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   guidewire: {
     fields: [
-      { key: 'pcUrl', label: 'PolicyCenter URL', placeholder: 'https://pc.example.com/pc/rest', type: 'url', required: false, group: 'connection' },
-      { key: 'ccUrl', label: 'ClaimCenter URL', placeholder: 'https://cc.example.com/cc/rest', type: 'url', required: false, group: 'connection' },
-      { key: 'bcUrl', label: 'BillingCenter URL', placeholder: 'https://bc.example.com/bc/rest', type: 'url', required: false, group: 'connection' },
-      { key: 'accessToken', label: 'Access Token', placeholder: 'Bearer ...', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'pcUrl',
+        label: 'PolicyCenter URL',
+        placeholder: 'https://pc.example.com/pc/rest',
+        type: 'url',
+        required: false,
+        group: 'connection',
+      },
+      {
+        key: 'ccUrl',
+        label: 'ClaimCenter URL',
+        placeholder: 'https://cc.example.com/cc/rest',
+        type: 'url',
+        required: false,
+        group: 'connection',
+      },
+      {
+        key: 'bcUrl',
+        label: 'BillingCenter URL',
+        placeholder: 'https://bc.example.com/bc/rest',
+        type: 'url',
+        required: false,
+        group: 'connection',
+      },
+      {
+        key: 'accessToken',
+        label: 'Access Token',
+        placeholder: 'Bearer ...',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       pcUrl: 'GUIDEWIRE_PC_URL',
@@ -591,8 +1562,22 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   'duck-creek': {
     fields: [
-      { key: 'apiUrl', label: 'Duck Creek API URL', placeholder: 'https://api.duckcreek.com', type: 'url', required: true, group: 'connection' },
-      { key: 'accessToken', label: 'Access Token', placeholder: 'Bearer ...', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'apiUrl',
+        label: 'Duck Creek API URL',
+        placeholder: 'https://api.duckcreek.com',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'accessToken',
+        label: 'Access Token',
+        placeholder: 'Bearer ...',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       apiUrl: 'DUCKCREEK_API_URL',
@@ -602,8 +1587,22 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   'applied-epic': {
     fields: [
-      { key: 'url', label: 'Applied Epic URL', placeholder: 'https://applied.example.com/api', type: 'url', required: true, group: 'connection' },
-      { key: 'accessToken', label: 'Access Token', placeholder: 'Bearer ...', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'url',
+        label: 'Applied Epic URL',
+        placeholder: 'https://applied.example.com/api',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'accessToken',
+        label: 'Access Token',
+        placeholder: 'Bearer ...',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       url: 'APPLIED_EPIC_URL',
@@ -617,8 +1616,22 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   'manhattan-associates': {
     fields: [
-      { key: 'apiUrl', label: 'API URL', placeholder: 'https://manhattan.example.com/api', type: 'url', required: true, group: 'connection' },
-      { key: 'accessToken', label: 'Access Token', placeholder: 'Bearer ...', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'apiUrl',
+        label: 'API URL',
+        placeholder: 'https://manhattan.example.com/api',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'accessToken',
+        label: 'Access Token',
+        placeholder: 'Bearer ...',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       apiUrl: 'MANHATTAN_API_URL',
@@ -628,8 +1641,22 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   'blue-yonder': {
     fields: [
-      { key: 'apiUrl', label: 'API URL', placeholder: 'https://api.blueyonder.com', type: 'url', required: true, group: 'connection' },
-      { key: 'accessToken', label: 'Access Token', placeholder: 'Bearer ...', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'apiUrl',
+        label: 'API URL',
+        placeholder: 'https://api.blueyonder.com',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'accessToken',
+        label: 'Access Token',
+        placeholder: 'Bearer ...',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       apiUrl: 'BLUEYONDER_API_URL',
@@ -639,8 +1666,22 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   descartes: {
     fields: [
-      { key: 'apiUrl', label: 'API URL', placeholder: 'https://api.descartes.com', type: 'url', required: true, group: 'connection' },
-      { key: 'apiKey', label: 'API Key', placeholder: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'apiUrl',
+        label: 'API URL',
+        placeholder: 'https://api.descartes.com',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'apiKey',
+        label: 'API Key',
+        placeholder: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       apiUrl: 'DESCARTES_API_URL',
@@ -654,10 +1695,38 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   fis: {
     fields: [
-      { key: 'apiUrl', label: 'FIS API URL', placeholder: 'https://api.fisglobal.com', type: 'url', required: true, group: 'connection' },
-      { key: 'apiKey', label: 'API Key', placeholder: 'xxxxxxxxxxxxxxxx', type: 'password', required: true, group: 'auth' },
-      { key: 'clientId', label: 'Client ID', placeholder: 'xxx-xxx', type: 'text', required: false, group: 'auth' },
-      { key: 'clientSecret', label: 'Client Secret', placeholder: '••••••••', type: 'password', required: false, group: 'auth' },
+      {
+        key: 'apiUrl',
+        label: 'FIS API URL',
+        placeholder: 'https://api.fisglobal.com',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'apiKey',
+        label: 'API Key',
+        placeholder: 'xxxxxxxxxxxxxxxx',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'clientId',
+        label: 'Client ID',
+        placeholder: 'xxx-xxx',
+        type: 'text',
+        required: false,
+        group: 'auth',
+      },
+      {
+        key: 'clientSecret',
+        label: 'Client Secret',
+        placeholder: '••••••••',
+        type: 'password',
+        required: false,
+        group: 'auth',
+      },
     ],
     envMap: {
       apiUrl: 'FIS_API_URL',
@@ -669,8 +1738,22 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   finastra: {
     fields: [
-      { key: 'apiUrl', label: 'Finastra API URL', placeholder: 'https://api.fusionfabric.cloud', type: 'url', required: true, group: 'connection' },
-      { key: 'accessToken', label: 'Access Token', placeholder: 'Bearer ...', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'apiUrl',
+        label: 'Finastra API URL',
+        placeholder: 'https://api.fusionfabric.cloud',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'accessToken',
+        label: 'Access Token',
+        placeholder: 'Bearer ...',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       apiUrl: 'FINASTRA_API_URL',
@@ -680,9 +1763,30 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   temenos: {
     fields: [
-      { key: 'apiUrl', label: 'Temenos API URL', placeholder: 'https://temenos-server/api/v1.0.0', type: 'url', required: true, group: 'connection' },
-      { key: 'username', label: 'Username', placeholder: 'INPUTTER', type: 'text', required: true, group: 'auth' },
-      { key: 'password', label: 'Password', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'apiUrl',
+        label: 'Temenos API URL',
+        placeholder: 'https://temenos-server/api/v1.0.0',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'username',
+        label: 'Username',
+        placeholder: 'INPUTTER',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'password',
+        label: 'Password',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       apiUrl: 'TEMENOS_API_URL',
@@ -693,8 +1797,22 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   blackline: {
     fields: [
-      { key: 'apiUrl', label: 'BlackLine API URL', placeholder: 'https://myorg.blackline.com/api', type: 'url', required: true, group: 'connection' },
-      { key: 'accessToken', label: 'Access Token', placeholder: 'Bearer ...', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'apiUrl',
+        label: 'BlackLine API URL',
+        placeholder: 'https://myorg.blackline.com/api',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'accessToken',
+        label: 'Access Token',
+        placeholder: 'Bearer ...',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       apiUrl: 'BLACKLINE_API_URL',
@@ -704,9 +1822,31 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   quickbooks: {
     fields: [
-      { key: 'apiUrl', label: 'QuickBooks API URL', placeholder: 'https://quickbooks.api.intuit.com', type: 'url', required: true, defaultValue: 'https://quickbooks.api.intuit.com', group: 'connection' },
-      { key: 'realmId', label: 'Realm ID (Company ID)', placeholder: '123456789', type: 'text', required: true, group: 'connection' },
-      { key: 'accessToken', label: 'Access Token', placeholder: 'eyJhbGci...', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'apiUrl',
+        label: 'QuickBooks API URL',
+        placeholder: 'https://quickbooks.api.intuit.com',
+        type: 'url',
+        required: true,
+        defaultValue: 'https://quickbooks.api.intuit.com',
+        group: 'connection',
+      },
+      {
+        key: 'realmId',
+        label: 'Realm ID (Company ID)',
+        placeholder: '123456789',
+        type: 'text',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'accessToken',
+        label: 'Access Token',
+        placeholder: 'eyJhbGci...',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       apiUrl: 'QUICKBOOKS_API_URL',
@@ -721,8 +1861,22 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   shopify: {
     fields: [
-      { key: 'storeUrl', label: 'Store URL', placeholder: 'https://mystore.myshopify.com', type: 'url', required: true, group: 'connection' },
-      { key: 'accessToken', label: 'Admin API Access Token', placeholder: 'shpat_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'storeUrl',
+        label: 'Store URL',
+        placeholder: 'https://mystore.myshopify.com',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'accessToken',
+        label: 'Admin API Access Token',
+        placeholder: 'shpat_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       storeUrl: 'SHOPIFY_STORE_URL',
@@ -732,8 +1886,22 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   magento: {
     fields: [
-      { key: 'url', label: 'Magento URL', placeholder: 'https://magento.example.com', type: 'url', required: true, group: 'connection' },
-      { key: 'accessToken', label: 'Integration Access Token', placeholder: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'url',
+        label: 'Magento URL',
+        placeholder: 'https://magento.example.com',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'accessToken',
+        label: 'Integration Access Token',
+        placeholder: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       url: 'MAGENTO_URL',
@@ -747,8 +1915,22 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   amdocs: {
     fields: [
-      { key: 'apiUrl', label: 'Amdocs API URL', placeholder: 'https://amdocs.example.com/api', type: 'url', required: true, group: 'connection' },
-      { key: 'accessToken', label: 'Access Token', placeholder: 'Bearer ...', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'apiUrl',
+        label: 'Amdocs API URL',
+        placeholder: 'https://amdocs.example.com/api',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'accessToken',
+        label: 'Access Token',
+        placeholder: 'Bearer ...',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       apiUrl: 'AMDOCS_API_URL',
@@ -758,8 +1940,22 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   'ericsson-bss': {
     fields: [
-      { key: 'url', label: 'Ericsson BSS URL', placeholder: 'https://bss.ericsson.example.com', type: 'url', required: true, group: 'connection' },
-      { key: 'accessToken', label: 'Access Token', placeholder: 'Bearer ...', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'url',
+        label: 'Ericsson BSS URL',
+        placeholder: 'https://bss.ericsson.example.com',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'accessToken',
+        label: 'Access Token',
+        placeholder: 'Bearer ...',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       url: 'ERICSSON_BSS_URL',
@@ -773,10 +1969,38 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   sharepoint: {
     fields: [
-      { key: 'tenantId', label: 'Tenant ID', placeholder: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', type: 'text', required: true, group: 'connection' },
-      { key: 'clientId', label: 'Client ID (App Registration)', placeholder: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', type: 'text', required: true, group: 'auth' },
-      { key: 'clientSecret', label: 'Client Secret', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
-      { key: 'siteUrl', label: 'Site URL', placeholder: 'https://myorg.sharepoint.com/sites/mysite', type: 'url', required: true, group: 'connection' },
+      {
+        key: 'tenantId',
+        label: 'Tenant ID',
+        placeholder: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+        type: 'text',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'clientId',
+        label: 'Client ID (App Registration)',
+        placeholder: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'clientSecret',
+        label: 'Client Secret',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'siteUrl',
+        label: 'Site URL',
+        placeholder: 'https://myorg.sharepoint.com/sites/mysite',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
     ],
     envMap: {
       tenantId: 'SHAREPOINT_TENANT_ID',
@@ -788,10 +2012,38 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   documentum: {
     fields: [
-      { key: 'url', label: 'Documentum REST URL', placeholder: 'https://documentum-server:8443/dctm-rest', type: 'url', required: true, group: 'connection' },
-      { key: 'username', label: 'Username', placeholder: 'dmadmin', type: 'text', required: true, group: 'auth' },
-      { key: 'password', label: 'Password', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
-      { key: 'repository', label: 'Repository', placeholder: 'docbase01', type: 'text', required: true, group: 'connection' },
+      {
+        key: 'url',
+        label: 'Documentum REST URL',
+        placeholder: 'https://documentum-server:8443/dctm-rest',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'username',
+        label: 'Username',
+        placeholder: 'dmadmin',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'password',
+        label: 'Password',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'repository',
+        label: 'Repository',
+        placeholder: 'docbase01',
+        type: 'text',
+        required: true,
+        group: 'connection',
+      },
     ],
     envMap: {
       url: 'DOCUMENTUM_URL',
@@ -803,10 +2055,38 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   'ibm-filenet': {
     fields: [
-      { key: 'url', label: 'FileNet REST URL', placeholder: 'https://filenet-server/acce/api/v1', type: 'url', required: true, group: 'connection' },
-      { key: 'username', label: 'Username', placeholder: 'p8admin', type: 'text', required: true, group: 'auth' },
-      { key: 'password', label: 'Password', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
-      { key: 'objectStore', label: 'Object Store', placeholder: 'OS1', type: 'text', required: true, group: 'connection' },
+      {
+        key: 'url',
+        label: 'FileNet REST URL',
+        placeholder: 'https://filenet-server/acce/api/v1',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'username',
+        label: 'Username',
+        placeholder: 'p8admin',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'password',
+        label: 'Password',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'objectStore',
+        label: 'Object Store',
+        placeholder: 'OS1',
+        type: 'text',
+        required: true,
+        group: 'connection',
+      },
     ],
     envMap: {
       url: 'FILENET_URL',
@@ -818,7 +2098,14 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   box: {
     fields: [
-      { key: 'accessToken', label: 'Developer Token / Access Token', placeholder: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'accessToken',
+        label: 'Developer Token / Access Token',
+        placeholder: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       accessToken: 'BOX_ACCESS_TOKEN',
@@ -831,8 +2118,22 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   'cgi-momentum': {
     fields: [
-      { key: 'apiUrl', label: 'CGI Momentum API URL', placeholder: 'https://momentum.example.gov/api', type: 'url', required: true, group: 'connection' },
-      { key: 'accessToken', label: 'Access Token', placeholder: 'Bearer ...', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'apiUrl',
+        label: 'CGI Momentum API URL',
+        placeholder: 'https://momentum.example.gov/api',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'accessToken',
+        label: 'Access Token',
+        placeholder: 'Bearer ...',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       apiUrl: 'CGI_API_URL',
@@ -842,8 +2143,22 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   'tyler-technologies': {
     fields: [
-      { key: 'apiUrl', label: 'Tyler API URL', placeholder: 'https://tyler.example.gov/api', type: 'url', required: true, group: 'connection' },
-      { key: 'apiKey', label: 'API Key', placeholder: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'apiUrl',
+        label: 'Tyler API URL',
+        placeholder: 'https://tyler.example.gov/api',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'apiKey',
+        label: 'API Key',
+        placeholder: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       apiUrl: 'TYLER_API_URL',
@@ -857,10 +2172,38 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   'ellucian-banner': {
     fields: [
-      { key: 'apiUrl', label: 'Banner API URL', placeholder: 'https://banner.example.edu/api', type: 'url', required: true, group: 'connection' },
-      { key: 'apiKey', label: 'API Key', placeholder: 'xxxxxxxxxxxxxxxx', type: 'password', required: true, group: 'auth' },
-      { key: 'username', label: 'Username', placeholder: 'admin_user', type: 'text', required: false, group: 'auth' },
-      { key: 'password', label: 'Password', placeholder: '••••••••', type: 'password', required: false, group: 'auth' },
+      {
+        key: 'apiUrl',
+        label: 'Banner API URL',
+        placeholder: 'https://banner.example.edu/api',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'apiKey',
+        label: 'API Key',
+        placeholder: 'xxxxxxxxxxxxxxxx',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'username',
+        label: 'Username',
+        placeholder: 'admin_user',
+        type: 'text',
+        required: false,
+        group: 'auth',
+      },
+      {
+        key: 'password',
+        label: 'Password',
+        placeholder: '••••••••',
+        type: 'password',
+        required: false,
+        group: 'auth',
+      },
     ],
     envMap: {
       apiUrl: 'BANNER_API_URL',
@@ -876,10 +2219,38 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   'ibm-maximo': {
     fields: [
-      { key: 'url', label: 'Maximo URL', placeholder: 'https://maximo.example.com/maximo/oslc', type: 'url', required: true, group: 'connection' },
-      { key: 'apiKey', label: 'API Key', placeholder: 'xxxxxxxxxxxxxxxx', type: 'password', required: false, group: 'auth' },
-      { key: 'username', label: 'Username', placeholder: 'maxadmin', type: 'text', required: false, group: 'auth' },
-      { key: 'password', label: 'Password', placeholder: '••••••••', type: 'password', required: false, group: 'auth' },
+      {
+        key: 'url',
+        label: 'Maximo URL',
+        placeholder: 'https://maximo.example.com/maximo/oslc',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'apiKey',
+        label: 'API Key',
+        placeholder: 'xxxxxxxxxxxxxxxx',
+        type: 'password',
+        required: false,
+        group: 'auth',
+      },
+      {
+        key: 'username',
+        label: 'Username',
+        placeholder: 'maxadmin',
+        type: 'text',
+        required: false,
+        group: 'auth',
+      },
+      {
+        key: 'password',
+        label: 'Password',
+        placeholder: '••••••••',
+        type: 'password',
+        required: false,
+        group: 'auth',
+      },
     ],
     envMap: {
       url: 'MAXIMO_URL',
@@ -891,9 +2262,30 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   'ibm-tririga': {
     fields: [
-      { key: 'url', label: 'TRIRIGA URL', placeholder: 'https://tririga.example.com', type: 'url', required: true, group: 'connection' },
-      { key: 'username', label: 'Username', placeholder: 'system', type: 'text', required: true, group: 'auth' },
-      { key: 'password', label: 'Password', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'url',
+        label: 'TRIRIGA URL',
+        placeholder: 'https://tririga.example.com',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'username',
+        label: 'Username',
+        placeholder: 'system',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'password',
+        label: 'Password',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       url: 'TRIRIGA_URL',
@@ -904,9 +2296,30 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   'ge-predix': {
     fields: [
-      { key: 'apiUrl', label: 'Predix API URL', placeholder: 'https://predix.example.com/api', type: 'url', required: true, group: 'connection' },
-      { key: 'zoneId', label: 'Predix Zone ID', placeholder: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', type: 'text', required: true, group: 'connection' },
-      { key: 'accessToken', label: 'Access Token', placeholder: 'Bearer ...', type: 'password', required: true, group: 'auth' },
+      {
+        key: 'apiUrl',
+        label: 'Predix API URL',
+        placeholder: 'https://predix.example.com/api',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'zoneId',
+        label: 'Predix Zone ID',
+        placeholder: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+        type: 'text',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'accessToken',
+        label: 'Access Token',
+        placeholder: 'Bearer ...',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
     ],
     envMap: {
       apiUrl: 'PREDIX_API_URL',
@@ -921,9 +2334,30 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   'sap-ariba': {
     fields: [
-      { key: 'apiUrl', label: 'Ariba API URL', placeholder: 'https://openapi.ariba.com', type: 'url', required: true, group: 'connection' },
-      { key: 'apiKey', label: 'API Key', placeholder: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', type: 'password', required: true, group: 'auth' },
-      { key: 'realm', label: 'Realm', placeholder: 'mycompany-T', type: 'text', required: true, group: 'connection' },
+      {
+        key: 'apiUrl',
+        label: 'Ariba API URL',
+        placeholder: 'https://openapi.ariba.com',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'apiKey',
+        label: 'API Key',
+        placeholder: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'realm',
+        label: 'Realm',
+        placeholder: 'mycompany-T',
+        type: 'text',
+        required: true,
+        group: 'connection',
+      },
     ],
     envMap: {
       apiUrl: 'ARIBA_API_URL',
@@ -934,10 +2368,38 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   coupa: {
     fields: [
-      { key: 'url', label: 'Coupa Instance URL', placeholder: 'https://mycompany.coupahost.com', type: 'url', required: true, group: 'connection' },
-      { key: 'apiKey', label: 'API Key', placeholder: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', type: 'password', required: true, group: 'auth' },
-      { key: 'clientId', label: 'OAuth Client ID (optional)', placeholder: 'xxxx', type: 'text', required: false, group: 'auth' },
-      { key: 'clientSecret', label: 'OAuth Client Secret (optional)', placeholder: '••••••••', type: 'password', required: false, group: 'auth' },
+      {
+        key: 'url',
+        label: 'Coupa Instance URL',
+        placeholder: 'https://mycompany.coupahost.com',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'apiKey',
+        label: 'API Key',
+        placeholder: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'clientId',
+        label: 'OAuth Client ID (optional)',
+        placeholder: 'xxxx',
+        type: 'text',
+        required: false,
+        group: 'auth',
+      },
+      {
+        key: 'clientSecret',
+        label: 'OAuth Client Secret (optional)',
+        placeholder: '••••••••',
+        type: 'password',
+        required: false,
+        group: 'auth',
+      },
     ],
     envMap: {
       url: 'COUPA_URL',
@@ -953,10 +2415,38 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
   as400: {
     fields: [
-      { key: 'host', label: 'AS/400 Host', placeholder: '10.0.0.100', type: 'text', required: true, group: 'connection' },
-      { key: 'username', label: 'Username', placeholder: 'QSECOFR', type: 'text', required: true, group: 'auth' },
-      { key: 'password', label: 'Password', placeholder: '••••••••', type: 'password', required: true, group: 'auth' },
-      { key: 'database', label: 'Database / Library', placeholder: 'MYLIB', type: 'text', required: false, group: 'connection' },
+      {
+        key: 'host',
+        label: 'AS/400 Host',
+        placeholder: '10.0.0.100',
+        type: 'text',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'username',
+        label: 'Username',
+        placeholder: 'QSECOFR',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'password',
+        label: 'Password',
+        placeholder: '••••••••',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'database',
+        label: 'Database / Library',
+        placeholder: 'MYLIB',
+        type: 'text',
+        required: false,
+        group: 'connection',
+      },
     ],
     envMap: {
       host: 'AS400_HOST',
@@ -972,16 +2462,32 @@ export const CONNECTION_FIELD_SCHEMAS: Record<string, ConnectionFieldSchema> = {
  * Falls back to a generic URL + token form for unknown types.
  */
 export function getFieldSchema(type: string): ConnectionFieldSchema {
-  return CONNECTION_FIELD_SCHEMAS[type] ?? {
-    fields: [
-      { key: 'url', label: 'URL', placeholder: 'https://api.example.com', type: 'url' as const, required: true, group: 'connection' as const },
-      { key: 'accessToken', label: 'Access Token', placeholder: 'Bearer ...', type: 'password' as const, required: true, group: 'auth' as const },
-    ],
-    envMap: {
-      url: `${type.toUpperCase().replace(/-/g, '_')}_URL`,
-      accessToken: `${type.toUpperCase().replace(/-/g, '_')}_ACCESS_TOKEN`,
-    },
-  };
+  return (
+    CONNECTION_FIELD_SCHEMAS[type] ?? {
+      fields: [
+        {
+          key: 'url',
+          label: 'URL',
+          placeholder: 'https://api.example.com',
+          type: 'url' as const,
+          required: true,
+          group: 'connection' as const,
+        },
+        {
+          key: 'accessToken',
+          label: 'Access Token',
+          placeholder: 'Bearer ...',
+          type: 'password' as const,
+          required: true,
+          group: 'auth' as const,
+        },
+      ],
+      envMap: {
+        url: `${type.toUpperCase().replace(/-/g, '_')}_URL`,
+        accessToken: `${type.toUpperCase().replace(/-/g, '_')}_ACCESS_TOKEN`,
+      },
+    }
+  );
 }
 
 /**

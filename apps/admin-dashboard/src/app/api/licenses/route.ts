@@ -3,6 +3,8 @@ export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
 import { requireAdmin } from '@/lib/api-auth';
+import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 
 export async function GET(request: NextRequest) {
   const auth = await requireAdmin();
@@ -15,15 +17,16 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search') || '';
     const status = searchParams.get('status') || 'all';
     const tier = searchParams.get('tier') || 'all';
-    
+
     const offset = (page - 1) * limit;
 
-    let query = supabaseAdmin
-      .from('licenses')
-      .select(`
+    let query = supabaseAdmin.from('licenses').select(
+      `
         *,
         users:user_id (id, email, full_name)
-      `, { count: 'exact' });
+      `,
+      { count: 'exact' }
+    );
 
     // Apply status filter
     if (status !== 'all') {
@@ -36,20 +39,18 @@ export async function GET(request: NextRequest) {
     }
 
     // Apply pagination
-    query = query
-      .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1);
+    query = query.order('created_at', { ascending: false }).range(offset, offset + limit - 1);
 
     const { data: licenses, count, error } = await query;
 
     if (error) throw error;
 
     // Format licenses
-    const formattedLicenses = (licenses || []).map((license) => {
+    const formattedLicenses = (licenses || []).map(license => {
       const expiresAt = license.expires_at ? new Date(license.expires_at) : null;
       const now = new Date();
       const isExpired = expiresAt && expiresAt < now;
-      
+
       let daysRemaining: number | null = null;
       if (expiresAt) {
         daysRemaining = Math.ceil((expiresAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
@@ -65,11 +66,13 @@ export async function GET(request: NextRequest) {
         daysRemaining,
         maxMachines: license.max_machines,
         activatedMachines: license.activated_machines || 0,
-        user: license.users ? {
-          id: license.users.id,
-          email: license.users.email,
-          name: license.users.full_name || license.users.email?.split('@')[0],
-        } : null,
+        user: license.users
+          ? {
+              id: license.users.id,
+              email: license.users.email,
+              name: license.users.full_name || license.users.email?.split('@')[0],
+            }
+          : null,
         createdAt: license.created_at,
         updatedAt: license.updated_at,
       };
@@ -79,10 +82,11 @@ export async function GET(request: NextRequest) {
     let filteredLicenses = formattedLicenses;
     if (search) {
       const searchLower = search.toLowerCase();
-      filteredLicenses = formattedLicenses.filter(l => 
-        l.licenseKey?.toLowerCase().includes(searchLower) ||
-        l.user?.email?.toLowerCase().includes(searchLower) ||
-        l.user?.name?.toLowerCase().includes(searchLower)
+      filteredLicenses = formattedLicenses.filter(
+        l =>
+          l.licenseKey?.toLowerCase().includes(searchLower) ||
+          l.user?.email?.toLowerCase().includes(searchLower) ||
+          l.user?.name?.toLowerCase().includes(searchLower)
       );
     }
 
@@ -93,14 +97,18 @@ export async function GET(request: NextRequest) {
 
     const stats = {
       total: allLicenses?.length || 0,
-      active: allLicenses?.filter(l => l.is_active && (!l.expires_at || new Date(l.expires_at) > new Date())).length || 0,
-      expired: allLicenses?.filter(l => l.expires_at && new Date(l.expires_at) < new Date()).length || 0,
+      active:
+        allLicenses?.filter(
+          l => l.is_active && (!l.expires_at || new Date(l.expires_at) > new Date())
+        ).length || 0,
+      expired:
+        allLicenses?.filter(l => l.expires_at && new Date(l.expires_at) < new Date()).length || 0,
       byTier: {
         free: allLicenses?.filter(l => l.tier === 'free').length || 0,
         starter: allLicenses?.filter(l => l.tier === 'starter').length || 0,
         pro: allLicenses?.filter(l => l.tier === 'pro').length || 0,
         enterprise: allLicenses?.filter(l => l.tier === 'enterprise').length || 0,
-      }
+      },
     };
 
     return NextResponse.json({
@@ -113,10 +121,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error fetching licenses:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch licenses' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch licenses' }, { status: 500 });
   }
 }
 
@@ -129,18 +134,13 @@ export async function POST(request: NextRequest) {
     const { userId, tier, expiresInDays, maxMachines } = body;
 
     if (!userId || !tier) {
-      return NextResponse.json(
-        { error: 'Missing required fields: userId, tier' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing required fields: userId, tier' }, { status: 400 });
     }
 
     // Generate license key
-    const jwt = require('jsonwebtoken');
-    const crypto = require('crypto');
     const jwtSecret = process.env.LICENSE_JWT_SECRET || 'dev-secret';
-    
-    const expiresAt = expiresInDays 
+
+    const expiresAt = expiresInDays
       ? new Date(Date.now() + expiresInDays * 24 * 60 * 60 * 1000)
       : new Date(Date.now() + 365 * 24 * 60 * 60 * 1000); // Default 1 year
 
@@ -181,9 +181,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error creating license:', error);
-    return NextResponse.json(
-      { error: 'Failed to create license' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to create license' }, { status: 500 });
   }
 }

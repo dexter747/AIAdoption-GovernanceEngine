@@ -1,7 +1,8 @@
 # Velanova Backend Architecture
+
 **Simplified, Production-Ready Design**
 
-*Last Updated: January 19, 2026*
+_Last Updated: January 19, 2026_
 
 ---
 
@@ -9,13 +10,13 @@
 
 ### 1. What Actually Costs Money?
 
-| Component | Cost Type | Notes |
-|-----------|-----------|-------|
-| **LLM API Calls** | ✅ Per-token | OpenAI, Anthropic, Google, Groq, etc. |
-| **Database (Supabase)** | Free tier / $25/mo Pro | Already using, works fine |
-| **Enterprise APIs** | License-based | SAP, Salesforce = org licenses, not per-call |
-| **Docker/VM Hosting** | Infrastructure | Only if you self-host |
-| **MCP Servers** | FREE | They're just bridges, no per-call cost |
+| Component               | Cost Type              | Notes                                        |
+| ----------------------- | ---------------------- | -------------------------------------------- |
+| **LLM API Calls**       | ✅ Per-token           | OpenAI, Anthropic, Google, Groq, etc.        |
+| **Database (Supabase)** | Free tier / $25/mo Pro | Already using, works fine                    |
+| **Enterprise APIs**     | License-based          | SAP, Salesforce = org licenses, not per-call |
+| **Docker/VM Hosting**   | Infrastructure         | Only if you self-host                        |
+| **MCP Servers**         | FREE                   | They're just bridges, no per-call cost       |
 
 **Bottom Line**: Only LLM API calls cost per-use. Everything else is fixed infrastructure.
 
@@ -28,7 +29,7 @@ Let me simplify:
 ```
 DEVELOPMENT (What you need NOW):
 ├── Express API (port 5500)         ← Already have
-├── Supabase (cloud)                ← Already have  
+├── Supabase (cloud)                ← Already have
 ├── Velanova MCP Server (local)     ← New, runs as Node process
 └── Desktop App (Electron)          ← Already have
 
@@ -46,11 +47,11 @@ PRODUCTION (Later, when scaling):
 ```
 Are you in development/MVP?
   YES → Run everything locally, no Docker needed
-  
+
 Do you have >100 users?
   NO  → Vercel + Supabase is enough
   YES → Consider VM with Docker
-  
+
 Do you need SAP/Epic/AS400?
   NO  → Skip enterprise MCP servers entirely
   YES → Add those specific containers only
@@ -122,16 +123,16 @@ Desktop App: Distributed via download (connects to cloud backend)
 
 ## What You DON'T Need (Yet)
 
-| Component | Why Skip For Now |
-|-----------|-----------------|
-| **Docker Compose with 20 containers** | Overkill - just run Node locally |
-| **Kubernetes** | Enterprise scale only |
-| **Self-hosted PostgreSQL** | Supabase handles this |
-| **Self-hosted MongoDB** | Not needed unless you have specific NoSQL needs |
-| **Self-hosted Redis** | Only for caching at scale |
-| **SAP MCP Server** | Only if you have SAP customers |
-| **Epic FHIR MCP Server** | Only for healthcare clients |
-| **AS/400 MCP Server** | Only for legacy system clients |
+| Component                             | Why Skip For Now                                |
+| ------------------------------------- | ----------------------------------------------- |
+| **Docker Compose with 20 containers** | Overkill - just run Node locally                |
+| **Kubernetes**                        | Enterprise scale only                           |
+| **Self-hosted PostgreSQL**            | Supabase handles this                           |
+| **Self-hosted MongoDB**               | Not needed unless you have specific NoSQL needs |
+| **Self-hosted Redis**                 | Only for caching at scale                       |
+| **SAP MCP Server**                    | Only if you have SAP customers                  |
+| **Epic FHIR MCP Server**              | Only for healthcare clients                     |
+| **AS/400 MCP Server**                 | Only for legacy system clients                  |
 
 ---
 
@@ -154,7 +155,7 @@ apps/
 │           └── ai-router.js  # Multi-model AI routing
 │
 ├── admin-dashboard/          # Admin UI (Next.js)
-├── landing-site/             # Marketing site (Next.js)  
+├── landing-site/             # Marketing site (Next.js)
 └── cloud-backend/            # License server (Next.js)
 
 packages/
@@ -197,6 +198,7 @@ pnpm dev
 ### Testing AI Routing
 
 The Express API already handles AI routing at:
+
 - `POST http://localhost:5500/api/chat` - Chat with AI
 - `POST http://localhost:5500/api/generate` - Generate content
 
@@ -238,13 +240,15 @@ usage_logs
 ### Do You Need MongoDB?
 
 **NO.** Supabase PostgreSQL handles:
+
 - ✅ User data
-- ✅ License management  
+- ✅ License management
 - ✅ Usage tracking
 - ✅ Audit logs
 - ✅ Chat history (with JSONB for messages)
 
 Only add MongoDB if you have:
+
 - Massive document storage needs
 - Complex nested data structures
 - Need for horizontal sharding
@@ -252,6 +256,7 @@ Only add MongoDB if you have:
 ### Do You Need Redis?
 
 **NOT YET.** Add Redis only when you need:
+
 - Session caching (Supabase handles auth)
 - Rate limiting at scale (governance layer handles this in-memory for now)
 - Response caching for expensive operations
@@ -261,37 +266,41 @@ Only add MongoDB if you have:
 ## Cost Breakdown (Realistic)
 
 ### Development Phase (Now)
-| Service | Cost |
-|---------|------|
-| Supabase | $0 (free tier) |
-| OpenAI API | $5-20/month (testing) |
+
+| Service       | Cost                  |
+| ------------- | --------------------- |
+| Supabase      | $0 (free tier)        |
+| OpenAI API    | $5-20/month (testing) |
 | Anthropic API | $5-20/month (testing) |
-| Hosting | $0 (local) |
-| **Total** | **~$20-40/month** |
+| Hosting       | $0 (local)            |
+| **Total**     | **~$20-40/month**     |
 
 ### Production (100 users)
-| Service | Cost |
-|---------|------|
-| Supabase Pro | $25/month |
-| Vercel Pro | $20/month |
-| Railway (Express API) | $5-20/month |
-| AI APIs (passed to users) | $0 (users pay) |
-| **Total** | **~$50-65/month** |
+
+| Service                   | Cost              |
+| ------------------------- | ----------------- |
+| Supabase Pro              | $25/month         |
+| Vercel Pro                | $20/month         |
+| Railway (Express API)     | $5-20/month       |
+| AI APIs (passed to users) | $0 (users pay)    |
+| **Total**                 | **~$50-65/month** |
 
 ### Production (1000+ users)
-| Service | Cost |
-|---------|------|
-| Supabase Pro | $25-100/month |
-| Vercel Pro | $20-50/month |
-| Railway/Fly.io | $20-100/month |
-| Redis (Upstash) | $10-30/month |
-| **Total** | **~$100-300/month** |
+
+| Service         | Cost                |
+| --------------- | ------------------- |
+| Supabase Pro    | $25-100/month       |
+| Vercel Pro      | $20-50/month        |
+| Railway/Fly.io  | $20-100/month       |
+| Redis (Upstash) | $10-30/month        |
+| **Total**       | **~$100-300/month** |
 
 ---
 
 ## Next Steps (Backend Focus)
 
 ### Priority 1: Verify Express API Works
+
 ```bash
 cd apps/express-api
 pnpm dev
@@ -304,18 +313,22 @@ curl -X POST http://localhost:5500/api/chat \
 ```
 
 ### Priority 2: Test AI Routing
+
 Ensure all providers work:
+
 - [ ] OpenAI (GPT-4o, GPT-4o-mini)
 - [ ] Anthropic (Claude 3.5 Sonnet)
 - [ ] Google (Gemini)
 - [ ] Groq (Llama, Mixtral)
 
 ### Priority 3: Test License Validation
+
 - [ ] License creation works
 - [ ] License validation works
 - [ ] Usage tracking works
 
 ### Priority 4: Desktop App Integration
+
 - [ ] Desktop app connects to Express API
 - [ ] Chat works end-to-end
 - [ ] License validation in desktop app

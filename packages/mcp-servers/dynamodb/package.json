@@ -4,7 +4,17 @@
   "description": "MCP server for Amazon DynamoDB",
   "type": "module",
   "main": "dist/index.js",
-  "scripts": { "build": "tsc", "watch": "tsc --watch", "start": "node dist/index.js" },
-  "dependencies": { "@modelcontextprotocol/sdk": "^1.0.0", "@aws-sdk/client-dynamodb": "^3.500.0", "@aws-sdk/lib-dynamodb": "^3.500.0" },
-  "devDependencies": { "typescript": "^5.3.3" }
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "@aws-sdk/client-dynamodb": "^3.500.0",
+    "@aws-sdk/lib-dynamodb": "^3.500.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
 }

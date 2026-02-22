@@ -15,9 +15,11 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           // Heavy vendor libs → their own cached chunk
-          if (id.includes('node_modules/react') ||
-              id.includes('node_modules/react-dom') ||
-              id.includes('node_modules/react-router')) {
+          if (
+            id.includes('node_modules/react') ||
+            id.includes('node_modules/react-dom') ||
+            id.includes('node_modules/react-router')
+          ) {
             return 'vendor-react';
           }
           if (id.includes('node_modules/framer-motion')) {
@@ -26,10 +28,12 @@ export default defineConfig({
           if (id.includes('node_modules/lucide-react')) {
             return 'vendor-icons';
           }
-          if (id.includes('node_modules/@radix-ui') ||
-              id.includes('node_modules/class-variance-authority') ||
-              id.includes('node_modules/clsx') ||
-              id.includes('node_modules/tailwind-merge')) {
+          if (
+            id.includes('node_modules/@radix-ui') ||
+            id.includes('node_modules/class-variance-authority') ||
+            id.includes('node_modules/clsx') ||
+            id.includes('node_modules/tailwind-merge')
+          ) {
             return 'vendor-ui';
           }
         },
@@ -64,19 +68,19 @@ export default defineConfig({
   },
   css: {
     postcss: {
-      plugins: [
-        require('tailwindcss'),
-        require('autoprefixer'),
-      ],
+      plugins: [require('tailwindcss'), require('autoprefixer')],
     },
   },
   // Optimise dep pre-bundling for faster cold starts
   optimizeDeps: {
     include: [
-      'react', 'react-dom', 'react-router-dom',
-      'lucide-react', 'framer-motion', 'clsx', 'tailwind-merge',
+      'react',
+      'react-dom',
+      'react-router-dom',
+      'lucide-react',
+      'framer-motion',
+      'clsx',
+      'tailwind-merge',
     ],
   },
 });
-
-

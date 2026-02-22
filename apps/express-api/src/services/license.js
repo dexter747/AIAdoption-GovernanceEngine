@@ -33,7 +33,16 @@ const TIER_FEATURES = {
     maxTokensPerDay: -1, // Unlimited
     maxMachines: -1, // Unlimited
     providers: ['openai', 'anthropic', 'google', 'groq', 'cohere', 'mistral'],
-    features: ['basic_chat', 'history', 'export', 'custom_prompts', 'mcp_integration', 'sso', 'audit_log', 'priority_support'],
+    features: [
+      'basic_chat',
+      'history',
+      'export',
+      'custom_prompts',
+      'mcp_integration',
+      'sso',
+      'audit_log',
+      'priority_support',
+    ],
   },
 };
 
@@ -45,7 +54,7 @@ export const LicenseService = {
     try {
       // First, try to decode as JWT
       const decoded = this.decodeLicense(licenseKey);
-      
+
       if (!decoded) {
         return { valid: false, reason: 'Invalid license format' };
       }
@@ -80,10 +89,13 @@ export const LicenseService = {
             .eq('is_active', true);
 
           const activeMachines = activations?.map(a => a.machine_id) || [];
-          
-          if (!activeMachines.includes(machineId) && activeMachines.length >= license.max_machines) {
-            return { 
-              valid: false, 
+
+          if (
+            !activeMachines.includes(machineId) &&
+            activeMachines.length >= license.max_machines
+          ) {
+            return {
+              valid: false,
               reason: 'Machine limit exceeded',
               activeMachines: activeMachines.length,
               maxMachines: license.max_machines,
@@ -122,7 +134,7 @@ export const LicenseService = {
   async activate(licenseKey, machineId, machineName = null) {
     // First validate
     const validation = await this.validate(licenseKey, machineId);
-    
+
     if (!validation.valid) {
       return { success: false, reason: validation.reason };
     }
@@ -149,17 +161,18 @@ export const LicenseService = {
       }
 
       // Upsert activation
-      const { error } = await supabase
-        .from('license_activations')
-        .upsert({
+      const { error } = await supabase.from('license_activations').upsert(
+        {
           license_id: license.id,
           machine_id: machineId,
           machine_name: machineName,
           is_active: true,
           last_seen: new Date().toISOString(),
-        }, {
+        },
+        {
           onConflict: 'license_id,machine_id',
-        });
+        }
+      );
 
       if (error) {
         logger.error({ error: error.message }, 'Failed to create activation');
@@ -259,8 +272,8 @@ export const LicenseService = {
    * Generate a new license key
    */
   generateLicense(userId, tier, expiresInDays = 365) {
-    const exp = Math.floor(Date.now() / 1000) + (expiresInDays * 24 * 60 * 60);
-    
+    const exp = Math.floor(Date.now() / 1000) + expiresInDays * 24 * 60 * 60;
+
     return jwt.sign(
       {
         userId,

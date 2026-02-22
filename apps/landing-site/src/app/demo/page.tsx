@@ -1,11 +1,11 @@
-import Link from "next/link";
-import { Play, ArrowLeft, Clock } from "lucide-react";
-import { Navbar } from "@/components/landing";
-import { Footer } from "@/components/landing";
+import Link from 'next/link';
+import { Play, ArrowLeft, Clock } from 'lucide-react';
+import { Navbar } from '@/components/landing';
+import { Footer } from '@/components/landing';
 
 export const metadata = {
-  title: "Product Demo — Velanova",
-  description: "Watch Velanova in action. See how AI connects to your legacy systems.",
+  title: 'Product Demo — Velanova',
+  description: 'Watch Velanova in action. See how AI connects to your legacy systems.',
 };
 
 export default function DemoPage() {
@@ -64,7 +64,9 @@ export default function DemoPage() {
 
             {/* Corner labels */}
             <div className="absolute top-4 left-4 px-3 py-1.5 rounded-lg bg-black/60 border border-white/[0.06] backdrop-blur-sm">
-              <span className="text-xs font-medium text-zinc-500">Full Product Walkthrough · ~5 min</span>
+              <span className="text-xs font-medium text-zinc-500">
+                Full Product Walkthrough · ~5 min
+              </span>
             </div>
           </div>
         </div>

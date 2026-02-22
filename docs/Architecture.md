@@ -7,6 +7,7 @@
 ---
 
 ## Table of Contents
+
 1. [Executive Summary](#1-executive-summary)
 2. [Architecture Overview](#2-architecture-overview)
 3. [Desktop Application Architecture](#3-desktop-application-architecture)
@@ -31,14 +32,14 @@ Velanova is built on a **local-first, privacy-preserving architecture** where se
 
 ### 1.2 Key Architectural Decisions
 
-| Decision | Rationale |
-|----------|-----------|
-| **Electron Desktop App** | Cross-platform (Windows, macOS, Linux) with single codebase; access to native system resources |
-| **Local Data Processing** | Data privacy compliance; no legacy data transmission to our servers |
-| **Next.js Full-Stack** | Unified frontend/backend; server components for performance; API routes for backend logic |
-| **PostgreSQL + MongoDB** | PostgreSQL for relational data (users, payments); MongoDB for flexible logs/metrics |
-| **SQLite Local Storage** | Embedded database for desktop app; encrypted; no server required |
-| **Multi-Payment Providers** | Global reach: Dodo Payments (global), PayPal (fallback), Razorpay (India) |
+| Decision                    | Rationale                                                                                      |
+| --------------------------- | ---------------------------------------------------------------------------------------------- |
+| **Electron Desktop App**    | Cross-platform (Windows, macOS, Linux) with single codebase; access to native system resources |
+| **Local Data Processing**   | Data privacy compliance; no legacy data transmission to our servers                            |
+| **Next.js Full-Stack**      | Unified frontend/backend; server components for performance; API routes for backend logic      |
+| **PostgreSQL + MongoDB**    | PostgreSQL for relational data (users, payments); MongoDB for flexible logs/metrics            |
+| **SQLite Local Storage**    | Embedded database for desktop app; encrypted; no server required                               |
+| **Multi-Payment Providers** | Global reach: Dodo Payments (global), PayPal (fallback), Razorpay (India)                      |
 
 ### 1.3 Architecture Constraints
 
@@ -135,13 +136,13 @@ Velanova is built on a **local-first, privacy-preserving architecture** where se
 
 ### 2.2 Deployment Model
 
-| Component | Deployment | Responsibility |
-|-----------|----------|----------------|
-| **Desktop App** | Customer's machine/server | Customer installs & runs |
-| **Legacy Systems** | Customer's infrastructure | Customer owns & manages |
-| **Cloud Backend** | Our infrastructure (Vercel/AWS) | We host & maintain |
-| **Databases** | Our infrastructure | We manage backups, scaling |
-| **AI Providers** | Third-party SaaS | External APIs |
+| Component          | Deployment                      | Responsibility             |
+| ------------------ | ------------------------------- | -------------------------- |
+| **Desktop App**    | Customer's machine/server       | Customer installs & runs   |
+| **Legacy Systems** | Customer's infrastructure       | Customer owns & manages    |
+| **Cloud Backend**  | Our infrastructure (Vercel/AWS) | We host & maintain         |
+| **Databases**      | Our infrastructure              | We manage backups, scaling |
+| **AI Providers**   | Third-party SaaS                | External APIs              |
 
 ---
 
@@ -242,13 +243,13 @@ import { initDatabase } from './storage/database';
 app.on('ready', async () => {
   // Initialize local SQLite database
   await initDatabase();
-  
+
   // Setup IPC communication with renderer
   setupIpcHandlers();
-  
+
   // Initialize auto-updater
   initAutoUpdater();
-  
+
   // Create main window
   const mainWindow = new BrowserWindow({
     width: 1400,
@@ -256,10 +257,10 @@ app.on('ready', async () => {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      preload: path.join(__dirname, 'preload.js')
-    }
+      preload: path.join(__dirname, 'preload.js'),
+    },
   });
-  
+
   mainWindow.loadURL(
     process.env.NODE_ENV === 'development'
       ? 'http://localhost:3000'
@@ -285,23 +286,23 @@ export function setupIpcHandlers() {
     const conn = await ConnectionManager.create(config);
     return { success: true, id: conn.id };
   });
-  
+
   ipcMain.handle('connection:test', async (event, config) => {
     const result = await ConnectionManager.test(config);
     return result;
   });
-  
+
   ipcMain.handle('connection:query', async (event, { connId, sql }) => {
     const data = await ConnectionManager.query(connId, sql);
     return data;
   });
-  
+
   // AI Queries
   ipcMain.handle('ai:query', async (event, { prompt, data, options }) => {
     const response = await AIRouter.query(prompt, data, options);
     return response;
   });
-  
+
   // License Validation
   ipcMain.handle('license:validate', async (event, licenseKey) => {
     const isValid = await LicenseValidator.validate(licenseKey);
@@ -312,17 +313,16 @@ export function setupIpcHandlers() {
 // renderer/utils/ipc.ts
 export const ipc = {
   connections: {
-    add: (config) => window.electron.invoke('connection:add', config),
-    test: (config) => window.electron.invoke('connection:test', config),
-    query: (connId, sql) => window.electron.invoke('connection:query', { connId, sql })
+    add: config => window.electron.invoke('connection:add', config),
+    test: config => window.electron.invoke('connection:test', config),
+    query: (connId, sql) => window.electron.invoke('connection:query', { connId, sql }),
   },
   ai: {
-    query: (prompt, data, options) => 
-      window.electron.invoke('ai:query', { prompt, data, options })
+    query: (prompt, data, options) => window.electron.invoke('ai:query', { prompt, data, options }),
   },
   license: {
-    validate: (key) => window.electron.invoke('license:validate', key)
-  }
+    validate: key => window.electron.invoke('license:validate', key),
+  },
 };
 ```
 
@@ -341,8 +341,17 @@ export interface BaseConnector {
 }
 
 export interface ConnectionConfig {
-  type: 'postgresql' | 'mysql' | 'oracle' | 'sqlserver' | 
-        'sap-hana' | 'mongodb' | 'salesforce' | 'servicenow' | 'jira' | 'zendesk';
+  type:
+    | 'postgresql'
+    | 'mysql'
+    | 'oracle'
+    | 'sqlserver'
+    | 'sap-hana'
+    | 'mongodb'
+    | 'salesforce'
+    | 'servicenow'
+    | 'jira'
+    | 'zendesk';
   name: string;
   host: string;
   port: number;
@@ -359,7 +368,7 @@ import { BaseConnector, ConnectionConfig } from './base.connector';
 export class PostgreSQLConnector implements BaseConnector {
   private pool: Pool;
   private config: ConnectionConfig;
-  
+
   async connect(config: ConnectionConfig): Promise<void> {
     this.config = config;
     this.pool = new Pool({
@@ -369,15 +378,15 @@ export class PostgreSQLConnector implements BaseConnector {
       user: config.username,
       password: config.password,
       max: 5, // Connection pool size
-      idleTimeoutMillis: 600000 // 10 minutes
+      idleTimeoutMillis: 600000, // 10 minutes
     });
   }
-  
+
   async query(sql: string): Promise<any[]> {
     const result = await this.pool.query(sql);
     return result.rows;
   }
-  
+
   async test(): Promise<TestResult> {
     try {
       const result = await this.pool.query('SELECT version()');
@@ -385,11 +394,11 @@ export class PostgreSQLConnector implements BaseConnector {
         `SELECT COUNT(*) FROM information_schema.tables 
          WHERE table_schema = 'public'`
       );
-      
+
       return {
         success: true,
         message: `Connected successfully. ${tableCount.rows[0].count} tables found.`,
-        metadata: { version: result.rows[0].version }
+        metadata: { version: result.rows[0].version },
       };
     } catch (error) {
       return {
@@ -398,12 +407,12 @@ export class PostgreSQLConnector implements BaseConnector {
         troubleshooting: [
           'Check that PostgreSQL is running',
           'Verify host and port are correct',
-          'Ensure user has connect permission'
-        ]
+          'Ensure user has connect permission',
+        ],
       };
     }
   }
-  
+
   async getSchema(): Promise<Schema> {
     const tables = await this.pool.query(`
       SELECT table_name, column_name, data_type
@@ -411,10 +420,10 @@ export class PostgreSQLConnector implements BaseConnector {
       WHERE table_schema = 'public'
       ORDER BY table_name, ordinal_position
     `);
-    
+
     return this.parseSchema(tables.rows);
   }
-  
+
   async disconnect(): Promise<void> {
     await this.pool.end();
   }
@@ -432,72 +441,70 @@ import { CostTracker } from './cost-tracker';
 export class AIRouter {
   private static openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   private static anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-  
+
   static async query(prompt: string, data: any, options?: QueryOptions) {
     const { model, provider } = this.selectModel(prompt, data, options);
-    
+
     const startTime = Date.now();
     let response, usage;
-    
+
     // Route to appropriate provider
     if (provider === 'openai') {
       response = await this.openai.chat.completions.create({
         model,
         messages: [
           { role: 'system', content: 'You are analyzing data from a legacy system.' },
-          { role: 'user', content: `${prompt}\n\nData: ${JSON.stringify(data)}` }
-        ]
+          { role: 'user', content: `${prompt}\n\nData: ${JSON.stringify(data)}` },
+        ],
       });
       usage = response.usage;
     } else if (provider === 'anthropic') {
       response = await this.anthropic.messages.create({
         model,
         max_tokens: 4096,
-        messages: [
-          { role: 'user', content: `${prompt}\n\nData: ${JSON.stringify(data)}` }
-        ]
+        messages: [{ role: 'user', content: `${prompt}\n\nData: ${JSON.stringify(data)}` }],
       });
       usage = response.usage;
     }
-    
+
     const latency = Date.now() - startTime;
-    
+
     // Track cost locally
     const cost = CostTracker.calculate({
       provider,
       model,
       inputTokens: usage.prompt_tokens || usage.input_tokens,
-      outputTokens: usage.completion_tokens || usage.output_tokens
+      outputTokens: usage.completion_tokens || usage.output_tokens,
     });
-    
+
     await CostTracker.logQuery({
       provider,
       model,
       tokens: usage,
       cost,
       latency,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
-    
+
     return {
       result: response.content || response.choices[0].message.content,
       model,
       provider,
       cost,
       tokens: usage,
-      latency
+      latency,
     };
   }
-  
+
   private static selectModel(prompt: string, data: any, options?: QueryOptions) {
     // User override
     if (options?.model && options?.provider) {
       return { model: options.model, provider: options.provider };
     }
-    
+
     // Estimate token count
     const estimatedTokens = this.estimateTokens(prompt, data);
-    
+
     // Auto-select based on complexity
     if (estimatedTokens < 200) {
       return { model: 'gpt-4o-mini', provider: 'openai' };
@@ -611,64 +618,54 @@ import { prisma } from '@/lib/prisma';
 export async function POST(request: NextRequest) {
   try {
     const { license_key } = await request.json();
-    
+
     // Verify JWT signature
     const payload = await verifyJWT(license_key);
-    
+
     // Check database for license status
     const license = await prisma.license.findUnique({
       where: { license_key },
-      include: { user: true }
+      include: { user: true },
     });
-    
+
     if (!license) {
-      return NextResponse.json(
-        { error: 'Invalid license' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Invalid license' }, { status: 401 });
     }
-    
+
     if (license.status !== 'active') {
-      return NextResponse.json(
-        { error: `License is ${license.status}` },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: `License is ${license.status}` }, { status: 403 });
     }
-    
+
     // Check expiration
     if (license.expires_at && new Date(license.expires_at) < new Date()) {
       await prisma.license.update({
         where: { id: license.id },
-        data: { status: 'expired' }
+        data: { status: 'expired' },
       });
-      
-      return NextResponse.json(
-        { error: 'License expired' },
-        { status: 403 }
-      );
+
+      return NextResponse.json({ error: 'License expired' }, { status: 403 });
     }
-    
+
     // Update last validated timestamp
     await prisma.license.update({
       where: { id: license.id },
-      data: { last_validated_at: new Date() }
+      data: { last_validated_at: new Date() },
     });
-    
+
     return NextResponse.json({
       valid: true,
       license: {
         id: license.id,
         plan_type: license.plan_type,
         expires_at: license.expires_at,
-        device_limit: license.device_limit
+        device_limit: license.device_limit,
       },
       user: {
         id: license.user.id,
         email: license.user.email,
-        full_name: license.user.full_name
-      }
+        full_name: license.user.full_name,
+      },
     });
-    
   } catch (error) {
     return NextResponse.json(
       { error: 'Validation failed', details: error.message },
@@ -691,9 +688,9 @@ const Dodo Payments = new Dodo Payments(process.env.Dodo Payments_SECRET_KEY!);
 export async function POST(request: NextRequest) {
   const body = await request.text();
   const sig = request.headers.get('Dodo Payments-signature')!;
-  
+
   let event: Dodo Payments.Event;
-  
+
   try {
     event = Dodo Payments.webhooks.constructEvent(
       body,
@@ -706,26 +703,26 @@ export async function POST(request: NextRequest) {
       { status: 400 }
     );
   }
-  
+
   // Handle the event
   switch (event.type) {
     case 'invoice.payment_succeeded':
       await handlePaymentSuccess(event.data.object as Dodo Payments.Invoice);
       break;
-      
+
     case 'invoice.payment_failed':
       await handlePaymentFailure(event.data.object as Dodo Payments.Invoice);
       break;
-      
+
     case 'customer.subscription.deleted':
       await handleSubscriptionCancelled(event.data.object as Dodo Payments.Subscription);
       break;
-      
+
     case 'customer.subscription.updated':
       await handleSubscriptionUpdated(event.data.object as Dodo Payments.Subscription);
       break;
   }
-  
+
   return NextResponse.json({ received: true });
 }
 
@@ -734,9 +731,9 @@ async function handlePaymentSuccess(invoice: Dodo Payments.Invoice) {
     where: { provider_subscription_id: invoice.subscription as string },
     include: { license: true }
   });
-  
+
   if (!subscription) return;
-  
+
   // Record payment
   await prisma.payment.create({
     data: {
@@ -750,7 +747,7 @@ async function handlePaymentSuccess(invoice: Dodo Payments.Invoice) {
       paid_at: new Date(invoice.status_transition.paid_at! * 1000)
     }
   });
-  
+
   // Update subscription status
   await prisma.subscription.update({
     where: { id: subscription.id },
@@ -759,7 +756,7 @@ async function handlePaymentSuccess(invoice: Dodo Payments.Invoice) {
       current_period_end: new Date(invoice.lines.data[0].period.end * 1000)
     }
   });
-  
+
   // Ensure license is active
   if (subscription.license) {
     await prisma.license.update({
@@ -799,11 +796,11 @@ model User {
   updated_at        DateTime       @updatedAt
   last_login_at     DateTime?
   status            String         @default("active")
-  
+
   licenses          License[]
   subscriptions     Subscription[]
   payments          Payment[]
-  
+
   @@index([email])
   @@index([oauth_provider, oauth_id])
 }
@@ -822,11 +819,11 @@ model License {
   metadata            Json          @default("{}")
   created_at          DateTime      @default(now())
   updated_at          DateTime      @updatedAt
-  
+
   user                User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
   devices             Device[]
   subscriptions       Subscription[]
-  
+
   @@index([user_id])
   @@index([license_key])
   @@index([status])
@@ -844,9 +841,9 @@ model Device {
   last_seen_at         DateTime    @default(now())
   status               String      @default("active")
   created_at           DateTime    @default(now())
-  
+
   license              License     @relation(fields: [license_id], references: [id], onDelete: Cascade)
-  
+
   @@index([license_id])
   @@index([device_fingerprint])
 }
@@ -869,11 +866,11 @@ model Subscription {
   cancelled_at              DateTime?
   created_at                DateTime  @default(now())
   updated_at                DateTime  @updatedAt
-  
+
   user                      User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
   license                   License?  @relation(fields: [license_id], references: [id])
   payments                  Payment[]
-  
+
   @@index([user_id])
   @@index([payment_provider, provider_subscription_id])
 }
@@ -892,10 +889,10 @@ model Payment {
   metadata            Json          @default("{}")
   paid_at             DateTime?
   created_at          DateTime      @default(now())
-  
+
   user                User          @relation(fields: [user_id], references: [id])
   subscription        Subscription? @relation(fields: [subscription_id], references: [id])
-  
+
   @@index([user_id])
   @@index([subscription_id])
   @@index([status])
@@ -947,3 +944,4 @@ model Payment {
     HTTPS → Cloud Backend API
     POST /api/usage/log
     {
+```

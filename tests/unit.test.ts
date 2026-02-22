@@ -32,15 +32,15 @@ describe('MCP Servers - Unit Tests', () => {
   ];
 
   describe('Package Structure Tests', () => {
-    mcpServers.forEach((server) => {
+    mcpServers.forEach(server => {
       it(`should have valid package.json for ${server}`, async () => {
         const pkgPath = path.join(PROJECT_ROOT, `packages/mcp-servers/${server}/package.json`);
-        
+
         expect(fs.existsSync(pkgPath)).toBe(true);
-        
+
         const content = fs.readFileSync(pkgPath, 'utf-8');
         const packageJson = JSON.parse(content);
-        
+
         expect(packageJson.name).toContain('mcp-server');
         expect(packageJson.type).toBe('module');
         expect(packageJson.main).toBe('dist/index.js');
@@ -55,15 +55,18 @@ describe('MCP Servers - Unit Tests', () => {
   });
 
   describe('TypeScript Configuration Tests', () => {
-    mcpServers.forEach((server) => {
+    mcpServers.forEach(server => {
       it(`should have valid tsconfig.json for ${server}`, async () => {
-        const tsconfigPath = path.join(PROJECT_ROOT, `packages/mcp-servers/${server}/tsconfig.json`);
-        
+        const tsconfigPath = path.join(
+          PROJECT_ROOT,
+          `packages/mcp-servers/${server}/tsconfig.json`
+        );
+
         expect(fs.existsSync(tsconfigPath)).toBe(true);
-        
+
         const content = fs.readFileSync(tsconfigPath, 'utf-8');
         const tsconfig = JSON.parse(content);
-        
+
         expect(tsconfig.compilerOptions).toHaveProperty('outDir');
         expect(tsconfig.compilerOptions).toHaveProperty('rootDir');
       });
@@ -71,47 +74,47 @@ describe('MCP Servers - Unit Tests', () => {
   });
 
   describe('Source Code Tests', () => {
-    mcpServers.forEach((server) => {
+    mcpServers.forEach(server => {
       it(`should have index.ts source file for ${server}`, async () => {
         const srcPath = path.join(PROJECT_ROOT, `packages/mcp-servers/${server}/src/index.ts`);
-        
+
         expect(fs.existsSync(srcPath)).toBe(true);
-        
+
         const content = fs.readFileSync(srcPath, 'utf-8');
         const lineCount = content.split('\n').length;
-        
+
         expect(lineCount).toBeGreaterThan(40); // Each server should have meaningful code
       });
 
       it(`should export Server instance in ${server}`, async () => {
         const srcPath = path.join(PROJECT_ROOT, `packages/mcp-servers/${server}/src/index.ts`);
         const content = fs.readFileSync(srcPath, 'utf-8');
-        
+
         expect(content).toContain('new Server');
       });
 
       it(`should implement ListToolsRequestSchema in ${server}`, async () => {
         const srcPath = path.join(PROJECT_ROOT, `packages/mcp-servers/${server}/src/index.ts`);
         const content = fs.readFileSync(srcPath, 'utf-8');
-        
+
         expect(content).toContain('ListToolsRequestSchema');
       });
 
       it(`should implement CallToolRequestSchema in ${server}`, async () => {
         const srcPath = path.join(PROJECT_ROOT, `packages/mcp-servers/${server}/src/index.ts`);
         const content = fs.readFileSync(srcPath, 'utf-8');
-        
+
         expect(content).toContain('CallToolRequestSchema');
       });
     });
   });
 
   describe('Tool Definition Tests', () => {
-    mcpServers.forEach((server) => {
+    mcpServers.forEach(server => {
       it(`should define at least 3 tools in ${server}`, async () => {
         const srcPath = path.join(PROJECT_ROOT, `packages/mcp-servers/${server}/src/index.ts`);
         const content = fs.readFileSync(srcPath, 'utf-8');
-        
+
         const toolMatches = content.match(/name:\s*['"]/g) || [];
         expect(toolMatches.length).toBeGreaterThanOrEqual(3);
       });
@@ -133,16 +136,22 @@ describe('LLM Providers - Unit Tests', () => {
   ];
 
   describe('Provider Implementation Tests', () => {
-    providers.forEach((provider) => {
+    providers.forEach(provider => {
       it(`should have ${provider} provider implementation`, async () => {
-        const providerPath = path.join(PROJECT_ROOT, `apps/express-api/src/services/ai/providers/${provider}.js`);
+        const providerPath = path.join(
+          PROJECT_ROOT,
+          `apps/express-api/src/services/ai/providers/${provider}.js`
+        );
         expect(fs.existsSync(providerPath)).toBe(true);
       });
 
       it(`should export chat function from ${provider} provider`, async () => {
-        const providerPath = path.join(PROJECT_ROOT, `apps/express-api/src/services/ai/providers/${provider}.js`);
+        const providerPath = path.join(
+          PROJECT_ROOT,
+          `apps/express-api/src/services/ai/providers/${provider}.js`
+        );
         const content = fs.readFileSync(providerPath, 'utf-8');
-        
+
         expect(content).toMatch(/export\s+(class|function|const)/);
       });
     });
@@ -159,21 +168,21 @@ describe('Encryption Service - Unit Tests', () => {
     it('should implement encrypt function', async () => {
       const encPath = path.join(PROJECT_ROOT, 'apps/express-api/src/services/encryption.js');
       const content = fs.readFileSync(encPath, 'utf-8');
-      
+
       expect(content).toMatch(/export.*encrypt/);
     });
 
     it('should implement decrypt function', async () => {
       const encPath = path.join(PROJECT_ROOT, 'apps/express-api/src/services/encryption.js');
       const content = fs.readFileSync(encPath, 'utf-8');
-      
+
       expect(content).toMatch(/export.*decrypt/);
     });
 
     it('should use proper encryption algorithm', async () => {
       const encPath = path.join(PROJECT_ROOT, 'apps/express-api/src/services/encryption.js');
       const content = fs.readFileSync(encPath, 'utf-8');
-      
+
       // Should use AES-256-GCM or similar secure algorithm
       expect(content).toMatch(/aes-256|AES-256|gcm|GCM/i);
     });
@@ -190,30 +199,24 @@ describe('License Service - Unit Tests', () => {
     it('should implement license validation', async () => {
       const licPath = path.join(PROJECT_ROOT, 'apps/express-api/src/services/license.js');
       const content = fs.readFileSync(licPath, 'utf-8');
-      
+
       expect(content).toMatch(/validate|verify/i);
     });
 
     it('should implement license generation', async () => {
       const licPath = path.join(PROJECT_ROOT, 'apps/express-api/src/services/license.js');
       const content = fs.readFileSync(licPath, 'utf-8');
-      
+
       expect(content).toMatch(/generate|create/i);
     });
   });
 });
 
 describe('Middleware - Unit Tests', () => {
-  const middlewares = [
-    'auth',
-    'errorHandler',
-    'requestLogger',
-    'security',
-    'validation',
-  ];
+  const middlewares = ['auth', 'errorHandler', 'requestLogger', 'security', 'validation'];
 
   describe('Middleware Files', () => {
-    middlewares.forEach((middleware) => {
+    middlewares.forEach(middleware => {
       it(`should have ${middleware} middleware file`, async () => {
         const mwPath = path.join(PROJECT_ROOT, `apps/express-api/src/middleware/${middleware}.js`);
         expect(fs.existsSync(mwPath)).toBe(true);
@@ -222,7 +225,7 @@ describe('Middleware - Unit Tests', () => {
       it(`should export functions from ${middleware} middleware`, async () => {
         const mwPath = path.join(PROJECT_ROOT, `apps/express-api/src/middleware/${middleware}.js`);
         const content = fs.readFileSync(mwPath, 'utf-8');
-        
+
         expect(content).toMatch(/export\s+(function|const|default)/);
       });
     });
@@ -239,7 +242,7 @@ describe('Route Handlers - Unit Tests', () => {
     it('should have at least 3 route files', async () => {
       const routesPath = path.join(PROJECT_ROOT, 'apps/express-api/src/routes');
       const files = fs.readdirSync(routesPath);
-      
+
       const jsFiles = files.filter(f => f.endsWith('.js') || f.endsWith('.ts'));
       expect(jsFiles.length).toBeGreaterThanOrEqual(3);
     });

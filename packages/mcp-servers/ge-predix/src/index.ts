@@ -1,6 +1,10 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { CallToolRequestSchema, ListToolsRequestSchema, Tool } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+  Tool,
+} from '@modelcontextprotocol/sdk/types.js';
 import axios, { AxiosInstance } from 'axios';
 
 // Environment variables
@@ -15,8 +19,8 @@ function initConnection(): void {
     baseURL: PREDIX_API_URL,
     headers: {
       'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': `Bearer ${PREDIX_ACCESS_TOKEN}`,
+      Accept: 'application/json',
+      Authorization: `Bearer ${PREDIX_ACCESS_TOKEN}`,
       'Predix-Zone-Id': PREDIX_ZONE_ID,
     },
   });
@@ -56,7 +60,12 @@ const tools: Tool[] = [
         start: { type: 'string', description: 'Start time (ISO 8601 or epoch ms)' },
         end: { type: 'string', description: 'End time (ISO 8601 or epoch ms)' },
         limit: { type: 'number', description: 'Maximum number of data points', default: 1000 },
-        order: { type: 'string', enum: ['asc', 'desc'], description: 'Sort order', default: 'desc' },
+        order: {
+          type: 'string',
+          enum: ['asc', 'desc'],
+          description: 'Sort order',
+          default: 'desc',
+        },
       },
       required: ['tags', 'start'],
     },
@@ -106,7 +115,11 @@ const tools: Tool[] = [
     inputSchema: {
       type: 'object',
       properties: {
-        method: { type: 'string', enum: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], description: 'HTTP method' },
+        method: {
+          type: 'string',
+          enum: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+          description: 'HTTP method',
+        },
         path: { type: 'string', description: 'API path (relative to base URL)' },
         data: { type: 'object', description: 'Request body for POST/PUT/PATCH' },
         params: { type: 'object', description: 'Query parameters' },
@@ -123,11 +136,18 @@ const server = new Server(
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools }));
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   const { name, arguments: args } = request.params;
 
   if (!api) {
-    return { content: [{ type: 'text', text: 'Error: Predix connection not initialized. Check PREDIX_API_URL, PREDIX_ACCESS_TOKEN, and PREDIX_ZONE_ID.' }] };
+    return {
+      content: [
+        {
+          type: 'text',
+          text: 'Error: Predix connection not initialized. Check PREDIX_API_URL, PREDIX_ACCESS_TOKEN, and PREDIX_ZONE_ID.',
+        },
+      ],
+    };
   }
 
   try {

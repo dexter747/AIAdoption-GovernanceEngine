@@ -4,7 +4,16 @@
   "description": "MCP server for Cerner/Oracle Health (FHIR R4)",
   "type": "module",
   "main": "dist/index.js",
-  "scripts": { "build": "tsc", "watch": "tsc --watch", "start": "node dist/index.js" },
-  "dependencies": { "@modelcontextprotocol/sdk": "^1.0.0", "axios": "^1.6.7" },
-  "devDependencies": { "typescript": "^5.3.3" }
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "axios": "^1.6.7"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
 }

@@ -155,11 +155,7 @@ export async function checkUsageOverages(
  * Send usage alert when user reaches threshold
  */
 export async function sendUsageAlert(userId: string, usagePercent: number) {
-  const { data: user } = await supabase
-    .from('users')
-    .select('email')
-    .eq('id', userId)
-    .single();
+  const { data: user } = await supabase.from('users').select('email').eq('id', userId).single();
 
   if (!user) return;
 

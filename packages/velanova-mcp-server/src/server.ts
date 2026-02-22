@@ -1,11 +1,11 @@
 /**
  * Velanova MCP Server
- * 
+ *
  * The aggregation layer that unifies:
  * - 67+ AI models (GPT-4, Claude, Gemini, Llama, etc.)
  * - 60+ enterprise systems via MCP farm
  * - Governance: licensing, audit, cost tracking, RBAC
- * 
+ *
  * This server exposes Velanova capabilities via MCP protocol,
  * allowing any MCP-compatible tool (Claude Desktop, Cursor, etc.)
  * to leverage the full Velanova platform.
@@ -19,7 +19,7 @@ import {
   ListResourcesRequestSchema,
   ReadResourceRequestSchema,
   ErrorCode,
-  McpError
+  McpError,
 } from '@modelcontextprotocol/sdk/types.js';
 
 import { AIRouter } from './tools/ai-router.js';
@@ -40,16 +40,16 @@ class VelanovaMCPServer {
 
   constructor() {
     this.server = new Server(
-      { 
-        name: 'velanova-mcp', 
-        version: '1.0.0' 
+      {
+        name: 'velanova-mcp',
+        version: '1.0.0',
       },
-      { 
-        capabilities: { 
+      {
+        capabilities: {
           tools: {},
           resources: {},
-          prompts: {}
-        } 
+          prompts: {},
+        },
       }
     );
 
@@ -76,21 +76,23 @@ class VelanovaMCPServer {
           // ============================================================
           {
             name: 'query_ai',
-            description: 'Query AI models with intelligent routing. Supports 67+ models including GPT-4, Claude, Gemini, Llama, Mistral, and more. Can auto-select best model based on requirements.',
+            description:
+              'Query AI models with intelligent routing. Supports 67+ models including GPT-4, Claude, Gemini, Llama, Mistral, and more. Can auto-select best model based on requirements.',
             inputSchema: {
               type: 'object' as const,
               properties: {
-                prompt: { 
-                  type: 'string', 
-                  description: 'The prompt to send to the AI model' 
+                prompt: {
+                  type: 'string',
+                  description: 'The prompt to send to the AI model',
                 },
-                model: { 
-                  type: 'string', 
-                  description: 'Specific model to use (optional). Examples: gpt-4o, claude-3-5-sonnet, gemini-2.0-flash' 
+                model: {
+                  type: 'string',
+                  description:
+                    'Specific model to use (optional). Examples: gpt-4o, claude-3-5-sonnet, gemini-2.0-flash',
                 },
-                system_prompt: { 
-                  type: 'string', 
-                  description: 'System prompt for context (optional)' 
+                system_prompt: {
+                  type: 'string',
+                  description: 'System prompt for context (optional)',
                 },
                 requirements: {
                   type: 'object',
@@ -98,65 +100,68 @@ class VelanovaMCPServer {
                   properties: {
                     max_cost_per_1k: { type: 'number', description: 'Max cost per 1K tokens in $' },
                     max_latency_ms: { type: 'number', description: 'Max acceptable latency' },
-                    min_quality_tier: { 
-                      type: 'string', 
+                    min_quality_tier: {
+                      type: 'string',
                       enum: ['economy', 'standard', 'premium', 'frontier'],
-                      description: 'Minimum quality tier'
+                      description: 'Minimum quality tier',
                     },
-                    data_residency: { 
-                      type: 'string', 
+                    data_residency: {
+                      type: 'string',
                       enum: ['any', 'US', 'EU', 'on-premise'],
-                      description: 'Data residency requirement'
+                      description: 'Data residency requirement',
                     },
                     capabilities: {
                       type: 'array',
                       items: { type: 'string' },
-                      description: 'Required capabilities: vision, code, reasoning, function_calling'
-                    }
-                  }
-                }
+                      description:
+                        'Required capabilities: vision, code, reasoning, function_calling',
+                    },
+                  },
+                },
               },
-              required: ['prompt']
-            }
+              required: ['prompt'],
+            },
           },
           {
             name: 'list_ai_models',
-            description: 'List all available AI models with pricing, capabilities, and current status',
+            description:
+              'List all available AI models with pricing, capabilities, and current status',
             inputSchema: {
               type: 'object' as const,
               properties: {
                 filter: {
                   type: 'object',
                   properties: {
-                    provider: { 
-                      type: 'string', 
-                      enum: ['openai', 'anthropic', 'google', 'meta', 'mistral', 'groq', 'cohere'] 
+                    provider: {
+                      type: 'string',
+                      enum: ['openai', 'anthropic', 'google', 'meta', 'mistral', 'groq', 'cohere'],
                     },
-                    tier: { 
-                      type: 'string', 
-                      enum: ['economy', 'standard', 'premium', 'frontier'] 
+                    tier: {
+                      type: 'string',
+                      enum: ['economy', 'standard', 'premium', 'frontier'],
                     },
-                    capability: { type: 'string' }
-                  }
-                }
-              }
-            }
+                    capability: { type: 'string' },
+                  },
+                },
+              },
+            },
           },
           {
             name: 'compare_models',
-            description: 'Compare multiple AI models on a given prompt. Useful for evaluation and testing.',
+            description:
+              'Compare multiple AI models on a given prompt. Useful for evaluation and testing.',
             inputSchema: {
               type: 'object' as const,
               properties: {
                 prompt: { type: 'string' },
-                models: { 
-                  type: 'array', 
+                models: {
+                  type: 'array',
                   items: { type: 'string' },
-                  description: 'List of model IDs to compare'
-                }
+                  description: 'List of model IDs to compare',
+                },
               },
-              required: ['prompt', 'models']
-            }
+              required: ['prompt', 'models'],
+            },
           },
 
           // ============================================================
@@ -164,44 +169,47 @@ class VelanovaMCPServer {
           // ============================================================
           {
             name: 'query_database',
-            description: 'Query any connected database. Supports PostgreSQL, MySQL, MongoDB, SQL Server, Oracle, Redis, and more.',
+            description:
+              'Query any connected database. Supports PostgreSQL, MySQL, MongoDB, SQL Server, Oracle, Redis, and more.',
             inputSchema: {
               type: 'object' as const,
               properties: {
-                database_id: { 
-                  type: 'string', 
-                  description: 'Database connection ID (use list_databases to see available)' 
+                database_id: {
+                  type: 'string',
+                  description: 'Database connection ID (use list_databases to see available)',
                 },
-                query: { 
-                  type: 'string', 
-                  description: 'SQL query or NoSQL query object' 
+                query: {
+                  type: 'string',
+                  description: 'SQL query or NoSQL query object',
                 },
                 natural_language: {
                   type: 'string',
-                  description: 'Optional: describe what you want in plain English and let AI generate the query'
-                }
+                  description:
+                    'Optional: describe what you want in plain English and let AI generate the query',
+                },
               },
-              required: ['database_id']
-            }
+              required: ['database_id'],
+            },
           },
           {
             name: 'list_databases',
             description: 'List all connected databases with their types and connection status',
             inputSchema: {
               type: 'object' as const,
-              properties: {}
-            }
+              properties: {},
+            },
           },
           {
             name: 'get_database_schema',
-            description: 'Get the schema of a database including tables, columns, and relationships',
+            description:
+              'Get the schema of a database including tables, columns, and relationships',
             inputSchema: {
               type: 'object' as const,
               properties: {
-                database_id: { type: 'string' }
+                database_id: { type: 'string' },
               },
-              required: ['database_id']
-            }
+              required: ['database_id'],
+            },
           },
 
           // ============================================================
@@ -209,30 +217,31 @@ class VelanovaMCPServer {
           // ============================================================
           {
             name: 'query_sap',
-            description: 'Query SAP S/4HANA using natural language or direct BAPI calls. Supports FI, CO, MM, SD, PP, HR modules.',
+            description:
+              'Query SAP S/4HANA using natural language or direct BAPI calls. Supports FI, CO, MM, SD, PP, HR modules.',
             inputSchema: {
               type: 'object' as const,
               properties: {
-                intent: { 
-                  type: 'string', 
-                  description: 'Natural language description of what you want' 
+                intent: {
+                  type: 'string',
+                  description: 'Natural language description of what you want',
                 },
-                module: { 
-                  type: 'string', 
+                module: {
+                  type: 'string',
                   enum: ['FI', 'CO', 'MM', 'SD', 'PP', 'HR', 'QM', 'PM'],
-                  description: 'SAP module (optional, will be auto-detected)'
+                  description: 'SAP module (optional, will be auto-detected)',
                 },
-                bapi: { 
-                  type: 'string', 
-                  description: 'Direct BAPI name (optional, for advanced users)' 
+                bapi: {
+                  type: 'string',
+                  description: 'Direct BAPI name (optional, for advanced users)',
                 },
-                parameters: { 
-                  type: 'object', 
-                  description: 'BAPI parameters (if using direct BAPI call)' 
-                }
+                parameters: {
+                  type: 'object',
+                  description: 'BAPI parameters (if using direct BAPI call)',
+                },
               },
-              required: ['intent']
-            }
+              required: ['intent'],
+            },
           },
           {
             name: 'query_salesforce',
@@ -240,47 +249,57 @@ class VelanovaMCPServer {
             inputSchema: {
               type: 'object' as const,
               properties: {
-                soql: { 
-                  type: 'string', 
-                  description: 'SOQL query string' 
+                soql: {
+                  type: 'string',
+                  description: 'SOQL query string',
                 },
-                natural_language: { 
-                  type: 'string', 
-                  description: 'Describe what you want in plain English' 
+                natural_language: {
+                  type: 'string',
+                  description: 'Describe what you want in plain English',
                 },
                 object_type: {
                   type: 'string',
                   enum: ['Account', 'Contact', 'Opportunity', 'Lead', 'Case', 'Custom'],
-                  description: 'Salesforce object type'
-                }
-              }
-            }
+                  description: 'Salesforce object type',
+                },
+              },
+            },
           },
           {
             name: 'query_epic',
-            description: 'Query Epic EHR via FHIR R4 API. HIPAA compliant with automatic PHI redaction.',
+            description:
+              'Query Epic EHR via FHIR R4 API. HIPAA compliant with automatic PHI redaction.',
             inputSchema: {
               type: 'object' as const,
               properties: {
                 resource_type: {
                   type: 'string',
-                  enum: ['Patient', 'Observation', 'Condition', 'MedicationRequest', 
-                         'Encounter', 'DiagnosticReport', 'Procedure', 'AllergyIntolerance',
-                         'Immunization', 'CarePlan'],
-                  description: 'FHIR resource type to query'
+                  enum: [
+                    'Patient',
+                    'Observation',
+                    'Condition',
+                    'MedicationRequest',
+                    'Encounter',
+                    'DiagnosticReport',
+                    'Procedure',
+                    'AllergyIntolerance',
+                    'Immunization',
+                    'CarePlan',
+                  ],
+                  description: 'FHIR resource type to query',
                 },
-                search_params: { 
+                search_params: {
                   type: 'object',
-                  description: 'FHIR search parameters as key-value pairs'
+                  description: 'FHIR search parameters as key-value pairs',
                 },
-                redact_phi: { 
-                  type: 'boolean', 
+                redact_phi: {
+                  type: 'boolean',
                   default: true,
-                  description: 'Whether to redact PHI fields (default: true)'
-                }
+                  description: 'Whether to redact PHI fields (default: true)',
+                },
               },
-              required: ['resource_type']
-            }
+              required: ['resource_type'],
+            },
           },
           {
             name: 'query_servicenow',
@@ -288,40 +307,41 @@ class VelanovaMCPServer {
             inputSchema: {
               type: 'object' as const,
               properties: {
-                table: { 
+                table: {
                   type: 'string',
                   enum: ['incident', 'change_request', 'problem', 'kb_knowledge', 'cmdb_ci'],
-                  description: 'ServiceNow table to query'
+                  description: 'ServiceNow table to query',
                 },
-                query: { 
-                  type: 'string', 
-                  description: 'Encoded query string or natural language' 
+                query: {
+                  type: 'string',
+                  description: 'Encoded query string or natural language',
                 },
-                limit: { 
-                  type: 'number', 
-                  default: 10 
-                }
+                limit: {
+                  type: 'number',
+                  default: 10,
+                },
               },
-              required: ['table']
-            }
+              required: ['table'],
+            },
           },
           {
             name: 'query_jira',
-            description: 'Query Jira for issues, projects, and boards using JQL or natural language.',
+            description:
+              'Query Jira for issues, projects, and boards using JQL or natural language.',
             inputSchema: {
               type: 'object' as const,
               properties: {
-                jql: { 
-                  type: 'string', 
-                  description: 'JQL query' 
+                jql: {
+                  type: 'string',
+                  description: 'JQL query',
                 },
-                natural_language: { 
-                  type: 'string', 
-                  description: 'Describe what you want to find' 
+                natural_language: {
+                  type: 'string',
+                  description: 'Describe what you want to find',
                 },
-                project: { type: 'string' }
-              }
-            }
+                project: { type: 'string' },
+              },
+            },
           },
 
           // ============================================================
@@ -333,18 +353,18 @@ class VelanovaMCPServer {
             inputSchema: {
               type: 'object' as const,
               properties: {
-                period: { 
-                  type: 'string', 
+                period: {
+                  type: 'string',
                   enum: ['today', 'week', 'month', 'year'],
-                  default: 'month'
+                  default: 'month',
                 },
                 group_by: {
                   type: 'string',
                   enum: ['model', 'user', 'system', 'day'],
-                  description: 'How to group the statistics'
-                }
-              }
-            }
+                  description: 'How to group the statistics',
+                },
+              },
+            },
           },
           {
             name: 'get_cost_estimate',
@@ -353,10 +373,10 @@ class VelanovaMCPServer {
               type: 'object' as const,
               properties: {
                 operation: { type: 'string' },
-                parameters: { type: 'object' }
+                parameters: { type: 'object' },
               },
-              required: ['operation']
-            }
+              required: ['operation'],
+            },
           },
           {
             name: 'get_audit_log',
@@ -367,18 +387,18 @@ class VelanovaMCPServer {
                 start_date: { type: 'string', format: 'date-time' },
                 end_date: { type: 'string', format: 'date-time' },
                 user_id: { type: 'string' },
-                action: { type: 'string' }
-              }
-            }
-          }
-        ]
+                action: { type: 'string' },
+              },
+            },
+          },
+        ],
       };
     });
 
     // Handle tool calls
-    this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
+    this.server.setRequestHandler(CallToolRequestSchema, async request => {
       const { name, arguments: args } = request.params;
-      
+
       // Extract metadata from request
       const userId = (request.params as any)._meta?.userId ?? 'anonymous';
       const licenseKey = (request.params as any)._meta?.licenseKey;
@@ -406,7 +426,11 @@ class VelanovaMCPServer {
       }
 
       // Start audit trail
-      const auditId = await this.governance.startAudit(userId, name, args as Record<string, unknown>);
+      const auditId = await this.governance.startAudit(
+        userId,
+        name,
+        args as Record<string, unknown>
+      );
 
       try {
         let result: unknown;
@@ -460,7 +484,9 @@ class VelanovaMCPServer {
             break;
 
           case 'query_salesforce':
-            result = await this.enterpriseAggregator.querySalesforce(args as Record<string, unknown>);
+            result = await this.enterpriseAggregator.querySalesforce(
+              args as Record<string, unknown>
+            );
             break;
 
           case 'query_epic':
@@ -468,7 +494,9 @@ class VelanovaMCPServer {
             break;
 
           case 'query_servicenow':
-            result = await this.enterpriseAggregator.queryServiceNow(args as Record<string, unknown>);
+            result = await this.enterpriseAggregator.queryServiceNow(
+              args as Record<string, unknown>
+            );
             break;
 
           case 'query_jira':
@@ -495,10 +523,7 @@ class VelanovaMCPServer {
             break;
 
           default:
-            throw new McpError(
-              ErrorCode.MethodNotFound,
-              `Unknown tool: ${name}`
-            );
+            throw new McpError(ErrorCode.MethodNotFound, `Unknown tool: ${name}`);
         }
 
         // Track cost and complete audit
@@ -511,11 +536,10 @@ class VelanovaMCPServer {
           content: [
             {
               type: 'text' as const,
-              text: typeof result === 'string' ? result : JSON.stringify(result, null, 2)
-            }
-          ]
+              text: typeof result === 'string' ? result : JSON.stringify(result, null, 2),
+            },
+          ],
         };
-
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error);
         await this.governance.failAudit(auditId, errorMessage);
@@ -533,39 +557,40 @@ class VelanovaMCPServer {
           {
             uri: 'velanova://models',
             name: 'AI Models Registry',
-            description: 'Complete list of all 67+ AI models with pricing, capabilities, and status',
-            mimeType: 'application/json'
+            description:
+              'Complete list of all 67+ AI models with pricing, capabilities, and status',
+            mimeType: 'application/json',
           },
           {
             uri: 'velanova://databases',
             name: 'Connected Databases',
             description: 'All connected database systems and their schemas',
-            mimeType: 'application/json'
+            mimeType: 'application/json',
           },
           {
             uri: 'velanova://enterprise-systems',
             name: 'Enterprise Systems',
             description: 'Connected enterprise systems (SAP, Salesforce, Epic, ServiceNow, etc.)',
-            mimeType: 'application/json'
+            mimeType: 'application/json',
           },
           {
             uri: 'velanova://usage/current',
             name: 'Current Usage',
             description: 'Real-time usage statistics and costs',
-            mimeType: 'application/json'
+            mimeType: 'application/json',
           },
           {
             uri: 'velanova://health',
             name: 'System Health',
             description: 'Health status of all connected systems',
-            mimeType: 'application/json'
-          }
-        ]
+            mimeType: 'application/json',
+          },
+        ],
       };
     });
 
     // Read resource content
-    this.server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
+    this.server.setRequestHandler(ReadResourceRequestSchema, async request => {
       const { uri } = request.params;
 
       let content: unknown;
@@ -592,10 +617,7 @@ class VelanovaMCPServer {
           break;
 
         default:
-          throw new McpError(
-            ErrorCode.InvalidRequest,
-            `Unknown resource: ${uri}`
-          );
+          throw new McpError(ErrorCode.InvalidRequest, `Unknown resource: ${uri}`);
       }
 
       return {
@@ -603,15 +625,15 @@ class VelanovaMCPServer {
           {
             uri,
             mimeType: 'application/json',
-            text: JSON.stringify(content, null, 2)
-          }
-        ]
+            text: JSON.stringify(content, null, 2),
+          },
+        ],
       };
     });
   }
 
   private setupErrorHandler() {
-    this.server.onerror = (error) => {
+    this.server.onerror = error => {
       logger.error({ error }, 'MCP Server error');
     };
   }
@@ -625,8 +647,8 @@ class VelanovaMCPServer {
         ai_router: await this.aiRouter.healthCheck(),
         databases: await this.databaseAggregator.healthCheck(),
         enterprise: await this.enterpriseAggregator.healthCheck(),
-        governance: await this.governance.healthCheck()
-      }
+        governance: await this.governance.healthCheck(),
+      },
     };
   }
 
@@ -668,7 +690,7 @@ async function main() {
   }
 }
 
-main().catch((error) => {
+main().catch(error => {
   console.error('Fatal error:', error);
   process.exit(1);
 });

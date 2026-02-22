@@ -34,13 +34,16 @@ export class MCPConnectionManager {
   private connections: Map<string, MCPConnection> = new Map();
 
   // Available MCP servers (official and community)
-  private mcpServers: Record<LegacySystemType, {
-    type: 'docker' | 'npm';
-    image?: string;
-    package?: string;
-    localPath?: string;
-    available: boolean;
-  }> = {
+  private mcpServers: Record<
+    LegacySystemType,
+    {
+      type: 'docker' | 'npm';
+      image?: string;
+      package?: string;
+      localPath?: string;
+      available: boolean;
+    }
+  > = {
     postgresql: {
       type: 'npm',
       package: '@modelcontextprotocol/server-postgres',
@@ -593,18 +596,25 @@ export class MCPConnectionManager {
     }
     // Legacy: for mongodb, also build the connection URI
     if (connection.type === 'mongodb' && config.host) {
-      env.MONGODB_URI = config.options?.uri || `mongodb://${config.username}:${config.password}@${config.host}:${config.port}/${config.database}`;
+      env.MONGODB_URI =
+        config.options?.uri ||
+        `mongodb://${config.username}:${config.password}@${config.host}:${config.port}/${config.database}`;
     }
     // Legacy: for redis, also build the URL
     if (connection.type === 'redis' && config.host) {
-      env.REDIS_URL = config.options?.url || `redis://${config.username ? config.username + ':' + config.password + '@' : ''}${config.host}:${config.port}`;
+      env.REDIS_URL =
+        config.options?.url ||
+        `redis://${config.username ? config.username + ':' + config.password + '@' : ''}${config.host}:${config.port}`;
     }
 
-    console.log(`[MCP Manager] Set ${Object.keys(mappedEnvVars).length} env vars for ${connection.type}:`, Object.keys(mappedEnvVars));
+    console.log(
+      `[MCP Manager] Set ${Object.keys(mappedEnvVars).length} env vars for ${connection.type}:`,
+      Object.keys(mappedEnvVars)
+    );
 
     // Start MCP server as child process
     console.log(`Starting MCP server: ${command} ${args.join(' ')}`);
-    
+
     // Actual spawning would happen here with child_process.spawn
     // and maintain the process reference
     connection.mcpServerInfo!.processId = 1; // Placeholder
@@ -682,19 +692,20 @@ export class MCPConnectionManager {
   }
 
   // Get available MCP server types
-  getAvailableMCPServers(): Record<LegacySystemType, {
-    available: boolean;
-    type: 'docker' | 'npm' | 'custom';
-    status: string;
-  }> {
+  getAvailableMCPServers(): Record<
+    LegacySystemType,
+    {
+      available: boolean;
+      type: 'docker' | 'npm' | 'custom';
+      status: string;
+    }
+  > {
     const result: any = {};
     for (const [type, info] of Object.entries(this.mcpServers)) {
       result[type] = {
         available: info.available,
         type: info.type,
-        status: info.available
-          ? `Ready (${info.type})`
-          : 'Coming soon',
+        status: info.available ? `Ready (${info.type})` : 'Coming soon',
       };
     }
     return result;

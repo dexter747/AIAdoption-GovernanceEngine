@@ -19,7 +19,7 @@ interface GoogleUserInfo {
 export async function GET(request: NextRequest) {
   const code = request.nextUrl.searchParams.get('code');
   const stateParam = request.nextUrl.searchParams.get('state');
-  
+
   if (!code) {
     return NextResponse.redirect(new URL('/login?error=no_code', request.url));
   }
@@ -82,7 +82,7 @@ export async function GET(request: NextRequest) {
 
     // Set cookies and redirect
     const response = NextResponse.redirect(new URL(callbackUrl, request.url));
-    
+
     response.cookies.set('auth-token', accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -90,7 +90,7 @@ export async function GET(request: NextRequest) {
       maxAge: 3600, // 1 hour
       path: '/',
     });
-    
+
     response.cookies.set('refresh-token', refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',

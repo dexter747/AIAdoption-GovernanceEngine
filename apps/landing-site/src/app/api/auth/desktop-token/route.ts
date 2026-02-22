@@ -15,10 +15,7 @@ export async function GET() {
     const session = await auth();
 
     if (!session?.user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Create a JWT token that the Express API can verify
@@ -49,9 +46,6 @@ export async function GET() {
     });
   } catch (error) {
     console.error('Failed to generate desktop token:', error);
-    return NextResponse.json(
-      { error: 'Failed to generate token' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to generate token' }, { status: 500 });
   }
 }

@@ -28,11 +28,13 @@ export default function QueriesPage() {
   const exampleQueries = [
     'Show me all users who signed up in the last 7 days',
     'Calculate the total revenue by month for 2024',
-    'Find customers who haven\'t made a purchase in 90 days',
+    "Find customers who haven't made a purchase in 90 days",
     'List the top 10 products by sales volume',
   ];
 
-  useEffect(() => { loadConnections(); }, []);
+  useEffect(() => {
+    loadConnections();
+  }, []);
 
   const loadConnections = async () => {
     try {
@@ -68,7 +70,7 @@ export default function QueriesPage() {
     startTime.current = Date.now();
 
     try {
-      const selectedConn = databases.find((d) => d.id === selectedDb);
+      const selectedConn = databases.find(d => d.id === selectedDb);
       let response: any = null;
 
       // Strategy 1: MCP query-with-ai (best for connected databases)
@@ -77,28 +79,38 @@ export default function QueriesPage() {
           connectionId: selectedDb,
           prompt: query,
         });
-      } catch { /* fall through */ }
+      } catch {
+        /* fall through */
+      }
 
       // Strategy 2: Express AI endpoint
       if (!response?.sql && !response?.result) {
         try {
           response = await window.electron.express?.queryAI?.({
-            prompt: query, connectionId: selectedDb, connectionType: selectedConn?.type,
+            prompt: query,
+            connectionId: selectedDb,
+            connectionType: selectedConn?.type,
           } as any);
-        } catch { /* fall through */ }
+        } catch {
+          /* fall through */
+        }
       }
 
       // Strategy 3: Local AI router
       if (!response?.sql && !response?.result) {
         response = await window.electron.ai?.query?.(query, {
-          connectionId: selectedDb, type: 'sql-generation',
+          connectionId: selectedDb,
+          type: 'sql-generation',
         });
       }
 
       const duration = ((Date.now() - startTime.current) / 1000).toFixed(1);
       const sql =
-        response?.sql || response?.result?.sql || response?.content ||
-        response?.result || response?.message ||
+        response?.sql ||
+        response?.result?.sql ||
+        response?.content ||
+        response?.result ||
+        response?.message ||
         'No SQL generated. Make sure a database is connected and try again.';
 
       setResult({
@@ -126,7 +138,9 @@ export default function QueriesPage() {
       {/* Header */}
       <div className="mb-6">
         <h1 className="font-medium text-white">AI Queries</h1>
-        <p className="text-muted-foreground mt-1">Ask questions in natural language and get SQL queries</p>
+        <p className="text-muted-foreground mt-1">
+          Ask questions in natural language and get SQL queries
+        </p>
       </div>
 
       {/* Query Input */}
@@ -136,29 +150,48 @@ export default function QueriesPage() {
             <label className="text-sm font-medium text-muted-foreground">Database:</label>
             {loadingDbs ? (
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Loader2 className="w-3.5 h-3.5 animate-spin" />Loading connections…
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                Loading connections…
               </div>
             ) : databases.length === 0 ? (
-              <span className="text-sm text-amber-400/70">No connections found — add one in Connections</span>
+              <span className="text-sm text-amber-400/70">
+                No connections found — add one in Connections
+              </span>
             ) : (
-              <select value={selectedDb} onChange={(e) => setSelectedDb(e.target.value)}
-                className="px-3 py-1.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-600 bg-zinc-950 border-zinc-800 text-white">
+              <select
+                value={selectedDb}
+                onChange={e => setSelectedDb(e.target.value)}
+                className="px-3 py-1.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-600 bg-zinc-950 border-zinc-800 text-white"
+              >
                 {databases.map(db => (
-                  <option key={db.id} value={db.id}>{db.name} ({db.type})</option>
+                  <option key={db.id} value={db.id}>
+                    {db.name} ({db.type})
+                  </option>
                 ))}
               </select>
             )}
           </div>
           <div className="relative">
-            <textarea value={query} onChange={(e) => setQuery(e.target.value)}
+            <textarea
+              value={query}
+              onChange={e => setQuery(e.target.value)}
               placeholder="Ask a question about your data in plain English..."
               rows={3}
               className="w-full px-4 py-3 rounded-xl placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-600 resize-none bg-zinc-950 border-zinc-800 text-white"
-              onKeyDown={(e) => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleSubmit(e); }}
+              onKeyDown={e => {
+                if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleSubmit(e);
+              }}
             />
-            <button type="submit" disabled={isLoading || !query.trim() || databases.length === 0}
-              className="absolute bottom-3 right-3 p-2 bg-white text-black rounded-lg hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-              {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
+            <button
+              type="submit"
+              disabled={isLoading || !query.trim() || databases.length === 0}
+              className="absolute bottom-3 right-3 p-2 bg-white text-black rounded-lg hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isLoading ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                <Send className="w-5 h-5" />
+              )}
             </button>
           </div>
         </form>
@@ -168,8 +201,11 @@ export default function QueriesPage() {
           <p className="text-xs text-muted-foreground mb-2">Try these examples:</p>
           <div className="flex flex-wrap gap-2">
             {exampleQueries.map((example, i) => (
-              <button key={i} onClick={() => setQuery(example)}
-                className="px-3 py-1.5 rounded-lg transition-colors bg-zinc-950 text-muted-foreground hover:bg-zinc-900">
+              <button
+                key={i}
+                onClick={() => setQuery(example)}
+                className="px-3 py-1.5 rounded-lg transition-colors bg-zinc-950 text-muted-foreground hover:bg-zinc-900"
+              >
                 {example}
               </button>
             ))}
@@ -180,7 +216,8 @@ export default function QueriesPage() {
       {/* Error */}
       {error && (
         <div className="mb-4 flex items-start gap-3 rounded-xl border border-red-500/20 bg-red-950/20 px-5 py-4 text-[13px] text-red-300">
-          <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" /><span>{error}</span>
+          <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+          <span>{error}</span>
         </div>
       )}
 
@@ -192,8 +229,10 @@ export default function QueriesPage() {
               <Sparkles className="w-5 h-5 text-zinc-300" />
               <h2 className="font-medium text-white">Generated Query</h2>
             </div>
-            <button onClick={handleCopy}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-white">
+            <button
+              onClick={handleCopy}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-white"
+            >
               {copied ? <Check className="w-4 h-4 text-zinc-400" /> : <Copy className="w-4 h-4" />}
               {copied ? 'Copied!' : 'Copy'}
             </button>
@@ -206,8 +245,14 @@ export default function QueriesPage() {
               <pre className="whitespace-pre-wrap">{result.sql}</pre>
             </div>
             <div className="mt-4 flex items-center gap-4 text-sm text-muted-foreground">
-              <span className="flex items-center gap-1"><Database className="w-4 h-4" />{result.connectionName}</span>
-              <span className="flex items-center gap-1"><Clock className="w-4 h-4" />{result.duration}s</span>
+              <span className="flex items-center gap-1">
+                <Database className="w-4 h-4" />
+                {result.connectionName}
+              </span>
+              <span className="flex items-center gap-1">
+                <Clock className="w-4 h-4" />
+                {result.duration}s
+              </span>
             </div>
           </div>
         </div>

@@ -1,6 +1,10 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { CallToolRequestSchema, ListToolsRequestSchema, Tool } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+  Tool,
+} from '@modelcontextprotocol/sdk/types.js';
 import axios, { AxiosInstance } from 'axios';
 
 const API_URL = process.env.FINASTRA_API_URL || '';
@@ -14,7 +18,7 @@ async function initConnection(): Promise<void> {
     baseURL: API_URL,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${ACCESS_TOKEN}`,
+      Authorization: `Bearer ${ACCESS_TOKEN}`,
     },
   });
 }
@@ -86,7 +90,11 @@ const tools: Tool[] = [
     inputSchema: {
       type: 'object',
       properties: {
-        method: { type: 'string', description: 'HTTP method', enum: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'] },
+        method: {
+          type: 'string',
+          description: 'HTTP method',
+          enum: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+        },
         path: { type: 'string', description: 'API path' },
         body: { type: 'object', description: 'Request body' },
         params: { type: 'object', description: 'Query parameters' },
@@ -103,10 +111,18 @@ const server = new Server(
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools }));
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   await initConnection();
   if (!api) {
-    return { content: [{ type: 'text', text: 'Finastra API connection not initialized. Check environment variables.' }], isError: true };
+    return {
+      content: [
+        {
+          type: 'text',
+          text: 'Finastra API connection not initialized. Check environment variables.',
+        },
+      ],
+      isError: true,
+    };
   }
 
   const { name, arguments: args } = request.params;
@@ -185,7 +201,7 @@ async function main(): Promise<void> {
   console.error('Finastra MCP server running on stdio');
 }
 
-main().catch((error) => {
+main().catch(error => {
   console.error('Fatal error:', error);
   process.exit(1);
 });

@@ -26,23 +26,27 @@ Server runs on: http://localhost:5500
 ## 📋 Features
 
 ### ✅ License Management
+
 - License validation and device activation
 - Support for free, professional, enterprise plans
 - Device limit enforcement
 - Automatic expiration handling
 
 ### ✅ AI Provider Routing
+
 - **15 AI providers** integrated (OpenAI, Anthropic, Google, Groq, etc.)
 - Automatic provider selection
 - Token counting and cost tracking
 - Usage logging for analytics
 
 ### ✅ Payment Processing
+
 - Dodo Payments, PayPal, Razorpay webhooks
 - Subscription management
 - Payment history tracking
 
 ### ✅ User API Keys (BYOK)
+
 - Encrypted storage of user's own API keys
 - Multi-provider support
 - Secure key management
@@ -52,40 +56,47 @@ Server runs on: http://localhost:5500
 ## 🔌 API Endpoints
 
 ### Health & Status
+
 ```
 GET  /health              → Server health check
 GET  /api/status          → API status and version
 ```
 
 ### License Management
+
 ```
 POST /api/licenses/validate  → Validate license + activate device
 ```
 
 ### AI Providers
+
 ```
 GET  /api/ai/providers    → List available AI providers
 POST /api/ai/query        → Route AI query to provider
 ```
 
 ### User API Keys
+
 ```
 GET  /api/users/:userId/api-keys      → Get user's API keys
 POST /api/users/:userId/api-keys      → Add new API key
 ```
 
 ### Usage Tracking
+
 ```
 POST /api/usage/log       → Log AI usage
 GET  /api/usage/:userId   → Get user's usage history
 ```
 
 ### Subscriptions
+
 ```
 GET  /api/subscriptions/:userId  → Get active subscription
 ```
 
 ### Webhooks
+
 ```
 POST /api/webhooks/dodo    → Dodo Payments webhook
 ```
@@ -94,28 +105,29 @@ POST /api/webhooks/dodo    → Dodo Payments webhook
 
 ## 🤖 Supported AI Providers
 
-| Provider | Status | Models |
-|----------|--------|--------|
-| OpenAI | ✅ | GPT-4, GPT-3.5-turbo |
-| Anthropic | ✅ | Claude 3 (Opus, Sonnet, Haiku) |
-| Google AI | ✅ | Gemini Pro, Gemini Pro Vision |
-| Groq | ✅ | Llama 2 70B, Mixtral 8x7B (FREE) |
-| Cohere | 🔜 | Command, Command Light |
-| Mistral | 🔜 | Mistral Large, Medium |
-| Perplexity | 🔜 | PPLX 70B Online |
-| DeepSeek | 🔜 | DeepSeek Chat, Coder |
-| Together AI | 🔜 | Multiple open models |
-| Replicate | 🔜 | Open models |
-| HuggingFace | 🔜 | Inference API |
-| OpenRouter | 🔜 | 100+ models |
-| Azure OpenAI | 🔜 | GPT-4 Enterprise |
-| AWS Bedrock | 🔜 | Claude, Llama, etc. |
+| Provider     | Status | Models                           |
+| ------------ | ------ | -------------------------------- |
+| OpenAI       | ✅     | GPT-4, GPT-3.5-turbo             |
+| Anthropic    | ✅     | Claude 3 (Opus, Sonnet, Haiku)   |
+| Google AI    | ✅     | Gemini Pro, Gemini Pro Vision    |
+| Groq         | ✅     | Llama 2 70B, Mixtral 8x7B (FREE) |
+| Cohere       | 🔜     | Command, Command Light           |
+| Mistral      | 🔜     | Mistral Large, Medium            |
+| Perplexity   | 🔜     | PPLX 70B Online                  |
+| DeepSeek     | 🔜     | DeepSeek Chat, Coder             |
+| Together AI  | 🔜     | Multiple open models             |
+| Replicate    | 🔜     | Open models                      |
+| HuggingFace  | 🔜     | Inference API                    |
+| OpenRouter   | 🔜     | 100+ models                      |
+| Azure OpenAI | 🔜     | GPT-4 Enterprise                 |
+| AWS Bedrock  | 🔜     | Claude, Llama, etc.              |
 
 ---
 
 ## 🔐 Environment Variables
 
 ### Required
+
 ```bash
 # Server
 PORT=5500
@@ -134,6 +146,7 @@ OPENAI_API_KEY=sk-proj-xxx
 ```
 
 ### Recommended
+
 ```bash
 # More AI Providers
 ANTHROPIC_API_KEY=sk-ant-api03-xxx
@@ -172,11 +185,13 @@ apps/express-api/
 ## 🧪 Testing
 
 ### Test Health Check
+
 ```bash
 curl http://localhost:5500/health
 ```
 
 ### Test License Validation
+
 ```bash
 curl -X POST http://localhost:5500/api/licenses/validate \
   -H "Content-Type: application/json" \
@@ -191,6 +206,7 @@ curl -X POST http://localhost:5500/api/licenses/validate \
 ```
 
 ### Test AI Query
+
 ```bash
 curl -X POST http://localhost:5500/api/ai/query \
   -H "Content-Type: application/json" \
@@ -206,6 +222,7 @@ curl -X POST http://localhost:5500/api/ai/query \
 ```
 
 ### Check Available Providers
+
 ```bash
 curl http://localhost:5500/api/ai/providers
 ```
@@ -224,12 +241,14 @@ curl http://localhost:5500/api/ai/providers
 ## 🚀 Deployment
 
 ### Railway / Render / Heroku
+
 1. Push code to GitHub
 2. Connect repository to platform
 3. Set environment variables from .env.example
 4. Deploy
 
 ### Environment Variables on Platform
+
 Copy all from `.env.example` and fill in actual values.
 
 ---
@@ -237,20 +256,24 @@ Copy all from `.env.example` and fill in actual values.
 ## 🐛 Troubleshooting
 
 ### Server won't start
+
 - Check if port 5500 is available: `lsof -i :5500`
 - Verify .env file exists: `ls -la .env`
 - Install dependencies: `npm install`
 
 ### "Supabase connection failed"
+
 - Verify SUPABASE_URL and SUPABASE_SERVICE_KEY in .env
 - Test connection: `curl https://lwounfzhkuuqvgkvwxvt.supabase.co`
 
 ### "Provider not enabled"
+
 - Check if API key is set in .env file
 - Restart server after adding new keys: `npm run dev`
 - Call `GET /api/ai/providers` to see enabled providers
 
 ### License validation failing
+
 - Ensure database schema is deployed (see DATABASE-SETUP-GUIDE.md)
 - Check if license exists in database
 - Verify license status is 'active'
@@ -271,6 +294,7 @@ Admin Dashboard ──→ Supabase (direct)
 ```
 
 **Why Separate Express Server?**
+
 - **Performance**: Optimized for AI query routing
 - **Flexibility**: Easy to add new providers
 - **Scalability**: Independent deployment
@@ -292,17 +316,20 @@ Admin Dashboard ──→ Supabase (direct)
 ## 📊 Monitoring
 
 ### Logs
+
 ```bash
 npm run dev  # Development logs
 ```
 
 ### Health Check
+
 ```bash
 curl http://localhost:5500/health
 # → {"status":"ok","timestamp":"2024-..."}
 ```
 
 ### Database Queries
+
 - Supabase Dashboard → Database → Logs
 - View all queries, slow queries, errors
 

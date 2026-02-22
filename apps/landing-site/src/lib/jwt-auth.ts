@@ -62,7 +62,7 @@ async function createSignature(data: string, secret: string): Promise<string> {
   const encoder = new TextEncoder();
   const keyData = encoder.encode(secret);
   const messageData = encoder.encode(data);
-  
+
   const key = await crypto.subtle.importKey(
     'raw',
     keyData,
@@ -70,32 +70,34 @@ async function createSignature(data: string, secret: string): Promise<string> {
     false,
     ['sign']
   );
-  
+
   const signature = await crypto.subtle.sign('HMAC', key, messageData);
   const signatureArray = new Uint8Array(signature);
-  
+
   let binary = '';
-  signatureArray.forEach(byte => binary += String.fromCharCode(byte));
-  
-  return btoa(binary)
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=/g, '');
+  signatureArray.forEach(byte => (binary += String.fromCharCode(byte)));
+
+  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 }
 
 function parseExpiry(expiry: string): number {
   const match = expiry.match(/^(\d+)([smhd])$/);
   if (!match) return 3600;
-  
+
   const value = parseInt(match[1]);
   const unit = match[2];
-  
+
   switch (unit) {
-    case 's': return value;
-    case 'm': return value * 60;
-    case 'h': return value * 3600;
-    case 'd': return value * 86400;
-    default: return 3600;
+    case 's':
+      return value;
+    case 'm':
+      return value * 60;
+    case 'h':
+      return value * 3600;
+    case 'd':
+      return value * 86400;
+    default:
+      return 3600;
   }
 }
 
@@ -211,7 +213,7 @@ export async function generateTokenPair(user: {
 
 export async function refreshAccessToken(refreshToken: string): Promise<TokenPair | null> {
   const result = await verifyToken(refreshToken);
-  
+
   if (!result.success || !result.user || result.user.type !== 'refresh') {
     return null;
   }
@@ -235,30 +237,38 @@ export function extractTokenFromHeader(authHeader: string | undefined): string |
 export async function hashPassword(password: string): Promise<string> {
   const encoder = new TextEncoder();
   const salt = crypto.getRandomValues(new Uint8Array(16));
-  const saltHex = Array.from(salt).map(b => b.toString(16).padStart(2, '0')).join('');
-  
+  const saltHex = Array.from(salt)
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+
   const passwordData = encoder.encode(password + saltHex);
   const hashBuffer = await crypto.subtle.digest('SHA-256', passwordData);
   const hashArray = new Uint8Array(hashBuffer);
-  const hashHex = Array.from(hashArray).map(b => b.toString(16).padStart(2, '0')).join('');
-  
+  const hashHex = Array.from(hashArray)
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+
   return `${saltHex}:${hashHex}`;
 }
 
 export async function verifyPassword(password: string, storedHash: string): Promise<boolean> {
   const [salt, hash] = storedHash.split(':');
   if (!salt || !hash) return false;
-  
+
   const encoder = new TextEncoder();
   const passwordData = encoder.encode(password + salt);
   const hashBuffer = await crypto.subtle.digest('SHA-256', passwordData);
   const hashArray = new Uint8Array(hashBuffer);
-  const verifyHash = Array.from(hashArray).map(b => b.toString(16).padStart(2, '0')).join('');
-  
+  const verifyHash = Array.from(hashArray)
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+
   return hash === verifyHash;
 }
 
 export function generateRandomToken(length: number = 32): string {
   const array = crypto.getRandomValues(new Uint8Array(length));
-  return Array.from(array).map(b => b.toString(16).padStart(2, '0')).join('');
+  return Array.from(array)
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
 }

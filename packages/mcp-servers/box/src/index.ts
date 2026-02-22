@@ -1,6 +1,10 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { CallToolRequestSchema, ListToolsRequestSchema, Tool } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+  Tool,
+} from '@modelcontextprotocol/sdk/types.js';
 import axios, { AxiosInstance } from 'axios';
 
 let api: AxiosInstance | null = null;
@@ -15,7 +19,7 @@ function initConnection(): void {
   api = axios.create({
     baseURL: 'https://api.box.com/2.0',
     headers: {
-      'Authorization': `Bearer ${accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
       'Content-Type': 'application/json',
     },
   });
@@ -29,9 +33,21 @@ const tools: Tool[] = [
       type: 'object',
       properties: {
         query: { type: 'string', description: 'Search query string' },
-        type: { type: 'string', description: 'Type filter (file or folder)', enum: ['file', 'folder'] },
-        fileExtensions: { type: 'array', items: { type: 'string' }, description: 'Filter by file extensions' },
-        ancestorFolderIds: { type: 'array', items: { type: 'string' }, description: 'Limit search to specific folder IDs' },
+        type: {
+          type: 'string',
+          description: 'Type filter (file or folder)',
+          enum: ['file', 'folder'],
+        },
+        fileExtensions: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'Filter by file extensions',
+        },
+        ancestorFolderIds: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'Limit search to specific folder IDs',
+        },
         limit: { type: 'number', description: 'Maximum number of results' },
       },
       required: ['query'],
@@ -119,7 +135,11 @@ const tools: Tool[] = [
     inputSchema: {
       type: 'object',
       properties: {
-        method: { type: 'string', description: 'HTTP method (GET, POST, PUT, DELETE)', enum: ['GET', 'POST', 'PUT', 'DELETE'] },
+        method: {
+          type: 'string',
+          description: 'HTTP method (GET, POST, PUT, DELETE)',
+          enum: ['GET', 'POST', 'PUT', 'DELETE'],
+        },
         path: { type: 'string', description: 'API path (relative to https://api.box.com/2.0)' },
         body: { type: 'object', description: 'Request body for POST/PUT' },
       },
@@ -135,7 +155,7 @@ const server = new Server(
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools }));
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   if (!api) initConnection();
 
   const { name, arguments: args } = request.params;
@@ -149,8 +169,12 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           params: {
             query: args!.query,
             type: args?.type,
-            file_extensions: args?.fileExtensions ? (args.fileExtensions as string[]).join(',') : undefined,
-            ancestor_folder_ids: args?.ancestorFolderIds ? (args.ancestorFolderIds as string[]).join(',') : undefined,
+            file_extensions: args?.fileExtensions
+              ? (args.fileExtensions as string[]).join(',')
+              : undefined,
+            ancestor_folder_ids: args?.ancestorFolderIds
+              ? (args.ancestorFolderIds as string[]).join(',')
+              : undefined,
             limit: args?.limit || 30,
           },
         });
@@ -182,14 +206,18 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           parent: { id: args!.folderId },
         });
         const body = Buffer.concat([
-          Buffer.from(`--${boundary}\r\nContent-Disposition: form-data; name="attributes"\r\nContent-Type: application/json\r\n\r\n${attributes}\r\n`),
-          Buffer.from(`--${boundary}\r\nContent-Disposition: form-data; name="file"; filename="${args!.fileName}"\r\nContent-Type: application/octet-stream\r\n\r\n`),
+          Buffer.from(
+            `--${boundary}\r\nContent-Disposition: form-data; name="attributes"\r\nContent-Type: application/json\r\n\r\n${attributes}\r\n`
+          ),
+          Buffer.from(
+            `--${boundary}\r\nContent-Disposition: form-data; name="file"; filename="${args!.fileName}"\r\nContent-Type: application/octet-stream\r\n\r\n`
+          ),
           content,
           Buffer.from(`\r\n--${boundary}--`),
         ]);
         r = await axios.post('https://upload.box.com/api/2.0/files/content', body, {
           headers: {
-            'Authorization': api!.defaults.headers['Authorization'] as string,
+            Authorization: api!.defaults.headers['Authorization'] as string,
             'Content-Type': `multipart/form-data; boundary=${boundary}`,
           },
         });
@@ -209,10 +237,17 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         });
         break;
       case 'api_call':
-        r = await api!.request({ method: args!.method as string, url: args!.path as string, data: args?.body });
+        r = await api!.request({
+          method: args!.method as string,
+          url: args!.path as string,
+          data: args?.body,
+        });
         break;
       default:
-        return { content: [{ type: 'text' as const, text: `Unknown tool: ${name}` }], isError: true };
+        return {
+          content: [{ type: 'text' as const, text: `Unknown tool: ${name}` }],
+          isError: true,
+        };
     }
 
     return { content: [{ type: 'text' as const, text: JSON.stringify(r.data, null, 2) }] };

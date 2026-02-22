@@ -1,12 +1,12 @@
 /**
  * MCP Orchestrator Service
- * 
+ *
  * This service orchestrates the tool calling flow between:
- * 1. AI Provider (OpenAI, Anthropic, etc.) 
+ * 1. AI Provider (OpenAI, Anthropic, etc.)
  * 2. Desktop App MCP Client (via WebSocket)
- * 
+ *
  * Flow:
- * User asks question -> AI decides to call tool -> Orchestrator sends to Desktop -> 
+ * User asks question -> AI decides to call tool -> Orchestrator sends to Desktop ->
  * Desktop executes MCP tool -> Result returns -> AI generates final response
  */
 
@@ -33,7 +33,7 @@ export function registerDesktopConnection(userId, connectionId, wsConnection) {
     connectedAt: new Date(),
     availableTools: [],
   });
-  
+
   logger.info({ userId, connectionId }, 'Desktop connection registered');
   return connectionKey;
 }
@@ -53,7 +53,7 @@ export function unregisterDesktopConnection(userId, connectionId) {
 export function updateDesktopTools(userId, connectionId, tools) {
   const connectionKey = `${userId}:${connectionId}`;
   const connection = activeDesktopConnections.get(connectionKey);
-  
+
   if (connection) {
     connection.availableTools = tools;
     logger.info({ userId, connectionId, toolCount: tools.length }, 'Updated desktop tools');
@@ -65,16 +65,18 @@ export function updateDesktopTools(userId, connectionId, tools) {
  */
 export function getAvailableToolsForUser(userId) {
   const tools = [];
-  
+
   for (const [key, connection] of activeDesktopConnections) {
     if (connection.userId === userId && connection.availableTools) {
-      tools.push(...connection.availableTools.map(tool => ({
-        ...tool,
-        connectionId: connection.connectionId,
-      })));
+      tools.push(
+        ...connection.availableTools.map(tool => ({
+          ...tool,
+          connectionId: connection.connectionId,
+        }))
+      );
     }
   }
-  
+
   return tools;
 }
 
@@ -97,30 +99,30 @@ export function hasActiveDesktop(userId) {
 export async function executeToolOnDesktop(userId, toolCall, timeout = 30000) {
   // Find an active connection for this user
   let targetConnection = null;
-  
+
   for (const [key, connection] of activeDesktopConnections) {
     if (connection.userId === userId) {
       targetConnection = connection;
       break;
     }
   }
-  
+
   if (!targetConnection) {
     throw new Error('No active desktop connection for user');
   }
-  
+
   const callId = `tool-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  
+
   return new Promise((resolve, reject) => {
     // Set timeout
     const timeoutId = setTimeout(() => {
       pendingToolCalls.delete(callId);
       reject(new Error(`Tool execution timed out after ${timeout}ms`));
     }, timeout);
-    
+
     // Store pending call
     pendingToolCalls.set(callId, { resolve, reject, timeoutId });
-    
+
     // Send to desktop
     const message = {
       type: 'EXECUTE_TOOL',
@@ -129,7 +131,7 @@ export async function executeToolOnDesktop(userId, toolCall, timeout = 30000) {
       arguments: JSON.parse(toolCall.function.arguments),
       timestamp: new Date().toISOString(),
     };
-    
+
     try {
       targetConnection.ws.send(JSON.stringify(message));
       logger.info({ callId, toolName: message.toolName }, 'Sent tool execution request to desktop');
@@ -146,15 +148,15 @@ export async function executeToolOnDesktop(userId, toolCall, timeout = 30000) {
  */
 export function handleToolResult(callId, result, error = null) {
   const pending = pendingToolCalls.get(callId);
-  
+
   if (!pending) {
     logger.warn({ callId }, 'Received result for unknown tool call');
     return;
   }
-  
+
   clearTimeout(pending.timeoutId);
   pendingToolCalls.delete(callId);
-  
+
   if (error) {
     pending.reject(new Error(error));
   } else {
@@ -171,41 +173,52 @@ export async function processAIResponseWithTools(userId, aiResponse, aiService, 
   if (!aiResponse.requiresToolExecution || !aiResponse.message.tool_calls) {
     return aiResponse;
   }
-  
-  logger.info({ 
-    userId, 
-    toolCallCount: aiResponse.message.tool_calls.length 
-  }, 'AI requested tool execution');
-  
+
+  logger.info(
+    {
+      userId,
+      toolCallCount: aiResponse.message.tool_calls.length,
+    },
+    'AI requested tool execution'
+  );
+
   // Execute each tool call
   const toolResults = [];
-  
+
   for (const toolCall of aiResponse.message.tool_calls) {
     try {
-      logger.info({ 
-        toolName: toolCall.function.name, 
-        toolId: toolCall.id 
-      }, 'Executing tool');
-      
+      logger.info(
+        {
+          toolName: toolCall.function.name,
+          toolId: toolCall.id,
+        },
+        'Executing tool'
+      );
+
       const result = await executeToolOnDesktop(userId, toolCall);
-      
+
       toolResults.push({
         tool_call_id: toolCall.id,
         role: 'tool',
         content: typeof result === 'string' ? result : JSON.stringify(result),
       });
-      
-      logger.info({ 
-        toolName: toolCall.function.name, 
-        success: true 
-      }, 'Tool execution completed');
-      
+
+      logger.info(
+        {
+          toolName: toolCall.function.name,
+          success: true,
+        },
+        'Tool execution completed'
+      );
     } catch (err) {
-      logger.error({ 
-        toolName: toolCall.function.name, 
-        error: err.message 
-      }, 'Tool execution failed');
-      
+      logger.error(
+        {
+          toolName: toolCall.function.name,
+          error: err.message,
+        },
+        'Tool execution failed'
+      );
+
       toolResults.push({
         tool_call_id: toolCall.id,
         role: 'tool',
@@ -213,7 +226,7 @@ export async function processAIResponseWithTools(userId, aiResponse, aiService, 
       });
     }
   }
-  
+
   // Build updated messages with tool results
   const updatedMessages = [
     ...chatOptions.messages,
@@ -224,13 +237,13 @@ export async function processAIResponseWithTools(userId, aiResponse, aiService, 
     },
     ...toolResults,
   ];
-  
+
   // Call AI again with tool results
   const finalResponse = await aiService.chat({
     ...chatOptions,
     messages: updatedMessages,
   });
-  
+
   // Add tool execution info to response
   return {
     ...finalResponse,
@@ -250,7 +263,7 @@ export const MCPOrchestrator = {
   executeToolOnDesktop,
   handleToolResult,
   processAIResponseWithTools,
-  
+
   // Get connection stats
   getStats() {
     return {

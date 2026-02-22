@@ -69,11 +69,13 @@ After Google OAuth works, we'll connect it to Supabase:
 ## 🐛 Troubleshooting
 
 ### "Invalid Client" Error
+
 - Double-check `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`
 - Make sure there are no extra spaces
 - Restart dev server after changing `.env.local`
 
 ### "redirect_uri_mismatch" Error
+
 - The redirect URI in Google Console must exactly match:
   ```
   http://localhost:3000/api/auth/callback/google
@@ -82,6 +84,7 @@ After Google OAuth works, we'll connect it to Supabase:
 - Check port number (3000)
 
 ### Button doesn't work
+
 - Open browser console (F12)
 - Check for JavaScript errors
 - Make sure you're on http://localhost:3000/login
@@ -89,6 +92,7 @@ After Google OAuth works, we'll connect it to Supabase:
 ## 📝 After Testing
 
 Once Google OAuth works, let me know and we'll:
+
 1. Connect it to Supabase Auth
 2. Implement payment integration
 3. Create license generation system

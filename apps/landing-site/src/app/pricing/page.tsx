@@ -8,12 +8,7 @@ const plans = [
     name: 'Trial',
     price: { monthly: 0, yearly: 0 },
     description: '14-day free trial',
-    features: [
-      '100 AI queries',
-      '1 database connection',
-      'Basic support',
-      'All AI providers',
-    ],
+    features: ['100 AI queries', '1 database connection', 'Basic support', 'All AI providers'],
     cta: 'Start Free Trial',
     popular: false,
   },
@@ -110,9 +105,7 @@ export default function PricingPage() {
       {/* Header */}
       <div className="container mx-auto px-4 py-16">
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-medium text-white mb-4">
-            Choose Your Plan
-          </h1>
+          <h1 className="text-5xl font-medium text-white mb-4">Choose Your Plan</h1>
           <p className="text-xl text-zinc-500 mb-8">
             Start with a 14-day free trial. No credit card required.
           </p>
@@ -132,9 +125,7 @@ export default function PricingPage() {
             <button
               onClick={() => setBillingCycle('yearly')}
               className={`px-6 py-2 rounded-md transition-colors ${
-                billingCycle === 'yearly'
-                  ? 'bg-white text-white'
-                  : 'text-zinc-500 hover:text-white'
+                billingCycle === 'yearly' ? 'bg-white text-white' : 'text-zinc-500 hover:text-white'
               }`}
             >
               Yearly
@@ -147,13 +138,11 @@ export default function PricingPage() {
 
         {/* Pricing Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {plans.map((plan) => (
+          {plans.map(plan => (
             <div
               key={plan.name}
               className={`relative bg-zinc-900 rounded-2xl p-8 ${
-                plan.popular
-                  ? 'ring-2 ring-zinc-600 shadow-2xl shadow-white/5'
-                  : ''
+                plan.popular ? 'ring-2 ring-zinc-600 shadow-2xl shadow-white/5' : ''
               }`}
             >
               {plan.popular && (
@@ -165,9 +154,7 @@ export default function PricingPage() {
               )}
 
               <div className="text-center mb-6">
-                <h3 className="text-2xl font-medium text-white mb-2">
-                  {plan.name}
-                </h3>
+                <h3 className="text-2xl font-medium text-white mb-2">{plan.name}</h3>
                 <p className="text-zinc-500 text-sm">{plan.description}</p>
               </div>
 
@@ -182,9 +169,7 @@ export default function PricingPage() {
                     </span>
                   </>
                 ) : (
-                  <span className="text-3xl font-medium text-white">
-                    Custom Pricing
-                  </span>
+                  <span className="text-3xl font-medium text-white">Custom Pricing</span>
                 )}
               </div>
 
@@ -232,11 +217,10 @@ export default function PricingPage() {
 
           <div className="space-y-6">
             <div className="bg-zinc-900 rounded-lg p-6">
-              <h3 className="text-lg font-medium text-white mb-2">
-                Can I cancel anytime?
-              </h3>
+              <h3 className="text-lg font-medium text-white mb-2">Can I cancel anytime?</h3>
               <p className="text-zinc-500">
-                Yes! You can cancel your subscription at any time. Your access will continue until the end of your billing period.
+                Yes! You can cancel your subscription at any time. Your access will continue until
+                the end of your billing period.
               </p>
             </div>
 
@@ -245,16 +229,16 @@ export default function PricingPage() {
                 What payment methods do you accept?
               </h3>
               <p className="text-zinc-500">
-                We accept all major credit cards via PayPal & Lemon Squeezy. Enterprise customers can pay via invoice.
+                We accept all major credit cards via PayPal & Lemon Squeezy. Enterprise customers
+                can pay via invoice.
               </p>
             </div>
 
             <div className="bg-zinc-900 rounded-lg p-6">
-              <h3 className="text-lg font-medium text-white mb-2">
-                Is my data secure?
-              </h3>
+              <h3 className="text-lg font-medium text-white mb-2">Is my data secure?</h3>
               <p className="text-zinc-500">
-                Absolutely! Your legacy system data never leaves your infrastructure. All credentials are encrypted with AES-256-GCM.
+                Absolutely! Your legacy system data never leaves your infrastructure. All
+                credentials are encrypted with AES-256-GCM.
               </p>
             </div>
 
@@ -263,7 +247,8 @@ export default function PricingPage() {
                 Can I upgrade or downgrade my plan?
               </h3>
               <p className="text-zinc-500">
-                Yes! You can change your plan at any time. Upgrades take effect immediately, while downgrades apply at the end of your billing period.
+                Yes! You can change your plan at any time. Upgrades take effect immediately, while
+                downgrades apply at the end of your billing period.
               </p>
             </div>
           </div>

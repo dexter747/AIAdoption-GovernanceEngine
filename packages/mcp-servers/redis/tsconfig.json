@@ -1,2 +1,13 @@
-{"compilerOptions": {"target": "ES2022", "module": "Node16", "moduleResolution": "Node16", "outDir": "dist", "rootDir": "src", "strict": false, "esModuleInterop": true, "skipLibCheck": true, "lib": ["ES2022", "DOM"]}}
-
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "Node16",
+    "moduleResolution": "Node16",
+    "outDir": "dist",
+    "rootDir": "src",
+    "strict": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "lib": ["ES2022", "DOM"]
+  }
+}

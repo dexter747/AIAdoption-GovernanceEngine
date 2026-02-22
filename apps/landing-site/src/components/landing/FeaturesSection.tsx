@@ -1,12 +1,23 @@
-"use client";
+'use client';
 
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import {
-  Database, Cpu, Lock, MessageSquare, Cloud, Layers,
-  LucideIcon, Zap, Shield, BarChart3, FileSearch, Workflow, Timer
-} from "lucide-react";
+  Database,
+  Cpu,
+  Lock,
+  MessageSquare,
+  Cloud,
+  Layers,
+  LucideIcon,
+  Zap,
+  Shield,
+  BarChart3,
+  FileSearch,
+  Workflow,
+  Timer,
+} from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -18,18 +29,90 @@ interface Feature {
 }
 
 const features: Feature[] = [
-  { icon: Database, title: "64+ System Connectors", description: "Connect to any database, ERP, CRM, or legacy system. PostgreSQL, Oracle, SAP, Salesforce, and 60+ more.", metric: "95% Compatibility" },
-  { icon: Cpu, title: "Multi-Model AI Engine", description: "Leverage GPT-4, Claude 3.5, Gemini, Mistral, or your private models. Automatic failover and load balancing.", metric: "99.9% Uptime" },
-  { icon: Lock, title: "Enterprise Security", description: "SOC 2 Type II, HIPAA, GDPR compliant. Zero-knowledge architecture with AES-256-GCM encryption.", metric: "Military Grade" },
-  { icon: MessageSquare, title: "Natural Language Interface", description: "Ask complex questions in plain English. AI translates to SQL, GraphQL, or API calls automatically.", metric: "89% Time Saved" },
-  { icon: Zap, title: "Real-Time Processing", description: "Sub-second query execution with intelligent caching. Handle millions of concurrent queries.", metric: "<200ms Latency" },
-  { icon: Shield, title: "Bring Your Own Keys", description: "Use your own API keys for complete cost control and compliance. No vendor lock-in.", metric: "100% Control" },
-  { icon: BarChart3, title: "Advanced Analytics", description: "Built-in dashboards, custom reports, and data visualization. Export to Excel, PDF, or BI tools.", metric: "Instant Insights" },
-  { icon: FileSearch, title: "Intelligent Search", description: "Semantic search across all connected systems. Find data relationships you never knew existed.", metric: "10x Faster Discovery" },
-  { icon: Workflow, title: "Workflow Automation", description: "Create multi-step workflows triggered by queries. Automate reports, alerts, and data sync.", metric: "70% Less Manual Work" },
-  { icon: Timer, title: "Query Scheduling", description: "Schedule recurring queries and automated reports. Morning dashboards delivered to your inbox.", metric: "Set & Forget" },
-  { icon: Cloud, title: "Hybrid Deployment", description: "On-premise, cloud, or air-gapped. Desktop app for local processing, cloud for collaboration.", metric: "Maximum Flexibility" },
-  { icon: Layers, title: "Plugin Ecosystem", description: "Extend with custom connectors, AI models, and business logic. Active marketplace and SDK.", metric: "500+ Extensions" },
+  {
+    icon: Database,
+    title: '64+ System Connectors',
+    description:
+      'Connect to any database, ERP, CRM, or legacy system. PostgreSQL, Oracle, SAP, Salesforce, and 60+ more.',
+    metric: '95% Compatibility',
+  },
+  {
+    icon: Cpu,
+    title: 'Multi-Model AI Engine',
+    description:
+      'Leverage GPT-4, Claude 3.5, Gemini, Mistral, or your private models. Automatic failover and load balancing.',
+    metric: '99.9% Uptime',
+  },
+  {
+    icon: Lock,
+    title: 'Enterprise Security',
+    description:
+      'SOC 2 Type II, HIPAA, GDPR compliant. Zero-knowledge architecture with AES-256-GCM encryption.',
+    metric: 'Military Grade',
+  },
+  {
+    icon: MessageSquare,
+    title: 'Natural Language Interface',
+    description:
+      'Ask complex questions in plain English. AI translates to SQL, GraphQL, or API calls automatically.',
+    metric: '89% Time Saved',
+  },
+  {
+    icon: Zap,
+    title: 'Real-Time Processing',
+    description:
+      'Sub-second query execution with intelligent caching. Handle millions of concurrent queries.',
+    metric: '<200ms Latency',
+  },
+  {
+    icon: Shield,
+    title: 'Bring Your Own Keys',
+    description:
+      'Use your own API keys for complete cost control and compliance. No vendor lock-in.',
+    metric: '100% Control',
+  },
+  {
+    icon: BarChart3,
+    title: 'Advanced Analytics',
+    description:
+      'Built-in dashboards, custom reports, and data visualization. Export to Excel, PDF, or BI tools.',
+    metric: 'Instant Insights',
+  },
+  {
+    icon: FileSearch,
+    title: 'Intelligent Search',
+    description:
+      'Semantic search across all connected systems. Find data relationships you never knew existed.',
+    metric: '10x Faster Discovery',
+  },
+  {
+    icon: Workflow,
+    title: 'Workflow Automation',
+    description:
+      'Create multi-step workflows triggered by queries. Automate reports, alerts, and data sync.',
+    metric: '70% Less Manual Work',
+  },
+  {
+    icon: Timer,
+    title: 'Query Scheduling',
+    description:
+      'Schedule recurring queries and automated reports. Morning dashboards delivered to your inbox.',
+    metric: 'Set & Forget',
+  },
+  {
+    icon: Cloud,
+    title: 'Hybrid Deployment',
+    description:
+      'On-premise, cloud, or air-gapped. Desktop app for local processing, cloud for collaboration.',
+    metric: 'Maximum Flexibility',
+  },
+  {
+    icon: Layers,
+    title: 'Plugin Ecosystem',
+    description:
+      'Extend with custom connectors, AI models, and business logic. Active marketplace and SDK.',
+    metric: '500+ Extensions',
+  },
 ];
 
 export function FeaturesSection() {
@@ -37,19 +120,33 @@ export function FeaturesSection() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(".feat-header > *", {
-        opacity: 0, y: 30, duration: 0.7, stagger: 0.12, ease: "power3.out", immediateRender: false,
-        scrollTrigger: { trigger: ".feat-header", start: "top 85%", once: true },
+      gsap.from('.feat-header > *', {
+        opacity: 0,
+        y: 30,
+        duration: 0.7,
+        stagger: 0.12,
+        ease: 'power3.out',
+        immediateRender: false,
+        scrollTrigger: { trigger: '.feat-header', start: 'top 85%', once: true },
       });
 
-      gsap.from(".feat-card", {
-        opacity: 0, y: 40, duration: 0.6, stagger: 0.06, ease: "power3.out", immediateRender: false,
-        scrollTrigger: { trigger: ".feat-grid", start: "top 85%", once: true },
+      gsap.from('.feat-card', {
+        opacity: 0,
+        y: 40,
+        duration: 0.6,
+        stagger: 0.06,
+        ease: 'power3.out',
+        immediateRender: false,
+        scrollTrigger: { trigger: '.feat-grid', start: 'top 85%', once: true },
       });
 
-      gsap.from(".feat-cta", {
-        opacity: 0, y: 20, duration: 0.6, ease: "power3.out", immediateRender: false,
-        scrollTrigger: { trigger: ".feat-cta", start: "top 90%", once: true },
+      gsap.from('.feat-cta', {
+        opacity: 0,
+        y: 20,
+        duration: 0.6,
+        ease: 'power3.out',
+        immediateRender: false,
+        scrollTrigger: { trigger: '.feat-cta', start: 'top 90%', once: true },
       });
     }, ref);
     return () => ctx.revert();
@@ -67,17 +164,16 @@ export function FeaturesSection() {
             <span className="text-sm font-medium text-zinc-500">Enterprise Features</span>
           </div>
           <h2 className="text-4xl md:text-5xl font-medium tracking-tight mb-5 text-white">
-            Everything You Need To{" "}
-            <span className="text-shimmer">Transform Your Enterprise</span>
+            Everything You Need To <span className="text-shimmer">Transform Your Enterprise</span>
           </h2>
           <p className="text-lg text-zinc-500 leading-relaxed">
-            A complete AI-powered platform to unlock the value in your legacy systems.
-            Deploy in 24 hours, see ROI in 30 days.
+            A complete AI-powered platform to unlock the value in your legacy systems. Deploy in 24
+            hours, see ROI in 30 days.
           </p>
         </div>
 
         <div className="feat-grid grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {features.map((feature) => {
+          {features.map(feature => {
             const Icon = feature.icon;
             return (
               <div
@@ -91,9 +187,7 @@ export function FeaturesSection() {
                 <h3 className="text-base font-medium mb-2 text-white tracking-tight">
                   {feature.title}
                 </h3>
-                <p className="text-sm leading-relaxed mb-4 text-zinc-500">
-                  {feature.description}
-                </p>
+                <p className="text-sm leading-relaxed mb-4 text-zinc-500">{feature.description}</p>
 
                 {feature.metric && (
                   <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.06]">

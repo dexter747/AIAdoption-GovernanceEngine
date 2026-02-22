@@ -31,6 +31,7 @@ psql -h YOUR_SUPABASE_HOST -U postgres -d postgres -f database/schema-v6-complet
 ```
 
 **What this creates:**
+
 - `payment_sessions` - Checkout session tracking
 - `subscriptions` - User subscriptions
 - `licenses` - Desktop app licenses
@@ -44,6 +45,7 @@ psql -h YOUR_SUPABASE_HOST -U postgres -d postgres -f database/schema-v6-complet
 ### Step 2: Add Environment Variables (5 minutes)
 
 #### **Landing Site** (`apps/landing-site/.env.local`):
+
 ```env
 DODO_API_KEY=your_dodo_api_key_here
 DODO_WEBHOOK_SECRET=your_webhook_secret_here
@@ -53,6 +55,7 @@ SUPABASE_SERVICE_KEY=your_service_key_here
 ```
 
 #### **Express API** (`apps/express-api/.env`):
+
 ```env
 SUPABASE_URL=https://YOUR_PROJECT.supabase.co
 SUPABASE_SERVICE_KEY=your_service_key_here
@@ -62,6 +65,7 @@ CORS_ORIGINS=http://localhost:3000,http://localhost:3001
 ```
 
 #### **Desktop App** (`apps/desktop-app/.env`):
+
 ```env
 API_BASE_URL=http://localhost:5500
 # For production: API_BASE_URL=https://api.velanova.com
@@ -82,6 +86,7 @@ API_BASE_URL=http://localhost:5500
 ```
 
 Alternatively, build individual servers:
+
 ```bash
 cd packages/mcp-servers/postgresql
 pnpm run build
@@ -98,6 +103,7 @@ pnpm run build
 ### Step 4: Test the System (30 minutes)
 
 #### **Start All Services:**
+
 ```bash
 # Terminal 1: Landing site
 cd apps/landing-site
@@ -117,6 +123,7 @@ pnpm run dev  # Electron window opens
 ```
 
 #### **Test Payment Flow:**
+
 1. Visit http://localhost:3000
 2. Click "Get Started" or "Pricing"
 3. Select a plan (Starter $199, Professional $499, Enterprise $999)
@@ -129,6 +136,7 @@ pnpm run dev  # Electron window opens
    - Email sent with license key (check logs)
 
 #### **Test License Activation:**
+
 1. Open desktop app
 2. Enter the license key from email (or database)
 3. **Verify:**
@@ -143,26 +151,29 @@ pnpm run dev  # Electron window opens
 Before distributing desktop app, you need code signing certificates:
 
 #### **macOS:**
+
 1. Join Apple Developer Program ($99/year)
 2. Create certificates in Xcode or Apple Dev portal
 3. Download & install in Keychain
 4. Update `electron-builder.yml`:
    ```yaml
    mac:
-     identity: "Developer ID Application: Your Name (TEAM_ID)"
+     identity: 'Developer ID Application: Your Name (TEAM_ID)'
    ```
 
 #### **Windows:**
+
 1. Get code signing certificate (Sectigo, DigiCert, etc - $200-500/year)
 2. Convert to .pfx format
 3. Update `electron-builder.yml`:
    ```yaml
    win:
-     certificateFile: "./certs/windows.pfx"
-     certificatePassword: "YOUR_PASSWORD"
+     certificateFile: './certs/windows.pfx'
+     certificatePassword: 'YOUR_PASSWORD'
    ```
 
 **For testing without signing:**
+
 ```bash
 # macOS will show "unidentified developer" warning
 # Windows will show SmartScreen warning
@@ -198,6 +209,7 @@ pnpm run build:all-platforms
 ## 📊 Current Project Status
 
 ### ✅ Complete (85%)
+
 - Payment system (Dodo Payments, webhooks)
 - Subscription management (API + webhooks)
 - License system (generation, validation, storage)
@@ -210,11 +222,13 @@ pnpm run build:all-platforms
 - MCP framework (64 packages)
 
 ### ⏳ In Progress (10%)
+
 - MCP server builds (script ready, 1 tested)
 - Database migration (schema ready, need to run)
 - Environment configuration
 
 ### ❌ Not Started (5%)
+
 - Code signing certificates
 - End-to-end testing
 - Production deployment
@@ -224,16 +238,16 @@ pnpm run build:all-platforms
 
 ## 🎯 Timeline to Launch
 
-| Task | Time | When |
-|------|------|------|
-| Database migration | 5 min | **Today** |
-| Environment setup | 10 min | **Today** |
-| Build MCP servers | 1 hour | **Today** |
-| Test payment flow | 30 min | **Tomorrow** |
+| Task               | Time     | When          |
+| ------------------ | -------- | ------------- |
+| Database migration | 5 min    | **Today**     |
+| Environment setup  | 10 min   | **Today**     |
+| Build MCP servers  | 1 hour   | **Today**     |
+| Test payment flow  | 30 min   | **Tomorrow**  |
 | Code signing setup | 1-2 days | **This week** |
-| Desktop packaging | 2 hours | **This week** |
-| End-to-end testing | 1 day | **This week** |
-| Production deploy | 1 day | **Next week** |
+| Desktop packaging  | 2 hours  | **This week** |
+| End-to-end testing | 1 day    | **This week** |
+| Production deploy  | 1 day    | **Next week** |
 
 **Target Launch: February 21-25, 2026** 🚀
 
@@ -241,14 +255,14 @@ pnpm run build:all-platforms
 
 ## 📁 Important Files Reference
 
-| File | Purpose |
-|------|---------|
-| [TODO-MASTER.md](/TODO-MASTER.md) | Complete project roadmap (300+ tasks) |
-| [LATEST-PROGRESS.md](/LATEST-PROGRESS.md) | Today's implementation summary |
-| [IMPLEMENTATION-COMPLETE.md](/IMPLEMENTATION-COMPLETE.md) | Previous work summary |
-| [database/schema-v6-complete-payments.sql](/database/schema-v6-complete-payments.sql) | **RUN THIS FIRST** |
-| [packages/shared/src/pricing.ts](/packages/shared/src/pricing.ts) | Pricing configuration |
-| [scripts/build-all-mcp-servers.sh](/scripts/build-all-mcp-servers.sh) | Build automation |
+| File                                                                                  | Purpose                               |
+| ------------------------------------------------------------------------------------- | ------------------------------------- |
+| [TODO-MASTER.md](/TODO-MASTER.md)                                                     | Complete project roadmap (300+ tasks) |
+| [LATEST-PROGRESS.md](/LATEST-PROGRESS.md)                                             | Today's implementation summary        |
+| [IMPLEMENTATION-COMPLETE.md](/IMPLEMENTATION-COMPLETE.md)                             | Previous work summary                 |
+| [database/schema-v6-complete-payments.sql](/database/schema-v6-complete-payments.sql) | **RUN THIS FIRST**                    |
+| [packages/shared/src/pricing.ts](/packages/shared/src/pricing.ts)                     | Pricing configuration                 |
+| [scripts/build-all-mcp-servers.sh](/scripts/build-all-mcp-servers.sh)                 | Build automation                      |
 
 ---
 
@@ -257,18 +271,23 @@ pnpm run build:all-platforms
 ### Common Issues
 
 **Issue:** "ADMIN_SECRET_TOKEN not found"
+
 - **Fix:** Add to `apps/express-api/.env`: `ADMIN_SECRET_TOKEN=your_secure_token`
 
 **Issue:** "Cannot find module 'resend'"
+
 - **Fix:** Already installed! Just restart dev server.
 
 **Issue:** "Cannot find module 'keytar'"
+
 - **Fix:** Already installed! Just restart desktop app.
 
 **Issue:** "License validation failed"
+
 - **Fix:** Make sure Express API is running on port 5500 and database is migrated.
 
 **Issue:** "Webhook signature verification failed"
+
 - **Fix:** Add correct `DODO_WEBHOOK_SECRET` to landing-site `.env.local`
 
 ---

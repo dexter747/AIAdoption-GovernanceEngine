@@ -86,16 +86,21 @@ function createSignature(data: string, secret: string): string {
 function parseExpiry(expiry: string): number {
   const match = expiry.match(/^(\d+)([smhd])$/);
   if (!match) return 3600; // Default 1 hour
-  
+
   const value = parseInt(match[1]);
   const unit = match[2];
-  
+
   switch (unit) {
-    case 's': return value;
-    case 'm': return value * 60;
-    case 'h': return value * 3600;
-    case 'd': return value * 86400;
-    default: return 3600;
+    case 's':
+      return value;
+    case 'm':
+      return value * 60;
+    case 'h':
+      return value * 3600;
+    case 'd':
+      return value * 86400;
+    default:
+      return 3600;
   }
 }
 
@@ -236,7 +241,7 @@ export function generateTokenPair(user: {
  */
 export function refreshAccessToken(refreshToken: string): TokenPair | null {
   const result = verifyToken(refreshToken);
-  
+
   if (!result.success || !result.user) {
     return null;
   }
@@ -259,11 +264,11 @@ export function refreshAccessToken(refreshToken: string): TokenPair | null {
  */
 export function extractTokenFromHeader(authHeader: string | undefined): string | null {
   if (!authHeader) return null;
-  
+
   if (authHeader.startsWith('Bearer ')) {
     return authHeader.slice(7);
   }
-  
+
   return authHeader;
 }
 
@@ -282,7 +287,7 @@ export function hashPassword(password: string): string {
 export function verifyPassword(password: string, storedHash: string): boolean {
   const [salt, hash] = storedHash.split(':');
   if (!salt || !hash) return false;
-  
+
   const verifyHash = crypto.pbkdf2Sync(password, salt, 100000, 64, 'sha512').toString('hex');
   return hash === verifyHash;
 }

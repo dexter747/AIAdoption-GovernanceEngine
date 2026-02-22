@@ -1,22 +1,25 @@
-import Link from "next/link";
+import Link from 'next/link';
 
 const footerLinks = {
   product: [
-    { name: "Features", href: "/#features" },
-    { name: "Pricing", href: "/#pricing" },
-    { name: "Download", href: "/download" },
-    { name: "Release Notes", href: "https://github.com/Nexolve-Technologies-India/AIAdoption-GovernanceEngine/releases" },
+    { name: 'Features', href: '/#features' },
+    { name: 'Pricing', href: '/#pricing' },
+    { name: 'Download', href: '/download' },
+    {
+      name: 'Release Notes',
+      href: 'https://github.com/Nexolve-Technologies-India/AIAdoption-GovernanceEngine/releases',
+    },
   ],
   resources: [
-    { name: "Documentation", href: "/docs" },
-    { name: "Blog", href: "/blog" },
-    { name: "Contact", href: "/contact" },
+    { name: 'Documentation', href: '/docs' },
+    { name: 'Blog', href: '/blog' },
+    { name: 'Contact', href: '/contact' },
   ],
   legal: [
-    { name: "Privacy Policy", href: "/privacy" },
-    { name: "Terms of Service", href: "/terms" },
-    { name: "Refund Policy", href: "/refund" },
-    { name: "Cookie Policy", href: "/cookies" },
+    { name: 'Privacy Policy', href: '/privacy' },
+    { name: 'Terms of Service', href: '/terms' },
+    { name: 'Refund Policy', href: '/refund' },
+    { name: 'Cookie Policy', href: '/cookies' },
   ],
 };
 
@@ -31,16 +34,22 @@ export function Footer() {
               <span className="text-lg font-medium tracking-tight text-white">Velanova</span>
             </Link>
             <p className="text-sm leading-relaxed max-w-xs text-zinc-500">
-              Bringing the power of AI to your legacy systems. Connect, query, and transform your data.
+              Bringing the power of AI to your legacy systems. Connect, query, and transform your
+              data.
             </p>
           </div>
 
           <div className="footer-col">
-            <h4 className="text-xs font-medium uppercase tracking-[0.15em] mb-4 text-zinc-400">Product</h4>
+            <h4 className="text-xs font-medium uppercase tracking-[0.15em] mb-4 text-zinc-400">
+              Product
+            </h4>
             <ul className="space-y-2.5">
-              {footerLinks.product.map((item) => (
+              {footerLinks.product.map(item => (
                 <li key={item.name}>
-                  <Link href={item.href} className="text-sm transition-colors text-zinc-500 hover:text-white">
+                  <Link
+                    href={item.href}
+                    className="text-sm transition-colors text-zinc-500 hover:text-white"
+                  >
                     {item.name}
                   </Link>
                 </li>
@@ -49,11 +58,16 @@ export function Footer() {
           </div>
 
           <div className="footer-col">
-            <h4 className="text-xs font-medium uppercase tracking-[0.15em] mb-4 text-zinc-400">Resources</h4>
+            <h4 className="text-xs font-medium uppercase tracking-[0.15em] mb-4 text-zinc-400">
+              Resources
+            </h4>
             <ul className="space-y-2.5">
-              {footerLinks.resources.map((item) => (
+              {footerLinks.resources.map(item => (
                 <li key={item.name}>
-                  <Link href={item.href} className="text-sm transition-colors text-zinc-500 hover:text-white">
+                  <Link
+                    href={item.href}
+                    className="text-sm transition-colors text-zinc-500 hover:text-white"
+                  >
                     {item.name}
                   </Link>
                 </li>
@@ -62,11 +76,16 @@ export function Footer() {
           </div>
 
           <div className="footer-col">
-            <h4 className="text-xs font-medium uppercase tracking-[0.15em] mb-4 text-zinc-400">Legal</h4>
+            <h4 className="text-xs font-medium uppercase tracking-[0.15em] mb-4 text-zinc-400">
+              Legal
+            </h4>
             <ul className="space-y-2.5">
-              {footerLinks.legal.map((item) => (
+              {footerLinks.legal.map(item => (
                 <li key={item.name}>
-                  <Link href={item.href} className="text-sm transition-colors text-zinc-500 hover:text-white">
+                  <Link
+                    href={item.href}
+                    className="text-sm transition-colors text-zinc-500 hover:text-white"
+                  >
                     {item.name}
                   </Link>
                 </li>

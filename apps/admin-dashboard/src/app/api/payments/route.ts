@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search') || '';
     const status = searchParams.get('status') || 'all';
     const plan = searchParams.get('plan') || 'all';
-    
+
     const offset = (page - 1) * limit;
 
     // Get payments with user info
@@ -34,30 +34,29 @@ export async function GET(request: NextRequest) {
     }
 
     // Apply pagination
-    query = query
-      .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1);
+    query = query.order('created_at', { ascending: false }).range(offset, offset + limit - 1);
 
     const { data: payments, count, error } = await query;
 
     if (error) throw error;
 
     // Calculate totals
-    const { data: allPayments } = await supabaseAdmin
-      .from('payments')
-      .select('amount, status');
+    const { data: allPayments } = await supabaseAdmin.from('payments').select('amount, status');
 
-    const totalRevenue = allPayments
-      ?.filter(p => p.status === 'completed')
-      .reduce((sum, p) => sum + Number(p.amount), 0) || 0;
+    const totalRevenue =
+      allPayments
+        ?.filter(p => p.status === 'completed')
+        .reduce((sum, p) => sum + Number(p.amount), 0) || 0;
 
-    const pendingAmount = allPayments
-      ?.filter(p => p.status === 'pending')
-      .reduce((sum, p) => sum + Number(p.amount), 0) || 0;
+    const pendingAmount =
+      allPayments
+        ?.filter(p => p.status === 'pending')
+        .reduce((sum, p) => sum + Number(p.amount), 0) || 0;
 
-    const refundedAmount = allPayments
-      ?.filter(p => p.status === 'refunded')
-      .reduce((sum, p) => sum + Number(p.amount), 0) || 0;
+    const refundedAmount =
+      allPayments
+        ?.filter(p => p.status === 'refunded')
+        .reduce((sum, p) => sum + Number(p.amount), 0) || 0;
 
     // Format payments
     const formattedPayments = (payments || []).map((payment: any) => {
@@ -107,9 +106,6 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error fetching payments:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch payments' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch payments' }, { status: 500 });
   }
 }

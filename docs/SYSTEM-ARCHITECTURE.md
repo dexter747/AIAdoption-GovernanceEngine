@@ -100,32 +100,38 @@
 ## Key Components
 
 ### 1. ChatPage (600 lines)
+
 - Full-screen chat interface
 - Model selector at bottom
 - Chat history sidebar (toggle-able)
 - Real-time token/cost tracking
 
 ### 2. ModelSelector (200 lines)
+
 - Loads 15 AI providers from Express API
 - 50+ models to choose from
 - Shows pricing and context window
 
 ### 3. ChatHistorySidebar (400 lines)
+
 - Lists all conversations
 - Search functionality
 - Pin/archive/delete actions
 - Usage statistics
 
 ### 4. Express API Client (160 lines)
+
 - Connects desktop app to Express backend
 - All 11 endpoints implemented
 
 ### 5. MCP Manager (420 lines)
+
 - Manages database connections
 - Docker + npm support
 - 10+ database types
 
 ### 6. Chat History Manager (380 lines)
+
 - Local conversation storage
 - Search and analytics
 - electron-store persistence
@@ -155,6 +161,7 @@ Usage logged to Supabase
 ## Storage
 
 ### Local (electron-store)
+
 ```
 ~/.config/velanova/
 ├── chat-history.json       # All conversations
@@ -162,6 +169,7 @@ Usage logged to Supabase
 ```
 
 ### Cloud (Supabase)
+
 ```sql
 users, licenses, usage_logs, api_keys, subscriptions
 ```
@@ -194,6 +202,7 @@ users, licenses, usage_logs, api_keys, subscriptions
 ---
 
 **See also**:
+
 - [IMPLEMENTATION-COMPLETE.md](./IMPLEMENTATION-COMPLETE.md) - What was built
 - [CHAT-INTERFACE-GUIDE.md](./CHAT-INTERFACE-GUIDE.md) - Testing guide
 - [DESKTOP-APP-IMPLEMENTATION.md](./DESKTOP-APP-IMPLEMENTATION.md) - Technical details

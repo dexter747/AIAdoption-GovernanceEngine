@@ -119,25 +119,25 @@ const server = new Server(
 // Initialize MongoDB connection
 async function initConnection() {
   const connectionString = process.env.MONGODB_URI || process.env.MONGODB_CONNECTION_STRING;
-  
+
   if (!connectionString) {
     throw new Error('MONGODB_URI or MONGODB_CONNECTION_STRING environment variable required');
   }
-  
+
   client = new MongoClient(connectionString);
   await client.connect();
-  
+
   // Extract database name from connection string or use env var
   const dbName = process.env.MONGODB_DATABASE || new URL(connectionString).pathname.slice(1);
   db = client.db(dbName);
-  
+
   console.error('Connected to MongoDB');
 }
 
 // Tool handlers
 async function handleFind(collection: string, query: any, limit: number = 10) {
   if (!db) throw new Error('Not connected to MongoDB');
-  
+
   try {
     const results = await db.collection(collection).find(query).limit(limit).toArray();
     return {
@@ -163,7 +163,7 @@ async function handleFind(collection: string, query: any, limit: number = 10) {
 
 async function handleAggregate(collection: string, pipeline: any[]) {
   if (!db) throw new Error('Not connected to MongoDB');
-  
+
   try {
     const results = await db.collection(collection).aggregate(pipeline).toArray();
     return {
@@ -189,13 +189,17 @@ async function handleAggregate(collection: string, pipeline: any[]) {
 
 async function handleListCollections() {
   if (!db) throw new Error('Not connected to MongoDB');
-  
+
   const collections = await db.listCollections().toArray();
   return {
     content: [
       {
         type: 'text' as const,
-        text: JSON.stringify(collections.map(c => c.name), null, 2),
+        text: JSON.stringify(
+          collections.map(c => c.name),
+          null,
+          2
+        ),
       },
     ],
   };
@@ -203,7 +207,7 @@ async function handleListCollections() {
 
 async function handleCountDocuments(collection: string, query: any) {
   if (!db) throw new Error('Not connected to MongoDB');
-  
+
   const count = await db.collection(collection).countDocuments(query);
   return {
     content: [
@@ -217,7 +221,7 @@ async function handleCountDocuments(collection: string, query: any) {
 
 async function handleGetIndexes(collection: string) {
   if (!db) throw new Error('Not connected to MongoDB');
-  
+
   const indexes = await db.collection(collection).indexes();
   return {
     content: [
@@ -234,7 +238,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   tools: TOOLS,
 }));
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   const { name, arguments: args } = request.params;
 
   switch (name) {
@@ -257,10 +261,10 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 async function main() {
   try {
     await initConnection();
-    
+
     const transport = new StdioServerTransport();
     await server.connect(transport);
-    
+
     console.error('MongoDB MCP Server running on stdio');
   } catch (error) {
     console.error('Failed to start server:', error);

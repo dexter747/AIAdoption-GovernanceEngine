@@ -24,7 +24,8 @@ app.commandLine.appendSwitch('disable-renderer-backgrounding');
 app.commandLine.appendSwitch('disable-backgrounding-occluded-windows');
 app.commandLine.appendSwitch('js-flags', '--max-old-space-size=256'); // cap V8 heap
 // Chromium can still use hardware acceleration; we just remove fragile features:
-app.commandLine.appendSwitch('disable-features',
+app.commandLine.appendSwitch(
+  'disable-features',
   'VizDisplayCompositor,UseSkiaRenderer,ThrottleDisplayNoneAndVisibilityHiddenCrossOriginIframes'
 );
 // ─────────────────────────────────────────────────────────────────────────
@@ -134,7 +135,7 @@ function startCallbackServer() {
 
   callbackServer = http.createServer((req, res) => {
     safeLog('📡 HTTP callback received:', req.url);
-    
+
     if (req.url?.startsWith('/auth/callback')) {
       const url = new URL(req.url, `http://localhost:${AUTH_CALLBACK_PORT}`);
       const token = url.searchParams.get('token');
@@ -158,8 +159,12 @@ function startCallbackServer() {
       if (token) {
         try {
           // Decode JWT to get user info and expiry
-          let user: { id: string; email: string; name: string; image?: string } = { id: '', email: '', name: '' };
-          let expiresAt = Date.now() + (60 * 60 * 1000); // Default 1 hour
+          let user: { id: string; email: string; name: string; image?: string } = {
+            id: '',
+            email: '',
+            name: '',
+          };
+          let expiresAt = Date.now() + 60 * 60 * 1000; // Default 1 hour
 
           // Decode JWT payload
           const parts = token.split('.');
@@ -219,7 +224,7 @@ function startCallbackServer() {
     safeLog(`🌐 OAuth callback server listening on http://localhost:${AUTH_CALLBACK_PORT}`);
   });
 
-  callbackServer.on('error', (err) => {
+  callbackServer.on('error', err => {
     console.error('❌ Callback server error:', err);
   });
 }
@@ -273,23 +278,27 @@ if (!gotTheLock) {
 
 function handleDeepLink(url: string) {
   console.log('🔗 Deep link received:', url);
-  
+
   try {
     const parsedUrl = new URL(url);
     console.log('📍 Parsed URL pathname:', parsedUrl.pathname);
-    
+
     if (parsedUrl.pathname === '/auth/callback' || parsedUrl.pathname === '//auth/callback') {
       const token = parsedUrl.searchParams.get('token');
       const refreshToken = parsedUrl.searchParams.get('refresh');
       const userJson = parsedUrl.searchParams.get('user');
-      
+
       console.log('🔑 Token exists:', !!token);
-      
+
       if (token) {
         try {
           // Decode JWT to get user info and expiry
-          let user: { id: string; email: string; name: string; image?: string } = { id: '', email: '', name: '' };
-          let expiresAt = Date.now() + (60 * 60 * 1000); // Default 1 hour
+          let user: { id: string; email: string; name: string; image?: string } = {
+            id: '',
+            email: '',
+            name: '',
+          };
+          let expiresAt = Date.now() + 60 * 60 * 1000; // Default 1 hour
 
           // Decode JWT payload
           const parts = token.split('.');
@@ -313,24 +322,24 @@ function handleDeepLink(url: string) {
               user = JSON.parse(decodeURIComponent(userJson));
             } catch {}
           }
-          
+
           console.log('✅ User parsed successfully:', user.email);
-          
+
           const authData: AuthData = {
             accessToken: token,
             refreshToken: refreshToken || undefined,
             user,
             expiresAt,
           };
-          
+
           store.set('authData', authData);
           expressClient.setAuthToken(authData.accessToken);
           console.log('💾 Auth data saved to store');
-          
+
           if (mainWindow && !mainWindow.isDestroyed()) {
             mainWindow.webContents.send('auth:success', authData);
             console.log('📨 Auth success event sent to renderer');
-            
+
             if (mainWindow.isMinimized()) mainWindow.restore();
             mainWindow.focus();
             mainWindow.show();
@@ -362,7 +371,7 @@ app.whenReady().then(() => {
     console.log('🔐 Initializing express client with stored auth token');
     expressClient.setAuthToken(storedAuth.accessToken);
   }
-  
+
   console.log('[main] Creating window...');
   createWindow();
   console.log('[main] Window created, starting callback server...');
@@ -419,7 +428,7 @@ ipcMain.handle('auth:refresh', async () => {
     }
 
     const data = await response.json();
-    
+
     const newAuthData: AuthData = {
       accessToken: data.token,
       refreshToken: data.refreshToken,
@@ -429,7 +438,7 @@ ipcMain.handle('auth:refresh', async () => {
 
     store.set('authData', newAuthData);
     expressClient.setAuthToken(newAuthData.accessToken);
-    
+
     return { success: true, authData: newAuthData };
   } catch (error: any) {
     console.error('Token refresh failed:', error);

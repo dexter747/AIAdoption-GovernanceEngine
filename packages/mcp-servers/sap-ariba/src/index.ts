@@ -1,6 +1,10 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { CallToolRequestSchema, ListToolsRequestSchema, Tool } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+  Tool,
+} from '@modelcontextprotocol/sdk/types.js';
 import axios, { AxiosInstance } from 'axios';
 
 // Environment variables
@@ -15,8 +19,8 @@ function initConnection(): void {
     baseURL: ARIBA_API_URL,
     headers: {
       'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'APIKey': ARIBA_API_KEY,
+      Accept: 'application/json',
+      APIKey: ARIBA_API_KEY,
     },
     params: {
       realm: ARIBA_REALM,
@@ -113,7 +117,11 @@ const tools: Tool[] = [
     inputSchema: {
       type: 'object',
       properties: {
-        method: { type: 'string', enum: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], description: 'HTTP method' },
+        method: {
+          type: 'string',
+          enum: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+          description: 'HTTP method',
+        },
         path: { type: 'string', description: 'API path (relative to base URL)' },
         data: { type: 'object', description: 'Request body for POST/PUT/PATCH' },
         params: { type: 'object', description: 'Query parameters' },
@@ -130,11 +138,18 @@ const server = new Server(
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools }));
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   const { name, arguments: args } = request.params;
 
   if (!api) {
-    return { content: [{ type: 'text', text: 'Error: SAP Ariba connection not initialized. Check ARIBA_API_URL, ARIBA_API_KEY, and ARIBA_REALM.' }] };
+    return {
+      content: [
+        {
+          type: 'text',
+          text: 'Error: SAP Ariba connection not initialized. Check ARIBA_API_URL, ARIBA_API_KEY, and ARIBA_REALM.',
+        },
+      ],
+    };
   }
 
   try {
@@ -195,7 +210,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       case 'search_catalog': {
         const params: Record<string, string | number> = {
-          '$search': args?.query as string,
+          $search: args?.query as string,
         };
         if (args?.category) params['category'] = args.category as string;
         if (args?.pageSize) params['$top'] = args.pageSize as number;

@@ -15,7 +15,7 @@ export class DeepSeekProvider {
     if (!config.apiKey) {
       throw new Error('DeepSeek API key not configured');
     }
-    
+
     this.client = new OpenAI({
       apiKey: config.apiKey,
       baseURL: 'https://api.deepseek.com',
@@ -32,7 +32,7 @@ export class DeepSeekProvider {
       });
 
       const choice = response.choices[0];
-      
+
       return {
         id: response.id,
         message: {
@@ -48,14 +48,14 @@ export class DeepSeekProvider {
       };
     } catch (err) {
       logger.error({ error: err.message, model }, 'DeepSeek chat failed');
-      
+
       if (err.status === 429) {
         throw ApiError.tooManyRequests('DeepSeek rate limit exceeded');
       }
       if (err.status === 401) {
         throw ApiError.unauthorized('Invalid DeepSeek API key');
       }
-      
+
       throw ApiError.internal(`DeepSeek error: ${err.message}`);
     }
   }

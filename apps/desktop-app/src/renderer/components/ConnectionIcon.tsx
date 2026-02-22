@@ -16,9 +16,9 @@ interface ConnectionIconProps {
 }
 
 const SIZE_MAP = {
-  sm:  { container: 'w-10 h-10', img: 'w-6 h-6',  emoji: 'text-xl' },
-  md:  { container: 'w-12 h-12', img: 'w-7 h-7',  emoji: 'text-2xl' },
-  lg:  { container: 'w-14 h-14', img: 'w-9 h-9',  emoji: 'text-3xl' },
+  sm: { container: 'w-10 h-10', img: 'w-6 h-6', emoji: 'text-xl' },
+  md: { container: 'w-12 h-12', img: 'w-7 h-7', emoji: 'text-2xl' },
+  lg: { container: 'w-14 h-14', img: 'w-9 h-9', emoji: 'text-3xl' },
 };
 
 /**
@@ -43,7 +43,7 @@ export default function ConnectionIcon({
         s.container,
         'rounded-xl flex items-center justify-center shadow-lg flex-shrink-0',
         showImg ? bgColor : `bg-gradient-to-br ${color}`,
-        className,
+        className
       )}
     >
       {showImg ? (

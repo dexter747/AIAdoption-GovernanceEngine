@@ -113,11 +113,7 @@ export class ExpressClient {
   }
 
   // Validate license
-  async validateLicense(
-    licenseKey: string,
-    deviceId: string,
-    deviceInfo?: any
-  ): Promise<any> {
+  async validateLicense(licenseKey: string, deviceId: string, deviceInfo?: any): Promise<any> {
     const response = await fetch(`${this.baseURL}/api/licenses/validate`, {
       method: 'POST',
       headers: {
@@ -378,21 +374,23 @@ export class ExpressClient {
   // ========================================
 
   // Get usage statistics
-  async getUsage(userId: string, options?: {
-    startDate?: string;
-    endDate?: string;
-    limit?: number;
-  }): Promise<any> {
+  async getUsage(
+    userId: string,
+    options?: {
+      startDate?: string;
+      endDate?: string;
+      limit?: number;
+    }
+  ): Promise<any> {
     const params = new URLSearchParams();
     if (options?.startDate) params.append('startDate', options.startDate);
     if (options?.endDate) params.append('endDate', options.endDate);
     if (options?.limit) params.append('limit', options.limit.toString());
 
-    const response = await fetch(
-      `${this.baseURL}/api/usage/${userId}?${params.toString()}`,
-      { headers: this.getHeaders() }
-    );
-    
+    const response = await fetch(`${this.baseURL}/api/usage/${userId}?${params.toString()}`, {
+      headers: this.getHeaders(),
+    });
+
     if (!response.ok) {
       throw new Error('Failed to fetch usage');
     }

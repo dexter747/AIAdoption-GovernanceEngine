@@ -6,10 +6,7 @@ const router = express.Router();
 let _supabase = null;
 function getSupabase() {
   if (!_supabase) {
-    _supabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_KEY
-    );
+    _supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
   }
   return _supabase;
 }
@@ -30,7 +27,8 @@ router.get('/:userId', async (req, res) => {
       .limit(1)
       .single();
 
-    if (error && error.code !== 'PGRST116') { // PGRST116 = no rows
+    if (error && error.code !== 'PGRST116') {
+      // PGRST116 = no rows
       throw error;
     }
 
@@ -291,7 +289,9 @@ router.get('/:userId/usage', async (req, res) => {
       .eq('status', 'active')
       .single();
 
-    const periodStart = subscription?.current_period_start || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+    const periodStart =
+      subscription?.current_period_start ||
+      new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
 
     // Get usage logs
     const { data: usageLogs, error } = await getSupabase()
@@ -304,9 +304,10 @@ router.get('/:userId/usage', async (req, res) => {
 
     // Calculate totals
     const totalQueries = usageLogs?.filter(log => log.usage_type === 'query').length || 0;
-    const totalTokens = usageLogs
-      ?.filter(log => log.usage_type === 'tokens')
-      .reduce((sum, log) => sum + log.amount, 0) || 0;
+    const totalTokens =
+      usageLogs
+        ?.filter(log => log.usage_type === 'tokens')
+        .reduce((sum, log) => sum + log.amount, 0) || 0;
     const totalCost = usageLogs?.reduce((sum, log) => sum + (log.cost || 0), 0) || 0;
 
     // Get plan limits

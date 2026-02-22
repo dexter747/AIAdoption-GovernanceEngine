@@ -1,6 +1,10 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { CallToolRequestSchema, ListToolsRequestSchema, Tool } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+  Tool,
+} from '@modelcontextprotocol/sdk/types.js';
 import axios, { AxiosInstance } from 'axios';
 
 let api: AxiosInstance;
@@ -10,7 +14,9 @@ function initConnection(): void {
   const accessToken = process.env.SHOPIFY_ACCESS_TOKEN;
 
   if (!storeUrl || !accessToken) {
-    throw new Error('SHOPIFY_STORE_URL and SHOPIFY_ACCESS_TOKEN environment variables are required');
+    throw new Error(
+      'SHOPIFY_STORE_URL and SHOPIFY_ACCESS_TOKEN environment variables are required'
+    );
   }
 
   api = axios.create({
@@ -29,7 +35,11 @@ const tools: Tool[] = [
     inputSchema: {
       type: 'object',
       properties: {
-        limit: { type: 'number', description: 'Number of products to return (max 250)', default: 50 },
+        limit: {
+          type: 'number',
+          description: 'Number of products to return (max 250)',
+          default: 50,
+        },
         page_info: { type: 'string', description: 'Cursor for pagination' },
       },
     },
@@ -52,7 +62,11 @@ const tools: Tool[] = [
       type: 'object',
       properties: {
         limit: { type: 'number', description: 'Number of orders to return (max 250)', default: 50 },
-        status: { type: 'string', description: 'Order status filter (open, closed, cancelled, any)', default: 'any' },
+        status: {
+          type: 'string',
+          description: 'Order status filter (open, closed, cancelled, any)',
+          default: 'any',
+        },
         page_info: { type: 'string', description: 'Cursor for pagination' },
       },
     },
@@ -74,7 +88,11 @@ const tools: Tool[] = [
     inputSchema: {
       type: 'object',
       properties: {
-        limit: { type: 'number', description: 'Number of customers to return (max 250)', default: 50 },
+        limit: {
+          type: 'number',
+          description: 'Number of customers to return (max 250)',
+          default: 50,
+        },
         page_info: { type: 'string', description: 'Cursor for pagination' },
       },
     },
@@ -119,7 +137,11 @@ const tools: Tool[] = [
     inputSchema: {
       type: 'object',
       properties: {
-        method: { type: 'string', description: 'HTTP method (GET, POST, PUT, DELETE)', default: 'GET' },
+        method: {
+          type: 'string',
+          description: 'HTTP method (GET, POST, PUT, DELETE)',
+          default: 'GET',
+        },
         endpoint: { type: 'string', description: 'API endpoint path (e.g., /products.json)' },
         data: { type: 'object', description: 'Request body for POST/PUT requests' },
       },
@@ -141,7 +163,10 @@ async function handleToolCall(name: string, args: Record<string, unknown>): Prom
       return JSON.stringify(response.data, null, 2);
     }
     case 'get_orders': {
-      const params: Record<string, unknown> = { limit: args.limit || 50, status: args.status || 'any' };
+      const params: Record<string, unknown> = {
+        limit: args.limit || 50,
+        status: args.status || 'any',
+      };
       if (args.page_info) params.page_info = args.page_info;
       const response = await api.get('/orders.json', { params });
       return JSON.stringify(response.data, null, 2);
@@ -193,7 +218,7 @@ async function main(): Promise<void> {
     tools,
   }));
 
-  server.setRequestHandler(CallToolRequestSchema, async (request) => {
+  server.setRequestHandler(CallToolRequestSchema, async request => {
     const { name, arguments: args } = request.params;
     try {
       const result = await handleToolCall(name, args as Record<string, unknown>);
@@ -214,7 +239,7 @@ async function main(): Promise<void> {
   console.error('Shopify MCP server running on stdio');
 }
 
-main().catch((error) => {
+main().catch(error => {
   console.error('Fatal error:', error);
   process.exit(1);
 });

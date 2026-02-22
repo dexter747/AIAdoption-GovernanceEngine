@@ -24,11 +24,11 @@ const BASE_URL = `https://wd2-impl-services1.workday.com/ccx/service/${WORKDAY_T
 
 async function workdayRequest(service: string, endpoint: string, options: RequestInit = {}) {
   const auth = Buffer.from(`${WORKDAY_USERNAME}:${WORKDAY_PASSWORD}`).toString('base64');
-  
+
   const response = await fetch(`${BASE_URL}/${service}/v39.0${endpoint}`, {
     ...options,
     headers: {
-      'Authorization': `Basic ${auth}`,
+      Authorization: `Basic ${auth}`,
       'Content-Type': 'application/json',
       ...options.headers,
     },
@@ -82,7 +82,11 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
         inputSchema: {
           type: 'object',
           properties: {
-            status: { type: 'string', description: 'Posting status (Open, Closed)', default: 'Open' },
+            status: {
+              type: 'string',
+              description: 'Posting status (Open, Closed)',
+              default: 'Open',
+            },
           },
         },
       },
@@ -91,9 +95,9 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
 });
 
 // Handle tool execution
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   const { name, arguments: args } = request.params;
-  
+
   try {
     switch (name) {
       case 'workday_get_workers': {
@@ -108,7 +112,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           ],
         };
       }
-      
+
       case 'workday_get_worker': {
         const { id } = args as any;
         const result = await workdayRequest('Human_Resources', `/Workers/${id}`);
@@ -121,7 +125,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           ],
         };
       }
-      
+
       case 'workday_get_organizations': {
         const { type } = args as any;
         let endpoint = '/Organizations';
@@ -138,7 +142,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           ],
         };
       }
-      
+
       case 'workday_get_job_postings': {
         const { status = 'Open' } = args as any;
         const result = await workdayRequest('Recruiting', `/Job_Postings?status=${status}`);
@@ -151,7 +155,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           ],
         };
       }
-      
+
       default:
         throw new Error(`Unknown tool: ${name}`);
     }
@@ -175,7 +179,7 @@ async function main() {
   console.error('Workday MCP server running on stdio');
 }
 
-main().catch((error) => {
+main().catch(error => {
   console.error('Fatal error:', error);
   process.exit(1);
 });

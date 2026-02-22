@@ -1,6 +1,6 @@
 /**
  * Comprehensive Integration Test Suite
- * 
+ *
  * Tests every function, connection, and component across the entire codebase:
  * - Shared types & utilities
  * - AI Router (Express) - all 9 providers
@@ -37,11 +37,20 @@ describe('Shared Types Package', () => {
 
   describe('AIProvider type', () => {
     const requiredProviders = [
-      'openai', 'anthropic', 'google', 'groq', 'xai',
-      'mistral', 'deepseek', 'cohere', 'perplexity', 'ollama', 'azure'
+      'openai',
+      'anthropic',
+      'google',
+      'groq',
+      'xai',
+      'mistral',
+      'deepseek',
+      'cohere',
+      'perplexity',
+      'ollama',
+      'azure',
     ];
 
-    test.each(requiredProviders)('should include %s provider', (provider) => {
+    test.each(requiredProviders)('should include %s provider', provider => {
       expect(typesContent).toContain(`'${provider}'`);
     });
 
@@ -52,12 +61,23 @@ describe('Shared Types Package', () => {
 
   describe('LegacySystemType type', () => {
     const requiredSystems = [
-      'mysql', 'postgresql', 'oracle', 'sqlserver', 'mongodb',
-      'sap-hana', 'salesforce', 'servicenow', 'jira', 'zendesk',
-      'mariadb', 'redis', 'elasticsearch', 'workday'
+      'mysql',
+      'postgresql',
+      'oracle',
+      'sqlserver',
+      'mongodb',
+      'sap-hana',
+      'salesforce',
+      'servicenow',
+      'jira',
+      'zendesk',
+      'mariadb',
+      'redis',
+      'elasticsearch',
+      'workday',
     ];
 
-    test.each(requiredSystems)('should include %s system type', (system) => {
+    test.each(requiredSystems)('should include %s system type', system => {
       expect(typesContent).toContain(`'${system}'`);
     });
 
@@ -67,11 +87,9 @@ describe('Shared Types Package', () => {
   });
 
   describe('Core interfaces', () => {
-    const requiredInterfaces = [
-      'ConnectionConfig', 'AIQueryOptions', 'AIQueryResult'
-    ];
+    const requiredInterfaces = ['ConnectionConfig', 'AIQueryOptions', 'AIQueryResult'];
 
-    test.each(requiredInterfaces)('should export %s', (iface) => {
+    test.each(requiredInterfaces)('should export %s', iface => {
       expect(typesContent).toMatch(new RegExp(`export\\s+(interface|type)\\s+${iface}`));
     });
   });
@@ -143,11 +161,18 @@ describe('Express AI Router', () => {
 
   describe('Router switch cases', () => {
     const switchCases = [
-      'openai', 'anthropic', 'google', 'groq',
-      'xai', 'mistral', 'deepseek', 'cohere', 'perplexity'
+      'openai',
+      'anthropic',
+      'google',
+      'groq',
+      'xai',
+      'mistral',
+      'deepseek',
+      'cohere',
+      'perplexity',
     ];
 
-    test.each(switchCases)('has case for %s', (provider) => {
+    test.each(switchCases)('has case for %s', provider => {
       expect(routerContent).toContain(`case '${provider}':`);
     });
 
@@ -181,14 +206,18 @@ describe('Express AI Router', () => {
 
     test('getUserApiKey has try/catch', () => {
       // Verify it doesn't crash on supabase errors
-      const getUserApiKeyMatch = routerContent.match(/async\s+function\s+getUserApiKey[\s\S]*?(?=\n\s*async\s+function|\nexport)/);
+      const getUserApiKeyMatch = routerContent.match(
+        /async\s+function\s+getUserApiKey[\s\S]*?(?=\n\s*async\s+function|\nexport)/
+      );
       expect(getUserApiKeyMatch).toBeTruthy();
       expect(getUserApiKeyMatch![0]).toContain('try');
       expect(getUserApiKeyMatch![0]).toContain('catch');
     });
 
     test('logUsage has try/catch', () => {
-      const logUsageMatch = routerContent.match(/async\s+function\s+logUsage[\s\S]*?(?=\n\s*\/\/\s*===|$)/);
+      const logUsageMatch = routerContent.match(
+        /async\s+function\s+logUsage[\s\S]*?(?=\n\s*\/\/\s*===|$)/
+      );
       expect(logUsageMatch).toBeTruthy();
       expect(logUsageMatch![0]).toContain('try');
       expect(logUsageMatch![0]).toContain('catch');
@@ -289,7 +318,9 @@ describe('Express Server', () => {
     });
 
     test('has error handler middleware', () => {
-      expect(serverContent).toContain("import { errorHandler } from './middleware/errorHandler.js'");
+      expect(serverContent).toContain(
+        "import { errorHandler } from './middleware/errorHandler.js'"
+      );
       expect(serverContent).toContain('app.use(errorHandler)');
     });
   });
@@ -315,7 +346,7 @@ describe('Express Server', () => {
 
 describe('MCP Server Packages', () => {
   const mcpServersDir = path.join(ROOT, 'packages/mcp-servers');
-  
+
   const servers = [
     { name: 'mysql', driver: 'mysql2', type: 'database' },
     { name: 'oracle', driver: 'oracledb', type: 'database' },
@@ -453,12 +484,23 @@ describe('MCP Client', () => {
 
   describe('Server type support', () => {
     const serverTypes = [
-      'mysql', 'postgresql', 'oracle', 'sqlserver', 'mongodb',
-      'sap-hana', 'salesforce', 'servicenow', 'jira', 'zendesk',
-      'mariadb', 'redis', 'elasticsearch', 'workday'
+      'mysql',
+      'postgresql',
+      'oracle',
+      'sqlserver',
+      'mongodb',
+      'sap-hana',
+      'salesforce',
+      'servicenow',
+      'jira',
+      'zendesk',
+      'mariadb',
+      'redis',
+      'elasticsearch',
+      'workday',
     ];
 
-    test.each(serverTypes)('supports %s server type', (type) => {
+    test.each(serverTypes)('supports %s server type', type => {
       expect(clientContent).toContain(`'${type}'`);
     });
   });
@@ -520,12 +562,23 @@ describe('MCP Manager', () => {
 
   describe('System support', () => {
     const systems = [
-      'mysql', 'postgresql', 'oracle', 'sqlserver', 'mongodb',
-      'sap-hana', 'salesforce', 'servicenow', 'jira', 'zendesk',
-      'mariadb', 'redis', 'elasticsearch', 'workday'
+      'mysql',
+      'postgresql',
+      'oracle',
+      'sqlserver',
+      'mongodb',
+      'sap-hana',
+      'salesforce',
+      'servicenow',
+      'jira',
+      'zendesk',
+      'mariadb',
+      'redis',
+      'elasticsearch',
+      'workday',
     ];
 
-    test.each(systems)('supports %s in server configs', (system) => {
+    test.each(systems)('supports %s in server configs', system => {
       // Check that the system type appears in either the mcpServers map
       // or the env-var mapping import (buildEnvVarsFromParams)
       const hasInMcpServers = managerContent.includes(`${system}:`);
@@ -570,18 +623,22 @@ describe('Context Manager', () => {
   describe('CRUD operations', () => {
     const methods = ['create', 'get', 'update', 'delete', 'list'];
 
-    test.each(methods)('has %s method', (method) => {
+    test.each(methods)('has %s method', method => {
       expect(contextContent).toMatch(new RegExp(`(async\\s+)?${method}\\s*\\(`));
     });
   });
 
   describe('Context types', () => {
     const types = [
-      'system_prompt', 'database_schema', 'knowledge_base',
-      'memory_summary', 'project', 'template'
+      'system_prompt',
+      'database_schema',
+      'knowledge_base',
+      'memory_summary',
+      'project',
+      'template',
     ];
 
-    test.each(types)('supports %s context type', (type) => {
+    test.each(types)('supports %s context type', type => {
       expect(contextContent).toContain(`'${type}'`);
     });
   });
@@ -706,13 +763,9 @@ describe('Express Client', () => {
   });
 
   describe('API methods', () => {
-    const methods = [
-      'queryAI',
-      'validateLicense',
-      'checkHealth',
-    ];
+    const methods = ['queryAI', 'validateLicense', 'checkHealth'];
 
-    test.each(methods)('has %s method', (method) => {
+    test.each(methods)('has %s method', method => {
       expect(clientContent).toContain(method);
     });
   });
@@ -770,47 +823,62 @@ describe('IPC Handlers', () => {
     });
 
     const handlers = ['auth:check', 'auth:login', 'auth:logout', 'auth:getUser'];
-    test.each(handlers)('handles %s', (handler) => {
+    test.each(handlers)('handles %s', handler => {
       expect(indexContent).toContain(`'${handler}'`);
     });
   });
 
   describe('MCP handlers', () => {
     const handlers = [
-      'mcp:add-connection', 'mcp:enable-connection', 'mcp:disable-connection',
-      'mcp:test-connection', 'mcp:get-all-connections',
+      'mcp:add-connection',
+      'mcp:enable-connection',
+      'mcp:disable-connection',
+      'mcp:test-connection',
+      'mcp:get-all-connections',
     ];
-    test.each(handlers)('handles %s', (handler) => {
+    test.each(handlers)('handles %s', handler => {
       expect(handlersContent).toContain(`'${handler}'`);
     });
   });
 
   describe('MCP Client SDK handlers', () => {
     const handlers = [
-      'mcp:client-connect', 'mcp:client-disconnect', 'mcp:query',
-      'mcp:call-tool', 'mcp:list-tables', 'mcp:get-table-schema',
+      'mcp:client-connect',
+      'mcp:client-disconnect',
+      'mcp:query',
+      'mcp:call-tool',
+      'mcp:list-tables',
+      'mcp:get-table-schema',
     ];
-    test.each(handlers)('handles %s', (handler) => {
+    test.each(handlers)('handles %s', handler => {
       expect(handlersContent).toContain(`'${handler}'`);
     });
   });
 
   describe('Chat handlers', () => {
     const handlers = [
-      'chat:create-conversation', 'chat:add-message', 'chat:get-conversation',
-      'chat:get-all-conversations', 'chat:delete-conversation',
+      'chat:create-conversation',
+      'chat:add-message',
+      'chat:get-conversation',
+      'chat:get-all-conversations',
+      'chat:delete-conversation',
     ];
-    test.each(handlers)('handles %s', (handler) => {
+    test.each(handlers)('handles %s', handler => {
       expect(handlersContent).toContain(`'${handler}'`);
     });
   });
 
   describe('Context handlers', () => {
     const handlers = [
-      'context:create', 'context:get', 'context:update', 'context:delete',
-      'context:list', 'context:compile', 'context:stats',
+      'context:create',
+      'context:get',
+      'context:update',
+      'context:delete',
+      'context:list',
+      'context:compile',
+      'context:stats',
     ];
-    test.each(handlers)('handles %s', (handler) => {
+    test.each(handlers)('handles %s', handler => {
       expect(handlersContent).toContain(`'${handler}'`);
     });
   });
@@ -826,10 +894,8 @@ describe('IPC Handlers', () => {
   });
 
   describe('Express API handlers', () => {
-    const handlers = [
-      'express:check-health', 'express:get-providers', 'express:query-ai',
-    ];
-    test.each(handlers)('handles %s', (handler) => {
+    const handlers = ['express:check-health', 'express:get-providers', 'express:query-ai'];
+    test.each(handlers)('handles %s', handler => {
       expect(handlersContent).toContain(`'${handler}'`);
     });
   });
@@ -867,11 +933,20 @@ describe('Preload API Surface', () => {
 
   describe('API namespaces', () => {
     const namespaces = [
-      'auth', 'connection', 'ai', 'mcp', 'chat',
-      'express', 'context', 'api', 'license', 'settings', 'system'
+      'auth',
+      'connection',
+      'ai',
+      'mcp',
+      'chat',
+      'express',
+      'context',
+      'api',
+      'license',
+      'settings',
+      'system',
     ];
 
-    test.each(namespaces)('exposes %s namespace', (ns) => {
+    test.each(namespaces)('exposes %s namespace', ns => {
       expect(preloadContent).toMatch(new RegExp(`${ns}:\\s*\\{`));
     });
   });
@@ -901,13 +976,20 @@ describe('Preload API Surface', () => {
 
   describe('Context API', () => {
     const contextMethods = [
-      'context:create', 'context:get', 'context:update', 'context:delete',
-      'context:list', 'context:compile', 'context:stats',
-      'context:import-file', 'context:create-memory',
-      'context:toggle-active', 'context:toggle-auto-include',
+      'context:create',
+      'context:get',
+      'context:update',
+      'context:delete',
+      'context:list',
+      'context:compile',
+      'context:stats',
+      'context:import-file',
+      'context:create-memory',
+      'context:toggle-active',
+      'context:toggle-auto-include',
     ];
 
-    test.each(contextMethods)('has %s method', (method) => {
+    test.each(contextMethods)('has %s method', method => {
       expect(preloadContent).toContain(`'${method}'`);
     });
   });
@@ -950,11 +1032,20 @@ describe('Electron API Type Definitions', () => {
 
   describe('ElectronAPI interface', () => {
     const requiredProperties = [
-      'auth', 'connection', 'mcp', 'chat', 'express', 'ai',
-      'license', 'settings', 'system', 'api', 'context'
+      'auth',
+      'connection',
+      'mcp',
+      'chat',
+      'express',
+      'ai',
+      'license',
+      'settings',
+      'system',
+      'api',
+      'context',
     ];
 
-    test.each(requiredProperties)('has %s property', (prop) => {
+    test.each(requiredProperties)('has %s property', prop => {
       expect(typesContent).toMatch(new RegExp(`${prop}:\\s*\\{`));
     });
   });
@@ -1061,7 +1152,7 @@ describe('Renderer Pages & Components', () => {
 
   describe('ContextManager Component', () => {
     const componentPath = path.join(rendererDir, 'components/ContextManager.tsx');
-    
+
     test('file exists', () => {
       expect(fs.existsSync(componentPath)).toBe(true);
     });
@@ -1168,7 +1259,7 @@ describe('Renderer Pages & Components', () => {
     });
 
     test('no unused Textarea import', () => {
-      expect(content).not.toContain("import { Textarea }");
+      expect(content).not.toContain('import { Textarea }');
     });
   });
 
@@ -1227,7 +1318,9 @@ describe('Build Configuration', () => {
     });
 
     test('has tsconfig.main.json for main process', () => {
-      const config = JSON.parse(fs.readFileSync(path.join(desktopDir, 'tsconfig.main.json'), 'utf-8'));
+      const config = JSON.parse(
+        fs.readFileSync(path.join(desktopDir, 'tsconfig.main.json'), 'utf-8')
+      );
       expect(config.include).toContain('src/main/**/*');
     });
 
@@ -1238,7 +1331,9 @@ describe('Build Configuration', () => {
 
   describe('Express API config', () => {
     test('is ESM module', () => {
-      const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, 'apps/express-api/package.json'), 'utf-8'));
+      const pkg = JSON.parse(
+        fs.readFileSync(path.join(ROOT, 'apps/express-api/package.json'), 'utf-8')
+      );
       expect(pkg.type).toBe('module');
     });
   });
@@ -1251,10 +1346,23 @@ describe('Build Configuration', () => {
 describe('Cross-Cutting Concerns', () => {
   describe('Provider consistency', () => {
     const sharedTypes = fs.readFileSync(path.join(ROOT, 'packages/shared/src/types.ts'), 'utf-8');
-    const expressRouter = fs.readFileSync(path.join(ROOT, 'apps/express-api/src/providers/ai-router.js'), 'utf-8');
+    const expressRouter = fs.readFileSync(
+      path.join(ROOT, 'apps/express-api/src/providers/ai-router.js'),
+      'utf-8'
+    );
 
     test('all Express providers are in shared AIProvider type', () => {
-      const expressProviders = ['openai', 'anthropic', 'google', 'groq', 'xai', 'mistral', 'deepseek', 'cohere', 'perplexity'];
+      const expressProviders = [
+        'openai',
+        'anthropic',
+        'google',
+        'groq',
+        'xai',
+        'mistral',
+        'deepseek',
+        'cohere',
+        'perplexity',
+      ];
       for (const p of expressProviders) {
         expect(sharedTypes).toContain(`'${p}'`);
       }
@@ -1263,13 +1371,27 @@ describe('Cross-Cutting Concerns', () => {
 
   describe('System type consistency', () => {
     const sharedTypes = fs.readFileSync(path.join(ROOT, 'packages/shared/src/types.ts'), 'utf-8');
-    const mcpClient = fs.readFileSync(path.join(ROOT, 'apps/desktop-app/src/main/mcp/mcp-client.ts'), 'utf-8');
+    const mcpClient = fs.readFileSync(
+      path.join(ROOT, 'apps/desktop-app/src/main/mcp/mcp-client.ts'),
+      'utf-8'
+    );
 
     test('all MCP client types are in shared LegacySystemType', () => {
       const clientTypes = [
-        'mysql', 'postgresql', 'oracle', 'sqlserver', 'mongodb',
-        'sap-hana', 'salesforce', 'servicenow', 'jira', 'zendesk',
-        'mariadb', 'redis', 'elasticsearch', 'workday'
+        'mysql',
+        'postgresql',
+        'oracle',
+        'sqlserver',
+        'mongodb',
+        'sap-hana',
+        'salesforce',
+        'servicenow',
+        'jira',
+        'zendesk',
+        'mariadb',
+        'redis',
+        'elasticsearch',
+        'workday',
       ];
       for (const t of clientTypes) {
         expect(sharedTypes).toContain(`'${t}'`);
@@ -1280,7 +1402,10 @@ describe('Cross-Cutting Concerns', () => {
 
   describe('Google Gemini system message handling', () => {
     test('Express router extracts system messages for Gemini', () => {
-      const router = fs.readFileSync(path.join(ROOT, 'apps/express-api/src/providers/ai-router.js'), 'utf-8');
+      const router = fs.readFileSync(
+        path.join(ROOT, 'apps/express-api/src/providers/ai-router.js'),
+        'utf-8'
+      );
       const googleFn = router.match(/async\s+function\s+callGoogle[\s\S]*?^}/m);
       expect(googleFn).toBeTruthy();
       expect(googleFn![0]).toContain('systemInstruction');
@@ -1290,7 +1415,10 @@ describe('Cross-Cutting Concerns', () => {
 
   describe('Anthropic system message handling', () => {
     test('Express router extracts system messages for Anthropic', () => {
-      const router = fs.readFileSync(path.join(ROOT, 'apps/express-api/src/providers/ai-router.js'), 'utf-8');
+      const router = fs.readFileSync(
+        path.join(ROOT, 'apps/express-api/src/providers/ai-router.js'),
+        'utf-8'
+      );
       const anthropicFn = router.match(/async\s+function\s+callAnthropic[\s\S]*?^}/m);
       expect(anthropicFn).toBeTruthy();
       expect(anthropicFn![0]).toContain("role === 'system'");

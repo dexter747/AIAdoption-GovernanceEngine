@@ -12,12 +12,9 @@ export async function GET(request: NextRequest) {
     // Get user info from session cookie (set after OAuth)
     const cookieStore = await cookies();
     const userCookie = cookieStore.get('user_session');
-    
+
     if (!userCookie) {
-      return NextResponse.json(
-        { error: 'Not authenticated' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
     }
 
     const user = JSON.parse(userCookie.value);
@@ -40,10 +37,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Token generation error:', error);
-    return NextResponse.json(
-      { error: 'Failed to generate token' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to generate token' }, { status: 500 });
   }
 }
 
@@ -53,27 +47,18 @@ export async function POST(request: NextRequest) {
     const { refreshToken } = body;
 
     if (!refreshToken) {
-      return NextResponse.json(
-        { error: 'Refresh token required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Refresh token required' }, { status: 400 });
     }
 
     // Verify and decode refresh token
     const result = await verifyToken(refreshToken);
 
     if (!result.success || !result.user) {
-      return NextResponse.json(
-        { error: result.error || 'Invalid refresh token' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: result.error || 'Invalid refresh token' }, { status: 401 });
     }
 
     if (result.user.type !== 'refresh') {
-      return NextResponse.json(
-        { error: 'Invalid token type' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Invalid token type' }, { status: 401 });
     }
 
     // Generate new token pair
@@ -94,9 +79,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Token refresh error:', error);
-    return NextResponse.json(
-      { error: 'Failed to refresh token' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to refresh token' }, { status: 500 });
   }
 }

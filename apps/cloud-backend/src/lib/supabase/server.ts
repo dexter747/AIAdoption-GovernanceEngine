@@ -44,6 +44,8 @@ export function createClient() {
  * This function should not be used - authentication is handled via pure JWT
  */
 export async function getUser() {
-  console.warn('DEPRECATED: getUser() from supabase/server.ts should not be used. Use JWT auth instead.');
+  console.warn(
+    'DEPRECATED: getUser() from supabase/server.ts should not be used. Use JWT auth instead.'
+  );
   throw new Error('Supabase auth is deprecated. Use JWT auth from @/lib/jwt-auth instead.');
 }

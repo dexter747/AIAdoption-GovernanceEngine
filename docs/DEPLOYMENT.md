@@ -13,6 +13,7 @@ The Velanova platform consists of three independent deployable applications:
 ## 🌐 Landing Site Deployment (domain.com)
 
 ### Recommended Platforms:
+
 - **Vercel** (Recommended for Next.js)
 - **Netlify**
 - **AWS Amplify**
@@ -21,17 +22,20 @@ The Velanova platform consists of three independent deployable applications:
 ### Vercel Deployment:
 
 1. **Install Vercel CLI:**
+
 ```bash
 npm i -g vercel
 ```
 
 2. **Deploy Landing Site:**
+
 ```bash
 cd apps/landing-site
 vercel
 ```
 
 3. **Set Environment Variables** in Vercel Dashboard:
+
 ```env
 DATABASE_URL=postgresql://...
 MONGODB_URI=mongodb://...
@@ -90,6 +94,7 @@ CMD ["node", "server.js"]
 ```
 
 **Build and Run:**
+
 ```bash
 docker build -t landing-site .
 docker run -p 3000:3000 --env-file .env landing-site
@@ -100,18 +105,21 @@ docker run -p 3000:3000 --env-file .env landing-site
 ## 🔐 Admin Dashboard Deployment (admin.domain.com)
 
 ### Recommended Platforms:
+
 - **Vercel** (Recommended)
 - **Custom Server with Auth Restrictions**
 
 ### Vercel Deployment:
 
 1. **Deploy Admin Dashboard:**
+
 ```bash
 cd apps/admin-dashboard
 vercel
 ```
 
 2. **Set Environment Variables:**
+
 ```env
 DATABASE_URL=postgresql://...
 MONGODB_URI=mongodb://...
@@ -138,6 +146,7 @@ ADMIN_PASSWORD_HASH=...
 ### Security Best Practices:
 
 **nginx reverse proxy with IP whitelisting:**
+
 ```nginx
 server {
     listen 443 ssl;
@@ -162,12 +171,14 @@ server {
 ### Build Process:
 
 **For All Platforms:**
+
 ```bash
 cd apps/desktop-app
 pnpm build
 ```
 
 **For Specific Platforms:**
+
 ```bash
 # Windows
 pnpm build --win
@@ -191,12 +202,7 @@ Add to `apps/desktop-app/package.json`:
     "directories": {
       "output": "dist/installers"
     },
-    "files": [
-      "dist/main/**/*",
-      "dist/renderer/**/*",
-      "node_modules/**/*",
-      "package.json"
-    ],
+    "files": ["dist/main/**/*", "dist/renderer/**/*", "node_modules/**/*", "package.json"],
     "win": {
       "target": ["nsis", "msi"],
       "icon": "build/icon.ico"
@@ -218,6 +224,7 @@ Add to `apps/desktop-app/package.json`:
 ### Distribution Methods:
 
 #### 1. GitHub Releases (Recommended)
+
 ```bash
 # Create release
 gh release create v1.0.0 \\
@@ -229,21 +236,25 @@ gh release create v1.0.0 \\
 ```
 
 Update landing site download links:
+
 ```typescript
 const downloads = {
   windows: {
-    installer: 'https://github.com/yourorg/velanova/releases/download/v1.0.0/Velanova-Setup-1.0.0.exe',
+    installer:
+      'https://github.com/yourorg/velanova/releases/download/v1.0.0/Velanova-Setup-1.0.0.exe',
   },
   mac: {
     dmg: 'https://github.com/yourorg/velanova/releases/download/v1.0.0/Velanova-1.0.0.dmg',
   },
   linux: {
-    appimage: 'https://github.com/yourorg/velanova/releases/download/v1.0.0/Velanova-1.0.0.AppImage',
+    appimage:
+      'https://github.com/yourorg/velanova/releases/download/v1.0.0/Velanova-1.0.0.AppImage',
   },
 };
 ```
 
 #### 2. CDN (Cloudflare/AWS S3)
+
 ```bash
 # Upload to S3
 aws s3 cp dist/installers/ s3://releases.domain.com/v1.0.0/ --recursive
@@ -256,6 +267,7 @@ aws s3 cp s3://releases.domain.com/v1.0.0/ s3://releases.domain.com/v1.0.0/ \\
 #### 3. Auto-Updates with electron-updater
 
 Add to `apps/desktop-app/src/main/index.ts`:
+
 ```typescript
 import { autoUpdater } from 'electron-updater';
 
@@ -275,6 +287,7 @@ autoUpdater.checkForUpdatesAndNotify();
 ### PostgreSQL (Prisma)
 
 **Setup:**
+
 ```bash
 # In landing-site or admin-dashboard
 cd apps/landing-site
@@ -283,6 +296,7 @@ pnpm prisma generate
 ```
 
 **Production Database Providers:**
+
 - **Supabase** (Recommended) - PostgreSQL with free tier
 - **Neon** - Serverless PostgreSQL
 - **Railway** - Full PostgreSQL instance
@@ -291,6 +305,7 @@ pnpm prisma generate
 ### MongoDB (Logs & Analytics)
 
 **Production Providers:**
+
 - **MongoDB Atlas** (Recommended) - Free tier available
 - **AWS DocumentDB**
 - **Self-hosted on VPS**
@@ -300,6 +315,7 @@ pnpm prisma generate
 ## 🔒 Environment Variables Checklist
 
 ### Landing Site (.env)
+
 - [ ] `DATABASE_URL` - PostgreSQL connection
 - [ ] `MONGODB_URI` - MongoDB connection
 - [ ] `NEXTAUTH_URL` - https://domain.com
@@ -311,6 +327,7 @@ pnpm prisma generate
 - [ ] `LICENSE_JWT_SECRET`
 
 ### Admin Dashboard (.env)
+
 - [ ] `DATABASE_URL` - PostgreSQL connection (same as landing)
 - [ ] `MONGODB_URI` - MongoDB connection (same as landing)
 - [ ] `NEXTAUTH_URL` - https://admin.domain.com
@@ -322,17 +339,20 @@ pnpm prisma generate
 ## 🎯 DNS Configuration
 
 ### domain.com (Landing Site)
+
 ```
 A     @      76.76.21.21           (Vercel IP)
 CNAME www    cname.vercel-dns.com
 ```
 
 ### admin.domain.com (Admin Dashboard)
+
 ```
 CNAME admin  cname.vercel-dns.com
 ```
 
 ### api.domain.com (Optional - Separate API Server)
+
 ```
 CNAME api    cname.vercel-dns.com
 ```
@@ -342,6 +362,7 @@ CNAME api    cname.vercel-dns.com
 ## 📊 Monitoring & Analytics
 
 ### Recommended Tools:
+
 - **Sentry** - Error tracking
 - **LogRocket** - Session replay
 - **Vercel Analytics** - Performance monitoring
@@ -355,6 +376,7 @@ CNAME api    cname.vercel-dns.com
 ### GitHub Actions Example:
 
 `.github/workflows/deploy.yml`:
+
 ```yaml
 name: Deploy
 
@@ -445,15 +467,18 @@ jobs:
 ### Common Issues:
 
 **"Module not found" in production:**
+
 - Ensure `transpilePackages: ['@shared/types']` in next.config.js
 - Run `pnpm install` in production
 
 **Desktop app won't update:**
+
 - Check GitHub releases are public
 - Verify electron-updater configuration
 - Check network firewall rules
 
 **Payment webhooks not working:**
+
 - Verify webhook URLs in payment provider dashboards
 - Check webhook signing secrets match
 - Enable webhook logs in provider dashboard

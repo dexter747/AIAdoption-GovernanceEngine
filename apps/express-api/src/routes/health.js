@@ -61,7 +61,7 @@ router.get('/ready', async (req, res) => {
   checks.aiProviders.count = enabledProviders.length;
 
   // Overall status
-  const isReady = 
+  const isReady =
     checks.api.status === 'ok' &&
     (checks.database.status === 'ok' || checks.database.status === 'not_configured') &&
     checks.aiProviders.status === 'ok';
@@ -79,7 +79,7 @@ router.get('/ready', async (req, res) => {
  */
 router.get('/metrics', (req, res) => {
   const memUsage = process.memoryUsage();
-  
+
   res.json({
     uptime: process.uptime(),
     memory: {

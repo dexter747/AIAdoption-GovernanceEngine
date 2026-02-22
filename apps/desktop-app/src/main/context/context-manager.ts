@@ -1,6 +1,6 @@
 /**
  * LLM Context Manager - Local storage for AI model contexts
- * 
+ *
  * Stores various types of context locally:
  * - System prompts / Custom instructions
  * - Database schemas (auto-generated)
@@ -19,13 +19,13 @@ import { randomUUID } from 'crypto';
 // TYPES
 // =============================================================================
 
-export type ContextType = 
-  | 'system_prompt'      // Custom instructions for AI behavior
-  | 'database_schema'    // Auto-generated from connected databases
-  | 'knowledge_base'     // User-uploaded documents/knowledge
-  | 'memory_summary'     // Compressed conversation memory
-  | 'project'           // Project-specific context
-  | 'template';         // Reusable prompt templates
+export type ContextType =
+  | 'system_prompt' // Custom instructions for AI behavior
+  | 'database_schema' // Auto-generated from connected databases
+  | 'knowledge_base' // User-uploaded documents/knowledge
+  | 'memory_summary' // Compressed conversation memory
+  | 'project' // Project-specific context
+  | 'template'; // Reusable prompt templates
 
 export interface ContextMetadata {
   id: string;
@@ -40,12 +40,12 @@ export interface ContextMetadata {
   lastUsedAt?: Date;
   usageCount: number;
   isActive: boolean;
-  priority: number;        // Higher = included first in context window
-  maxTokens?: number;      // Optional limit for this context
-  autoInclude: boolean;    // Automatically include in all chats
-  connectionId?: string;   // For database schemas
-  projectId?: string;      // For project contexts
-  sourceFile?: string;     // For knowledge base (file path)
+  priority: number; // Higher = included first in context window
+  maxTokens?: number; // Optional limit for this context
+  autoInclude: boolean; // Automatically include in all chats
+  connectionId?: string; // For database schemas
+  projectId?: string; // For project contexts
+  sourceFile?: string; // For knowledge base (file path)
 }
 
 export interface LLMContext extends ContextMetadata {
@@ -196,7 +196,10 @@ export class ContextManager {
   /**
    * Update an existing context
    */
-  update(id: string, updates: Partial<Omit<LLMContext, 'id' | 'createdAt'>>): LLMContext | undefined {
+  update(
+    id: string,
+    updates: Partial<Omit<LLMContext, 'id' | 'createdAt'>>
+  ): LLMContext | undefined {
     const context = this.contexts.get(id);
     if (!context) return undefined;
 
@@ -249,9 +252,7 @@ export class ContextManager {
         results = results.filter(c => c.type === options.type);
       }
       if (options.tags && options.tags.length > 0) {
-        results = results.filter(c => 
-          options.tags!.some(tag => c.tags.includes(tag))
-        );
+        results = results.filter(c => options.tags!.some(tag => c.tags.includes(tag)));
       }
       if (options.isActive !== undefined) {
         results = results.filter(c => c.isActive === options.isActive);
@@ -267,10 +268,11 @@ export class ContextManager {
       }
       if (options.query) {
         const q = options.query.toLowerCase();
-        results = results.filter(c => 
-          c.name.toLowerCase().includes(q) ||
-          c.content.toLowerCase().includes(q) ||
-          c.description?.toLowerCase().includes(q)
+        results = results.filter(
+          c =>
+            c.name.toLowerCase().includes(q) ||
+            c.content.toLowerCase().includes(q) ||
+            c.description?.toLowerCase().includes(q)
         );
       }
     }
@@ -297,29 +299,30 @@ export class ContextManager {
     excludeIds?: string[];
   }): CompiledContext {
     const { config, connectionId, projectId, additionalContextIds = [], excludeIds = [] } = options;
-    
+
     // Calculate available tokens
-    const availableTokens = config.maxTokens - config.reservedForResponse - config.reservedForConversation;
-    
+    const availableTokens =
+      config.maxTokens - config.reservedForResponse - config.reservedForConversation;
+
     // Get all relevant contexts
     let contexts: LLMContext[] = [];
-    
+
     // 1. Auto-include contexts (highest priority)
     const autoInclude = this.list({ isActive: true, autoInclude: true });
     contexts.push(...autoInclude);
-    
+
     // 2. Connection-specific contexts (database schemas)
     if (connectionId) {
       const connectionContexts = this.list({ isActive: true, connectionId });
       contexts.push(...connectionContexts.filter(c => !contexts.find(x => x.id === c.id)));
     }
-    
+
     // 3. Project-specific contexts
     if (projectId) {
       const projectContexts = this.list({ isActive: true, projectId });
       contexts.push(...projectContexts.filter(c => !contexts.find(x => x.id === c.id)));
     }
-    
+
     // 4. Additional requested contexts
     additionalContextIds.forEach(id => {
       const ctx = this.get(id);
@@ -327,56 +330,56 @@ export class ContextManager {
         contexts.push(ctx);
       }
     });
-    
+
     // Remove excluded contexts
     contexts = contexts.filter(c => !excludeIds.includes(c.id));
-    
+
     // Sort by priority
     contexts.sort((a, b) => b.priority - a.priority);
-    
+
     // Fit contexts into token budget
     const includedContexts: LLMContext[] = [];
     let totalTokens = 0;
     let truncated = false;
-    
+
     for (const ctx of contexts) {
       const ctxTokens = ctx.maxTokens ? Math.min(ctx.tokenCount, ctx.maxTokens) : ctx.tokenCount;
-      
+
       if (totalTokens + ctxTokens <= availableTokens) {
         includedContexts.push(ctx);
         totalTokens += ctxTokens;
-        
+
         // Update usage stats
         this.recordUsage(ctx.id);
       } else {
         // Smart truncation: try to include a truncated version of the context
         const remainingTokens = availableTokens - totalTokens;
-        
+
         if (remainingTokens > 200) {
           // Include a truncated version (estimate chars from tokens)
           const maxChars = remainingTokens * 3; // conservative estimate
-          const truncatedContent = ctx.content.slice(0, maxChars) + 
-            '\n\n[... context truncated to fit token window ...]';
-          
+          const truncatedContent =
+            ctx.content.slice(0, maxChars) + '\n\n[... context truncated to fit token window ...]';
+
           const truncatedCtx: LLMContext = {
             ...ctx,
             content: truncatedContent,
             tokenCount: estimateTokens(truncatedContent),
           };
-          
+
           includedContexts.push(truncatedCtx);
           totalTokens += truncatedCtx.tokenCount;
           this.recordUsage(ctx.id);
         }
-        
+
         truncated = true;
         break; // Stop adding more contexts
       }
     }
-    
+
     // Build system prompt from included contexts
     const systemPromptParts: string[] = [];
-    
+
     // Group by type for better organization
     const systemPrompts = includedContexts.filter(c => c.type === 'system_prompt');
     const schemas = includedContexts.filter(c => c.type === 'database_schema');
@@ -384,34 +387,34 @@ export class ContextManager {
     const memory = includedContexts.filter(c => c.type === 'memory_summary');
     const templates = includedContexts.filter(c => c.type === 'template');
     const projects = includedContexts.filter(c => c.type === 'project');
-    
+
     // Build organized system prompt
     if (systemPrompts.length > 0) {
       systemPromptParts.push('## Instructions\n' + systemPrompts.map(c => c.content).join('\n\n'));
     }
-    
+
     if (schemas.length > 0) {
-      systemPromptParts.push('## Database Schema\n' + schemas.map(c => 
-        `### ${c.name}\n${c.content}`
-      ).join('\n\n'));
+      systemPromptParts.push(
+        '## Database Schema\n' + schemas.map(c => `### ${c.name}\n${c.content}`).join('\n\n')
+      );
     }
-    
+
     if (knowledge.length > 0) {
-      systemPromptParts.push('## Knowledge Base\n' + knowledge.map(c => 
-        `### ${c.name}\n${c.content}`
-      ).join('\n\n'));
+      systemPromptParts.push(
+        '## Knowledge Base\n' + knowledge.map(c => `### ${c.name}\n${c.content}`).join('\n\n')
+      );
     }
-    
+
     if (memory.length > 0) {
       systemPromptParts.push('## Previous Context\n' + memory.map(c => c.content).join('\n\n'));
     }
-    
+
     if (projects.length > 0) {
-      systemPromptParts.push('## Project Context\n' + projects.map(c => 
-        `### ${c.name}\n${c.content}`
-      ).join('\n\n'));
+      systemPromptParts.push(
+        '## Project Context\n' + projects.map(c => `### ${c.name}\n${c.content}`).join('\n\n')
+      );
     }
-    
+
     return {
       contexts: includedContexts,
       totalTokens,
@@ -464,12 +467,12 @@ export class ContextManager {
   }): LLMContext {
     // Build schema description
     let schemaContent = `Database: ${data.connectionName}\n\n`;
-    
+
     for (const table of data.tables) {
       const tableName = table.schema ? `${table.schema}.${table.name}` : table.name;
       schemaContent += `Table: ${tableName}\n`;
       schemaContent += `Columns:\n`;
-      
+
       for (const col of table.columns) {
         let colDesc = `  - ${col.name}: ${col.type}`;
         if (col.primaryKey) colDesc += ' (PRIMARY KEY)';
@@ -481,9 +484,9 @@ export class ContextManager {
     }
 
     // Check if schema already exists for this connection
-    const existing = this.list({ 
-      type: 'database_schema', 
-      connectionId: data.connectionId 
+    const existing = this.list({
+      type: 'database_schema',
+      connectionId: data.connectionId,
     });
 
     if (existing.length > 0) {
@@ -514,19 +517,22 @@ export class ContextManager {
   /**
    * Import a text file as knowledge base context
    */
-  importKnowledgeFile(filePath: string, options?: {
-    name?: string;
-    tags?: string[];
-    chunkSize?: number; // Split large files into chunks
-  }): LLMContext[] {
+  importKnowledgeFile(
+    filePath: string,
+    options?: {
+      name?: string;
+      tags?: string[];
+      chunkSize?: number; // Split large files into chunks
+    }
+  ): LLMContext[] {
     const content = fs.readFileSync(filePath, 'utf-8');
     const fileName = path.basename(filePath);
     const name = options?.name || fileName;
-    
+
     // For large files, split into chunks
     const chunkSize = options?.chunkSize || 8000; // ~2000 tokens
     const createdContexts: LLMContext[] = [];
-    
+
     if (content.length > chunkSize) {
       const chunks = this.splitIntoChunks(content, chunkSize);
       chunks.forEach((chunk, index) => {
@@ -551,7 +557,7 @@ export class ContextManager {
       });
       createdContexts.push(ctx);
     }
-    
+
     return createdContexts;
   }
 
@@ -559,7 +565,7 @@ export class ContextManager {
     const chunks: string[] = [];
     const paragraphs = text.split(/\n\n+/);
     let currentChunk = '';
-    
+
     for (const para of paragraphs) {
       if (currentChunk.length + para.length + 2 > maxChars) {
         if (currentChunk) chunks.push(currentChunk.trim());
@@ -568,7 +574,7 @@ export class ContextManager {
         currentChunk += (currentChunk ? '\n\n' : '') + para;
       }
     }
-    
+
     if (currentChunk) chunks.push(currentChunk.trim());
     return chunks;
   }
@@ -586,7 +592,7 @@ export class ContextManager {
     keyFacts: string[];
   }): LLMContext {
     const content = `Conversation Summary:\n${data.summary}\n\nKey Facts:\n${data.keyFacts.map(f => `- ${f}`).join('\n')}`;
-    
+
     return this.create({
       name: `Memory: ${new Date().toLocaleDateString()}`,
       type: 'memory_summary',
@@ -604,7 +610,12 @@ export class ContextManager {
   /**
    * Get default prompt templates
    */
-  getDefaultTemplates(): Array<Omit<LLMContext, 'id' | 'createdAt' | 'updatedAt' | 'lastUsedAt' | 'usageCount' | 'charCount' | 'tokenCount'>> {
+  getDefaultTemplates(): Array<
+    Omit<
+      LLMContext,
+      'id' | 'createdAt' | 'updatedAt' | 'lastUsedAt' | 'usageCount' | 'charCount' | 'tokenCount'
+    >
+  > {
     return [
       {
         name: 'SQL Expert',
@@ -685,7 +696,7 @@ export class ContextManager {
     mostUsed: LLMContext[];
   } {
     const contexts = Array.from(this.contexts.values());
-    
+
     const byType: Record<ContextType, number> = {
       system_prompt: 0,
       database_schema: 0,
@@ -694,20 +705,18 @@ export class ContextManager {
       project: 0,
       template: 0,
     };
-    
+
     let totalTokens = 0;
     let totalChars = 0;
-    
+
     contexts.forEach(ctx => {
       byType[ctx.type]++;
       totalTokens += ctx.tokenCount;
       totalChars += ctx.charCount;
     });
-    
-    const mostUsed = [...contexts]
-      .sort((a, b) => b.usageCount - a.usageCount)
-      .slice(0, 5);
-    
+
+    const mostUsed = [...contexts].sort((a, b) => b.usageCount - a.usageCount).slice(0, 5);
+
     return {
       totalContexts: contexts.length,
       byType,
@@ -735,7 +744,7 @@ export class ContextManager {
   importFromJson(json: string, options?: { overwrite?: boolean }): number {
     const imported: LLMContext[] = JSON.parse(json);
     let count = 0;
-    
+
     imported.forEach(ctx => {
       if (options?.overwrite || !this.contexts.has(ctx.id)) {
         ctx.createdAt = new Date(ctx.createdAt);
@@ -745,7 +754,7 @@ export class ContextManager {
         count++;
       }
     });
-    
+
     this.saveContexts();
     return count;
   }

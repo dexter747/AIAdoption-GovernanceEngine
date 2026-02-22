@@ -34,20 +34,16 @@ describe('Encryption Service', () => {
 
     const key = getTestKey(encryptionKey);
     const iv = crypto.randomBytes(IV_LENGTH);
-    
+
     const cipher = crypto.createCipheriv(ALGORITHM, key, iv);
-    
+
     let encrypted = cipher.update(plaintext, 'utf8', 'base64');
     encrypted += cipher.final('base64');
-    
+
     const authTag = cipher.getAuthTag();
-    
-    const combined = Buffer.concat([
-      iv,
-      authTag,
-      Buffer.from(encrypted, 'base64')
-    ]);
-    
+
+    const combined = Buffer.concat([iv, authTag, Buffer.from(encrypted, 'base64')]);
+
     return combined.toString('base64');
   }
 
@@ -61,17 +57,17 @@ describe('Encryption Service', () => {
 
     const key = getTestKey(encryptionKey);
     const combined = Buffer.from(encryptedData, 'base64');
-    
+
     const iv = combined.subarray(0, IV_LENGTH);
     const authTag = combined.subarray(IV_LENGTH, IV_LENGTH + AUTH_TAG_LENGTH);
     const encrypted = combined.subarray(IV_LENGTH + AUTH_TAG_LENGTH);
-    
+
     const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
     decipher.setAuthTag(authTag);
-    
+
     let decrypted = decipher.update(encrypted, undefined, 'utf8');
     decrypted += decipher.final('utf8');
-    
+
     return decrypted;
   }
 
@@ -81,7 +77,7 @@ describe('Encryption Service', () => {
     it('should encrypt a plaintext string', () => {
       const plaintext = 'my-secret-api-key-12345';
       const encrypted = encrypt(plaintext, testKey);
-      
+
       expect(encrypted).toBeDefined();
       expect(typeof encrypted).toBe('string');
       expect(encrypted).not.toBe(plaintext);
@@ -92,7 +88,7 @@ describe('Encryption Service', () => {
       const plaintext = 'my-secret-api-key';
       const encrypted1 = encrypt(plaintext, testKey);
       const encrypted2 = encrypt(plaintext, testKey);
-      
+
       expect(encrypted1).not.toBe(encrypted2);
     });
 
@@ -108,7 +104,7 @@ describe('Encryption Service', () => {
       const plaintext = '日本語テスト🔐';
       const encrypted = encrypt(plaintext, testKey);
       const decrypted = decrypt(encrypted, testKey);
-      
+
       expect(decrypted).toBe(plaintext);
     });
 
@@ -116,7 +112,7 @@ describe('Encryption Service', () => {
       const plaintext = 'a'.repeat(10000);
       const encrypted = encrypt(plaintext, testKey);
       const decrypted = decrypt(encrypted, testKey);
-      
+
       expect(decrypted).toBe(plaintext);
     });
 
@@ -125,7 +121,7 @@ describe('Encryption Service', () => {
       const plaintext2 = 'secret2';
       const encrypted1 = encrypt(plaintext1, testKey);
       const encrypted2 = encrypt(plaintext2, testKey);
-      
+
       expect(encrypted1).not.toBe(encrypted2);
     });
   });
@@ -135,7 +131,7 @@ describe('Encryption Service', () => {
       const plaintext = 'my-secret-api-key-12345';
       const encrypted = encrypt(plaintext, testKey);
       const decrypted = decrypt(encrypted, testKey);
-      
+
       expect(decrypted).toBe(plaintext);
     });
 
@@ -150,19 +146,19 @@ describe('Encryption Service', () => {
     it('should throw error for wrong decryption key', () => {
       const plaintext = 'my-secret';
       const encrypted = encrypt(plaintext, testKey);
-      
+
       expect(() => decrypt(encrypted, 'wrong-key-that-is-different!!')).toThrow();
     });
 
     it('should throw error for tampered ciphertext', () => {
       const plaintext = 'my-secret';
       const encrypted = encrypt(plaintext, testKey);
-      
+
       // Tamper with the encrypted data
       const buffer = Buffer.from(encrypted, 'base64');
-      buffer[buffer.length - 1] ^= 0xFF;
+      buffer[buffer.length - 1] ^= 0xff;
       const tampered = buffer.toString('base64');
-      
+
       expect(() => decrypt(tampered, testKey)).toThrow();
     });
   });
@@ -174,7 +170,7 @@ describe('Encryption Service', () => {
       const decrypted1 = decrypt(encrypted1, testKey);
       const encrypted2 = encrypt(decrypted1, testKey);
       const decrypted2 = decrypt(encrypted2, testKey);
-      
+
       expect(decrypted1).toBe(original);
       expect(decrypted2).toBe(original);
     });
@@ -183,7 +179,7 @@ describe('Encryption Service', () => {
       const special = '!@#$%^&*()_+-=[]{}|;:\'",.<>?/\\`~';
       const encrypted = encrypt(special, testKey);
       const decrypted = decrypt(encrypted, testKey);
-      
+
       expect(decrypted).toBe(special);
     });
 
@@ -191,7 +187,7 @@ describe('Encryption Service', () => {
       const json = JSON.stringify({ key: 'value', nested: { arr: [1, 2, 3] } });
       const encrypted = encrypt(json, testKey);
       const decrypted = decrypt(encrypted, testKey);
-      
+
       expect(decrypted).toBe(json);
       expect(JSON.parse(decrypted)).toEqual({ key: 'value', nested: { arr: [1, 2, 3] } });
     });
@@ -218,7 +214,7 @@ describe('License Service', () => {
     const segments = 4;
     const segmentLength = 4;
     const parts: string[] = [];
-    
+
     for (let i = 0; i < segments; i++) {
       let segment = '';
       for (let j = 0; j < segmentLength; j++) {
@@ -226,7 +222,7 @@ describe('License Service', () => {
       }
       parts.push(segment);
     }
-    
+
     return parts.join('-');
   }
 
@@ -241,9 +237,17 @@ describe('License Service', () => {
 
   function getTierFeatures(tier: string): string[] {
     const features: Record<string, string[]> = {
-      'free': ['basic-chat', 'limited-models'],
-      'professional': ['basic-chat', 'all-models', 'byok', 'mcp-servers'],
-      'enterprise': ['basic-chat', 'all-models', 'byok', 'mcp-servers', 'sso', 'audit-logs', 'custom-deployment'],
+      free: ['basic-chat', 'limited-models'],
+      professional: ['basic-chat', 'all-models', 'byok', 'mcp-servers'],
+      enterprise: [
+        'basic-chat',
+        'all-models',
+        'byok',
+        'mcp-servers',
+        'sso',
+        'audit-logs',
+        'custom-deployment',
+      ],
     };
     return features[tier] || [];
   }
@@ -251,7 +255,7 @@ describe('License Service', () => {
   describe('generateLicenseKey()', () => {
     it('should generate a license key in correct format', () => {
       const key = generateLicenseKey();
-      
+
       expect(key).toBeDefined();
       expect(typeof key).toBe('string');
       expect(key).toMatch(/^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/);
@@ -259,11 +263,11 @@ describe('License Service', () => {
 
     it('should generate unique keys', () => {
       const keys = new Set<string>();
-      
+
       for (let i = 0; i < 100; i++) {
         keys.add(generateLicenseKey());
       }
-      
+
       // All 100 keys should be unique
       expect(keys.size).toBe(100);
     });
@@ -271,7 +275,7 @@ describe('License Service', () => {
     it('should generate keys with exactly 4 segments', () => {
       const key = generateLicenseKey();
       const segments = key.split('-');
-      
+
       expect(segments.length).toBe(4);
       segments.forEach(segment => {
         expect(segment.length).toBe(4);
@@ -302,14 +306,14 @@ describe('License Service', () => {
     it('should return false for future expiration', () => {
       const futureDate = new Date();
       futureDate.setFullYear(futureDate.getFullYear() + 1);
-      
+
       expect(isLicenseExpired(futureDate)).toBe(false);
     });
 
     it('should return true for past expiration', () => {
       const pastDate = new Date();
       pastDate.setFullYear(pastDate.getFullYear() - 1);
-      
+
       expect(isLicenseExpired(pastDate)).toBe(true);
     });
 
@@ -317,7 +321,7 @@ describe('License Service', () => {
       const now = new Date();
       const justPast = new Date(now.getTime() - 1000);
       const justFuture = new Date(now.getTime() + 60000);
-      
+
       expect(isLicenseExpired(justPast)).toBe(true);
       expect(isLicenseExpired(justFuture)).toBe(false);
     });
@@ -326,7 +330,7 @@ describe('License Service', () => {
   describe('getTierFeatures()', () => {
     it('should return correct features for free tier', () => {
       const features = getTierFeatures('free');
-      
+
       expect(features).toContain('basic-chat');
       expect(features).toContain('limited-models');
       expect(features).not.toContain('byok');
@@ -334,7 +338,7 @@ describe('License Service', () => {
 
     it('should return correct features for professional tier', () => {
       const features = getTierFeatures('professional');
-      
+
       expect(features).toContain('basic-chat');
       expect(features).toContain('all-models');
       expect(features).toContain('byok');
@@ -344,7 +348,7 @@ describe('License Service', () => {
 
     it('should return correct features for enterprise tier', () => {
       const features = getTierFeatures('enterprise');
-      
+
       expect(features).toContain('all-models');
       expect(features).toContain('byok');
       expect(features).toContain('mcp-servers');
@@ -355,7 +359,7 @@ describe('License Service', () => {
 
     it('should return empty array for unknown tier', () => {
       const features = getTierFeatures('unknown');
-      
+
       expect(features).toEqual([]);
     });
   });
@@ -370,7 +374,7 @@ describe('License Service', () => {
         expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
         issuedTo: 'user@example.com',
       };
-      
+
       expect(isValidLicenseFormat(license.key)).toBe(true);
       expect(isLicenseExpired(license.expiresAt)).toBe(false);
       expect(license.features.length).toBeGreaterThan(0);
@@ -385,7 +389,7 @@ describe('License Service', () => {
         expiresAt: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000), // Past
         issuedTo: 'user@example.com',
       };
-      
+
       expect(isLicenseExpired(license.expiresAt)).toBe(true);
     });
   });
@@ -472,7 +476,7 @@ describe('Validation Service', () => {
     it('should escape HTML special characters', () => {
       expect(sanitizeString('<script>')).toBe('&lt;script&gt;');
       expect(sanitizeString('"quoted"')).toBe('&quot;quoted&quot;');
-      expect(sanitizeString("it's")).toBe("it&#039;s");
+      expect(sanitizeString("it's")).toBe('it&#039;s');
     });
 
     it('should handle strings without special characters', () => {
@@ -531,32 +535,32 @@ describe('Usage Tracking Service', () => {
   describe('calculateTokenCost()', () => {
     it('should calculate cost for GPT-4o', () => {
       const cost = calculateTokenCost('gpt-4o', 1000, 1000);
-      
+
       expect(cost).toBe(0.005 + 0.015); // $0.02
     });
 
     it('should calculate cost for GPT-4o-mini', () => {
       const cost = calculateTokenCost('gpt-4o-mini', 1000, 1000);
-      
+
       expect(cost).toBe(0.00015 + 0.0006); // $0.00075
     });
 
     it('should use default pricing for unknown models', () => {
       const cost = calculateTokenCost('unknown-model', 1000, 1000);
-      
+
       expect(cost).toBe(0.001 + 0.002); // $0.003
     });
 
     it('should handle zero tokens', () => {
       const cost = calculateTokenCost('gpt-4o', 0, 0);
-      
+
       expect(cost).toBe(0);
     });
 
     it('should scale linearly with token count', () => {
       const cost1 = calculateTokenCost('gpt-4o', 1000, 1000);
       const cost2 = calculateTokenCost('gpt-4o', 2000, 2000);
-      
+
       expect(cost2).toBe(cost1 * 2);
     });
   });
@@ -564,19 +568,31 @@ describe('Usage Tracking Service', () => {
   describe('aggregateUsage()', () => {
     it('should aggregate multiple usage records', () => {
       const records: UsageRecord[] = [
-        { userId: 'user1', model: 'gpt-4o', inputTokens: 100, outputTokens: 100, timestamp: new Date() },
-        { userId: 'user1', model: 'gpt-4o', inputTokens: 200, outputTokens: 200, timestamp: new Date() },
+        {
+          userId: 'user1',
+          model: 'gpt-4o',
+          inputTokens: 100,
+          outputTokens: 100,
+          timestamp: new Date(),
+        },
+        {
+          userId: 'user1',
+          model: 'gpt-4o',
+          inputTokens: 200,
+          outputTokens: 200,
+          timestamp: new Date(),
+        },
       ];
 
       const result = aggregateUsage(records);
-      
+
       expect(result.totalTokens).toBe(600);
       expect(result.totalCost).toBeGreaterThan(0);
     });
 
     it('should return zero for empty records', () => {
       const result = aggregateUsage([]);
-      
+
       expect(result.totalTokens).toBe(0);
       expect(result.totalCost).toBe(0);
     });
@@ -603,11 +619,11 @@ describe('API Key Service', () => {
     const prefix = 'sk_';
     const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let key = prefix;
-    
+
     for (let i = 0; i < 48; i++) {
       key += chars[Math.floor(Math.random() * chars.length)];
     }
-    
+
     return key;
   }
 
@@ -623,23 +639,23 @@ describe('API Key Service', () => {
   describe('generateApiKey()', () => {
     it('should generate API key with sk_ prefix', () => {
       const key = generateApiKey();
-      
+
       expect(key.startsWith('sk_')).toBe(true);
     });
 
     it('should generate API key with correct length', () => {
       const key = generateApiKey();
-      
+
       expect(key.length).toBe(51); // 3 (prefix) + 48 (random)
     });
 
     it('should generate unique keys', () => {
       const keys = new Set<string>();
-      
+
       for (let i = 0; i < 50; i++) {
         keys.add(generateApiKey());
       }
-      
+
       expect(keys.size).toBe(50);
     });
   });
@@ -647,7 +663,7 @@ describe('API Key Service', () => {
   describe('isValidApiKey()', () => {
     it('should validate correct API key format', () => {
       const key = generateApiKey();
-      
+
       expect(isValidApiKey(key)).toBe(true);
     });
 
@@ -662,7 +678,7 @@ describe('API Key Service', () => {
     it('should mask API key correctly', () => {
       const key = 'sk_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRS';
       const masked = maskApiKey(key);
-      
+
       expect(masked).toBe('sk_abc...PQRS');
       expect(masked).not.toContain('ghijklmnopqrstuvwxyz');
     });

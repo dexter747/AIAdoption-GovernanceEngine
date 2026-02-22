@@ -118,14 +118,14 @@ describe('AuthContext', () => {
     it('should have isAuthenticated true when user exists', () => {
       const user = { id: '123', email: 'test@test.com', name: 'Test' };
       const isAuthenticated = !!user;
-      
+
       expect(isAuthenticated).toBe(true);
     });
 
     it('should have isAuthenticated false when user is null', () => {
       const user = null;
       const isAuthenticated = !!user;
-      
+
       expect(isAuthenticated).toBe(false);
     });
   });
@@ -137,7 +137,7 @@ describe('AuthContext', () => {
       });
 
       const result = await mockElectron.auth.check();
-      
+
       expect(mockElectron.auth.check).toHaveBeenCalled();
       expect(result.user).toBeDefined();
     });
@@ -146,7 +146,7 @@ describe('AuthContext', () => {
       mockElectronAuth.check.mockResolvedValue(null);
 
       const result = await mockElectron.auth.check();
-      
+
       expect(result).toBeNull();
     });
 
@@ -162,7 +162,7 @@ describe('AuthContext', () => {
       mockElectronAuth.login.mockResolvedValue(undefined);
 
       await mockElectron.auth.login();
-      
+
       expect(mockElectron.auth.login).toHaveBeenCalled();
     });
 
@@ -178,7 +178,7 @@ describe('AuthContext', () => {
       mockElectronAuth.logout.mockResolvedValue(undefined);
 
       await mockElectron.auth.logout();
-      
+
       expect(mockElectron.auth.logout).toHaveBeenCalled();
     });
 
@@ -193,14 +193,14 @@ describe('AuthContext', () => {
     it('should register onSuccess callback', () => {
       const callback = jest.fn();
       mockElectron.auth.onSuccess(callback);
-      
+
       expect(mockElectron.auth.onSuccess).toHaveBeenCalledWith(callback);
     });
 
     it('should register onError callback', () => {
       const callback = jest.fn();
       mockElectron.auth.onError(callback);
-      
+
       expect(mockElectron.auth.onError).toHaveBeenCalledWith(callback);
     });
   });
@@ -251,7 +251,16 @@ describe('LicenseContext', () => {
       free: ['basic_chat'],
       starter: ['basic_chat', 'history', 'export'],
       pro: ['basic_chat', 'history', 'export', 'custom_prompts', 'mcp_integration'],
-      enterprise: ['basic_chat', 'history', 'export', 'custom_prompts', 'mcp_integration', 'sso', 'audit_log', 'priority_support'],
+      enterprise: [
+        'basic_chat',
+        'history',
+        'export',
+        'custom_prompts',
+        'mcp_integration',
+        'sso',
+        'audit_log',
+        'priority_support',
+      ],
     };
 
     it('should have free tier with basic_chat only', () => {
@@ -298,7 +307,7 @@ describe('LicenseContext', () => {
 
       const stored = await mockElectron.license.get();
       const result = await mockElectron.license.validate(stored.key);
-      
+
       expect(result.valid).toBe(true);
       expect(result.tier).toBe('pro');
     });
@@ -307,7 +316,7 @@ describe('LicenseContext', () => {
       mockElectronLicense.get.mockResolvedValue(null);
 
       const stored = await mockElectron.license.get();
-      
+
       expect(stored).toBeNull();
     });
 
@@ -322,7 +331,7 @@ describe('LicenseContext', () => {
 
       const stored = await mockElectron.license.get();
       const result = await mockElectron.license.validate(stored.key);
-      
+
       expect(result.valid).toBe(false);
     });
   });
@@ -340,7 +349,7 @@ describe('LicenseContext', () => {
       mockElectronSettings.set.mockResolvedValue(undefined);
 
       const result = await mockElectron.license.validate('VALID-KEY');
-      
+
       expect(result.valid).toBe(true);
     });
 
@@ -348,7 +357,7 @@ describe('LicenseContext', () => {
       mockElectronLicense.validate.mockResolvedValue(null);
 
       const result = await mockElectron.license.validate('SOME-KEY');
-      
+
       expect(result).toBeNull();
     });
 
@@ -359,7 +368,7 @@ describe('LicenseContext', () => {
       });
 
       const result = await mockElectron.license.validate('INVALID-KEY');
-      
+
       expect(result.valid).toBe(false);
       expect(result.reason).toBe('Invalid license key');
     });
@@ -376,7 +385,7 @@ describe('LicenseContext', () => {
       mockElectronSettings.set.mockResolvedValue(undefined);
 
       await mockElectron.settings.set('license', null);
-      
+
       expect(mockElectron.settings.set).toHaveBeenCalledWith('license', null);
     });
   });
@@ -392,7 +401,7 @@ describe('LicenseContext', () => {
       });
 
       const result = await mockElectron.license.validate(currentKey);
-      
+
       expect(result.valid).toBe(true);
       expect(result.tier).toBe('pro');
     });
@@ -404,7 +413,7 @@ describe('LicenseContext', () => {
       });
 
       const result = await mockElectron.license.validate('EXPIRED-KEY');
-      
+
       expect(result.valid).toBe(false);
     });
   });
@@ -413,7 +422,7 @@ describe('LicenseContext', () => {
     it('should return true if feature exists in license', () => {
       const features = ['basic_chat', 'mcp_integration'];
       const hasFeature = (feature: string) => features.includes(feature);
-      
+
       expect(hasFeature('basic_chat')).toBe(true);
       expect(hasFeature('mcp_integration')).toBe(true);
     });
@@ -421,7 +430,7 @@ describe('LicenseContext', () => {
     it('should return false if feature does not exist', () => {
       const features = ['basic_chat'];
       const hasFeature = (feature: string) => features.includes(feature);
-      
+
       expect(hasFeature('mcp_integration')).toBe(false);
     });
 
@@ -432,7 +441,7 @@ describe('LicenseContext', () => {
         if (!license) return TIER_FEATURES.free.includes(feature);
         return false;
       };
-      
+
       expect(hasFeature('basic_chat')).toBe(true);
       expect(hasFeature('mcp_integration')).toBe(false);
     });
@@ -443,12 +452,12 @@ describe('LicenseContext', () => {
       const futureDate = new Date();
       futureDate.setDate(futureDate.getDate() + 30);
       const expiresAt = futureDate.toISOString();
-      
+
       const daysRemaining = Math.max(
-        0, 
+        0,
         Math.ceil((new Date(expiresAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
       );
-      
+
       expect(daysRemaining).toBeGreaterThanOrEqual(29);
       expect(daysRemaining).toBeLessThanOrEqual(31);
     });
@@ -457,21 +466,21 @@ describe('LicenseContext', () => {
       const pastDate = new Date();
       pastDate.setDate(pastDate.getDate() - 10);
       const expiresAt = pastDate.toISOString();
-      
+
       const daysRemaining = Math.max(
-        0, 
+        0,
         Math.ceil((new Date(expiresAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
       );
-      
+
       expect(daysRemaining).toBe(0);
     });
 
     it('should return null for null expiresAt', () => {
       const expiresAt: string | null = null;
-      const daysRemaining = expiresAt 
+      const daysRemaining = expiresAt
         ? Math.ceil((new Date(expiresAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
         : null;
-      
+
       expect(daysRemaining).toBeNull();
     });
   });
@@ -480,13 +489,13 @@ describe('LicenseContext', () => {
     it('should set isValid true for active status', () => {
       const status = 'active';
       const isValid = status === 'active';
-      
+
       expect(isValid).toBe(true);
     });
 
     it('should set isValid false for other statuses', () => {
       const statuses = ['expired', 'suspended', 'invalid'];
-      
+
       statuses.forEach(status => {
         const isValid = status === 'active';
         expect(isValid).toBe(false);
@@ -495,7 +504,7 @@ describe('LicenseContext', () => {
 
     it('should set isPro true for pro or enterprise tier', () => {
       const tiers = ['pro', 'enterprise'];
-      
+
       tiers.forEach(tier => {
         const isPro = tier === 'pro' || tier === 'enterprise';
         expect(isPro).toBe(true);
@@ -504,7 +513,7 @@ describe('LicenseContext', () => {
 
     it('should set isPro false for free or starter tier', () => {
       const tiers = ['free', 'starter'];
-      
+
       tiers.forEach(tier => {
         const isPro = tier === 'pro' || tier === 'enterprise';
         expect(isPro).toBe(false);
@@ -514,14 +523,14 @@ describe('LicenseContext', () => {
     it('should set isEnterprise true only for enterprise tier', () => {
       const tier = 'enterprise';
       const isEnterprise = tier === 'enterprise';
-      
+
       expect(isEnterprise).toBe(true);
     });
 
     it('should set isTrial true for free tier', () => {
       const tier = 'free';
       const isTrial = tier === 'free';
-      
+
       expect(isTrial).toBe(true);
     });
   });
@@ -536,7 +545,9 @@ describe('LicenseContext', () => {
         return context;
       };
 
-      expect(() => useLicenseOutsideProvider()).toThrow('useLicense must be used within a LicenseProvider');
+      expect(() => useLicenseOutsideProvider()).toThrow(
+        'useLicense must be used within a LicenseProvider'
+      );
     });
   });
 });

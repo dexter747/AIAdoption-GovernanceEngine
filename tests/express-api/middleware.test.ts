@@ -25,7 +25,7 @@ describe('Security Middleware', () => {
 
     function sanitizeObject(obj: any, depth = 0): any {
       if (depth > 10) return obj;
-      
+
       if (Array.isArray(obj)) {
         return obj.map(item => {
           if (typeof item === 'string') return sanitizeString(item);
@@ -33,7 +33,7 @@ describe('Security Middleware', () => {
           return item;
         });
       }
-      
+
       if (obj !== null && typeof obj === 'object') {
         // Use Object.create(null) to avoid prototype chain issues
         const sanitized: any = Object.create(null);
@@ -56,7 +56,7 @@ describe('Security Middleware', () => {
     it('should sanitize HTML tags in strings', () => {
       const input = { message: '<script>alert("xss")</script>' };
       const sanitized = sanitizeObject(input);
-      
+
       expect(sanitized.message).toBe('&lt;script&gt;alert("xss")&lt;/script&gt;');
       expect(sanitized.message).not.toContain('<script>');
     });
@@ -64,14 +64,14 @@ describe('Security Middleware', () => {
     it('should remove javascript: protocol', () => {
       const input = { url: 'javascript:alert(1)' };
       const sanitized = sanitizeObject(input);
-      
+
       expect(sanitized.url).not.toContain('javascript:');
     });
 
     it('should block data: protocol', () => {
       const input = { image: 'data:text/html,<script>alert(1)</script>' };
       const sanitized = sanitizeObject(input);
-      
+
       expect(sanitized.image).toContain('data_blocked:');
       expect(sanitized.image).not.toMatch(/^data:/);
     });
@@ -79,20 +79,20 @@ describe('Security Middleware', () => {
     it('should remove null bytes', () => {
       const input = { text: 'hello\x00world' };
       const sanitized = sanitizeObject(input);
-      
+
       expect(sanitized.text).toBe('helloworld');
       expect(sanitized.text).not.toContain('\x00');
     });
 
     it('should block prototype pollution attempts', () => {
       const input = {
-        '__proto__': { admin: true },
-        'constructor': { isAdmin: true },
-        'prototype': { hacked: true },
-        'normal': 'value',
+        __proto__: { admin: true },
+        constructor: { isAdmin: true },
+        prototype: { hacked: true },
+        normal: 'value',
       };
       const sanitized = sanitizeObject(input);
-      
+
       expect(sanitized['__proto__']).toBeUndefined();
       expect(sanitized['constructor']).toBeUndefined();
       expect(sanitized['prototype']).toBeUndefined();
@@ -108,7 +108,7 @@ describe('Security Middleware', () => {
         },
       };
       const sanitized = sanitizeObject(input);
-      
+
       expect(sanitized.level1.level2.level3).toBe('&lt;script&gt;xss&lt;/script&gt;');
     });
 
@@ -117,7 +117,7 @@ describe('Security Middleware', () => {
         items: ['<b>bold</b>', 'normal', '<script>xss</script>'],
       };
       const sanitized = sanitizeObject(input);
-      
+
       expect(sanitized.items[0]).toBe('&lt;b&gt;bold&lt;/b&gt;');
       expect(sanitized.items[1]).toBe('normal');
       expect(sanitized.items[2]).toBe('&lt;script&gt;xss&lt;/script&gt;');
@@ -131,7 +131,7 @@ describe('Security Middleware', () => {
         array: [1, 2, 3],
       };
       const sanitized = sanitizeObject(input);
-      
+
       expect(sanitized.number).toBe(42);
       expect(sanitized.boolean).toBe(true);
       expect(sanitized.nullValue).toBe(null);
@@ -144,7 +144,7 @@ describe('Security Middleware', () => {
       for (let i = 0; i < 15; i++) {
         nested = { child: nested };
       }
-      
+
       // Should not throw, should stop at depth 10
       expect(() => sanitizeObject(nested)).not.toThrow();
     });
@@ -168,28 +168,28 @@ describe('Security Middleware', () => {
 
     it('should allow requests under the limit', () => {
       const limiter = createLimiter(1024);
-      
+
       expect(limiter(500).allowed).toBe(true);
       expect(limiter(1024).allowed).toBe(true);
     });
 
     it('should reject requests over the limit', () => {
       const limiter = createLimiter(1024);
-      
+
       expect(limiter(1025).allowed).toBe(false);
       expect(limiter(2000).allowed).toBe(false);
     });
 
     it('should use default 1MB limit', () => {
       const limiter = createLimiter(1024 * 1024);
-      
+
       expect(limiter(1024 * 1024).allowed).toBe(true);
       expect(limiter(1024 * 1024 + 1).allowed).toBe(false);
     });
 
     it('should allow zero-length requests', () => {
       const limiter = createLimiter(1024);
-      
+
       expect(limiter(0).allowed).toBe(true);
     });
   });
@@ -197,30 +197,30 @@ describe('Security Middleware', () => {
   describe('limitSensitiveOperations()', () => {
     const WINDOW_MS = 60000;
     const MAX_REQUESTS = 5;
-    
+
     class RateLimiter {
       private tracker = new Map<string, { timestamp: number; count: number }>();
-      
+
       check(key: string): { allowed: boolean; retryAfter?: number } {
         const now = Date.now();
         const record = this.tracker.get(key);
-        
+
         if (!record || now - record.timestamp >= WINDOW_MS) {
           this.tracker.set(key, { timestamp: now, count: 1 });
           return { allowed: true };
         }
-        
+
         if (record.count >= MAX_REQUESTS) {
           return {
             allowed: false,
             retryAfter: Math.ceil((WINDOW_MS - (now - record.timestamp)) / 1000),
           };
         }
-        
+
         record.count++;
         return { allowed: true };
       }
-      
+
       reset() {
         this.tracker.clear();
       }
@@ -228,7 +228,7 @@ describe('Security Middleware', () => {
 
     it('should allow requests under the limit', () => {
       const limiter = new RateLimiter();
-      
+
       for (let i = 0; i < 5; i++) {
         expect(limiter.check('user-1').allowed).toBe(true);
       }
@@ -236,21 +236,21 @@ describe('Security Middleware', () => {
 
     it('should block requests over the limit', () => {
       const limiter = new RateLimiter();
-      
+
       for (let i = 0; i < 5; i++) {
         limiter.check('user-1');
       }
-      
+
       expect(limiter.check('user-1').allowed).toBe(false);
     });
 
     it('should return retry-after time', () => {
       const limiter = new RateLimiter();
-      
+
       for (let i = 0; i < 6; i++) {
         limiter.check('user-1');
       }
-      
+
       const result = limiter.check('user-1');
       expect(result.allowed).toBe(false);
       expect(result.retryAfter).toBeDefined();
@@ -260,11 +260,11 @@ describe('Security Middleware', () => {
 
     it('should track different users independently', () => {
       const limiter = new RateLimiter();
-      
+
       for (let i = 0; i < 5; i++) {
         limiter.check('user-1');
       }
-      
+
       expect(limiter.check('user-1').allowed).toBe(false);
       expect(limiter.check('user-2').allowed).toBe(true);
     });
@@ -276,11 +276,11 @@ describe('Security Middleware', () => {
         if (['GET', 'HEAD', 'OPTIONS'].includes(method)) {
           return { allowed: true };
         }
-        
+
         if (!origin) {
           return { allowed: true }; // Allow requests without origin (desktop apps, curl)
         }
-        
+
         try {
           const originUrl = new URL(origin);
           const isAllowed = allowedOrigins.some(allowed => {
@@ -292,7 +292,7 @@ describe('Security Middleware', () => {
               return originUrl.host === allowed;
             }
           });
-          
+
           return { allowed: isAllowed };
         } catch {
           return { allowed: false };
@@ -302,7 +302,7 @@ describe('Security Middleware', () => {
 
     it('should allow safe methods without checking origin', () => {
       const checker = createOriginChecker(['https://example.com']);
-      
+
       expect(checker('https://evil.com', 'GET').allowed).toBe(true);
       expect(checker('https://evil.com', 'HEAD').allowed).toBe(true);
       expect(checker('https://evil.com', 'OPTIONS').allowed).toBe(true);
@@ -310,33 +310,33 @@ describe('Security Middleware', () => {
 
     it('should allow requests without origin header', () => {
       const checker = createOriginChecker(['https://example.com']);
-      
+
       expect(checker(undefined, 'POST').allowed).toBe(true);
     });
 
     it('should allow whitelisted origins for POST', () => {
       const checker = createOriginChecker(['https://example.com', 'https://app.example.com']);
-      
+
       expect(checker('https://example.com', 'POST').allowed).toBe(true);
       expect(checker('https://app.example.com', 'POST').allowed).toBe(true);
     });
 
     it('should reject non-whitelisted origins for POST', () => {
       const checker = createOriginChecker(['https://example.com']);
-      
+
       expect(checker('https://evil.com', 'POST').allowed).toBe(false);
       expect(checker('https://example.com.evil.com', 'POST').allowed).toBe(false);
     });
 
     it('should allow wildcard origin', () => {
       const checker = createOriginChecker(['*']);
-      
+
       expect(checker('https://any-origin.com', 'POST').allowed).toBe(true);
     });
 
     it('should handle localhost origins', () => {
       const checker = createOriginChecker(['http://localhost:3000', 'http://localhost:5500']);
-      
+
       expect(checker('http://localhost:3000', 'POST').allowed).toBe(true);
       expect(checker('http://localhost:5500', 'POST').allowed).toBe(true);
       expect(checker('http://localhost:4000', 'POST').allowed).toBe(false);
@@ -349,8 +349,8 @@ describe('Security Middleware', () => {
       'X-Frame-Options': 'DENY',
       'X-XSS-Protection': '1; mode=block',
       'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-      'Pragma': 'no-cache',
-      'Expires': '0',
+      Pragma: 'no-cache',
+      Expires: '0',
     };
 
     it('should set X-Content-Type-Options header', () => {
@@ -415,7 +415,7 @@ describe('Validation Middleware', () => {
         email: 'john@example.com',
         age: 30,
       });
-      
+
       expect(result.valid).toBe(true);
       expect(result.data?.name).toBe('John Doe');
     });
@@ -424,7 +424,7 @@ describe('Validation Middleware', () => {
       const result = validateBody(testSchema, {
         name: 'John Doe',
       });
-      
+
       expect(result.valid).toBe(false);
       expect(result.errors).toBeDefined();
       expect(result.errors.some((e: any) => e.field === 'email')).toBe(true);
@@ -435,7 +435,7 @@ describe('Validation Middleware', () => {
         name: 'John',
         email: 'not-an-email',
       });
-      
+
       expect(result.valid).toBe(false);
       expect(result.errors.some((e: any) => e.field === 'email')).toBe(true);
     });
@@ -445,7 +445,7 @@ describe('Validation Middleware', () => {
         name: '',
         email: 'john@example.com',
       });
-      
+
       expect(result.valid).toBe(false);
     });
 
@@ -455,7 +455,7 @@ describe('Validation Middleware', () => {
         email: 'john@example.com',
         age: -1,
       });
-      
+
       expect(result.valid).toBe(false);
     });
 
@@ -464,7 +464,7 @@ describe('Validation Middleware', () => {
         name: 'John',
         email: 'john@example.com',
       });
-      
+
       expect(result.valid).toBe(true);
       expect(result.data?.age).toBeUndefined();
     });
@@ -491,7 +491,7 @@ describe('Validation Middleware', () => {
         page: '1',
         limit: '10',
       });
-      
+
       expect(result.valid).toBe(true);
       expect(result.data?.page).toBe(1);
       expect(result.data?.limit).toBe(10);
@@ -499,7 +499,7 @@ describe('Validation Middleware', () => {
 
     it('should pass empty query', () => {
       const result = validateQuery(querySchema, {});
-      
+
       expect(result.valid).toBe(true);
     });
 
@@ -507,7 +507,7 @@ describe('Validation Middleware', () => {
       const result = validateQuery(querySchema, {
         page: 'abc',
       });
-      
+
       expect(result.valid).toBe(false);
     });
   });
@@ -529,7 +529,7 @@ describe('Validation Middleware', () => {
       const result = validateParams(paramsSchema, {
         id: '123e4567-e89b-12d3-a456-426614174000',
       });
-      
+
       expect(result.valid).toBe(true);
     });
 
@@ -537,13 +537,13 @@ describe('Validation Middleware', () => {
       const result = validateParams(paramsSchema, {
         id: 'not-a-uuid',
       });
-      
+
       expect(result.valid).toBe(false);
     });
 
     it('should fail on missing id', () => {
       const result = validateParams(paramsSchema, {});
-      
+
       expect(result.valid).toBe(false);
     });
   });
@@ -578,22 +578,24 @@ describe('Auth Middleware', () => {
 
     it('should reject missing Authorization header', () => {
       const result = validateJwt(undefined);
-      
+
       expect(result.valid).toBe(false);
       expect(result.error).toBe('Bearer token required');
     });
 
     it('should reject non-Bearer token', () => {
       const result = validateJwt('Basic abc123');
-      
+
       expect(result.valid).toBe(false);
       expect(result.error).toBe('Bearer token required');
     });
 
     it('should accept valid JWT', () => {
-      const token = jwt.sign({ userId: '123', email: 'test@example.com' }, SECRET, { expiresIn: '1h' });
+      const token = jwt.sign({ userId: '123', email: 'test@example.com' }, SECRET, {
+        expiresIn: '1h',
+      });
       const result = validateJwt(`Bearer ${token}`);
-      
+
       expect(result.valid).toBe(true);
       expect(result.user?.userId).toBe('123');
     });
@@ -601,7 +603,7 @@ describe('Auth Middleware', () => {
     it('should reject expired JWT', () => {
       const token = jwt.sign({ userId: '123' }, SECRET, { expiresIn: '-1h' });
       const result = validateJwt(`Bearer ${token}`);
-      
+
       expect(result.valid).toBe(false);
       expect(result.error).toBe('Token expired');
     });
@@ -609,14 +611,14 @@ describe('Auth Middleware', () => {
     it('should reject invalid signature', () => {
       const token = jwt.sign({ userId: '123' }, 'wrong-secret', { expiresIn: '1h' });
       const result = validateJwt(`Bearer ${token}`);
-      
+
       expect(result.valid).toBe(false);
       expect(result.error).toBe('Invalid token');
     });
 
     it('should reject malformed token', () => {
       const result = validateJwt('Bearer invalid.token.here');
-      
+
       expect(result.valid).toBe(false);
       expect(result.error).toBe('Invalid token');
     });
@@ -625,7 +627,7 @@ describe('Auth Middleware', () => {
   describe('validateApiKey()', () => {
     const crypto = require('crypto');
     const validKeyHash = crypto.createHash('sha256').update('sk-valid-key').digest('hex');
-    
+
     const mockApiKeys: Record<string, any> = {
       [validKeyHash]: { id: 'key-1', user_id: 'user-1', tier: 'pro', is_active: true },
     };
@@ -655,21 +657,21 @@ describe('Auth Middleware', () => {
 
     it('should reject missing API key', () => {
       const result = validateApiKey(undefined);
-      
+
       expect(result.valid).toBe(false);
       expect(result.error).toBe('API key required');
     });
 
     it('should accept valid API key', () => {
       const result = validateApiKey('sk-valid-key');
-      
+
       expect(result.valid).toBe(true);
       expect(result.keyData?.tier).toBe('pro');
     });
 
     it('should reject invalid API key', () => {
       const result = validateApiKey('sk-invalid-key');
-      
+
       expect(result.valid).toBe(false);
       expect(result.error).toBe('Invalid API key');
     });
@@ -677,9 +679,9 @@ describe('Auth Middleware', () => {
     it('should reject disabled API key', () => {
       const disabledHash = crypto.createHash('sha256').update('sk-disabled-key').digest('hex');
       mockApiKeys[disabledHash] = { id: 'key-2', is_active: false };
-      
+
       const result = validateApiKey('sk-disabled-key');
-      
+
       expect(result.valid).toBe(false);
       expect(result.error).toBe('API key is disabled');
     });
@@ -719,7 +721,7 @@ describe('Error Handler', () => {
         schema.parse({ name: '', email: 'invalid' });
       } catch (error) {
         const formatted = formatZodError(error);
-        
+
         expect(formatted).not.toBeNull();
         expect(formatted?.statusCode).toBe(400);
         expect(formatted?.code).toBe('VALIDATION_ERROR');
@@ -740,7 +742,7 @@ describe('Error Handler', () => {
         schema.parse({ user: { profile: { age: -1 } } });
       } catch (error) {
         const formatted = formatZodError(error);
-        
+
         expect(formatted?.details[0].field).toBe('user.profile.age');
       }
     });
@@ -761,7 +763,7 @@ describe('Error Handler', () => {
     it('should handle JSON parse errors', () => {
       const error = { type: 'entity.parse.failed' };
       const result = handleParseError(error);
-      
+
       expect(result?.statusCode).toBe(400);
       expect(result?.code).toBe('INVALID_JSON');
     });
@@ -769,7 +771,7 @@ describe('Error Handler', () => {
     it('should return null for non-parse errors', () => {
       const error = { type: 'other.error' };
       const result = handleParseError(error);
-      
+
       expect(result).toBeNull();
     });
   });

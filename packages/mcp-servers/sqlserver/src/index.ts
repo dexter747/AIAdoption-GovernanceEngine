@@ -100,7 +100,7 @@ async function initConnection(): Promise<void> {
 
     connection = new Connection(config);
 
-    connection.on('connect', (err) => {
+    connection.on('connect', err => {
       if (err) {
         reject(err);
       } else {
@@ -122,7 +122,7 @@ function executeQuery(sql: string): Promise<any[]> {
     }
 
     const rows: any[] = [];
-    const request = new Request(sql, (err) => {
+    const request = new Request(sql, err => {
       if (err) {
         reject(err);
       } else {
@@ -130,9 +130,9 @@ function executeQuery(sql: string): Promise<any[]> {
       }
     });
 
-    request.on('row', (columns) => {
+    request.on('row', columns => {
       const row: any = {};
-      columns.forEach((column) => {
+      columns.forEach(column => {
         row[column.metadata.colName] = column.value;
       });
       rows.push(row);
@@ -193,7 +193,8 @@ async function handleDescribeTable(tableName: string) {
 }
 
 async function handleListDatabases() {
-  const sql = 'SELECT name FROM sys.databases WHERE name NOT IN (\'master\', \'tempdb\', \'model\', \'msdb\')';
+  const sql =
+    "SELECT name FROM sys.databases WHERE name NOT IN ('master', 'tempdb', 'model', 'msdb')";
   return handleQuery(sql);
 }
 
@@ -202,7 +203,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   tools: TOOLS,
 }));
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   const { name, arguments: args } = request.params;
 
   switch (name) {
@@ -223,10 +224,10 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 async function main() {
   try {
     await initConnection();
-    
+
     const transport = new StdioServerTransport();
     await server.connect(transport);
-    
+
     console.error('SQL Server MCP Server running on stdio');
   } catch (error) {
     console.error('Failed to start server:', error);

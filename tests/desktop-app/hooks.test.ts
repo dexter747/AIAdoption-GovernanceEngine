@@ -120,7 +120,7 @@ describe('useAsync Hook', () => {
   describe('execute function', () => {
     it('should set loading state during execution', async () => {
       const states: boolean[] = [];
-      
+
       // Simulate state tracking
       const simulateExecute = async (asyncFn: () => Promise<any>) => {
         states.push(true); // isLoading = true
@@ -133,21 +133,21 @@ describe('useAsync Hook', () => {
       };
 
       await simulateExecute(async () => 'result');
-      
+
       expect(states).toEqual([true, false]);
     });
 
     it('should return result on success', async () => {
       const asyncFn = jest.fn().mockResolvedValue({ id: 1, name: 'Test' });
-      
+
       const result = await asyncFn();
-      
+
       expect(result).toEqual({ id: 1, name: 'Test' });
     });
 
     it('should set data on success', async () => {
       let state = { data: null as any, isLoading: false, error: null as string | null };
-      
+
       const execute = async (asyncFn: () => Promise<any>) => {
         state = { ...state, isLoading: true, error: null };
         try {
@@ -161,7 +161,7 @@ describe('useAsync Hook', () => {
       };
 
       await execute(async () => ({ id: 1 }));
-      
+
       expect(state.data).toEqual({ id: 1 });
       expect(state.isLoading).toBe(false);
       expect(state.error).toBeNull();
@@ -169,7 +169,7 @@ describe('useAsync Hook', () => {
 
     it('should set error on failure', async () => {
       let state = { data: null as any, isLoading: false, error: null as string | null };
-      
+
       const execute = async (asyncFn: () => Promise<any>) => {
         state = { ...state, isLoading: true, error: null };
         try {
@@ -182,8 +182,10 @@ describe('useAsync Hook', () => {
         }
       };
 
-      await execute(async () => { throw new Error('Test error'); });
-      
+      await execute(async () => {
+        throw new Error('Test error');
+      });
+
       expect(state.data).toBeNull();
       expect(state.isLoading).toBe(false);
       expect(state.error).toBe('Test error');
@@ -198,14 +200,16 @@ describe('useAsync Hook', () => {
         }
       };
 
-      const result = await execute(async () => { throw new Error('Test'); });
-      
+      const result = await execute(async () => {
+        throw new Error('Test');
+      });
+
       expect(result).toBeNull();
     });
 
     it('should call onSuccess callback', async () => {
       const onSuccess = jest.fn();
-      
+
       const execute = async (
         asyncFn: () => Promise<any>,
         callbacks: { onSuccess?: (data: any) => void }
@@ -220,13 +224,13 @@ describe('useAsync Hook', () => {
       };
 
       await execute(async () => ({ success: true }), { onSuccess });
-      
+
       expect(onSuccess).toHaveBeenCalledWith({ success: true });
     });
 
     it('should call onError callback', async () => {
       const onError = jest.fn();
-      
+
       const execute = async (
         asyncFn: () => Promise<any>,
         callbacks: { onError?: (err: Error) => void }
@@ -239,8 +243,13 @@ describe('useAsync Hook', () => {
         }
       };
 
-      await execute(async () => { throw new Error('Test error'); }, { onError });
-      
+      await execute(
+        async () => {
+          throw new Error('Test error');
+        },
+        { onError }
+      );
+
       expect(onError).toHaveBeenCalled();
       expect(onError.mock.calls[0][0]).toBeInstanceOf(Error);
     });
@@ -248,7 +257,7 @@ describe('useAsync Hook', () => {
     it('should show success toast when enabled', async () => {
       const showSuccessToast = true;
       const successMessage = 'Operation successful!';
-      
+
       const execute = async (
         asyncFn: () => Promise<any>,
         options: { showSuccessToast: boolean; successMessage: string }
@@ -265,17 +274,14 @@ describe('useAsync Hook', () => {
       };
 
       await execute(async () => 'done', { showSuccessToast, successMessage });
-      
+
       expect(mockToast.success).toHaveBeenCalledWith('Operation successful!');
     });
 
     it('should show error toast when enabled', async () => {
       const showErrorToast = true;
-      
-      const execute = async (
-        asyncFn: () => Promise<any>,
-        options: { showErrorToast: boolean }
-      ) => {
+
+      const execute = async (asyncFn: () => Promise<any>, options: { showErrorToast: boolean }) => {
         try {
           return await asyncFn();
         } catch (err: any) {
@@ -286,8 +292,13 @@ describe('useAsync Hook', () => {
         }
       };
 
-      await execute(async () => { throw new Error('Something went wrong'); }, { showErrorToast });
-      
+      await execute(
+        async () => {
+          throw new Error('Something went wrong');
+        },
+        { showErrorToast }
+      );
+
       expect(mockToast.error).toHaveBeenCalledWith('Error', 'Something went wrong');
     });
 
@@ -305,7 +316,7 @@ describe('useAsync Hook', () => {
       };
 
       await execute(async () => 'done', { showSuccessToast: false, showErrorToast: false });
-      
+
       expect(mockToast.success).not.toHaveBeenCalled();
       expect(mockToast.error).not.toHaveBeenCalled();
     });
@@ -321,21 +332,25 @@ describe('useAsync Hook', () => {
       };
 
       await execute(async () => 'done', 'Custom message!', 'Default message');
-      
+
       expect(mockToast.success).toHaveBeenCalledWith('Custom message!');
     });
   });
 
   describe('reset function', () => {
     it('should reset state to initial values', () => {
-      let state = { data: { id: 1 } as any, isLoading: false, error: 'Some error' as string | null };
-      
+      let state = {
+        data: { id: 1 } as any,
+        isLoading: false,
+        error: 'Some error' as string | null,
+      };
+
       const reset = () => {
         state = { data: null, isLoading: false, error: null };
       };
 
       reset();
-      
+
       expect(state.data).toBeNull();
       expect(state.isLoading).toBe(false);
       expect(state.error).toBeNull();
@@ -345,25 +360,25 @@ describe('useAsync Hook', () => {
   describe('setData function', () => {
     it('should update data directly', () => {
       let state = { data: null as any, isLoading: false, error: null };
-      
+
       const setData = (data: any) => {
         state = { ...state, data };
       };
 
       setData({ id: 999, name: 'Direct set' });
-      
+
       expect(state.data).toEqual({ id: 999, name: 'Direct set' });
     });
 
     it('should preserve other state properties', () => {
       let state = { data: null as any, isLoading: true, error: 'existing error' as string | null };
-      
+
       const setData = (data: any) => {
         state = { ...state, data };
       };
 
       setData({ id: 1 });
-      
+
       // Note: In real hook, this would only update data
       expect(state.data).toEqual({ id: 1 });
     });
@@ -378,7 +393,7 @@ describe('useFormSubmit Hook', () => {
   describe('handleSubmit function', () => {
     it('should prevent default form event', async () => {
       const mockEvent = { preventDefault: jest.fn() } as any;
-      
+
       const handleSubmit = (asyncFn: () => Promise<any>) => async (e?: any) => {
         e?.preventDefault();
         return asyncFn();
@@ -386,34 +401,34 @@ describe('useFormSubmit Hook', () => {
 
       const onSubmit = handleSubmit(async () => 'submitted');
       await onSubmit(mockEvent);
-      
+
       expect(mockEvent.preventDefault).toHaveBeenCalled();
     });
 
     it('should execute async function', async () => {
       const asyncFn = jest.fn().mockResolvedValue({ success: true });
-      
+
       const handleSubmit = (fn: () => Promise<any>) => async (e?: any) => {
         e?.preventDefault();
         return fn();
       };
 
       const result = await handleSubmit(asyncFn)();
-      
+
       expect(asyncFn).toHaveBeenCalled();
       expect(result).toEqual({ success: true });
     });
 
     it('should work without event parameter', async () => {
       const asyncFn = jest.fn().mockResolvedValue('done');
-      
+
       const handleSubmit = (fn: () => Promise<any>) => async (e?: any) => {
         e?.preventDefault();
         return fn();
       };
 
       const result = await handleSubmit(asyncFn)();
-      
+
       expect(result).toBe('done');
     });
   });
@@ -437,15 +452,15 @@ describe('useFetch Hook', () => {
 
     it('should call fetcher function', async () => {
       const fetcher = jest.fn().mockResolvedValue([{ id: 1 }, { id: 2 }]);
-      
+
       await fetcher();
-      
+
       expect(fetcher).toHaveBeenCalled();
     });
 
     it('should set data after successful fetch', async () => {
       let state = { data: null as any, isLoading: true, error: null };
-      
+
       const fetch = async (fetcher: () => Promise<any>) => {
         try {
           const result = await fetcher();
@@ -456,14 +471,14 @@ describe('useFetch Hook', () => {
       };
 
       await fetch(async () => [{ id: 1 }]);
-      
+
       expect(state.data).toEqual([{ id: 1 }]);
       expect(state.isLoading).toBe(false);
     });
 
     it('should set error after failed fetch', async () => {
       let state = { data: null as any, isLoading: true, error: null as string | null };
-      
+
       const fetch = async (fetcher: () => Promise<any>) => {
         try {
           const result = await fetcher();
@@ -473,8 +488,10 @@ describe('useFetch Hook', () => {
         }
       };
 
-      await fetch(async () => { throw new Error('Network error'); });
-      
+      await fetch(async () => {
+        throw new Error('Network error');
+      });
+
       expect(state.data).toBeNull();
       expect(state.error).toBe('Network error');
     });
@@ -483,7 +500,7 @@ describe('useFetch Hook', () => {
   describe('refetch function', () => {
     it('should reset loading state', async () => {
       const states: boolean[] = [];
-      
+
       const refetch = async (fetcher: () => Promise<any>) => {
         states.push(true); // isLoading = true
         try {
@@ -495,14 +512,14 @@ describe('useFetch Hook', () => {
       };
 
       await refetch(async () => 'done');
-      
+
       expect(states[0]).toBe(true);
       expect(states[1]).toBe(false);
     });
 
     it('should clear previous error', async () => {
       let error: string | null = 'Previous error';
-      
+
       const refetch = async (fetcher: () => Promise<any>) => {
         error = null; // Clear error
         try {
@@ -513,19 +530,19 @@ describe('useFetch Hook', () => {
       };
 
       await refetch(async () => 'success');
-      
+
       expect(error).toBeNull();
     });
 
     it('should update data with new result', async () => {
       let data: any = { old: 'data' };
-      
+
       const refetch = async (fetcher: () => Promise<any>) => {
         data = await fetcher();
       };
 
       await refetch(async () => ({ new: 'data' }));
-      
+
       expect(data).toEqual({ new: 'data' });
     });
   });
@@ -539,13 +556,13 @@ describe('useMutation Hook', () => {
   describe('mutate function', () => {
     it('should call mutation function with variables', async () => {
       const mutationFn = jest.fn().mockResolvedValue({ id: 1, created: true });
-      
+
       const mutate = async (variables: any) => {
         return mutationFn(variables);
       };
 
       const result = await mutate({ name: 'Test', value: 123 });
-      
+
       expect(mutationFn).toHaveBeenCalledWith({ name: 'Test', value: 123 });
       expect(result).toEqual({ id: 1, created: true });
     });
@@ -555,17 +572,14 @@ describe('useMutation Hook', () => {
         return mutationFn(variables);
       };
 
-      const result = await mutate(
-        { id: 1 }, 
-        async (v) => ({ ...v, updated: true })
-      );
-      
+      const result = await mutate({ id: 1 }, async v => ({ ...v, updated: true }));
+
       expect(result).toEqual({ id: 1, updated: true });
     });
 
     it('should handle mutation error', async () => {
       const mutationFn = jest.fn().mockRejectedValue(new Error('Mutation failed'));
-      
+
       const mutate = async (variables: any) => {
         try {
           return await mutationFn(variables);
@@ -575,15 +589,15 @@ describe('useMutation Hook', () => {
       };
 
       const result = await mutate({ id: 1 });
-      
+
       expect(result).toBeNull();
     });
 
     it('should call onSettled after mutation', async () => {
       const onSettled = jest.fn();
-      
+
       const mutate = async (
-        variables: any, 
+        variables: any,
         mutationFn: (v: any) => Promise<any>,
         callbacks: { onSettled?: () => void }
       ) => {
@@ -598,13 +612,13 @@ describe('useMutation Hook', () => {
       };
 
       await mutate({ id: 1 }, async () => 'done', { onSettled });
-      
+
       expect(onSettled).toHaveBeenCalled();
     });
 
     it('should call onSettled even on error', async () => {
       const onSettled = jest.fn();
-      
+
       const mutate = async (
         mutationFn: () => Promise<any>,
         callbacks: { onSettled?: () => void }
@@ -618,8 +632,13 @@ describe('useMutation Hook', () => {
         }
       };
 
-      await mutate(async () => { throw new Error('Error'); }, { onSettled });
-      
+      await mutate(
+        async () => {
+          throw new Error('Error');
+        },
+        { onSettled }
+      );
+
       expect(onSettled).toHaveBeenCalled();
     });
   });
@@ -630,13 +649,13 @@ describe('useMutation Hook', () => {
         id: number;
         name: string;
       }
-      
+
       const createUser = async (data: { name: string }): Promise<User> => {
         return { id: 1, ...data };
       };
 
       const result = await createUser({ name: 'John' });
-      
+
       expect(result.id).toBe(1);
       expect(result.name).toBe('John');
     });
@@ -652,13 +671,13 @@ describe('useMutation Hook', () => {
         name: string;
         email: string;
       }
-      
+
       const mutate = async (variables: CreateUserInput): Promise<User> => {
         return { id: 1, ...variables };
       };
 
       const result = await mutate({ name: 'John', email: 'john@test.com' });
-      
+
       expect(result.email).toBe('john@test.com');
     });
   });
@@ -673,7 +692,7 @@ describe('Hook Integration', () => {
     it('should work together for CRUD operations', async () => {
       // Simulate a complete CRUD flow
       const items: any[] = [];
-      
+
       // Create
       const create = async (data: { name: string }) => {
         const newItem = { id: items.length + 1, ...data };
@@ -720,7 +739,7 @@ describe('Hook Integration', () => {
   describe('Error handling across hooks', () => {
     it('should consistently handle errors', async () => {
       const errors: string[] = [];
-      
+
       const executeWithErrorTracking = async (asyncFn: () => Promise<any>) => {
         try {
           return await asyncFn();
@@ -730,8 +749,12 @@ describe('Hook Integration', () => {
         }
       };
 
-      await executeWithErrorTracking(async () => { throw new Error('Error 1'); });
-      await executeWithErrorTracking(async () => { throw new Error('Error 2'); });
+      await executeWithErrorTracking(async () => {
+        throw new Error('Error 1');
+      });
+      await executeWithErrorTracking(async () => {
+        throw new Error('Error 2');
+      });
       await executeWithErrorTracking(async () => 'success');
 
       expect(errors).toEqual(['Error 1', 'Error 2']);

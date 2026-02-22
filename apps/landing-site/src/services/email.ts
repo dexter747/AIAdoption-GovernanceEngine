@@ -74,11 +74,7 @@ export async function sendWelcomeEmail(email: string, name: string) {
 /**
  * License delivery email
  */
-export async function sendLicenseEmail(
-  email: string,
-  licenseKey: string,
-  planType: string
-) {
+export async function sendLicenseEmail(email: string, licenseKey: string, planType: string) {
   return sendEmail({
     to: email,
     subject: 'Your Velanova License Key 🔑',
@@ -130,7 +126,7 @@ export async function sendPaymentConfirmationEmail(
   billingCycle: string
 ) {
   const formattedAmount = (amount / 100).toFixed(2);
-  
+
   return sendEmail({
     to: email,
     subject: 'Payment Confirmation - Velanova',
@@ -216,7 +212,7 @@ export async function sendUsageAlertEmail(
   limit: number
 ) {
   const isOverLimit = usagePercent >= 100;
-  
+
   return sendEmail({
     to: email,
     subject: `Usage Alert: ${usagePercent}% of ${usageType} limit reached`,
@@ -233,16 +229,20 @@ export async function sendUsageAlertEmail(
           <strong>Remaining:</strong> ${Math.max(0, limit - currentUsage).toLocaleString()}
         </div>
 
-        ${isOverLimit ? `
+        ${
+          isOverLimit
+            ? `
           <p><strong>You've exceeded your plan limit.</strong> Usage-based charges will apply:</p>
           <ul>
             <li>Additional tokens: $10 per 1M tokens</li>
             <li>Extra connections: $50 per connection/month</li>
             <li>Additional users: $99 per user/month</li>
           </ul>
-        ` : `
+        `
+            : `
           <p>Consider upgrading your plan to avoid overage charges.</p>
-        `}
+        `
+        }
 
         <div style="margin: 30px 0;">
           <a href="${process.env.NEXT_PUBLIC_APP_URL}/account/usage" 
@@ -295,7 +295,7 @@ export async function sendCancellationEmail(email: string, endDate: string) {
  */
 export async function sendPasswordResetEmail(email: string, resetToken: string) {
   const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${resetToken}`;
-  
+
   return sendEmail({
     to: email,
     subject: 'Reset Your Password - Velanova',

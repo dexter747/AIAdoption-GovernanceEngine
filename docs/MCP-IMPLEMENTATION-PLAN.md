@@ -1,7 +1,8 @@
 # Velanova Complete MCP Implementation Plan
+
 **Leveraging Existing MCP Ecosystem + Building What's Missing**
 
-*Last Updated: January 19, 2026*
+_Last Updated: January 19, 2026_
 
 ---
 
@@ -22,70 +23,70 @@
 
 ### Databases (✅ All Available - Zero Development)
 
-| System | Source | Package/Image | Status |
-|--------|--------|---------------|--------|
-| **PostgreSQL** | Official Anthropic | `@modelcontextprotocol/server-postgres` | ✅ Production |
-| **MySQL** | Community | `@benborla/mcp-server-mysql` | ✅ Production |
-| **MongoDB** | Official MongoDB | `mongodb/mongodb-mcp-server` (Docker) | ✅ Production |
-| **SQL Server** | Microsoft Official | `@azure-samples/mssql-mcp-server` | ✅ Production |
-| **SQLite** | Official Anthropic | `@modelcontextprotocol/server-sqlite` | ✅ Production |
-| **Oracle** | Official Oracle | SQLcl native MCP | ✅ Enterprise |
-| **MariaDB** | Official MariaDB | `mariadb/mcp` (GitHub) | ✅ Production |
-| **Redis** | Official Redis | `redis/mcp-redis` (GitHub) | ✅ Production |
-| **Snowflake** | Official | `Snowflake-Labs/mcp` | ✅ Enterprise |
-| **BigQuery** | Google | MCP Toolbox for Databases | ✅ Production |
-| **DynamoDB** | Community | `dynamodbtoolbox.com` | ✅ Production |
-| **Elasticsearch** | Community | `elasticsearch-mcp-server` | ✅ Production |
-| **Neo4j** | Google Toolbox | Supported | ✅ Production |
-| **CockroachDB** | Community | Multiple options | ✅ Production |
-| **TiDB** | Official PingCAP | `pingcap/pytidb` | ✅ Production |
-| **Couchbase** | Official | `Couchbase-Ecosystem/mcp-server-couchbase` | ✅ Production |
-| **ClickHouse** | Via Aiven | Aiven MCP Server | ✅ Production |
+| System            | Source             | Package/Image                              | Status        |
+| ----------------- | ------------------ | ------------------------------------------ | ------------- |
+| **PostgreSQL**    | Official Anthropic | `@modelcontextprotocol/server-postgres`    | ✅ Production |
+| **MySQL**         | Community          | `@benborla/mcp-server-mysql`               | ✅ Production |
+| **MongoDB**       | Official MongoDB   | `mongodb/mongodb-mcp-server` (Docker)      | ✅ Production |
+| **SQL Server**    | Microsoft Official | `@azure-samples/mssql-mcp-server`          | ✅ Production |
+| **SQLite**        | Official Anthropic | `@modelcontextprotocol/server-sqlite`      | ✅ Production |
+| **Oracle**        | Official Oracle    | SQLcl native MCP                           | ✅ Enterprise |
+| **MariaDB**       | Official MariaDB   | `mariadb/mcp` (GitHub)                     | ✅ Production |
+| **Redis**         | Official Redis     | `redis/mcp-redis` (GitHub)                 | ✅ Production |
+| **Snowflake**     | Official           | `Snowflake-Labs/mcp`                       | ✅ Enterprise |
+| **BigQuery**      | Google             | MCP Toolbox for Databases                  | ✅ Production |
+| **DynamoDB**      | Community          | `dynamodbtoolbox.com`                      | ✅ Production |
+| **Elasticsearch** | Community          | `elasticsearch-mcp-server`                 | ✅ Production |
+| **Neo4j**         | Google Toolbox     | Supported                                  | ✅ Production |
+| **CockroachDB**   | Community          | Multiple options                           | ✅ Production |
+| **TiDB**          | Official PingCAP   | `pingcap/pytidb`                           | ✅ Production |
+| **Couchbase**     | Official           | `Couchbase-Ecosystem/mcp-server-couchbase` | ✅ Production |
+| **ClickHouse**    | Via Aiven          | Aiven MCP Server                           | ✅ Production |
 
 ### Enterprise Systems (Partial Coverage)
 
-| System | Available? | Source | Notes |
-|--------|-----------|--------|-------|
-| **Salesforce** | ⚠️ Community | Multiple implementations | Need to evaluate quality |
-| **ServiceNow** | ✅ Yes | `osomai/servicenow-mcp` | Community maintained |
-| **Jira** | ✅ Yes | Multiple implementations | Atlassian community |
-| **GitHub** | ✅ Official | `@modelcontextprotocol/server-github` | Production ready |
-| **GitLab** | ✅ Official | `@modelcontextprotocol/server-gitlab` | Production ready |
-| **Slack** | ✅ Multiple | `korotovsky/slack-mcp-server` | Very capable |
-| **Notion** | ✅ Yes | Multiple implementations | Community |
-| **HubSpot** | ✅ Yes | Via Maton MCP | Verified |
-| **Confluence** | ⚠️ Limited | Need evaluation | |
-| **Azure DevOps** | ✅ Yes | `Vortiago/mcp-azure-devops` | Community |
-| **Terraform** | ✅ Official | HashiCorp MCP Server | Enterprise |
-| **Kubernetes** | ✅ Yes | `mcp-k8s-go` | Community |
-| **Docker** | ✅ Yes | Multiple options | Production |
+| System           | Available?   | Source                                | Notes                    |
+| ---------------- | ------------ | ------------------------------------- | ------------------------ |
+| **Salesforce**   | ⚠️ Community | Multiple implementations              | Need to evaluate quality |
+| **ServiceNow**   | ✅ Yes       | `osomai/servicenow-mcp`               | Community maintained     |
+| **Jira**         | ✅ Yes       | Multiple implementations              | Atlassian community      |
+| **GitHub**       | ✅ Official  | `@modelcontextprotocol/server-github` | Production ready         |
+| **GitLab**       | ✅ Official  | `@modelcontextprotocol/server-gitlab` | Production ready         |
+| **Slack**        | ✅ Multiple  | `korotovsky/slack-mcp-server`         | Very capable             |
+| **Notion**       | ✅ Yes       | Multiple implementations              | Community                |
+| **HubSpot**      | ✅ Yes       | Via Maton MCP                         | Verified                 |
+| **Confluence**   | ⚠️ Limited   | Need evaluation                       |                          |
+| **Azure DevOps** | ✅ Yes       | `Vortiago/mcp-azure-devops`           | Community                |
+| **Terraform**    | ✅ Official  | HashiCorp MCP Server                  | Enterprise               |
+| **Kubernetes**   | ✅ Yes       | `mcp-k8s-go`                          | Community                |
+| **Docker**       | ✅ Yes       | Multiple options                      | Production               |
 
 ### Cloud Providers
 
-| Provider | Available? | Source | Notes |
-|----------|-----------|--------|-------|
-| **AWS** | ✅ Yes | Multiple (S3, EC2, etc.) | Various community servers |
-| **Azure** | ✅ Yes | `Azure-Samples/mcp` | Microsoft maintained |
-| **Google Cloud** | ✅ Yes | MCP Toolbox for Databases | Google supported |
-| **Vercel** | ✅ Yes | `vercel/mcp-adapter` | Official |
-| **Supabase** | ✅ Yes | Built into your project | Already integrated! |
+| Provider         | Available? | Source                    | Notes                     |
+| ---------------- | ---------- | ------------------------- | ------------------------- |
+| **AWS**          | ✅ Yes     | Multiple (S3, EC2, etc.)  | Various community servers |
+| **Azure**        | ✅ Yes     | `Azure-Samples/mcp`       | Microsoft maintained      |
+| **Google Cloud** | ✅ Yes     | MCP Toolbox for Databases | Google supported          |
+| **Vercel**       | ✅ Yes     | `vercel/mcp-adapter`      | Official                  |
+| **Supabase**     | ✅ Yes     | Built into your project   | Already integrated!       |
 
 ### Enterprise ERP/CRM (Gaps Identified)
 
-| System | Available? | Priority | Action Required |
-|--------|-----------|----------|-----------------|
-| **SAP S/4HANA** | ❌ No | P0 Critical | **MUST BUILD** |
-| **SAP HANA DB** | ❌ No | P0 Critical | **MUST BUILD** |
-| **Oracle ERP Cloud** | ⚠️ Partial | P0 Critical | Evaluate existing Oracle MCP |
-| **Workday** | ❌ No | P1 High | **MUST BUILD** |
-| **Epic FHIR** | ❌ No | P1 High | **MUST BUILD** |
-| **NetSuite** | ⚠️ Partial | P1 High | `dsvantien/netsuite-mcp-server` - evaluate |
-| **Dynamics 365** | ⚠️ Partial | P1 High | `D365FO` exists, evaluate |
-| **Guidewire** | ❌ No | P1 High | **MUST BUILD** |
-| **AS/400 (IBM i)** | ❌ No | P2 Medium | **MUST BUILD** (differentiator!) |
-| **Oracle Siebel** | ❌ No | P2 Medium | **MUST BUILD** |
-| **FIS Core Banking** | ❌ No | P2 Medium | **MUST BUILD** |
-| **Amdocs** | ❌ No | P2 Medium | **MUST BUILD** |
+| System               | Available? | Priority    | Action Required                            |
+| -------------------- | ---------- | ----------- | ------------------------------------------ |
+| **SAP S/4HANA**      | ❌ No      | P0 Critical | **MUST BUILD**                             |
+| **SAP HANA DB**      | ❌ No      | P0 Critical | **MUST BUILD**                             |
+| **Oracle ERP Cloud** | ⚠️ Partial | P0 Critical | Evaluate existing Oracle MCP               |
+| **Workday**          | ❌ No      | P1 High     | **MUST BUILD**                             |
+| **Epic FHIR**        | ❌ No      | P1 High     | **MUST BUILD**                             |
+| **NetSuite**         | ⚠️ Partial | P1 High     | `dsvantien/netsuite-mcp-server` - evaluate |
+| **Dynamics 365**     | ⚠️ Partial | P1 High     | `D365FO` exists, evaluate                  |
+| **Guidewire**        | ❌ No      | P1 High     | **MUST BUILD**                             |
+| **AS/400 (IBM i)**   | ❌ No      | P2 Medium   | **MUST BUILD** (differentiator!)           |
+| **Oracle Siebel**    | ❌ No      | P2 Medium   | **MUST BUILD**                             |
+| **FIS Core Banking** | ❌ No      | P2 Medium   | **MUST BUILD**                             |
+| **Amdocs**           | ❌ No      | P2 Medium   | **MUST BUILD**                             |
 
 ---
 
@@ -228,6 +229,7 @@ infrastructure/
 ## Part 4: Implementation Phases
 
 ### Phase 1: MCP Server Farm Setup (Week 1-2)
+
 **Goal**: Get 20+ existing MCP servers running via Docker Compose
 
 #### docker-compose.mcp-farm.yml
@@ -239,7 +241,7 @@ services:
   # =====================================================
   # DATABASE MCP SERVERS (All existing, just configure)
   # =====================================================
-  
+
   postgres-mcp:
     image: crystaldba/postgres-mcp:latest
     environment:
@@ -279,7 +281,7 @@ services:
   # =====================================================
   # ENTERPRISE SYSTEM MCP SERVERS
   # =====================================================
-  
+
   github-mcp:
     image: ghcr.io/modelcontextprotocol/server-github:latest
     environment:
@@ -337,7 +339,7 @@ services:
   # =====================================================
   # INFRASTRUCTURE MCP SERVERS
   # =====================================================
-  
+
   kubernetes-mcp:
     image: strowk/mcp-k8s-go:latest
     volumes:
@@ -365,7 +367,7 @@ services:
   # =====================================================
   # CUSTOM MCP SERVERS (We Build)
   # =====================================================
-  
+
   sap-s4hana-mcp:
     build:
       context: ./custom-mcp-servers/sap-s4hana
@@ -406,13 +408,13 @@ services:
   # =====================================================
   # VELANOVA MCP SERVER (Aggregator)
   # =====================================================
-  
+
   velanova-mcp:
     build:
       context: ../../packages/velanova-mcp-server
       dockerfile: Dockerfile
     ports:
-      - "3100:3100"  # SSE endpoint
+      - '3100:3100' # SSE endpoint
     environment:
       - NODE_ENV=production
       - SUPABASE_URL=${SUPABASE_URL}
@@ -448,10 +450,10 @@ networks:
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { SSEServerTransport } from '@modelcontextprotocol/sdk/server/sse.js';
-import { 
-  CallToolRequestSchema, 
+import {
+  CallToolRequestSchema,
   ListToolsRequestSchema,
-  ListResourcesRequestSchema 
+  ListResourcesRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
 
 import { AIRouter } from './tools/ai-router.js';
@@ -503,19 +505,19 @@ class VelanovaMCPServer {
                   max_cost: { type: 'number' },
                   max_latency_ms: { type: 'number' },
                   min_quality: { type: 'number' },
-                  data_residency: { type: 'string', enum: ['US', 'EU', 'on-premise'] }
-                }
-              }
+                  data_residency: { type: 'string', enum: ['US', 'EU', 'on-premise'] },
+                },
+              },
             },
-            required: ['prompt']
-          }
+            required: ['prompt'],
+          },
         },
         {
           name: 'list_ai_models',
           description: 'List all available AI models with pricing and capabilities',
-          inputSchema: { type: 'object', properties: {} }
+          inputSchema: { type: 'object', properties: {} },
         },
-        
+
         // Database Tools
         {
           name: 'query_database',
@@ -525,15 +527,15 @@ class VelanovaMCPServer {
             properties: {
               database_id: { type: 'string', description: 'Database connection ID' },
               query: { type: 'string', description: 'SQL or NoSQL query' },
-              intent: { type: 'string', description: 'Natural language intent (optional)' }
+              intent: { type: 'string', description: 'Natural language intent (optional)' },
             },
-            required: ['database_id']
-          }
+            required: ['database_id'],
+          },
         },
         {
           name: 'list_databases',
           description: 'List all connected databases',
-          inputSchema: { type: 'object', properties: {} }
+          inputSchema: { type: 'object', properties: {} },
         },
         {
           name: 'get_database_schema',
@@ -541,12 +543,12 @@ class VelanovaMCPServer {
           inputSchema: {
             type: 'object',
             properties: {
-              database_id: { type: 'string' }
+              database_id: { type: 'string' },
             },
-            required: ['database_id']
-          }
+            required: ['database_id'],
+          },
         },
-        
+
         // Enterprise System Tools
         {
           name: 'query_sap',
@@ -556,10 +558,10 @@ class VelanovaMCPServer {
             properties: {
               intent: { type: 'string', description: 'Natural language query' },
               module: { type: 'string', enum: ['FI', 'CO', 'MM', 'SD', 'PP', 'HR'] },
-              bapi: { type: 'string', description: 'Specific BAPI to call (optional)' }
+              bapi: { type: 'string', description: 'Specific BAPI to call (optional)' },
             },
-            required: ['intent']
-          }
+            required: ['intent'],
+          },
         },
         {
           name: 'query_salesforce',
@@ -568,9 +570,9 @@ class VelanovaMCPServer {
             type: 'object',
             properties: {
               soql: { type: 'string', description: 'SOQL query' },
-              intent: { type: 'string', description: 'Natural language (optional)' }
-            }
-          }
+              intent: { type: 'string', description: 'Natural language (optional)' },
+            },
+          },
         },
         {
           name: 'query_epic',
@@ -578,15 +580,15 @@ class VelanovaMCPServer {
           inputSchema: {
             type: 'object',
             properties: {
-              resource_type: { 
-                type: 'string', 
-                enum: ['Patient', 'Observation', 'Condition', 'MedicationRequest', 'Encounter'] 
+              resource_type: {
+                type: 'string',
+                enum: ['Patient', 'Observation', 'Condition', 'MedicationRequest', 'Encounter'],
               },
               search_params: { type: 'object' },
-              redact_phi: { type: 'boolean', default: true }
+              redact_phi: { type: 'boolean', default: true },
             },
-            required: ['resource_type']
-          }
+            required: ['resource_type'],
+          },
         },
         {
           name: 'query_servicenow',
@@ -595,12 +597,12 @@ class VelanovaMCPServer {
             type: 'object',
             properties: {
               table: { type: 'string' },
-              query: { type: 'string' }
+              query: { type: 'string' },
             },
-            required: ['table']
-          }
+            required: ['table'],
+          },
         },
-        
+
         // Governance Tools
         {
           name: 'get_usage_stats',
@@ -608,9 +610,9 @@ class VelanovaMCPServer {
           inputSchema: {
             type: 'object',
             properties: {
-              period: { type: 'string', enum: ['today', 'week', 'month', 'year'] }
-            }
-          }
+              period: { type: 'string', enum: ['today', 'week', 'month', 'year'] },
+            },
+          },
         },
         {
           name: 'get_cost_estimate',
@@ -624,18 +626,18 @@ class VelanovaMCPServer {
                   type: 'object',
                   properties: {
                     tool: { type: 'string' },
-                    params: { type: 'object' }
-                  }
-                }
-              }
-            }
-          }
-        }
-      ]
+                    params: { type: 'object' },
+                  },
+                },
+              },
+            },
+          },
+        },
+      ],
     }));
 
     // Handle tool calls
-    this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
+    this.server.setRequestHandler(CallToolRequestSchema, async request => {
       const { name, arguments: args } = request.params;
       const userId = request.params._meta?.userId;
       const licenseKey = request.params._meta?.licenseKey;
@@ -645,7 +647,7 @@ class VelanovaMCPServer {
       if (!licenseValid.valid) {
         return {
           content: [{ type: 'text', text: `License error: ${licenseValid.error}` }],
-          isError: true
+          isError: true,
         };
       }
 
@@ -654,7 +656,7 @@ class VelanovaMCPServer {
       if (!rateLimitOk) {
         return {
           content: [{ type: 'text', text: 'Rate limit exceeded. Please try again later.' }],
-          isError: true
+          isError: true,
         };
       }
 
@@ -663,7 +665,7 @@ class VelanovaMCPServer {
 
       try {
         let result;
-        
+
         switch (name) {
           // AI Tools
           case 'query_ai':
@@ -717,14 +719,13 @@ class VelanovaMCPServer {
         await this.governance.completeAudit(auditId, result, cost);
 
         return {
-          content: [{ type: 'text', text: JSON.stringify(result, null, 2) }]
+          content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
         };
-
       } catch (error) {
         await this.governance.failAudit(auditId, error.message);
         return {
           content: [{ type: 'text', text: `Error: ${error.message}` }],
-          isError: true
+          isError: true,
         };
       }
     });
@@ -736,27 +737,27 @@ class VelanovaMCPServer {
           uri: 'velanova://models',
           name: 'Available AI Models',
           description: 'List of all AI models with pricing and capabilities',
-          mimeType: 'application/json'
+          mimeType: 'application/json',
         },
         {
           uri: 'velanova://databases',
           name: 'Connected Databases',
           description: 'List of all connected database systems',
-          mimeType: 'application/json'
+          mimeType: 'application/json',
         },
         {
           uri: 'velanova://enterprise-systems',
           name: 'Enterprise Systems',
           description: 'List of connected enterprise systems (SAP, Salesforce, etc.)',
-          mimeType: 'application/json'
+          mimeType: 'application/json',
         },
         {
           uri: 'velanova://usage',
           name: 'Usage Statistics',
           description: 'Current usage and cost data',
-          mimeType: 'application/json'
-        }
-      ]
+          mimeType: 'application/json',
+        },
+      ],
     }));
   }
 
@@ -823,7 +824,7 @@ export class DatabaseAggregator {
           name: server.id,
           type: server.type as any,
           mcpEndpoint: server.endpoint,
-          status: 'connected'
+          status: 'connected',
         });
       } catch (error) {
         console.error(`Failed to connect to ${server.id}:`, error);
@@ -844,7 +845,7 @@ export class DatabaseAggregator {
     // Call the appropriate tool on the MCP server
     const result = await client.callTool({
       name: 'query',
-      arguments: { sql: query }
+      arguments: { sql: query },
     });
 
     return result;
@@ -858,7 +859,7 @@ export class DatabaseAggregator {
 
     const result = await client.callTool({
       name: 'list_tables',
-      arguments: {}
+      arguments: {},
     });
 
     return result;
@@ -914,10 +915,10 @@ class SAPS4HanaMCPServer {
               intent: { type: 'string' },
               table: { type: 'string' },
               fields: { type: 'array', items: { type: 'string' } },
-              where: { type: 'string' }
+              where: { type: 'string' },
             },
-            required: ['intent']
-          }
+            required: ['intent'],
+          },
         },
         {
           name: 'sap_call_bapi',
@@ -926,10 +927,10 @@ class SAPS4HanaMCPServer {
             type: 'object',
             properties: {
               bapi: { type: 'string' },
-              parameters: { type: 'object' }
+              parameters: { type: 'object' },
             },
-            required: ['bapi']
-          }
+            required: ['bapi'],
+          },
         },
         {
           name: 'sap_get_purchase_orders',
@@ -940,9 +941,9 @@ class SAPS4HanaMCPServer {
               vendor: { type: 'string' },
               date_from: { type: 'string' },
               date_to: { type: 'string' },
-              status: { type: 'string' }
-            }
-          }
+              status: { type: 'string' },
+            },
+          },
         },
         {
           name: 'sap_get_invoices',
@@ -952,9 +953,9 @@ class SAPS4HanaMCPServer {
             properties: {
               type: { type: 'string', enum: ['vendor', 'customer'] },
               company_code: { type: 'string' },
-              fiscal_year: { type: 'string' }
-            }
-          }
+              fiscal_year: { type: 'string' },
+            },
+          },
         },
         {
           name: 'sap_get_material_master',
@@ -963,14 +964,14 @@ class SAPS4HanaMCPServer {
             type: 'object',
             properties: {
               material_number: { type: 'string' },
-              material_type: { type: 'string' }
-            }
-          }
-        }
-      ]
+              material_type: { type: 'string' },
+            },
+          },
+        },
+      ],
     }));
 
-    this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
+    this.server.setRequestHandler(CallToolRequestSchema, async request => {
       const { name, arguments: args } = request.params;
 
       await this.rfcClient.open();
@@ -999,7 +1000,7 @@ class SAPS4HanaMCPServer {
         }
 
         return {
-          content: [{ type: 'text', text: JSON.stringify(result, null, 2) }]
+          content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
         };
       } finally {
         await this.rfcClient.close();
@@ -1012,7 +1013,7 @@ class SAPS4HanaMCPServer {
     const result = await this.rfcClient.call('RFC_READ_TABLE', {
       QUERY_TABLE: args.table,
       FIELDS: args.fields?.map((f: string) => ({ FIELDNAME: f })) || [],
-      OPTIONS: args.where ? [{ TEXT: args.where }] : []
+      OPTIONS: args.where ? [{ TEXT: args.where }] : [],
     });
     return result;
   }
@@ -1021,7 +1022,7 @@ class SAPS4HanaMCPServer {
     // Use BAPI_PO_GETITEMS or similar
     return await this.rfcClient.call('BAPI_PO_GETITEMS', {
       VENDOR: args.vendor || '',
-      PURCHASING_ORG: args.purchasing_org || ''
+      PURCHASING_ORG: args.purchasing_org || '',
     });
   }
 
@@ -1029,13 +1030,13 @@ class SAPS4HanaMCPServer {
     // Use BAPI for invoice retrieval
     return await this.rfcClient.call('BAPI_INCOMINGINVOICE_GETLIST', {
       COMP_CODE: args.company_code || '',
-      FISCAL_YEAR: args.fiscal_year || ''
+      FISCAL_YEAR: args.fiscal_year || '',
     });
   }
 
   private async getMaterialMaster(args: any) {
     return await this.rfcClient.call('BAPI_MATERIAL_GET_DETAIL', {
-      MATERIAL: args.material_number
+      MATERIAL: args.material_number,
     });
   }
 
@@ -1080,14 +1081,22 @@ class EpicFHIRMCPServer {
             properties: {
               resource_type: {
                 type: 'string',
-                enum: ['Patient', 'Observation', 'Condition', 'MedicationRequest', 
-                       'Encounter', 'DiagnosticReport', 'Procedure', 'AllergyIntolerance']
+                enum: [
+                  'Patient',
+                  'Observation',
+                  'Condition',
+                  'MedicationRequest',
+                  'Encounter',
+                  'DiagnosticReport',
+                  'Procedure',
+                  'AllergyIntolerance',
+                ],
               },
               search_params: { type: 'object' },
-              redact_phi: { type: 'boolean', default: true }
+              redact_phi: { type: 'boolean', default: true },
             },
-            required: ['resource_type']
-          }
+            required: ['resource_type'],
+          },
         },
         {
           name: 'fhir_read',
@@ -1097,10 +1106,10 @@ class EpicFHIRMCPServer {
             properties: {
               resource_type: { type: 'string' },
               id: { type: 'string' },
-              redact_phi: { type: 'boolean', default: true }
+              redact_phi: { type: 'boolean', default: true },
             },
-            required: ['resource_type', 'id']
-          }
+            required: ['resource_type', 'id'],
+          },
         },
         {
           name: 'get_patient_summary',
@@ -1111,17 +1120,20 @@ class EpicFHIRMCPServer {
               patient_id: { type: 'string' },
               include: {
                 type: 'array',
-                items: { type: 'string', enum: ['conditions', 'medications', 'allergies', 'vitals'] }
+                items: {
+                  type: 'string',
+                  enum: ['conditions', 'medications', 'allergies', 'vitals'],
+                },
               },
-              redact_phi: { type: 'boolean', default: true }
+              redact_phi: { type: 'boolean', default: true },
             },
-            required: ['patient_id']
-          }
-        }
-      ]
+            required: ['patient_id'],
+          },
+        },
+      ],
     }));
 
-    this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
+    this.server.setRequestHandler(CallToolRequestSchema, async request => {
       const { name, arguments: args } = request.params;
 
       try {
@@ -1147,12 +1159,12 @@ class EpicFHIRMCPServer {
         }
 
         return {
-          content: [{ type: 'text', text: JSON.stringify(result, null, 2) }]
+          content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
         };
       } catch (error) {
         return {
           content: [{ type: 'text', text: `FHIR Error: ${error.message}` }],
-          isError: true
+          isError: true,
         };
       }
     });
@@ -1160,10 +1172,7 @@ class EpicFHIRMCPServer {
 
   private redactPHI(data: any): any {
     // Redact common PHI fields per HIPAA Safe Harbor
-    const phiFields = [
-      'name', 'address', 'telecom', 'birthDate', 
-      'identifier', 'photo', 'contact'
-    ];
+    const phiFields = ['name', 'address', 'telecom', 'birthDate', 'identifier', 'photo', 'contact'];
 
     const redact = (obj: any): any => {
       if (Array.isArray(obj)) {
@@ -1191,24 +1200,21 @@ class EpicFHIRMCPServer {
       `${process.env.EPIC_BASE_URL}/${args.resource_type}?${new URLSearchParams(args.search_params)}`,
       {
         headers: {
-          'Authorization': `Bearer ${await this.getAccessToken()}`,
-          'Accept': 'application/fhir+json'
-        }
+          Authorization: `Bearer ${await this.getAccessToken()}`,
+          Accept: 'application/fhir+json',
+        },
       }
     );
     return await response.json();
   }
 
   private async fhirRead(args: any) {
-    const response = await fetch(
-      `${process.env.EPIC_BASE_URL}/${args.resource_type}/${args.id}`,
-      {
-        headers: {
-          'Authorization': `Bearer ${await this.getAccessToken()}`,
-          'Accept': 'application/fhir+json'
-        }
-      }
-    );
+    const response = await fetch(`${process.env.EPIC_BASE_URL}/${args.resource_type}/${args.id}`, {
+      headers: {
+        Authorization: `Bearer ${await this.getAccessToken()}`,
+        Accept: 'application/fhir+json',
+      },
+    });
     return await response.json();
   }
 
@@ -1218,21 +1224,21 @@ class EpicFHIRMCPServer {
     if (args.include?.includes('conditions') || !args.include) {
       summary.conditions = await this.fhirSearch({
         resource_type: 'Condition',
-        search_params: { patient: args.patient_id }
+        search_params: { patient: args.patient_id },
       });
     }
 
     if (args.include?.includes('medications') || !args.include) {
       summary.medications = await this.fhirSearch({
         resource_type: 'MedicationRequest',
-        search_params: { patient: args.patient_id, status: 'active' }
+        search_params: { patient: args.patient_id, status: 'active' },
       });
     }
 
     if (args.include?.includes('allergies') || !args.include) {
       summary.allergies = await this.fhirSearch({
         resource_type: 'AllergyIntolerance',
-        search_params: { patient: args.patient_id }
+        search_params: { patient: args.patient_id },
       });
     }
 
@@ -1284,9 +1290,7 @@ export class MCPConnectionManager {
       { capabilities: {} }
     );
 
-    const transport = new SSEClientTransport(
-      new URL(`${this.config.mcpServerUrl}/sse`)
-    );
+    const transport = new SSEClientTransport(new URL(`${this.config.mcpServerUrl}/sse`));
 
     await this.aiNexusClient.connect(transport);
     console.log('Connected to Velanova MCP Server');
@@ -1303,8 +1307,8 @@ export class MCPConnectionManager {
       arguments: {
         prompt,
         model: options?.model,
-        requirements: options?.requirements
-      }
+        requirements: options?.requirements,
+      },
     });
   }
 
@@ -1316,7 +1320,7 @@ export class MCPConnectionManager {
 
     return await this.aiNexusClient.callTool({
       name: 'query_database',
-      arguments: { database_id: databaseId, query }
+      arguments: { database_id: databaseId, query },
     });
   }
 
@@ -1328,7 +1332,7 @@ export class MCPConnectionManager {
 
     return await this.aiNexusClient.callTool({
       name: 'query_sap',
-      arguments: { intent, module }
+      arguments: { intent, module },
     });
   }
 
@@ -1340,7 +1344,7 @@ export class MCPConnectionManager {
 
     return await this.aiNexusClient.callTool({
       name: 'query_epic',
-      arguments: { resource_type: resourceType, search_params: params }
+      arguments: { resource_type: resourceType, search_params: params },
     });
   }
 
@@ -1362,7 +1366,7 @@ export class MCPConnectionManager {
 
     return await this.aiNexusClient.callTool({
       name: 'get_usage_stats',
-      arguments: { period }
+      arguments: { period },
     });
   }
 }
@@ -1374,46 +1378,46 @@ export class MCPConnectionManager {
 
 ### ✅ USE Existing MCP Servers (90% of integrations)
 
-| Category | Servers | Action |
-|----------|---------|--------|
-| **Databases** | PostgreSQL, MySQL, MongoDB, SQL Server, Oracle, Redis, Elasticsearch | Just configure Docker |
-| **Cloud** | AWS, Azure, GCP, Snowflake, BigQuery | Just configure |
-| **DevOps** | GitHub, GitLab, Jira, Kubernetes, Terraform, Docker | Just configure |
-| **Collaboration** | Slack, Notion, Discord, Microsoft Teams | Just configure |
-| **SaaS** | Salesforce, ServiceNow, HubSpot, Zendesk | Evaluate & configure |
+| Category          | Servers                                                              | Action                |
+| ----------------- | -------------------------------------------------------------------- | --------------------- |
+| **Databases**     | PostgreSQL, MySQL, MongoDB, SQL Server, Oracle, Redis, Elasticsearch | Just configure Docker |
+| **Cloud**         | AWS, Azure, GCP, Snowflake, BigQuery                                 | Just configure        |
+| **DevOps**        | GitHub, GitLab, Jira, Kubernetes, Terraform, Docker                  | Just configure        |
+| **Collaboration** | Slack, Notion, Discord, Microsoft Teams                              | Just configure        |
+| **SaaS**          | Salesforce, ServiceNow, HubSpot, Zendesk                             | Evaluate & configure  |
 
 ### 🔨 BUILD Custom MCP Servers (10% of integrations)
 
-| System | Priority | Weeks | Why Custom? |
-|--------|----------|-------|-------------|
-| **SAP S/4HANA** | P0 | 2-3 | No existing server, RFC complexity |
-| **Epic FHIR** | P1 | 2 | HIPAA compliance, PHI redaction |
-| **Workday** | P1 | 2 | No existing server |
-| **AS/400 (IBM i)** | P2 | 2-3 | No existing server, legacy protocol |
-| **Guidewire** | P2 | 2 | Insurance industry, no existing |
-| **FIS Core Banking** | P2 | 2-3 | Banking protocols, security |
+| System               | Priority | Weeks | Why Custom?                         |
+| -------------------- | -------- | ----- | ----------------------------------- |
+| **SAP S/4HANA**      | P0       | 2-3   | No existing server, RFC complexity  |
+| **Epic FHIR**        | P1       | 2     | HIPAA compliance, PHI redaction     |
+| **Workday**          | P1       | 2     | No existing server                  |
+| **AS/400 (IBM i)**   | P2       | 2-3   | No existing server, legacy protocol |
+| **Guidewire**        | P2       | 2     | Insurance industry, no existing     |
+| **FIS Core Banking** | P2       | 2-3   | Banking protocols, security         |
 
 ### 🌟 BUILD Velanova MCP Server (The Aggregator)
 
-| Component | Purpose | Weeks |
-|-----------|---------|-------|
-| **Aggregation Layer** | Unified access to all MCP servers | 2 |
-| **AI Router** | Intelligent model selection & routing | 1 |
-| **Governance Layer** | License, audit, cost tracking, RBAC | 2 |
-| **SSE/STDIO Transport** | Support all connection methods | 1 |
+| Component               | Purpose                               | Weeks |
+| ----------------------- | ------------------------------------- | ----- |
+| **Aggregation Layer**   | Unified access to all MCP servers     | 2     |
+| **AI Router**           | Intelligent model selection & routing | 1     |
+| **Governance Layer**    | License, audit, cost tracking, RBAC   | 2     |
+| **SSE/STDIO Transport** | Support all connection methods        | 1     |
 
 ---
 
 ## Timeline Summary
 
-| Phase | Duration | Deliverables |
-|-------|----------|--------------|
-| **Phase 1**: MCP Farm Setup | Week 1-2 | 20+ existing MCP servers running via Docker |
-| **Phase 2**: Velanova MCP Server | Week 3-4 | Aggregator with governance layer |
-| **Phase 3**: Database Integration | Week 3 | All DB MCP servers connected to aggregator |
-| **Phase 4**: Custom MCP Servers | Week 5-8 | SAP, Epic, Workday, AS/400 |
-| **Phase 5**: Desktop App Integration | Week 6-7 | Updated mcp-manager.ts |
-| **Phase 6**: Testing & Hardening | Week 8-10 | Production readiness |
+| Phase                                | Duration  | Deliverables                                |
+| ------------------------------------ | --------- | ------------------------------------------- |
+| **Phase 1**: MCP Farm Setup          | Week 1-2  | 20+ existing MCP servers running via Docker |
+| **Phase 2**: Velanova MCP Server     | Week 3-4  | Aggregator with governance layer            |
+| **Phase 3**: Database Integration    | Week 3    | All DB MCP servers connected to aggregator  |
+| **Phase 4**: Custom MCP Servers      | Week 5-8  | SAP, Epic, Workday, AS/400                  |
+| **Phase 5**: Desktop App Integration | Week 6-7  | Updated mcp-manager.ts                      |
+| **Phase 6**: Testing & Hardening     | Week 8-10 | Production readiness                        |
 
 **Total**: 10 weeks (vs. 6+ months if building from scratch)
 
@@ -1422,11 +1426,13 @@ export class MCPConnectionManager {
 ## Conclusion
 
 **The key insight**: We're not building 70 MCP servers. We're:
+
 1. **Configuring** 50+ existing MCP servers (zero development)
 2. **Building** 6-8 custom MCP servers (enterprise gaps)
 3. **Creating** 1 Velanova MCP Server (aggregation + governance)
 
 This approach gives us:
+
 - **300+ integrations** in 10 weeks
 - **Enterprise-grade governance** (licensing, audit, cost tracking)
 - **Protocol lock-in** (MCP standard = customers can't easily leave)

@@ -82,7 +82,7 @@ const server = new Server(
 // Initialize MariaDB connection
 async function initConnection() {
   const connectionString = process.env.MARIADB_CONNECTION_STRING;
-  
+
   if (!connectionString) {
     // Parse individual env vars
     connection = await mysql.createConnection({
@@ -97,7 +97,7 @@ async function initConnection() {
     // Use connection string
     connection = await mysql.createConnection(connectionString);
   }
-  
+
   console.error('Connected to MariaDB');
 }
 
@@ -106,7 +106,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
   return { tools: TOOLS };
 });
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   if (!connection) {
     await initConnection();
   }
@@ -188,7 +188,7 @@ async function main() {
   console.error('MariaDB MCP server running on stdio');
 }
 
-main().catch((error) => {
+main().catch(error => {
   console.error('Fatal error:', error);
   process.exit(1);
 });

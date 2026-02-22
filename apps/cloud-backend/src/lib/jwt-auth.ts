@@ -37,17 +37,21 @@ async function createSignature(data: string, secret: string): Promise<string> {
   const encoder = new TextEncoder();
   const keyData = encoder.encode(secret);
   const messageData = encoder.encode(data);
-  
+
   const key = await crypto.subtle.importKey(
-    'raw', keyData, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
+    'raw',
+    keyData,
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
   );
-  
+
   const signature = await crypto.subtle.sign('HMAC', key, messageData);
   const signatureArray = new Uint8Array(signature);
-  
+
   let binary = '';
-  signatureArray.forEach(byte => binary += String.fromCharCode(byte));
-  
+  signatureArray.forEach(byte => (binary += String.fromCharCode(byte)));
+
   return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 }
 
@@ -62,14 +66,14 @@ export async function verifyToken(token: string): Promise<AuthResult> {
 
     const [headerEncoded, payloadEncoded, signature] = parts;
     const expectedSignature = await createSignature(`${headerEncoded}.${payloadEncoded}`, secret);
-    
+
     if (signature !== expectedSignature) {
       return { success: false, error: 'Invalid signature' };
     }
 
     const payload: JWTPayload = JSON.parse(base64UrlDecode(payloadEncoded));
     const now = Math.floor(Date.now() / 1000);
-    
+
     if (payload.exp && payload.exp < now) {
       return { success: false, error: 'Token expired' };
     }
@@ -93,16 +97,16 @@ export function extractTokenFromHeader(authHeader: string | undefined | null): s
 export async function getUser(): Promise<{ user: JWTPayload | null; error: string | null }> {
   try {
     const cookieStore = await cookies();
-    
+
     // Try auth_token cookie first
-    let token = cookieStore.get('auth_token')?.value;
-    
+    const token = cookieStore.get('auth_token')?.value;
+
     if (!token) {
       return { user: null, error: 'No auth token' };
     }
 
     const result = await verifyToken(token);
-    
+
     if (!result.success || !result.user) {
       return { user: null, error: result.error || 'Invalid token' };
     }
@@ -116,7 +120,9 @@ export async function getUser(): Promise<{ user: JWTPayload | null; error: strin
   }
 }
 
-export async function getUserFromRequest(request: Request): Promise<{ user: JWTPayload | null; error: string | null }> {
+export async function getUserFromRequest(
+  request: Request
+): Promise<{ user: JWTPayload | null; error: string | null }> {
   const authHeader = request.headers.get('authorization');
   const token = extractTokenFromHeader(authHeader);
 
@@ -125,7 +131,7 @@ export async function getUserFromRequest(request: Request): Promise<{ user: JWTP
   }
 
   const result = await verifyToken(token);
-  
+
   if (!result.success || !result.user) {
     return { user: null, error: result.error || 'Invalid token' };
   }

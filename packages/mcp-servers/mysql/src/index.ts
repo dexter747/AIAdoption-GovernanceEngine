@@ -81,7 +81,7 @@ const server = new Server(
 // Initialize MySQL connection
 async function initConnection() {
   const connectionString = process.env.MYSQL_CONNECTION_STRING;
-  
+
   if (!connectionString) {
     // Parse individual env vars
     connection = await mysql.createConnection({
@@ -96,14 +96,14 @@ async function initConnection() {
     // Use connection string
     connection = await mysql.createConnection(connectionString);
   }
-  
+
   console.error('Connected to MySQL');
 }
 
 // Tool handlers
 async function handleQuery(sql: string) {
   if (!connection) throw new Error('Not connected to MySQL');
-  
+
   try {
     const [rows] = await connection.query(sql);
     return {
@@ -129,7 +129,7 @@ async function handleQuery(sql: string) {
 
 async function handleListTables() {
   if (!connection) throw new Error('Not connected to MySQL');
-  
+
   const [rows] = await connection.query(
     'SELECT table_name FROM information_schema.tables WHERE table_schema = DATABASE()'
   );
@@ -145,7 +145,7 @@ async function handleListTables() {
 
 async function handleDescribeTable(tableName: string) {
   if (!connection) throw new Error('Not connected to MySQL');
-  
+
   const [rows] = await connection.query(`DESCRIBE ${mysql.escapeId(tableName)}`);
   return {
     content: [
@@ -159,7 +159,7 @@ async function handleDescribeTable(tableName: string) {
 
 async function handleShowDatabases() {
   if (!connection) throw new Error('Not connected to MySQL');
-  
+
   const [rows] = await connection.query('SHOW DATABASES');
   return {
     content: [
@@ -176,7 +176,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   tools: TOOLS,
 }));
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   const { name, arguments: args } = request.params;
 
   switch (name) {
@@ -197,10 +197,10 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 async function main() {
   try {
     await initConnection();
-    
+
     const transport = new StdioServerTransport();
     await server.connect(transport);
-    
+
     console.error('MySQL MCP Server running on stdio');
   } catch (error) {
     console.error('Failed to start server:', error);

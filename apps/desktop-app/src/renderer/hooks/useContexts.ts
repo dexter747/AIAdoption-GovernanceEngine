@@ -5,7 +5,7 @@
 import { useState, useCallback, useEffect } from 'react';
 
 // Re-export types for convenience
-export type ContextType = 
+export type ContextType =
   | 'system_prompt'
   | 'database_schema'
   | 'knowledge_base'
@@ -80,11 +80,11 @@ export function useContexts(initialOptions?: ContextSearchOptions) {
     try {
       setLoading(true);
       setError(null);
-      
+
       if (!window.electron?.context?.list) {
         throw new Error('Context API not available. Please restart the application.');
       }
-      
+
       const result = await window.electron.context.list(options);
       // Convert dates from string to Date objects
       const parsed = result.map((ctx: any) => ({
@@ -108,62 +108,80 @@ export function useContexts(initialOptions?: ContextSearchOptions) {
   }, [loadContexts, initialOptions]);
 
   // Create a new context
-  const createContext = useCallback(async (data: {
-    name: string;
-    type: ContextType;
-    content: string;
-    description?: string;
-    tags?: string[];
-    priority?: number;
-    autoInclude?: boolean;
-    connectionId?: string;
-    projectId?: string;
-    maxTokens?: number;
-  }): Promise<LLMContext> => {
-    const result = await window.electron.context.create(data);
-    await loadContexts(initialOptions);
-    return result;
-  }, [loadContexts, initialOptions]);
+  const createContext = useCallback(
+    async (data: {
+      name: string;
+      type: ContextType;
+      content: string;
+      description?: string;
+      tags?: string[];
+      priority?: number;
+      autoInclude?: boolean;
+      connectionId?: string;
+      projectId?: string;
+      maxTokens?: number;
+    }): Promise<LLMContext> => {
+      const result = await window.electron.context.create(data);
+      await loadContexts(initialOptions);
+      return result;
+    },
+    [loadContexts, initialOptions]
+  );
 
   // Update a context
-  const updateContext = useCallback(async (id: string, updates: Partial<LLMContext>): Promise<LLMContext> => {
-    const result = await window.electron.context.update(id, updates);
-    await loadContexts(initialOptions);
-    return result;
-  }, [loadContexts, initialOptions]);
+  const updateContext = useCallback(
+    async (id: string, updates: Partial<LLMContext>): Promise<LLMContext> => {
+      const result = await window.electron.context.update(id, updates);
+      await loadContexts(initialOptions);
+      return result;
+    },
+    [loadContexts, initialOptions]
+  );
 
   // Delete a context
-  const deleteContext = useCallback(async (id: string): Promise<void> => {
-    await window.electron.context.delete(id);
-    await loadContexts(initialOptions);
-  }, [loadContexts, initialOptions]);
+  const deleteContext = useCallback(
+    async (id: string): Promise<void> => {
+      await window.electron.context.delete(id);
+      await loadContexts(initialOptions);
+    },
+    [loadContexts, initialOptions]
+  );
 
   // Toggle active state
-  const toggleActive = useCallback(async (id: string): Promise<LLMContext> => {
-    const result = await window.electron.context.toggleActive(id);
-    await loadContexts(initialOptions);
-    return result;
-  }, [loadContexts, initialOptions]);
+  const toggleActive = useCallback(
+    async (id: string): Promise<LLMContext> => {
+      const result = await window.electron.context.toggleActive(id);
+      await loadContexts(initialOptions);
+      return result;
+    },
+    [loadContexts, initialOptions]
+  );
 
   // Toggle auto-include
-  const toggleAutoInclude = useCallback(async (id: string): Promise<LLMContext> => {
-    const result = await window.electron.context.toggleAutoInclude(id);
-    await loadContexts(initialOptions);
-    return result;
-  }, [loadContexts, initialOptions]);
+  const toggleAutoInclude = useCallback(
+    async (id: string): Promise<LLMContext> => {
+      const result = await window.electron.context.toggleAutoInclude(id);
+      await loadContexts(initialOptions);
+      return result;
+    },
+    [loadContexts, initialOptions]
+  );
 
   // Import knowledge file
-  const importKnowledgeFile = useCallback(async (options?: { 
-    name?: string; 
-    tags?: string[]; 
-    chunkSize?: number;
-  }): Promise<{ canceled: boolean; contexts: LLMContext[] }> => {
-    const result = await window.electron.context.importFile(options);
-    if (!result.canceled) {
-      await loadContexts(initialOptions);
-    }
-    return result;
-  }, [loadContexts, initialOptions]);
+  const importKnowledgeFile = useCallback(
+    async (options?: {
+      name?: string;
+      tags?: string[];
+      chunkSize?: number;
+    }): Promise<{ canceled: boolean; contexts: LLMContext[] }> => {
+      const result = await window.electron.context.importFile(options);
+      if (!result.canceled) {
+        await loadContexts(initialOptions);
+      }
+      return result;
+    },
+    [loadContexts, initialOptions]
+  );
 
   // Load stats
   const loadStats = useCallback(async () => {
@@ -187,20 +205,23 @@ export function useContexts(initialOptions?: ContextSearchOptions) {
   }, []);
 
   // Import contexts from JSON
-  const importContextsFromJson = useCallback(async (options?: { overwrite?: boolean }) => {
-    const result = await window.electron.context.importJson(options);
-    if (!result.canceled) {
-      await loadContexts(initialOptions);
-    }
-    return result;
-  }, [loadContexts, initialOptions]);
+  const importContextsFromJson = useCallback(
+    async (options?: { overwrite?: boolean }) => {
+      const result = await window.electron.context.importJson(options);
+      if (!result.canceled) {
+        await loadContexts(initialOptions);
+      }
+      return result;
+    },
+    [loadContexts, initialOptions]
+  );
 
   return {
     contexts,
     loading,
     error,
     stats,
-    
+
     // Actions
     loadContexts,
     createContext,
@@ -212,7 +233,7 @@ export function useContexts(initialOptions?: ContextSearchOptions) {
     loadStats,
     exportAllContexts,
     importContextsFromJson,
-    
+
     // Refresh
     refresh: () => loadContexts(initialOptions),
   };
@@ -226,26 +247,29 @@ export function useCompiledContext() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const compile = useCallback(async (options: {
-    config: ContextWindowConfig;
-    connectionId?: string;
-    projectId?: string;
-    additionalContextIds?: string[];
-    excludeIds?: string[];
-  }): Promise<CompiledContext> => {
-    try {
-      setLoading(true);
-      setError(null);
-      const result = await window.electron.context.compile(options);
-      setCompiled(result);
-      return result;
-    } catch (err: any) {
-      setError(err.message || 'Failed to compile contexts');
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const compile = useCallback(
+    async (options: {
+      config: ContextWindowConfig;
+      connectionId?: string;
+      projectId?: string;
+      additionalContextIds?: string[];
+      excludeIds?: string[];
+    }): Promise<CompiledContext> => {
+      try {
+        setLoading(true);
+        setError(null);
+        const result = await window.electron.context.compile(options);
+        setCompiled(result);
+        return result;
+      } catch (err: any) {
+        setError(err.message || 'Failed to compile contexts');
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
 
   return {
     compiled,
@@ -268,7 +292,7 @@ export function useContext(id: string | null) {
       setContext(null);
       return;
     }
-    
+
     try {
       setLoading(true);
       setError(null);

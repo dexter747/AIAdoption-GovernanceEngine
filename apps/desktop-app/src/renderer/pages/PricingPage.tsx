@@ -100,9 +100,13 @@ export default function PricingPage() {
     <div className="h-full flex flex-col overflow-hidden">
       {/* Toolbar */}
       <div className="toolbar app-region-drag">
-        <h1 className="text-[13px] font-medium text-white/80 app-region-no-drag select-none">Pricing</h1>
+        <h1 className="text-[13px] font-medium text-white/80 app-region-no-drag select-none">
+          Pricing
+        </h1>
         <div className="w-px h-4 bg-white/[0.08] mx-3" />
-        <span className="text-[11px] text-white/30 app-region-no-drag">Start free · No credit card required · Cancel anytime</span>
+        <span className="text-[11px] text-white/30 app-region-no-drag">
+          Start free · No credit card required · Cancel anytime
+        </span>
       </div>
 
       <div className="flex-1 overflow-auto bg-[#0b0b0b] p-6">
@@ -111,8 +115,10 @@ export default function PricingPage() {
           {plans.map(plan => {
             const Icon = plan.icon;
             return (
-              <div key={plan.name}
-                className={cn('relative flex flex-col rounded-xl border p-5 transition-all',
+              <div
+                key={plan.name}
+                className={cn(
+                  'relative flex flex-col rounded-xl border p-5 transition-all',
                   plan.highlighted
                     ? 'border-white/25 bg-white/[0.06] shadow-lg shadow-white/[0.04] ring-1 ring-white/15'
                     : 'border-white/[0.07] bg-white/[0.02] hover:border-white/[0.12]'
@@ -132,7 +138,9 @@ export default function PricingPage() {
                 <p className="text-[11px] text-white/35 mb-4">{plan.description}</p>
 
                 <div className="flex items-baseline gap-1 mb-5">
-                  <span className="text-[28px] font-medium text-white tracking-tight">{plan.price}</span>
+                  <span className="text-[28px] font-medium text-white tracking-tight">
+                    {plan.price}
+                  </span>
                   {plan.period && <span className="text-[11px] text-white/35">{plan.period}</span>}
                 </div>
 
@@ -148,11 +156,14 @@ export default function PricingPage() {
                 <button
                   onClick={() => {
                     if (plan.ctaAction === 'download') open('https://velanova.ai/download');
-                    else if (plan.ctaAction === 'subscribe-professional') open('https://velanova.ai/subscribe?plan=professional');
-                    else if (plan.ctaAction === 'subscribe-team') open('https://velanova.ai/subscribe?plan=team');
+                    else if (plan.ctaAction === 'subscribe-professional')
+                      open('https://velanova.ai/subscribe?plan=professional');
+                    else if (plan.ctaAction === 'subscribe-team')
+                      open('https://velanova.ai/subscribe?plan=team');
                     else open('https://velanova.ai/contact');
                   }}
-                  className={cn('w-full py-2 rounded-[6px] text-[12px] font-medium transition-all flex items-center justify-center gap-1.5',
+                  className={cn(
+                    'w-full py-2 rounded-[6px] text-[12px] font-medium transition-all flex items-center justify-center gap-1.5',
                     plan.highlighted
                       ? 'bg-white text-black hover:bg-zinc-200'
                       : 'border border-white/[0.09] text-white/60 hover:border-white/20 hover:bg-white/[0.04]'
@@ -174,8 +185,10 @@ export default function PricingPage() {
         <div className="mt-3 pb-2 text-center">
           <p className="text-[11px] text-white/25">
             Need a custom plan?{' '}
-            <button onClick={() => open('https://velanova.ai/contact')}
-              className="text-white/40 hover:text-white/60 underline underline-offset-2 transition-colors">
+            <button
+              onClick={() => open('https://velanova.ai/contact')}
+              className="text-white/40 hover:text-white/60 underline underline-offset-2 transition-colors"
+            >
               Contact sales
             </button>
           </p>

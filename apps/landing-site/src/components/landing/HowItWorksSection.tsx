@@ -1,16 +1,31 @@
-"use client";
+'use client';
 
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Download, Database, MessageSquare } from "lucide-react";
+import { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Download, Database, MessageSquare } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const steps = [
-  { step: "1", icon: Download, title: "Download the App", description: "Install Velanova on Windows, macOS, or Linux. No complex setup required." },
-  { step: "2", icon: Database, title: "Connect Your Database", description: "Add your database credentials. We support 10+ database types out of the box." },
-  { step: "3", icon: MessageSquare, title: "Start Asking Questions", description: "Type your questions in plain English. AI generates and executes the perfect SQL." },
+  {
+    step: '1',
+    icon: Download,
+    title: 'Download the App',
+    description: 'Install Velanova on Windows, macOS, or Linux. No complex setup required.',
+  },
+  {
+    step: '2',
+    icon: Database,
+    title: 'Connect Your Database',
+    description: 'Add your database credentials. We support 10+ database types out of the box.',
+  },
+  {
+    step: '3',
+    icon: MessageSquare,
+    title: 'Start Asking Questions',
+    description: 'Type your questions in plain English. AI generates and executes the perfect SQL.',
+  },
 ];
 
 export function HowItWorksSection() {
@@ -18,17 +33,30 @@ export function HowItWorksSection() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(".hiw-header > *", {
-        opacity: 0, y: 30, duration: 0.7, stagger: 0.12, immediateRender: false,
-        scrollTrigger: { trigger: ".hiw-header", start: "top 85%", once: true },
+      gsap.from('.hiw-header > *', {
+        opacity: 0,
+        y: 30,
+        duration: 0.7,
+        stagger: 0.12,
+        immediateRender: false,
+        scrollTrigger: { trigger: '.hiw-header', start: 'top 85%', once: true },
       });
-      gsap.from(".hiw-step", {
-        opacity: 0, y: 40, duration: 0.7, stagger: 0.2, ease: "power3.out", immediateRender: false,
-        scrollTrigger: { trigger: ".hiw-grid", start: "top 85%", once: true },
+      gsap.from('.hiw-step', {
+        opacity: 0,
+        y: 40,
+        duration: 0.7,
+        stagger: 0.2,
+        ease: 'power3.out',
+        immediateRender: false,
+        scrollTrigger: { trigger: '.hiw-grid', start: 'top 85%', once: true },
       });
-      gsap.from(".hiw-connector", {
-        scaleX: 0, duration: 0.8, stagger: 0.3, ease: "power2.out", immediateRender: false,
-        scrollTrigger: { trigger: ".hiw-grid", start: "top 80%", once: true },
+      gsap.from('.hiw-connector', {
+        scaleX: 0,
+        duration: 0.8,
+        stagger: 0.3,
+        ease: 'power2.out',
+        immediateRender: false,
+        scrollTrigger: { trigger: '.hiw-grid', start: 'top 80%', once: true },
       });
     }, ref);
     return () => ctx.revert();
@@ -56,7 +84,7 @@ export function HowItWorksSection() {
             <div className="hiw-connector absolute right-0 w-1/2 h-px bg-gradient-to-l from-zinc-700 to-zinc-800 origin-right" />
           </div>
 
-          {steps.map((item) => {
+          {steps.map(item => {
             const Icon = item.icon;
             return (
               <div key={item.step} className="hiw-step text-center group">
@@ -67,7 +95,9 @@ export function HowItWorksSection() {
                   </div>
                 </div>
                 <h3 className="text-lg font-medium mb-2 text-white">{item.title}</h3>
-                <p className="text-sm text-zinc-500 leading-relaxed max-w-xs mx-auto">{item.description}</p>
+                <p className="text-sm text-zinc-500 leading-relaxed max-w-xs mx-auto">
+                  {item.description}
+                </p>
               </div>
             );
           })}

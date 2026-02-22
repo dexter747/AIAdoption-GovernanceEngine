@@ -33,12 +33,10 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20 text-center">
-        <h2 className="text-5xl font-medium mb-6 text-white">
-          Bring AI to Your Legacy Software
-        </h2>
+        <h2 className="text-5xl font-medium mb-6 text-white">Bring AI to Your Legacy Software</h2>
         <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
-          Connect your existing databases and enterprise systems to powerful AI models.
-          Query your data in natural language, automate tasks, and gain insights instantly.
+          Connect your existing databases and enterprise systems to powerful AI models. Query your
+          data in natural language, automate tasks, and gain insights instantly.
         </p>
         <div className="flex gap-4 justify-center">
           <Link
@@ -98,7 +96,10 @@ export default function Home() {
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="container mx-auto px-4 py-20 bg-card rounded-3xl border border-border my-20">
+      <section
+        id="pricing"
+        className="container mx-auto px-4 py-20 bg-card rounded-3xl border border-border my-20"
+      >
         <h3 className="text-3xl font-medium text-center mb-12">Simple, Transparent Pricing</h3>
         <div className="grid md:grid-cols-4 gap-6">
           <PricingCard
@@ -113,12 +114,7 @@ export default function Home() {
             name="Professional"
             price="$49"
             period="per month"
-            features={[
-              '3 devices',
-              'Unlimited queries',
-              'All AI providers',
-              'Priority support',
-            ]}
+            features={['3 devices', 'Unlimited queries', 'All AI providers', 'Priority support']}
             cta="Subscribe Now"
             ctaLink="/subscribe?plan=professional"
             highlighted

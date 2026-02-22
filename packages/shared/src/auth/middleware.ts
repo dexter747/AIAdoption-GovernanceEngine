@@ -45,7 +45,7 @@ export function authMiddleware(options: AuthMiddlewareOptions = {}) {
     if (options.requiredPlan && options.requiredPlan.length > 0) {
       const userPlan = result.user?.plan || 'trial';
       if (!options.requiredPlan.includes(userPlan)) {
-        return res.status(403).json({ 
+        return res.status(403).json({
           error: 'Insufficient permissions',
           required: options.requiredPlan,
           current: userPlan,
@@ -56,7 +56,7 @@ export function authMiddleware(options: AuthMiddlewareOptions = {}) {
     // Attach user to request
     req.user = result.user;
     req.token = token;
-    
+
     next();
   };
 }
@@ -66,7 +66,7 @@ export function authMiddleware(options: AuthMiddlewareOptions = {}) {
  */
 export function verifyAuth(authHeader: string | undefined): AuthResult {
   const token = extractTokenFromHeader(authHeader);
-  
+
   if (!token) {
     return { success: false, error: 'No token provided' };
   }
@@ -77,12 +77,14 @@ export function verifyAuth(authHeader: string | undefined): AuthResult {
 /**
  * Get user from request headers
  */
-export function getUserFromRequest(req: { headers: Record<string, string | undefined> }): JWTPayload | null {
+export function getUserFromRequest(req: {
+  headers: Record<string, string | undefined>;
+}): JWTPayload | null {
   const authHeader = req.headers.authorization || req.headers.Authorization;
   const token = extractTokenFromHeader(authHeader);
-  
+
   if (!token) return null;
-  
+
   const result = verifyToken(token);
   return result.success ? result.user || null : null;
 }

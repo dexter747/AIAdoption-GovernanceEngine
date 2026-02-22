@@ -1,7 +1,17 @@
 import { useState, useEffect } from 'react';
 import {
-  Check, X, Loader2, ExternalLink, Zap, Users, Building2,
-  CreditCard, Calendar, ArrowRight, Star, RefreshCw,
+  Check,
+  X,
+  Loader2,
+  ExternalLink,
+  Zap,
+  Users,
+  Building2,
+  CreditCard,
+  Calendar,
+  ArrowRight,
+  Star,
+  RefreshCw,
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -49,11 +59,7 @@ const PLANS = [
       'Priority email support',
       'Early feature access',
     ],
-    missing: [
-      'Team collaboration',
-      'Admin dashboard',
-      'SSO / SAML',
-    ],
+    missing: ['Team collaboration', 'Admin dashboard', 'SSO / SAML'],
   },
   {
     id: 'team',
@@ -73,11 +79,7 @@ const PLANS = [
       'Dedicated Slack support',
       'Custom AI system prompts',
     ],
-    missing: [
-      'Unlimited team members',
-      'SSO / SAML',
-      'Dedicated account manager',
-    ],
+    missing: ['Unlimited team members', 'SSO / SAML', 'Dedicated account manager'],
   },
   {
     id: 'enterprise',
@@ -101,7 +103,7 @@ const PLANS = [
   },
 ] as const;
 
-type PlanId = typeof PLANS[number]['id'];
+type PlanId = (typeof PLANS)[number]['id'];
 
 const CHECKOUT_URLS: Record<string, Record<'monthly' | 'yearly', string>> = {
   professional: {
@@ -149,7 +151,7 @@ function PlanCard({
         plan.highlight
           ? 'bg-white/[0.04] border-white/[0.18] shadow-[0_0_60px_-12px_rgba(255,255,255,0.08)]'
           : 'bg-white/[0.015] border-white/[0.06] hover:border-white/[0.10] hover:bg-white/[0.025]',
-        isCurrent && 'border-white/[0.14]',
+        isCurrent && 'border-white/[0.14]'
       )}
     >
       {plan.highlight && (
@@ -160,10 +162,12 @@ function PlanCard({
 
       <div className="mb-4">
         <div className="flex items-center gap-2.5 mb-3">
-          <div className={cn(
-            'w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0',
-            plan.highlight ? 'bg-white/10' : 'bg-white/[0.06]',
-          )}>
+          <div
+            className={cn(
+              'w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0',
+              plan.highlight ? 'bg-white/10' : 'bg-white/[0.06]'
+            )}
+          >
             <plan.Icon className="w-4 h-4 text-zinc-300" strokeWidth={1.6} />
           </div>
           <div>
@@ -199,29 +203,34 @@ function PlanCard({
           isCurrent
             ? 'bg-white/[0.04] text-zinc-600 border border-white/[0.06] cursor-default'
             : plan.highlight
-            ? 'bg-white text-black hover:bg-zinc-100 shadow-[0_2px_20px_-4px_rgba(255,255,255,0.15)]'
-            : 'border border-white/[0.10] text-white hover:bg-white/[0.06] hover:border-white/[0.18]',
+              ? 'bg-white text-black hover:bg-zinc-100 shadow-[0_2px_20px_-4px_rgba(255,255,255,0.15)]'
+              : 'border border-white/[0.10] text-white hover:bg-white/[0.06] hover:border-white/[0.18]'
         )}
       >
         {isLoading === plan.id ? (
           <Loader2 className="w-4 h-4 animate-spin" />
         ) : isCurrent ? (
-          <><Check className="w-3.5 h-3.5" /> Current Plan</>
+          <>
+            <Check className="w-3.5 h-3.5" /> Current Plan
+          </>
         ) : (
-          <>{plan.cta}<ArrowRight className="w-3.5 h-3.5" /></>
+          <>
+            {plan.cta}
+            <ArrowRight className="w-3.5 h-3.5" />
+          </>
         )}
       </button>
 
       <div className="h-px bg-white/[0.05] mb-3.5" />
 
       <div className="flex-1 space-y-2">
-        {plan.features.map((f) => (
+        {plan.features.map(f => (
           <div key={f} className="flex items-start gap-2 text-[12px]">
             <Check className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0 mt-0.5" />
             <span className="text-zinc-400 leading-snug">{f}</span>
           </div>
         ))}
-        {plan.missing.map((f) => (
+        {plan.missing.map(f => (
           <div key={f} className="flex items-start gap-2 text-[12px]">
             <X className="w-3.5 h-3.5 text-zinc-800 flex-shrink-0 mt-0.5" />
             <span className="text-zinc-700 leading-snug">{f}</span>
@@ -286,7 +295,9 @@ export default function SubscriptionPage() {
       try {
         const r = await (window.electron as any).api?.createCheckout?.({ plan: planId, billing });
         url = r?.checkoutUrl ?? r?.url ?? null;
-      } catch { /* fall through */ }
+      } catch {
+        /* fall through */
+      }
       if (!url) {
         url = CHECKOUT_URLS[planId]?.[billing] ?? 'https://velanova.ai/pricing';
       }
@@ -300,7 +311,10 @@ export default function SubscriptionPage() {
   };
 
   const handleCancel = async () => {
-    if (!cancelConfirm) { setCancelConfirm(true); return; }
+    if (!cancelConfirm) {
+      setCancelConfirm(true);
+      return;
+    }
     setCancelConfirm(false);
     try {
       await (window.electron as any).api?.cancelSubscription?.();
@@ -334,12 +348,14 @@ export default function SubscriptionPage() {
               'fixed top-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-4 py-3 rounded-xl border shadow-2xl text-[13px] font-medium max-w-sm w-full',
               toast.type === 'success'
                 ? 'bg-[#0e0e0e] border-emerald-500/30 text-emerald-300'
-                : 'bg-[#0e0e0e] border-red-500/30 text-red-300',
+                : 'bg-[#0e0e0e] border-red-500/30 text-red-300'
             )}
           >
-            {toast.type === 'success'
-              ? <Check className="w-4 h-4 flex-shrink-0" />
-              : <X className="w-4 h-4 flex-shrink-0" />}
+            {toast.type === 'success' ? (
+              <Check className="w-4 h-4 flex-shrink-0" />
+            ) : (
+              <X className="w-4 h-4 flex-shrink-0" />
+            )}
             {toast.msg}
           </motion.div>
         )}
@@ -352,13 +368,13 @@ export default function SubscriptionPage() {
             Upgrade to unlock unlimited queries, all AI models, and BYOK support
           </p>
           <div className="inline-flex items-center gap-1 mt-6 p-1 rounded-xl border border-white/[0.07] bg-white/[0.02]">
-            {(['monthly', 'yearly'] as const).map((b) => (
+            {(['monthly', 'yearly'] as const).map(b => (
               <button
                 key={b}
                 onClick={() => setBilling(b)}
                 className={cn(
                   'px-5 py-1.5 rounded-lg text-[13px] font-medium transition-all duration-200',
-                  billing === b ? 'bg-white text-black shadow' : 'text-zinc-600 hover:text-zinc-300',
+                  billing === b ? 'bg-white text-black shadow' : 'text-zinc-600 hover:text-zinc-300'
                 )}
               >
                 {b === 'monthly' ? 'Monthly' : 'Annual'}
@@ -371,7 +387,7 @@ export default function SubscriptionPage() {
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
-          {PLANS.map((plan) => (
+          {PLANS.map(plan => (
             <PlanCard
               key={plan.id}
               plan={plan}
@@ -396,9 +412,11 @@ export default function SubscriptionPage() {
                 </div>
                 <div>
                   <p className="text-[14px] font-medium text-white">
-                    {PLANS.find((p) => p.id === currentPlan)?.name} — Active
+                    {PLANS.find(p => p.id === currentPlan)?.name} — Active
                   </p>
-                  <p className="text-[12px] text-zinc-600">Renews automatically each billing period</p>
+                  <p className="text-[12px] text-zinc-600">
+                    Renews automatically each billing period
+                  </p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -415,7 +433,7 @@ export default function SubscriptionPage() {
                     'px-4 py-2 rounded-xl text-[13px] font-medium border transition-all',
                     cancelConfirm
                       ? 'border-red-500/40 text-red-400 hover:bg-red-500/10'
-                      : 'border-white/[0.07] text-zinc-500 hover:border-white/[0.14] hover:text-zinc-300',
+                      : 'border-white/[0.07] text-zinc-500 hover:border-white/[0.14] hover:text-zinc-300'
                   )}
                 >
                   {cancelConfirm ? 'Confirm cancel?' : 'Cancel Subscription'}
@@ -457,7 +475,9 @@ export default function SubscriptionPage() {
                       <p className="text-[11px] text-zinc-600">
                         {p.createdAt ? new Date(p.createdAt).toLocaleDateString() : '—'}
                         {' · '}
-                        <span className={p.status === 'succeeded' ? 'text-emerald-500' : 'text-red-400'}>
+                        <span
+                          className={p.status === 'succeeded' ? 'text-emerald-500' : 'text-red-400'}
+                        >
                           {p.status ?? 'unknown'}
                         </span>
                       </p>
@@ -478,7 +498,9 @@ export default function SubscriptionPage() {
             <div className="flex flex-col items-center justify-center py-14 px-6 text-center">
               <CreditCard className="w-8 h-8 text-zinc-800 mb-2.5" />
               <p className="text-[13px] text-zinc-600">No payments yet</p>
-              <p className="text-[11px] text-zinc-700 mt-1">Invoices appear here once you upgrade</p>
+              <p className="text-[11px] text-zinc-700 mt-1">
+                Invoices appear here once you upgrade
+              </p>
             </div>
           )}
         </div>
@@ -488,10 +510,12 @@ export default function SubscriptionPage() {
             <Zap className="w-4 h-4 text-zinc-400" />
           </div>
           <div>
-            <p className="text-[14px] font-medium text-white mb-1">Bring Your Own API Keys (BYOK)</p>
+            <p className="text-[14px] font-medium text-white mb-1">
+              Bring Your Own API Keys (BYOK)
+            </p>
             <p className="text-[13px] text-zinc-500 leading-relaxed">
-              On Professional and above you can add your own OpenAI, Anthropic, Google, Groq, and more
-              API keys. Keys are AES-encrypted and stored locally — we never see them. Costs go
+              On Professional and above you can add your own OpenAI, Anthropic, Google, Groq, and
+              more API keys. Keys are AES-encrypted and stored locally — we never see them. Costs go
               directly to your provider account.
             </p>
             <button

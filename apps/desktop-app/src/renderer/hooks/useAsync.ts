@@ -19,8 +19,8 @@ interface UseAsyncOptions {
  * Hook for handling async operations with loading/error states
  */
 export function useAsync<T = any>(options: UseAsyncOptions = {}) {
-  const { 
-    showSuccessToast = false, 
+  const {
+    showSuccessToast = false,
     showErrorToast = true,
     successMessage = 'Operation completed successfully',
     onSuccess,
@@ -32,37 +32,37 @@ export function useAsync<T = any>(options: UseAsyncOptions = {}) {
     isLoading: false,
     error: null,
   });
-  
+
   const toast = useToast();
 
-  const execute = useCallback(async (
-    asyncFunction: () => Promise<T>,
-    customSuccessMessage?: string
-  ): Promise<T | null> => {
-    setState(prev => ({ ...prev, isLoading: true, error: null }));
-    
-    try {
-      const result = await asyncFunction();
-      setState({ data: result, isLoading: false, error: null });
-      
-      if (showSuccessToast) {
-        toast.success(customSuccessMessage || successMessage);
+  const execute = useCallback(
+    async (asyncFunction: () => Promise<T>, customSuccessMessage?: string): Promise<T | null> => {
+      setState(prev => ({ ...prev, isLoading: true, error: null }));
+
+      try {
+        const result = await asyncFunction();
+        setState({ data: result, isLoading: false, error: null });
+
+        if (showSuccessToast) {
+          toast.success(customSuccessMessage || successMessage);
+        }
+
+        onSuccess?.(result);
+        return result;
+      } catch (err: any) {
+        const errorMessage = err.message || 'An error occurred';
+        setState({ data: null, isLoading: false, error: errorMessage });
+
+        if (showErrorToast) {
+          toast.error('Error', errorMessage);
+        }
+
+        onError?.(err);
+        return null;
       }
-      
-      onSuccess?.(result);
-      return result;
-    } catch (err: any) {
-      const errorMessage = err.message || 'An error occurred';
-      setState({ data: null, isLoading: false, error: errorMessage });
-      
-      if (showErrorToast) {
-        toast.error('Error', errorMessage);
-      }
-      
-      onError?.(err);
-      return null;
-    }
-  }, [showSuccessToast, showErrorToast, successMessage, onSuccess, onError, toast]);
+    },
+    [showSuccessToast, showErrorToast, successMessage, onSuccess, onError, toast]
+  );
 
   const reset = useCallback(() => {
     setState({ data: null, isLoading: false, error: null });
@@ -81,7 +81,7 @@ export function useAsync<T = any>(options: UseAsyncOptions = {}) {
  */
 export function useFormSubmit<T = any>(options: UseAsyncOptions = {}) {
   const async = useAsync<T>(options);
-  
+
   const handleSubmit = useCallback(
     (asyncFunction: () => Promise<T>) => async (e?: React.FormEvent) => {
       e?.preventDefault();
@@ -99,9 +99,7 @@ export function useFormSubmit<T = any>(options: UseAsyncOptions = {}) {
 /**
  * Hook for fetching data on mount
  */
-export function useFetch<T = any>(
-  fetcher: () => Promise<T>
-) {
+export function useFetch<T = any>(fetcher: () => Promise<T>) {
   const [data, setData] = useState<T | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -110,7 +108,7 @@ export function useFetch<T = any>(
   const refetch = useCallback(async () => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const result = await fetcher();
       setData(result);

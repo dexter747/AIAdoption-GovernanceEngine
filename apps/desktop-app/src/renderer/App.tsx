@@ -11,23 +11,23 @@ import { useState, useEffect, lazy, Suspense, memo } from 'react';
 // Each page is only fetched & parsed when the user first visits that route.
 // This reduces the initial JS bundle from one monolith to small route chunks,
 // cutting startup time and RAM usage on older machines by ~30–50 %.
-const LoginPage              = lazy(() => import('./pages/LoginPage'));
+const LoginPage = lazy(() => import('./pages/LoginPage'));
 const ConnectionsPageEnhanced = lazy(() => import('./pages/ConnectionsPageEnhanced'));
-const QueriesPage            = lazy(() => import('./pages/QueriesPage'));
-const ChatPage               = lazy(() => import('./pages/ChatPage'));
-const PricingPage            = lazy(() => import('./pages/PricingPage'));
-const SettingsPage           = lazy(() => import('./pages/SettingsPage'));
-const ProfilePage            = lazy(() => import('./pages/ProfilePage'));
-const APIKeysPage            = lazy(() => import('./pages/APIKeysPage'));
-const DatabaseConnectionsPage= lazy(() => import('./pages/DatabaseConnectionsPage'));
-const ModernChatPage         = lazy(() => import('./pages/ModernChatPage'));
-const SubscriptionPage       = lazy(() => import('./pages/SubscriptionPage'));
-const ConnectionsDashboard   = lazy(() => import('./pages/ConnectionsDashboard'));
-const ProfileSettingsPage    = lazy(() => import('./pages/ProfileSettingsPage'));
-const LicenseActivationPage  = lazy(() => import('./pages/LicenseActivationPage'));
-const LibraryPage            = lazy(() => import('./pages/LibraryPage'));
-const MyConnectionsPage      = lazy(() => import('./pages/MyConnectionsPage'));
-const ContextManager         = lazy(() => import('./components/ContextManager'));
+const QueriesPage = lazy(() => import('./pages/QueriesPage'));
+const ChatPage = lazy(() => import('./pages/ChatPage'));
+const PricingPage = lazy(() => import('./pages/PricingPage'));
+const SettingsPage = lazy(() => import('./pages/SettingsPage'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage'));
+const APIKeysPage = lazy(() => import('./pages/APIKeysPage'));
+const DatabaseConnectionsPage = lazy(() => import('./pages/DatabaseConnectionsPage'));
+const ModernChatPage = lazy(() => import('./pages/ModernChatPage'));
+const SubscriptionPage = lazy(() => import('./pages/SubscriptionPage'));
+const ConnectionsDashboard = lazy(() => import('./pages/ConnectionsDashboard'));
+const ProfileSettingsPage = lazy(() => import('./pages/ProfileSettingsPage'));
+const LicenseActivationPage = lazy(() => import('./pages/LicenseActivationPage'));
+const LibraryPage = lazy(() => import('./pages/LibraryPage'));
+const MyConnectionsPage = lazy(() => import('./pages/MyConnectionsPage'));
+const ContextManager = lazy(() => import('./components/ContextManager'));
 
 // ── Tiny spinner shown while a lazy chunk is downloading ───────────────────
 const PageFallback = memo(() => (
@@ -41,7 +41,11 @@ function LoadingScreen({ label = 'Loading…' }: { label?: string }) {
     <div className="min-h-screen bg-[#030303] flex flex-col items-center justify-center gap-5">
       <div className="relative">
         <div className="absolute inset-0 rounded-xl bg-white/10 blur-lg scale-125 animate-pulse" />
-        <img src="/logo.png" alt="Velanova" className="relative w-10 h-10 rounded-xl object-cover opacity-90" />
+        <img
+          src="/logo.png"
+          alt="Velanova"
+          className="relative w-10 h-10 rounded-xl object-cover opacity-90"
+        />
       </div>
       <div className="flex flex-col items-center gap-2">
         <div className="w-5 h-5 border border-white/20 border-t-white/70 rounded-full animate-spin" />
@@ -79,12 +83,13 @@ function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     /* Full-screen window — no scroll at this level */
     <div className="flex h-screen overflow-hidden bg-[#080808]">
-      <Sidebar collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} />
+      <Sidebar
+        collapsed={sidebarCollapsed}
+        onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
+      />
       {/* 1px panel divider is already part of sidebar border-r */}
       <main className="flex-1 flex flex-col overflow-hidden bg-[#0b0b0b]">
-        <Suspense fallback={<PageFallback />}>
-          {children}
-        </Suspense>
+        <Suspense fallback={<PageFallback />}>{children}</Suspense>
       </main>
     </div>
   );
@@ -104,176 +109,176 @@ function AppRoutes() {
           path="/login"
           element={isAuthenticated ? <Navigate to="/" replace /> : <LoginPage />}
         />
-      <Route
-        path="/"
-        element={
-          <ProtectedRoute>
-            <AppLayout>
-              <ModernChatPage />
-            </AppLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/library"
-        element={
-          <ProtectedRoute>
-            <AppLayout>
-              <LibraryPage />
-            </AppLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/my-connections"
-        element={
-          <ProtectedRoute>
-            <AppLayout>
-              <MyConnectionsPage />
-            </AppLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/connections"
-        element={
-          <ProtectedRoute>
-            <AppLayout>
-              <ConnectionsPageEnhanced />
-            </AppLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/chat"
-        element={
-          <ProtectedRoute>
-            <AppLayout>
-              <ModernChatPage />
-            </AppLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/chat-old"
-        element={
-          <ProtectedRoute>
-            <ChatPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/connections-dashboard"
-        element={
-          <ProtectedRoute>
-            <AppLayout>
-              <ConnectionsDashboard />
-            </AppLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/queries"
-        element={
-          <ProtectedRoute>
-            <AppLayout>
-              <QueriesPage />
-            </AppLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/subscription"
-        element={
-          <ProtectedRoute>
-            <AppLayout>
-              <SubscriptionPage />
-            </AppLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/pricing"
-        element={
-          <ProtectedRoute>
-            <AppLayout>
-              <PricingPage />
-            </AppLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/settings"
-        element={
-          <ProtectedRoute>
-            <AppLayout>
-              <SettingsPage />
-            </AppLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/settings/api-keys"
-        element={
-          <ProtectedRoute>
-            <AppLayout>
-              <APIKeysPage />
-            </AppLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/settings/databases"
-        element={
-          <ProtectedRoute>
-            <AppLayout>
-              <DatabaseConnectionsPage />
-            </AppLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/profile"
-        element={
-          <ProtectedRoute>
-            <AppLayout>
-              <ProfilePage />
-            </AppLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/profile-settings"
-        element={
-          <ProtectedRoute>
-            <AppLayout>
-              <ProfileSettingsPage />
-            </AppLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/license"
-        element={
-          <ProtectedRoute>
-            <AppLayout>
-              <LicenseActivationPage />
-            </AppLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/contexts"
-        element={
-          <ProtectedRoute>
-            <AppLayout>
-              <ContextManager />
-            </AppLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <AppLayout>
+                <ModernChatPage />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/library"
+          element={
+            <ProtectedRoute>
+              <AppLayout>
+                <LibraryPage />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/my-connections"
+          element={
+            <ProtectedRoute>
+              <AppLayout>
+                <MyConnectionsPage />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/connections"
+          element={
+            <ProtectedRoute>
+              <AppLayout>
+                <ConnectionsPageEnhanced />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/chat"
+          element={
+            <ProtectedRoute>
+              <AppLayout>
+                <ModernChatPage />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/chat-old"
+          element={
+            <ProtectedRoute>
+              <ChatPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/connections-dashboard"
+          element={
+            <ProtectedRoute>
+              <AppLayout>
+                <ConnectionsDashboard />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/queries"
+          element={
+            <ProtectedRoute>
+              <AppLayout>
+                <QueriesPage />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/subscription"
+          element={
+            <ProtectedRoute>
+              <AppLayout>
+                <SubscriptionPage />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/pricing"
+          element={
+            <ProtectedRoute>
+              <AppLayout>
+                <PricingPage />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute>
+              <AppLayout>
+                <SettingsPage />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/settings/api-keys"
+          element={
+            <ProtectedRoute>
+              <AppLayout>
+                <APIKeysPage />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/settings/databases"
+          element={
+            <ProtectedRoute>
+              <AppLayout>
+                <DatabaseConnectionsPage />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <AppLayout>
+                <ProfilePage />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile-settings"
+          element={
+            <ProtectedRoute>
+              <AppLayout>
+                <ProfileSettingsPage />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/license"
+          element={
+            <ProtectedRoute>
+              <AppLayout>
+                <LicenseActivationPage />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/contexts"
+          element={
+            <ProtectedRoute>
+              <AppLayout>
+                <ContextManager />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </Suspense>
   );
 }

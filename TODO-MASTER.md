@@ -1,4 +1,5 @@
 # Velanova - Master Implementation TODO
+
 **Created:** February 11, 2026  
 **Target MVP:** March 15, 2026 (32 days)
 
@@ -6,13 +7,15 @@
 
 ## 🎯 PRICING STRUCTURE (NEW)
 
-**Plans:** 
+**Plans:**
+
 - **Starter:** $199/month or $1,990/year (save 17%)
-- **Professional:** $499/month or $4,990/year (save 17%)  
+- **Professional:** $499/month or $4,990/year (save 17%)
 - **Enterprise:** $999/month or $9,990/year (save 17%)
 - **Custom:** Contact sales
 
 **Usage-Based Add-ons:**
+
 - Additional AI tokens: $10 per 1M tokens
 - Extra database connections: $50 per connection/month
 - Additional team members: $99 per user/month
@@ -22,6 +25,7 @@
 ## 📋 PHASE 1: PAYMENT SYSTEM (Week 1 - Days 1-7)
 
 ### Payment Infrastructure
+
 - [ ] Update pricing constants in all apps
 - [ ] Implement Dodo Payments checkout flow
 - [ ] Create payment session management
@@ -34,6 +38,7 @@
 - [ ] Generate invoice PDFs
 
 ### Subscription Management
+
 - [ ] Create subscription lifecycle handlers
 - [ ] Implement subscription upgrade flow
 - [ ] Implement subscription downgrade flow
@@ -46,6 +51,7 @@
 - [ ] Build subscription status sync
 
 ### Usage-Based Billing
+
 - [ ] Create usage tracking service
 - [ ] Track AI token consumption
 - [ ] Track database connection usage
@@ -58,6 +64,7 @@
 - [ ] Test usage calculation accuracy
 
 ### Payment UI (Landing Site)
+
 - [ ] Update pricing page with new prices
 - [ ] Add usage-based pricing info
 - [ ] Create checkout page
@@ -74,6 +81,7 @@
 ## 📋 PHASE 2: LICENSE SYSTEM (Week 2 - Days 8-14)
 
 ### License Generation
+
 - [ ] Create license key generation service
 - [ ] Implement JWT-based license format
 - [ ] Add license tier encoding
@@ -86,6 +94,7 @@
 - [ ] Add license recovery flow
 
 ### Desktop App License Integration
+
 - [ ] Build license activation UI
 - [ ] Implement license input validation
 - [ ] Connect to license validation API
@@ -98,6 +107,7 @@
 - [ ] Build license deactivation
 
 ### License Features
+
 - [ ] Create feature flag system
 - [ ] Implement tier-based restrictions
 - [ ] Limit AI providers by tier
@@ -114,6 +124,7 @@
 ## 📋 PHASE 3: DESKTOP APP PACKAGING (Week 3 - Days 15-21)
 
 ### Electron Builder Setup
+
 - [ ] Install electron-builder
 - [ ] Create electron-builder.yml config
 - [ ] Configure app metadata (name, version, etc.)
@@ -126,6 +137,7 @@
 - [ ] Set bundle identifier
 
 ### Windows Build
+
 - [ ] Configure NSIS installer
 - [ ] Create installer images
 - [ ] Set up one-click install
@@ -138,6 +150,7 @@
 - [ ] Test Windows installer
 
 ### macOS Build
+
 - [ ] Configure DMG builder
 - [ ] Create DMG background
 - [ ] Set up app notarization
@@ -150,6 +163,7 @@
 - [ ] Submit for notarization
 
 ### Linux Build
+
 - [ ] Configure AppImage builder
 - [ ] Set up .deb package
 - [ ] Configure .rpm package
@@ -162,6 +176,7 @@
 - [ ] Test on Arch Linux
 
 ### Auto-Updater
+
 - [ ] Implement update check on startup
 - [ ] Create update server endpoint
 - [ ] Build version comparison logic
@@ -178,6 +193,7 @@
 ## 📋 PHASE 4: ADMIN DASHBOARD (Week 4 - Days 22-28)
 
 ### User Management
+
 - [ ] Build user list page
 - [ ] Implement user search
 - [ ] Add user filters (plan, status)
@@ -190,6 +206,7 @@
 - [ ] Export user data
 
 ### License Management
+
 - [ ] Create license list page
 - [ ] Build license search
 - [ ] Add license filters
@@ -202,6 +219,7 @@
 - [ ] Export license report
 
 ### Payment Dashboard
+
 - [ ] Build revenue dashboard
 - [ ] Show MRR/ARR metrics
 - [ ] Display churn rate
@@ -214,6 +232,7 @@
 - [ ] Export financial data
 
 ### Analytics
+
 - [ ] Create analytics dashboard
 - [ ] Show active users
 - [ ] Display usage trends
@@ -226,6 +245,7 @@
 - [ ] Export analytics data
 
 ### Support Tools
+
 - [ ] Build support ticket system
 - [ ] Create ticket list
 - [ ] Implement ticket sorting
@@ -242,6 +262,7 @@
 ## 📋 PHASE 5: EMAIL SERVICE (Week 5 - Days 29-32)
 
 ### Email Infrastructure
+
 - [ ] Set up email service (Resend/SendGrid)
 - [ ] Configure SMTP settings
 - [ ] Create email templates
@@ -254,6 +275,7 @@
 - [ ] Test email delivery
 
 ### Transactional Emails
+
 - [ ] Welcome email on signup
 - [ ] License delivery email
 - [ ] Payment confirmation email
@@ -266,6 +288,7 @@
 - [ ] Usage alert email (100%)
 
 ### Marketing Emails
+
 - [ ] Create newsletter template
 - [ ] Build feature announcement emails
 - [ ] Design product update emails
@@ -282,6 +305,7 @@
 ## 📋 PHASE 6: MCP SERVERS (Ongoing)
 
 ### Server Testing
+
 - [ ] Test MySQL MCP server
 - [ ] Test MongoDB MCP server
 - [ ] Test PostgreSQL MCP server
@@ -294,6 +318,7 @@
 - [ ] Fix connection issues
 
 ### Missing Servers
+
 - [ ] Build SQLite MCP server
 - [ ] Build Redis MCP server
 - [ ] Build Elasticsearch MCP server
@@ -306,6 +331,7 @@
 - [ ] Create troubleshooting guide
 
 ### MCP Integration
+
 - [ ] Improve connection management
 - [ ] Add connection pooling
 - [ ] Implement retry logic
@@ -322,6 +348,7 @@
 ## 📋 PHASE 7: AUTHENTICATION & SECURITY
 
 ### User Authentication
+
 - [ ] Replace hardcoded "default-user"
 - [ ] Implement real user login
 - [ ] Complete Google OAuth flow
@@ -334,6 +361,7 @@
 - [ ] Build account recovery
 
 ### Security Hardening
+
 - [ ] Implement rate limiting
 - [ ] Add brute-force protection
 - [ ] Encrypt sensitive data at rest
@@ -346,6 +374,7 @@
 - [ ] Fix security vulnerabilities
 
 ### Data Privacy
+
 - [ ] Complete PII masking
 - [ ] Implement data anonymization
 - [ ] Add data export feature
@@ -362,6 +391,7 @@
 ## 📋 PHASE 8: PRODUCTION DEPLOYMENT
 
 ### Infrastructure
+
 - [ ] Set up production servers
 - [ ] Configure load balancers
 - [ ] Set up CDN (Cloudflare)
@@ -374,6 +404,7 @@
 - [ ] Test disaster recovery
 
 ### CI/CD Pipeline
+
 - [ ] Set up GitHub Actions
 - [ ] Create build workflows
 - [ ] Add test automation
@@ -386,6 +417,7 @@
 - [ ] Document deployment process
 
 ### Monitoring & Logging
+
 - [ ] Set up Sentry error tracking
 - [ ] Configure DataDog monitoring
 - [ ] Add performance monitoring
@@ -398,6 +430,7 @@
 - [ ] Test alerting
 
 ### Landing Site Deployment
+
 - [ ] Deploy to Vercel
 - [ ] Configure custom domain
 - [ ] Set up environment variables
@@ -410,6 +443,7 @@
 - [ ] Test payment flow
 
 ### Admin Dashboard Deployment
+
 - [ ] Deploy to Vercel
 - [ ] Set up admin subdomain
 - [ ] Configure IP whitelist
@@ -422,6 +456,7 @@
 - [ ] Document admin access
 
 ### Express API Deployment
+
 - [ ] Deploy to Railway/Render
 - [ ] Configure API domain
 - [ ] Set up environment variables
@@ -438,6 +473,7 @@
 ## 📋 PHASE 9: TESTING & QA
 
 ### Unit Tests
+
 - [ ] Write payment service tests
 - [ ] Write license service tests
 - [ ] Write encryption tests
@@ -450,6 +486,7 @@
 - [ ] Document test procedures
 
 ### Integration Tests
+
 - [ ] Test complete payment flow
 - [ ] Test license activation flow
 - [ ] Test subscription flow
@@ -462,6 +499,7 @@
 - [ ] Document test scenarios
 
 ### E2E Tests
+
 - [ ] Set up Playwright/Cypress
 - [ ] Write landing site tests
 - [ ] Write admin dashboard tests
@@ -474,6 +512,7 @@
 - [ ] Document E2E tests
 
 ### Performance Testing
+
 - [ ] Load test API endpoints
 - [ ] Stress test database
 - [ ] Test concurrent users
@@ -486,6 +525,7 @@
 - [ ] Document performance benchmarks
 
 ### Security Testing
+
 - [ ] Run vulnerability scan
 - [ ] Test SQL injection
 - [ ] Test XSS attacks
@@ -502,6 +542,7 @@
 ## 📋 PHASE 10: POLISH & LAUNCH
 
 ### UI/UX Polish
+
 - [ ] Review all UI designs
 - [ ] Fix layout issues
 - [ ] Improve mobile responsiveness
@@ -514,6 +555,7 @@
 - [ ] Get design review
 
 ### Documentation
+
 - [ ] Write user guide
 - [ ] Create video tutorials
 - [ ] Document API endpoints
@@ -526,6 +568,7 @@
 - [ ] Review all docs
 
 ### Marketing Materials
+
 - [ ] Create product screenshots
 - [ ] Record demo videos
 - [ ] Write blog posts
@@ -538,6 +581,7 @@
 - [ ] Get marketing review
 
 ### Launch Preparation
+
 - [ ] Set up customer support
 - [ ] Create onboarding flow
 - [ ] Set up analytics tracking
@@ -555,47 +599,52 @@
 
 **Overall Completion:** 70% → Target: 100%
 
-| Phase | Status | Completion | ETA |
-|-------|--------|------------|-----|
-| Phase 1: Payment System | 🔴 Not Started | 30% | Day 7 |
-| Phase 2: License System | 🔴 Not Started | 25% | Day 14 |
-| Phase 3: Desktop Packaging | 🔴 Not Started | 0% | Day 21 |
-| Phase 4: Admin Dashboard | 🔴 Not Started | 10% | Day 28 |
-| Phase 5: Email Service | 🔴 Not Started | 0% | Day 32 |
-| Phase 6: MCP Servers | 🟡 In Progress | 60% | Ongoing |
-| Phase 7: Auth & Security | 🟡 In Progress | 50% | Ongoing |
-| Phase 8: Deployment | 🔴 Not Started | 5% | Day 35 |
-| Phase 9: Testing & QA | 🔴 Not Started | 15% | Day 38 |
-| Phase 10: Polish & Launch | 🔴 Not Started | 20% | Day 40 |
+| Phase                      | Status         | Completion | ETA     |
+| -------------------------- | -------------- | ---------- | ------- |
+| Phase 1: Payment System    | 🔴 Not Started | 30%        | Day 7   |
+| Phase 2: License System    | 🔴 Not Started | 25%        | Day 14  |
+| Phase 3: Desktop Packaging | 🔴 Not Started | 0%         | Day 21  |
+| Phase 4: Admin Dashboard   | 🔴 Not Started | 10%        | Day 28  |
+| Phase 5: Email Service     | 🔴 Not Started | 0%         | Day 32  |
+| Phase 6: MCP Servers       | 🟡 In Progress | 60%        | Ongoing |
+| Phase 7: Auth & Security   | 🟡 In Progress | 50%        | Ongoing |
+| Phase 8: Deployment        | 🔴 Not Started | 5%         | Day 35  |
+| Phase 9: Testing & QA      | 🔴 Not Started | 15%        | Day 38  |
+| Phase 10: Polish & Launch  | 🔴 Not Started | 20%        | Day 40  |
 
 ---
 
 ## 🎯 Daily Goals
 
 ### Week 1 (Feb 11-17): Payment System
+
 - Day 1: Update pricing, start payment integration
 - Day 2-3: Complete Dodo Payments integration
 - Day 4-5: Build webhook handlers & subscription mgmt
 - Day 6-7: Usage-based billing & payment UI
 
 ### Week 2 (Feb 18-24): License System
+
 - Day 8-9: License generation & delivery
 - Day 10-11: Desktop app license integration
 - Day 12-14: Feature flags & tier restrictions
 
 ### Week 3 (Feb 25-Mar 3): Desktop Packaging
+
 - Day 15-16: Electron builder setup
 - Day 17-18: Windows & macOS builds
 - Day 19-20: Linux builds & auto-updater
 - Day 21: Testing & fixes
 
 ### Week 4 (Mar 4-10): Admin Dashboard
+
 - Day 22-23: User & license management
 - Day 24-25: Payment dashboard
 - Day 26-27: Analytics & reports
 - Day 28: Support tools
 
 ### Week 5 (Mar 11-15): Final Push
+
 - Day 29-30: Email service & testing
 - Day 31-32: Deploy & monitor
 - Day 33-35: QA & polish

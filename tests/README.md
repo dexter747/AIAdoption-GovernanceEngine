@@ -95,28 +95,33 @@ pnpm test:ci
 Located in `*/services.test.ts`, `*/middleware.test.ts`, `*/contexts.test.tsx`, `*/hooks.test.ts`, `*/components.test.tsx`
 
 #### Services Tests (`express-api/services.test.ts`)
+
 - **EncryptionService**: `encrypt()`, `decrypt()`, `hashKey()`, `getKeyPreview()`
 - **LicenseService**: `validate()`, `getTierFeatures()`
 - **ApiError**: Factory methods for all HTTP error types
 - **Validation Schemas**: UUID, pagination, licenseKey, aiQuery, userApiKey, userConnection
 
 #### Middleware Tests (`express-api/middleware.test.ts`)
+
 - **Security Middleware**: Request sanitization, payload limits, rate limiting, CSRF
 - **Validation Middleware**: `validateBody()`, `validateQuery()`, `validateParams()`
 - **Auth Middleware**: JWT validation, API key validation
 - **Error Handlers**: Zod errors, JSON parse errors
 
 #### Context Tests (`desktop-app/contexts.test.tsx`)
+
 - **AuthContext**: User management, login/logout, authentication state
 - **LicenseContext**: License validation, activation, tier features, expiration
 
 #### Hooks Tests (`desktop-app/hooks.test.ts`)
+
 - **useAsync**: Async state management, success/error handling, toast notifications
 - **useFormSubmit**: Form submission with async operations
 - **useFetch**: Data fetching with loading states
 - **useMutation**: CRUD operations with callbacks
 
 #### Component Tests (`desktop-app/components.test.tsx`)
+
 - **Loading Components**: LoadingSpinner, LoadingOverlay, LoadingSkeleton, LoadingCard, LoadingTable
 - **Error Components**: ErrorBoundary, ErrorDisplay, ErrorCard, EmptyState
 - **Toast Components**: ToastProvider, useToast hook, notification types
@@ -126,6 +131,7 @@ Located in `*/services.test.ts`, `*/middleware.test.ts`, `*/contexts.test.tsx`, 
 Located in `*/routes.test.ts`, `*-api.test.ts`
 
 #### Express API Routes (`express-api/routes.test.ts`)
+
 - **Health Routes**: `/health`, `/ready` endpoints
 - **License Routes**: Validate, activate, deactivate, features
 - **User API Keys Routes**: CRUD operations, provider listing, key testing
@@ -134,11 +140,13 @@ Located in `*/routes.test.ts`, `*-api.test.ts`
 - **Usage Routes**: Statistics, logging
 
 #### Admin Dashboard API (`admin-dashboard/licenses-api.test.ts`)
+
 - **GET /api/licenses**: Pagination, filtering, search, statistics
 - **POST /api/licenses**: License creation, key generation
 - **License Operations**: Revoke, extend, upgrade, transfer
 
 #### Landing Site API (`landing-site/payments-api.test.ts`)
+
 - **Plan Prices**: Configuration, formatting
 - **Checkout Creation**: Session generation, Dodo Payments integration
 - **Webhooks**: Signature verification, event handling
@@ -175,26 +183,26 @@ expect(value).toBeValidJWT();
 
 The test suite enforces minimum coverage thresholds:
 
-| Metric | Threshold |
-|--------|-----------|
-| Branches | 50% |
-| Functions | 50% |
-| Lines | 50% |
-| Statements | 50% |
+| Metric     | Threshold |
+| ---------- | --------- |
+| Branches   | 50%       |
+| Functions  | 50%       |
+| Lines      | 50%       |
+| Statements | 50%       |
 
 ## Test Files Summary
 
-| File | Approx Tests | Description |
-|------|--------------|-------------|
-| `express-api/services.test.ts` | ~100 | Encryption, license validation, schemas |
-| `express-api/middleware.test.ts` | ~80 | Security, auth, validation middleware |
-| `express-api/routes.test.ts` | ~90 | Express API endpoints |
-| `desktop-app/contexts.test.tsx` | ~60 | Auth and License React contexts |
-| `desktop-app/hooks.test.ts` | ~70 | Custom React hooks |
-| `desktop-app/components.test.tsx` | ~80 | UI components |
-| `admin-dashboard/licenses-api.test.ts` | ~70 | Admin license management |
-| `landing-site/payments-api.test.ts` | ~80 | Payment processing |
-| `integration/flows.test.ts` | ~60 | End-to-end flows |
+| File                                   | Approx Tests | Description                             |
+| -------------------------------------- | ------------ | --------------------------------------- |
+| `express-api/services.test.ts`         | ~100         | Encryption, license validation, schemas |
+| `express-api/middleware.test.ts`       | ~80          | Security, auth, validation middleware   |
+| `express-api/routes.test.ts`           | ~90          | Express API endpoints                   |
+| `desktop-app/contexts.test.tsx`        | ~60          | Auth and License React contexts         |
+| `desktop-app/hooks.test.ts`            | ~70          | Custom React hooks                      |
+| `desktop-app/components.test.tsx`      | ~80          | UI components                           |
+| `admin-dashboard/licenses-api.test.ts` | ~70          | Admin license management                |
+| `landing-site/payments-api.test.ts`    | ~80          | Payment processing                      |
+| `integration/flows.test.ts`            | ~60          | End-to-end flows                        |
 
 **Total: ~700+ test cases**
 
@@ -290,6 +298,7 @@ node --experimental-vm-modules node_modules/jest/bin/jest.js
 ### Type Errors
 
 Ensure the following are installed and configured:
+
 - `@types/jest` in devDependencies
 - `@jest/globals` for proper typing
 - `tsconfig.json` includes Jest types
@@ -307,6 +316,7 @@ For slow tests, increase timeout in `jest.config.json`:
 ### Module Resolution
 
 If modules aren't resolving correctly, check:
+
 - `moduleDirectories` in jest.config.json
 - `moduleNameMapper` for path aliases
 - TypeScript paths in tsconfig.json

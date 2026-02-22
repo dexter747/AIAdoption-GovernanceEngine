@@ -1,6 +1,10 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { CallToolRequestSchema, ListToolsRequestSchema, Tool } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+  Tool,
+} from '@modelcontextprotocol/sdk/types.js';
 import axios, { AxiosInstance } from 'axios';
 
 let api: AxiosInstance | null = null;
@@ -16,12 +20,14 @@ async function initConnection(): Promise<void> {
   }
 
   if (!apiKey && (!username || !password)) {
-    throw new Error('Either BANNER_API_KEY or BANNER_USERNAME and BANNER_PASSWORD environment variables are required');
+    throw new Error(
+      'Either BANNER_API_KEY or BANNER_USERNAME and BANNER_PASSWORD environment variables are required'
+    );
   }
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
-    'Accept': 'application/json',
+    Accept: 'application/json',
   };
 
   if (apiKey) {
@@ -46,7 +52,10 @@ const TOOLS: Tool[] = [
         email: { type: 'string', description: 'Search by email address' },
         major: { type: 'string', description: 'Filter by major/program' },
         status: { type: 'string', description: 'Enrollment status (active, graduated, withdrawn)' },
-        level: { type: 'string', description: 'Academic level (undergraduate, graduate, doctoral)' },
+        level: {
+          type: 'string',
+          description: 'Academic level (undergraduate, graduate, doctoral)',
+        },
         limit: { type: 'number', description: 'Maximum results to return' },
         offset: { type: 'number', description: 'Offset for pagination' },
       },
@@ -59,7 +68,10 @@ const TOOLS: Tool[] = [
       type: 'object',
       properties: {
         student_id: { type: 'string', description: 'Student ID (Banner ID)' },
-        include: { type: 'string', description: 'Additional data to include (addresses, phones, emails, academic-standings)' },
+        include: {
+          type: 'string',
+          description: 'Additional data to include (addresses, phones, emails, academic-standings)',
+        },
       },
       required: ['student_id'],
     },
@@ -139,7 +151,11 @@ const TOOLS: Tool[] = [
     inputSchema: {
       type: 'object',
       properties: {
-        method: { type: 'string', description: 'HTTP method (GET, POST, PUT, DELETE)', enum: ['GET', 'POST', 'PUT', 'DELETE'] },
+        method: {
+          type: 'string',
+          description: 'HTTP method (GET, POST, PUT, DELETE)',
+          enum: ['GET', 'POST', 'PUT', 'DELETE'],
+        },
         endpoint: { type: 'string', description: 'API endpoint path (appended to base /api)' },
         params: { type: 'object', description: 'Query parameters' },
         body: { type: 'object', description: 'Request body for POST/PUT' },
@@ -158,7 +174,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
   return { tools: TOOLS };
 });
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   const { name, arguments: args } = request.params;
 
   if (!api) {
@@ -243,7 +259,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       }
 
       case 'api_call': {
-        const method = (args?.method as string || 'GET').toLowerCase();
+        const method = ((args?.method as string) || 'GET').toLowerCase();
         const endpoint = args?.endpoint as string;
         response = await api!.request({
           method,
@@ -267,10 +283,12 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   } catch (error: unknown) {
     const err = error as Error & { response?: { status: number; data: unknown } };
     return {
-      content: [{
-        type: 'text',
-        text: `Error: ${err.message}${err.response ? `\nStatus: ${err.response.status}\nData: ${JSON.stringify(err.response.data)}` : ''}`,
-      }],
+      content: [
+        {
+          type: 'text',
+          text: `Error: ${err.message}${err.response ? `\nStatus: ${err.response.status}\nData: ${JSON.stringify(err.response.data)}` : ''}`,
+        },
+      ],
       isError: true,
     };
   }

@@ -9,6 +9,7 @@ Model Context Protocol (MCP) will enable your desktop app to provide AI models w
 ## Why MCP for Your Desktop App?
 
 ### Current Limitations Without MCP:
+
 1. **Text-based queries**: AI generates SQL as text, you parse it
 2. **No schema awareness**: AI doesn't "see" your database structure
 3. **Manual execution**: You handle all query execution logic
@@ -16,6 +17,7 @@ Model Context Protocol (MCP) will enable your desktop app to provide AI models w
 5. **Limited context**: AI can't explore tables, columns, relationships
 
 ### Benefits With MCP:
+
 1. ✅ **Direct execution**: AI runs queries through MCP protocol
 2. ✅ **Schema introspection**: AI can list tables, columns, types
 3. ✅ **Safe operations**: MCP provides sandboxing and validation
@@ -81,6 +83,7 @@ Model Context Protocol (MCP) will enable your desktop app to provide AI models w
 ### 🔌 Plugin System Design
 
 Your desktop app needs a **plugin architecture** so you can add:
+
 - New databases (Cassandra, Redis, Neo4j, etc.)
 - New enterprise systems (Workday, Zendesk, etc.)
 - New AI providers (local models, custom APIs)
@@ -101,11 +104,11 @@ export interface MCPServerPlugin {
   type: 'database' | 'api' | 'enterprise' | 'cloud' | 'custom';
   icon: string;
   description: string;
-  
+
   // MCP server details
   serverCommand: string;
   serverArgs?: string[];
-  
+
   // Configuration schema
   configSchema: {
     fields: Array<{
@@ -116,7 +119,7 @@ export interface MCPServerPlugin {
       options?: string[];
     }>;
   };
-  
+
   // Capabilities
   capabilities: {
     read: boolean;
@@ -124,7 +127,7 @@ export interface MCPServerPlugin {
     schema: boolean;
     streaming: boolean;
   };
-  
+
   // Health check
   healthCheck: (config: any) => Promise<boolean>;
 }
@@ -155,18 +158,18 @@ export class MCPServerRegistry {
           { name: 'database', type: 'text', label: 'Database', required: true },
           { name: 'username', type: 'text', label: 'Username', required: true },
           { name: 'password', type: 'password', label: 'Password', required: true },
-        ]
+        ],
       },
       capabilities: {
         read: true,
         write: true,
         schema: true,
-        streaming: false
+        streaming: false,
       },
-      healthCheck: async (config) => {
+      healthCheck: async config => {
         // Test connection
         return true;
-      }
+      },
     });
 
     // MySQL
@@ -185,10 +188,10 @@ export class MCPServerRegistry {
           { name: 'database', type: 'text', label: 'Database', required: true },
           { name: 'username', type: 'text', label: 'Username', required: true },
           { name: 'password', type: 'password', label: 'Password', required: true },
-        ]
+        ],
       },
       capabilities: { read: true, write: true, schema: true, streaming: false },
-      healthCheck: async (config) => true
+      healthCheck: async config => true,
     });
 
     // Oracle
@@ -207,10 +210,10 @@ export class MCPServerRegistry {
           { name: 'serviceName', type: 'text', label: 'Service Name', required: true },
           { name: 'username', type: 'text', label: 'Username', required: true },
           { name: 'password', type: 'password', label: 'Password', required: true },
-        ]
+        ],
       },
       capabilities: { read: true, write: true, schema: true, streaming: false },
-      healthCheck: async (config) => true
+      healthCheck: async config => true,
     });
 
     // Salesforce
@@ -229,10 +232,10 @@ export class MCPServerRegistry {
           { name: 'clientSecret', type: 'password', label: 'Client Secret', required: true },
           { name: 'username', type: 'text', label: 'Username', required: true },
           { name: 'password', type: 'password', label: 'Password', required: true },
-        ]
+        ],
       },
       capabilities: { read: true, write: true, schema: true, streaming: false },
-      healthCheck: async (config) => true
+      healthCheck: async config => true,
     });
 
     // Add more built-in plugins...
@@ -241,15 +244,14 @@ export class MCPServerRegistry {
   // Load custom plugins from user directory
   private async loadCustomPlugins() {
     const pluginsDir = path.join(app.getPath('userData'), 'plugins');
-    
+
     if (!fs.existsSync(pluginsDir)) {
       fs.mkdirSync(pluginsDir, { recursive: true });
       return;
     }
 
     // Scan for plugin.json files
-    const pluginFiles = fs.readdirSync(pluginsDir)
-      .filter(f => f.endsWith('.plugin.json'));
+    const pluginFiles = fs.readdirSync(pluginsDir).filter(f => f.endsWith('.plugin.json'));
 
     for (const file of pluginFiles) {
       try {
@@ -278,9 +280,10 @@ export class MCPServerRegistry {
   // Search plugins
   search(query: string): MCPServerPlugin[] {
     const lowerQuery = query.toLowerCase();
-    return Array.from(this.plugins.values()).filter(p =>
-      p.name.toLowerCase().includes(lowerQuery) ||
-      p.description.toLowerCase().includes(lowerQuery)
+    return Array.from(this.plugins.values()).filter(
+      p =>
+        p.name.toLowerCase().includes(lowerQuery) ||
+        p.description.toLowerCase().includes(lowerQuery)
     );
   }
 }
@@ -301,7 +304,7 @@ export interface AIProviderPlugin {
   category: 'llm' | 'embedding' | 'image' | 'audio' | 'specialized';
   icon: string;
   description: string;
-  
+
   // Model configurations
   models: Array<{
     id: string;
@@ -310,7 +313,7 @@ export interface AIProviderPlugin {
     costPer1kTokens: number;
     capabilities: string[];
   }>;
-  
+
   // Authentication
   authType: 'api_key' | 'oauth' | 'none' | 'custom';
   authFields?: Array<{
@@ -318,13 +321,13 @@ export interface AIProviderPlugin {
     type: 'text' | 'password';
     label: string;
   }>;
-  
+
   // Capabilities
   supportsMCP: boolean;
   supportsStreaming: boolean;
   supportsImages: boolean;
   supportsFunctionCalling: boolean;
-  
+
   // Client implementation
   createClient: (config: any) => Promise<any>;
 }
@@ -346,33 +349,31 @@ export class AIProviderRegistry {
       icon: '🤖',
       description: 'GPT-4, GPT-3.5 models',
       models: [
-        { 
-          id: 'gpt-4-turbo', 
-          name: 'GPT-4 Turbo', 
-          contextWindow: 128000, 
+        {
+          id: 'gpt-4-turbo',
+          name: 'GPT-4 Turbo',
+          contextWindow: 128000,
           costPer1kTokens: 0.01,
-          capabilities: ['text', 'code', 'function-calling']
+          capabilities: ['text', 'code', 'function-calling'],
         },
-        { 
-          id: 'gpt-3.5-turbo', 
-          name: 'GPT-3.5 Turbo', 
-          contextWindow: 16000, 
+        {
+          id: 'gpt-3.5-turbo',
+          name: 'GPT-3.5 Turbo',
+          contextWindow: 16000,
           costPer1kTokens: 0.002,
-          capabilities: ['text', 'code', 'function-calling']
+          capabilities: ['text', 'code', 'function-calling'],
         },
       ],
       authType: 'api_key',
-      authFields: [
-        { name: 'apiKey', type: 'password', label: 'API Key' }
-      ],
+      authFields: [{ name: 'apiKey', type: 'password', label: 'API Key' }],
       supportsMCP: true,
       supportsStreaming: true,
       supportsImages: true,
       supportsFunctionCalling: true,
-      createClient: async (config) => {
+      createClient: async config => {
         const OpenAI = (await import('openai')).default;
         return new OpenAI({ apiKey: config.apiKey });
-      }
+      },
     });
 
     // Anthropic / Claude
@@ -383,26 +384,24 @@ export class AIProviderRegistry {
       icon: '🧠',
       description: 'Claude models with MCP support',
       models: [
-        { 
-          id: 'claude-3-5-sonnet-20241022', 
-          name: 'Claude 3.5 Sonnet', 
-          contextWindow: 200000, 
+        {
+          id: 'claude-3-5-sonnet-20241022',
+          name: 'Claude 3.5 Sonnet',
+          contextWindow: 200000,
           costPer1kTokens: 0.003,
-          capabilities: ['text', 'code', 'mcp', 'function-calling', 'vision']
+          capabilities: ['text', 'code', 'mcp', 'function-calling', 'vision'],
         },
       ],
       authType: 'api_key',
-      authFields: [
-        { name: 'apiKey', type: 'password', label: 'API Key' }
-      ],
+      authFields: [{ name: 'apiKey', type: 'password', label: 'API Key' }],
       supportsMCP: true,
       supportsStreaming: true,
       supportsImages: true,
       supportsFunctionCalling: true,
-      createClient: async (config) => {
+      createClient: async config => {
         const Anthropic = (await import('@anthropic-ai/sdk')).default;
         return new Anthropic({ apiKey: config.apiKey });
-      }
+      },
     });
 
     // Google Gemini
@@ -413,26 +412,24 @@ export class AIProviderRegistry {
       icon: '🔷',
       description: 'Gemini models',
       models: [
-        { 
-          id: 'gemini-pro', 
-          name: 'Gemini Pro', 
-          contextWindow: 30000, 
+        {
+          id: 'gemini-pro',
+          name: 'Gemini Pro',
+          contextWindow: 30000,
           costPer1kTokens: 0.00025,
-          capabilities: ['text', 'code', 'vision']
+          capabilities: ['text', 'code', 'vision'],
         },
       ],
       authType: 'api_key',
-      authFields: [
-        { name: 'apiKey', type: 'password', label: 'API Key' }
-      ],
+      authFields: [{ name: 'apiKey', type: 'password', label: 'API Key' }],
       supportsMCP: false,
       supportsStreaming: true,
       supportsImages: true,
       supportsFunctionCalling: true,
-      createClient: async (config) => {
+      createClient: async config => {
         const { GoogleGenerativeAI } = await import('@google/generative-ai');
         return new GoogleGenerativeAI(config.apiKey);
-      }
+      },
     });
 
     // Ollama (Local)
@@ -443,26 +440,26 @@ export class AIProviderRegistry {
       icon: '🦙',
       description: 'Local AI models (offline)',
       models: [
-        { 
-          id: 'llama2', 
-          name: 'Llama 2', 
-          contextWindow: 4096, 
+        {
+          id: 'llama2',
+          name: 'Llama 2',
+          contextWindow: 4096,
           costPer1kTokens: 0,
-          capabilities: ['text', 'code']
+          capabilities: ['text', 'code'],
         },
-        { 
-          id: 'codellama', 
-          name: 'Code Llama', 
-          contextWindow: 16000, 
+        {
+          id: 'codellama',
+          name: 'Code Llama',
+          contextWindow: 16000,
           costPer1kTokens: 0,
-          capabilities: ['code']
+          capabilities: ['code'],
         },
-        { 
-          id: 'mistral', 
-          name: 'Mistral', 
-          contextWindow: 8000, 
+        {
+          id: 'mistral',
+          name: 'Mistral',
+          contextWindow: 8000,
           costPer1kTokens: 0,
-          capabilities: ['text', 'code']
+          capabilities: ['text', 'code'],
         },
       ],
       authType: 'none',
@@ -470,10 +467,10 @@ export class AIProviderRegistry {
       supportsStreaming: true,
       supportsImages: false,
       supportsFunctionCalling: false,
-      createClient: async (config) => {
+      createClient: async config => {
         const { Ollama } = await import('ollama');
         return new Ollama({ host: config.host || 'http://localhost:11434' });
-      }
+      },
     });
 
     // Cohere
@@ -484,26 +481,24 @@ export class AIProviderRegistry {
       icon: '🎯',
       description: 'Command models',
       models: [
-        { 
-          id: 'command', 
-          name: 'Command', 
-          contextWindow: 4000, 
+        {
+          id: 'command',
+          name: 'Command',
+          contextWindow: 4000,
           costPer1kTokens: 0.0015,
-          capabilities: ['text', 'code']
+          capabilities: ['text', 'code'],
         },
       ],
       authType: 'api_key',
-      authFields: [
-        { name: 'apiKey', type: 'password', label: 'API Key' }
-      ],
+      authFields: [{ name: 'apiKey', type: 'password', label: 'API Key' }],
       supportsMCP: false,
       supportsStreaming: true,
       supportsImages: false,
       supportsFunctionCalling: false,
-      createClient: async (config) => {
+      createClient: async config => {
         const { CohereClient } = await import('cohere-ai');
         return new CohereClient({ token: config.apiKey });
-      }
+      },
     });
 
     // Groq
@@ -514,26 +509,24 @@ export class AIProviderRegistry {
       icon: '⚡',
       description: 'Ultra-fast inference',
       models: [
-        { 
-          id: 'mixtral-8x7b', 
-          name: 'Mixtral 8x7B', 
-          contextWindow: 32000, 
+        {
+          id: 'mixtral-8x7b',
+          name: 'Mixtral 8x7B',
+          contextWindow: 32000,
           costPer1kTokens: 0.00027,
-          capabilities: ['text', 'code']
+          capabilities: ['text', 'code'],
         },
       ],
       authType: 'api_key',
-      authFields: [
-        { name: 'apiKey', type: 'password', label: 'API Key' }
-      ],
+      authFields: [{ name: 'apiKey', type: 'password', label: 'API Key' }],
       supportsMCP: false,
       supportsStreaming: true,
       supportsImages: false,
       supportsFunctionCalling: false,
-      createClient: async (config) => {
+      createClient: async config => {
         const Groq = (await import('groq-sdk')).default;
         return new Groq({ apiKey: config.apiKey });
-      }
+      },
     });
 
     // Azure OpenAI
@@ -544,32 +537,32 @@ export class AIProviderRegistry {
       icon: '☁️',
       description: 'Enterprise OpenAI via Azure',
       models: [
-        { 
-          id: 'gpt-4', 
-          name: 'GPT-4', 
-          contextWindow: 8000, 
+        {
+          id: 'gpt-4',
+          name: 'GPT-4',
+          contextWindow: 8000,
           costPer1kTokens: 0.03,
-          capabilities: ['text', 'code', 'function-calling']
+          capabilities: ['text', 'code', 'function-calling'],
         },
       ],
       authType: 'custom',
       authFields: [
         { name: 'endpoint', type: 'text', label: 'Endpoint URL' },
         { name: 'apiKey', type: 'password', label: 'API Key' },
-        { name: 'deployment', type: 'text', label: 'Deployment Name' }
+        { name: 'deployment', type: 'text', label: 'Deployment Name' },
       ],
       supportsMCP: true,
       supportsStreaming: true,
       supportsImages: true,
       supportsFunctionCalling: true,
-      createClient: async (config) => {
+      createClient: async config => {
         const { AzureOpenAI } = await import('@azure/openai');
         return new AzureOpenAI({
           endpoint: config.endpoint,
           apiKey: config.apiKey,
-          deployment: config.deployment
+          deployment: config.deployment,
         });
-      }
+      },
     });
 
     // Perplexity
@@ -580,30 +573,28 @@ export class AIProviderRegistry {
       icon: '🔍',
       description: 'Search-augmented AI',
       models: [
-        { 
-          id: 'pplx-70b-online', 
-          name: 'Perplexity 70B', 
-          contextWindow: 4000, 
+        {
+          id: 'pplx-70b-online',
+          name: 'Perplexity 70B',
+          contextWindow: 4000,
           costPer1kTokens: 0.001,
-          capabilities: ['text', 'search', 'citations']
+          capabilities: ['text', 'search', 'citations'],
         },
       ],
       authType: 'api_key',
-      authFields: [
-        { name: 'apiKey', type: 'password', label: 'API Key' }
-      ],
+      authFields: [{ name: 'apiKey', type: 'password', label: 'API Key' }],
       supportsMCP: false,
       supportsStreaming: true,
       supportsImages: false,
       supportsFunctionCalling: false,
-      createClient: async (config) => {
+      createClient: async config => {
         // Perplexity uses OpenAI-compatible API
         const OpenAI = (await import('openai')).default;
-        return new OpenAI({ 
+        return new OpenAI({
           apiKey: config.apiKey,
-          baseURL: 'https://api.perplexity.ai'
+          baseURL: 'https://api.perplexity.ai',
         });
-      }
+      },
     });
 
     // HuggingFace (Custom models)
@@ -614,41 +605,40 @@ export class AIProviderRegistry {
       icon: '🤗',
       description: 'Access thousands of models',
       models: [
-        { 
-          id: 'custom', 
-          name: 'Custom Model', 
-          contextWindow: 2000, 
+        {
+          id: 'custom',
+          name: 'Custom Model',
+          contextWindow: 2000,
           costPer1kTokens: 0.0001,
-          capabilities: ['text']
+          capabilities: ['text'],
         },
       ],
       authType: 'api_key',
       authFields: [
         { name: 'apiKey', type: 'password', label: 'API Key' },
-        { name: 'modelId', type: 'text', label: 'Model ID' }
+        { name: 'modelId', type: 'text', label: 'Model ID' },
       ],
       supportsMCP: false,
       supportsStreaming: false,
       supportsImages: false,
       supportsFunctionCalling: false,
-      createClient: async (config) => {
+      createClient: async config => {
         const { HfInference } = await import('@huggingface/inference');
         return new HfInference(config.apiKey);
-      }
+      },
     });
   }
 
   private async loadCustomProviders() {
     const providersDir = path.join(app.getPath('userData'), 'ai-providers');
-    
+
     if (!fs.existsSync(providersDir)) {
       fs.mkdirSync(providersDir, { recursive: true });
       return;
     }
 
     // Load custom AI provider plugins
-    const providerFiles = fs.readdirSync(providersDir)
-      .filter(f => f.endsWith('.provider.json'));
+    const providerFiles = fs.readdirSync(providersDir).filter(f => f.endsWith('.provider.json'));
 
     for (const file of providerFiles) {
       try {
@@ -684,9 +674,10 @@ export class AIProviderRegistry {
   // Search providers
   search(query: string): AIProviderPlugin[] {
     const lowerQuery = query.toLowerCase();
-    return Array.from(this.providers.values()).filter(p =>
-      p.name.toLowerCase().includes(lowerQuery) ||
-      p.description.toLowerCase().includes(lowerQuery)
+    return Array.from(this.providers.values()).filter(
+      p =>
+        p.name.toLowerCase().includes(lowerQuery) ||
+        p.description.toLowerCase().includes(lowerQuery)
     );
   }
 }
@@ -699,6 +690,7 @@ export class AIProviderRegistry {
 ### Adding a New Database (e.g., Cassandra)
 
 **Step 1: Create MCP Server Plugin**
+
 ```bash
 mkdir -p packages/mcp-servers/cassandra
 cd packages/mcp-servers/cassandra
@@ -706,6 +698,7 @@ pnpm init
 ```
 
 **Step 2: Define Plugin Manifest**
+
 ```json
 // packages/mcp-servers/cassandra/plugin.json
 {
@@ -734,25 +727,29 @@ pnpm init
 ```
 
 **Step 3: Implement MCP Server**
+
 ```typescript
 // packages/mcp-servers/cassandra/src/index.ts
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { Client as CassandraClient } from 'cassandra-driver';
 
-const server = new Server({
-  name: 'cassandra-mcp-server',
-  version: '1.0.0'
-}, {
-  capabilities: { tools: {} }
-});
+const server = new Server(
+  {
+    name: 'cassandra-mcp-server',
+    version: '1.0.0',
+  },
+  {
+    capabilities: { tools: {} },
+  }
+);
 
 let client: CassandraClient;
 
-server.setRequestHandler('initialize', async (request) => {
+server.setRequestHandler('initialize', async request => {
   client = new CassandraClient({
     contactPoints: process.env.CASSANDRA_CONTACT_POINTS?.split(','),
     localDataCenter: process.env.CASSANDRA_DATACENTER,
-    keyspace: process.env.CASSANDRA_KEYSPACE
+    keyspace: process.env.CASSANDRA_KEYSPACE,
   });
   await client.connect();
   return { protocolVersion: '0.1.0' };
@@ -766,39 +763,43 @@ server.setRequestHandler('tools/list', async () => {
         description: 'Execute CQL query',
         inputSchema: {
           type: 'object',
-          properties: { query: { type: 'string' } }
-        }
+          properties: { query: { type: 'string' } },
+        },
       },
       {
         name: 'list_tables',
         description: 'List tables in keyspace',
-        inputSchema: { type: 'object' }
-      }
-    ]
+        inputSchema: { type: 'object' },
+      },
+    ],
   };
 });
 
-server.setRequestHandler('tools/call', async (request) => {
+server.setRequestHandler('tools/call', async request => {
   if (request.params.name === 'execute_cql') {
     const result = await client.execute(request.params.arguments.query);
     return {
-      content: [{
-        type: 'text',
-        text: JSON.stringify(result.rows)
-      }]
+      content: [
+        {
+          type: 'text',
+          text: JSON.stringify(result.rows),
+        },
+      ],
     };
   }
-  
+
   if (request.params.name === 'list_tables') {
     const result = await client.execute(
       `SELECT table_name FROM system_schema.tables WHERE keyspace_name = ?`,
       [client.keyspace]
     );
     return {
-      content: [{
-        type: 'text',
-        text: JSON.stringify(result.rows)
-      }]
+      content: [
+        {
+          type: 'text',
+          text: JSON.stringify(result.rows),
+        },
+      ],
     };
   }
 });
@@ -808,6 +809,7 @@ await server.connect(transport);
 ```
 
 **Step 4: Register in Desktop App**
+
 ```typescript
 // Desktop app automatically discovers it via registry
 const registry = new MCPServerRegistry();
@@ -820,6 +822,7 @@ const cassandraPlugin = registry.get('cassandra');
 ### Adding a New AI Provider (e.g., Local BERT Model)
 
 **Step 1: Create Provider Plugin**
+
 ```json
 // user-data/ai-providers/local-bert.provider.json
 {
@@ -847,33 +850,32 @@ const cassandraPlugin = registry.get('cassandra');
 ```
 
 **Step 2: Implement Client**
+
 ```typescript
 // user-data/ai-providers/bert-client.js
 const { pipeline } = require('@xenova/transformers');
 
 module.exports = async function createBertClient(config) {
   const embedder = await pipeline('feature-extraction', 'Xenova/bert-base-uncased');
-  
+
   return {
     async generateEmbedding(text) {
       const output = await embedder(text, { pooling: 'mean', normalize: true });
       return Array.from(output.data);
     },
-    
+
     async semanticSearch(query, documents) {
       const queryEmb = await this.generateEmbedding(query);
-      const docEmbs = await Promise.all(
-        documents.map(doc => this.generateEmbedding(doc))
-      );
-      
+      const docEmbs = await Promise.all(documents.map(doc => this.generateEmbedding(doc)));
+
       // Calculate cosine similarity
       const scores = docEmbs.map((docEmb, i) => ({
         document: documents[i],
-        score: cosineSimilarity(queryEmb, docEmb)
+        score: cosineSimilarity(queryEmb, docEmb),
       }));
-      
+
       return scores.sort((a, b) => b.score - a.score);
-    }
+    },
   };
 };
 ```
@@ -891,17 +893,17 @@ import React, { useState, useEffect } from 'react';
 export function PluginManager() {
   const [mcpPlugins, setMcpPlugins] = useState([]);
   const [aiProviders, setAiProviders] = useState([]);
-  
+
   useEffect(() => {
     // Load installed plugins
     window.electron.getMCPPlugins().then(setMcpPlugins);
     window.electron.getAIProviders().then(setAiProviders);
   }, []);
-  
+
   return (
     <div className="plugin-manager">
       <h1>Plugin Manager</h1>
-      
+
       {/* Data Source Plugins */}
       <section>
         <h2>Data Sources</h2>
@@ -920,7 +922,7 @@ export function PluginManager() {
           <AddPluginCard onAdd={installMCPPlugin} />
         </div>
       </section>
-      
+
       {/* AI Provider Plugins */}
       <section>
         <h2>AI Providers</h2>
@@ -959,28 +961,28 @@ data_sources:
     enabled: true
     default_config:
       port: 5432
-      
+
   - id: mysql
     enabled: true
     default_config:
       port: 3306
-      
+
   - id: cassandra
-    enabled: false  # Disabled by default
-    
+    enabled: false # Disabled by default
+
 ai_providers:
   - id: anthropic
     enabled: true
     default_model: claude-3-5-sonnet-20241022
-    
+
   - id: openai
     enabled: true
     default_model: gpt-4-turbo
-    
+
   - id: ollama
     enabled: true
     default_model: llama2
-    auto_start: true  # Auto-start Ollama server
+    auto_start: true # Auto-start Ollama server
 ```
 
 ---
@@ -988,23 +990,27 @@ ai_providers:
 ## Summary: Future-Proof Architecture
 
 ### ✅ To Add a New Database/System:
+
 1. Create MCP server package (or use existing community server)
 2. Add plugin manifest (JSON file)
 3. Registry auto-discovers it
 4. Shows up in UI automatically
 
 ### ✅ To Add a New AI Provider:
+
 1. Create provider plugin (JSON + client implementation)
 2. Add to provider registry
 3. Appears in model selector automatically
 
 ### ✅ No Code Changes Needed:
+
 - Plugin system handles discovery
 - UI dynamically generates connection forms
 - Configuration validates via JSON Schema
 - Health checks ensure reliability
 
 ### ✅ Extensibility:
+
 - **100+ databases** can be added
 - **Any AI model** (cloud or local)
 - **Custom enterprise systems**
@@ -1028,6 +1034,7 @@ pnpm add @modelcontextprotocol/sdk
 ```
 
 **Desktop app code:**
+
 ```typescript
 // apps/desktop-app/src/mcp/manager.ts
 import { spawn } from 'child_process';
@@ -1039,25 +1046,30 @@ export class MCPManager {
 
   async connectPostgreSQL(connectionId: string, config: DatabaseConfig) {
     // Spawn PostgreSQL MCP server as child process
-    const serverProcess = spawn('node', [
-      'node_modules/@modelcontextprotocol/server-postgres/dist/index.js'
-    ], {
-      env: {
-        POSTGRES_CONNECTION_STRING: config.connectionString
+    const serverProcess = spawn(
+      'node',
+      ['node_modules/@modelcontextprotocol/server-postgres/dist/index.js'],
+      {
+        env: {
+          POSTGRES_CONNECTION_STRING: config.connectionString,
+        },
       }
-    });
+    );
 
     // Connect MCP client to server
     const transport = new StdioClientTransport({
-      command: serverProcess
+      command: serverProcess,
     });
 
-    const client = new Client({
-      name: 'velanova-desktop',
-      version: '1.0.0'
-    }, {
-      capabilities: {}
-    });
+    const client = new Client(
+      {
+        name: 'velanova-desktop',
+        version: '1.0.0',
+      },
+      {
+        capabilities: {},
+      }
+    );
 
     await client.connect(transport);
 
@@ -1071,7 +1083,7 @@ export class MCPManager {
 
     // AI model uses MCP to execute query
     return await server.client.callTool('execute_query', {
-      query
+      query,
     });
   }
 
@@ -1102,6 +1114,7 @@ cd packages/mcp-servers
 ```
 
 **Structure:**
+
 ```
 packages/mcp-servers/
 ├── oracle/
@@ -1124,29 +1137,33 @@ packages/mcp-servers/
 ```
 
 **Example: Oracle MCP Server**
+
 ```typescript
 // packages/mcp-servers/oracle/src/index.ts
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import oracledb from 'oracledb';
 
-const server = new Server({
-  name: 'oracle-mcp-server',
-  version: '1.0.0'
-}, {
-  capabilities: {
-    tools: {}
+const server = new Server(
+  {
+    name: 'oracle-mcp-server',
+    version: '1.0.0',
+  },
+  {
+    capabilities: {
+      tools: {},
+    },
   }
-});
+);
 
 let connection: oracledb.Connection;
 
 // Initialize Oracle connection
-server.setRequestHandler('initialize', async (request) => {
+server.setRequestHandler('initialize', async request => {
   connection = await oracledb.getConnection({
     user: process.env.ORACLE_USER,
     password: process.env.ORACLE_PASSWORD,
-    connectString: process.env.ORACLE_CONNECT_STRING
+    connectString: process.env.ORACLE_CONNECT_STRING,
   });
   return { protocolVersion: '0.1.0' };
 });
@@ -1161,14 +1178,14 @@ server.setRequestHandler('tools/list', async () => {
         inputSchema: {
           type: 'object',
           properties: {
-            query: { type: 'string' }
-          }
-        }
+            query: { type: 'string' },
+          },
+        },
       },
       {
         name: 'list_tables',
         description: 'List all tables in Oracle database',
-        inputSchema: { type: 'object' }
+        inputSchema: { type: 'object' },
       },
       {
         name: 'describe_table',
@@ -1176,24 +1193,26 @@ server.setRequestHandler('tools/list', async () => {
         inputSchema: {
           type: 'object',
           properties: {
-            tableName: { type: 'string' }
-          }
-        }
-      }
-    ]
+            tableName: { type: 'string' },
+          },
+        },
+      },
+    ],
   };
 });
 
 // Execute query tool
-server.setRequestHandler('tools/call', async (request) => {
+server.setRequestHandler('tools/call', async request => {
   if (request.params.name === 'execute_query') {
     const { query } = request.params.arguments;
     const result = await connection.execute(query);
     return {
-      content: [{
-        type: 'text',
-        text: JSON.stringify(result.rows)
-      }]
+      content: [
+        {
+          type: 'text',
+          text: JSON.stringify(result.rows),
+        },
+      ],
     };
   }
 
@@ -1202,10 +1221,12 @@ server.setRequestHandler('tools/call', async (request) => {
       `SELECT table_name FROM user_tables ORDER BY table_name`
     );
     return {
-      content: [{
-        type: 'text',
-        text: JSON.stringify(result.rows)
-      }]
+      content: [
+        {
+          type: 'text',
+          text: JSON.stringify(result.rows),
+        },
+      ],
     };
   }
 
@@ -1218,10 +1239,12 @@ server.setRequestHandler('tools/call', async (request) => {
       [tableName]
     );
     return {
-      content: [{
-        type: 'text',
-        text: JSON.stringify(result.rows)
-      }]
+      content: [
+        {
+          type: 'text',
+          text: JSON.stringify(result.rows),
+        },
+      ],
     };
   }
 });
@@ -1244,15 +1267,9 @@ export class AIWithMCP {
   private anthropic = new Anthropic();
   private mcpManager = new MCPManager();
 
-  async queryDatabase(
-    connectionId: string, 
-    naturalLanguageQuery: string
-  ) {
+  async queryDatabase(connectionId: string, naturalLanguageQuery: string) {
     // Connect to database via MCP
-    const mcpClient = await this.mcpManager.connectPostgreSQL(
-      connectionId,
-      databaseConfig
-    );
+    const mcpClient = await this.mcpManager.connectPostgreSQL(connectionId, databaseConfig);
 
     // Get available tools from MCP server
     const tools = await mcpClient.listTools();
@@ -1261,26 +1278,25 @@ export class AIWithMCP {
     const response = await this.anthropic.messages.create({
       model: 'claude-3-5-sonnet-20241022',
       max_tokens: 4096,
-      messages: [{
-        role: 'user',
-        content: naturalLanguageQuery
-      }],
+      messages: [
+        {
+          role: 'user',
+          content: naturalLanguageQuery,
+        },
+      ],
       tools: tools.map(tool => ({
         name: tool.name,
         description: tool.description,
-        input_schema: tool.inputSchema
-      }))
+        input_schema: tool.inputSchema,
+      })),
     });
 
     // Handle tool use
     if (response.stop_reason === 'tool_use') {
       const toolUse = response.content.find(c => c.type === 'tool_use');
-      
+
       // Execute via MCP
-      const result = await mcpClient.callTool(
-        toolUse.name,
-        toolUse.input
-      );
+      const result = await mcpClient.callTool(toolUse.name, toolUse.input);
 
       // Continue conversation with tool result
       const finalResponse = await this.anthropic.messages.create({
@@ -1291,13 +1307,15 @@ export class AIWithMCP {
           { role: 'assistant', content: response.content },
           {
             role: 'user',
-            content: [{
-              type: 'tool_result',
-              tool_use_id: toolUse.id,
-              content: result.content
-            }]
-          }
-        ]
+            content: [
+              {
+                type: 'tool_result',
+                tool_use_id: toolUse.id,
+                content: result.content,
+              },
+            ],
+          },
+        ],
       });
 
       return finalResponse;
@@ -1330,6 +1348,7 @@ export class AIWithMCP {
    - Connect via stdio or HTTP transport
 
 **Using Docker MCP Server:**
+
 ```typescript
 import Docker from 'dockerode';
 
@@ -1338,12 +1357,10 @@ const docker = new Docker();
 // Pull and run existing MCP server from Docker Hub
 const container = await docker.createContainer({
   Image: 'community/postgres-mcp-server',
-  Env: [
-    `DATABASE_URL=${connectionString}`
-  ],
+  Env: [`DATABASE_URL=${connectionString}`],
   HostConfig: {
-    NetworkMode: 'host'
-  }
+    NetworkMode: 'host',
+  },
 });
 
 await container.start();
@@ -1356,6 +1373,7 @@ await container.start();
 ## When to Create Custom vs Use Existing
 
 ### ✅ Use Existing MCP Servers:
+
 - PostgreSQL → Use `@modelcontextprotocol/server-postgres`
 - SQLite → Use `@modelcontextprotocol/server-sqlite`
 - MySQL → Check community servers
@@ -1364,6 +1382,7 @@ await container.start();
 - Docker management → Use existing Docker MCP server
 
 ### 🔧 Create Custom MCP Servers:
+
 - Oracle Database (if no community server exists)
 - SAP HANA (enterprise-specific)
 - Custom REST APIs (Salesforce, Jira, etc.)
@@ -1376,7 +1395,9 @@ await container.start();
 ## Benefits for Your Desktop App
 
 ### 1. **Better AI Understanding**
+
 Instead of:
+
 ```
 User: "Show me all customers in California"
 AI: "SELECT * FROM customers WHERE state = 'CA'"
@@ -1384,6 +1405,7 @@ App: Parse, validate, execute
 ```
 
 With MCP:
+
 ```
 User: "Show me all customers in California"
 AI → MCP: list_tables()
@@ -1393,6 +1415,7 @@ AI: Returns formatted results with explanations
 ```
 
 ### 2. **Multi-Database Queries**
+
 ```typescript
 // AI can query multiple databases at once via different MCP servers
 const salesData = await mcpManager.executeQuery('postgres-sales', query1);
@@ -1403,6 +1426,7 @@ const jiraTickets = await mcpManager.executeQuery('jira-api', query3);
 ```
 
 ### 3. **Safe Exploration**
+
 - AI can explore schema without executing dangerous queries
 - MCP servers can implement read-only modes
 - Sandboxing prevents data corruption
@@ -1449,6 +1473,7 @@ const jiraTickets = await mcpManager.executeQuery('jira-api', query3);
 **✅ YES, absolutely!**
 
 MCP is **exactly what you need** for your desktop app. It will:
+
 - Make AI interactions more reliable
 - Provide better schema understanding
 - Enable multi-database queries

@@ -15,7 +15,7 @@ const TOKEN_COSTS = {
     'gpt-4o-mini': { input: 15, output: 60 },
     'gpt-4-turbo': { input: 1000, output: 3000 },
     'gpt-3.5-turbo': { input: 50, output: 150 },
-    'o1': { input: 1500, output: 6000 },
+    o1: { input: 1500, output: 6000 },
     'o1-mini': { input: 300, output: 1200 },
     'o3-mini': { input: 110, output: 440 },
   },
@@ -38,7 +38,7 @@ const TOKEN_COSTS = {
   cohere: {
     'command-r-plus': { input: 250, output: 1000 },
     'command-r': { input: 50, output: 150 },
-    'command': { input: 100, output: 200 },
+    command: { input: 100, output: 200 },
   },
   mistral: {
     'mistral-large-latest': { input: 200, output: 600 },
@@ -47,7 +47,7 @@ const TOKEN_COSTS = {
     'codestral-latest': { input: 30, output: 90 },
   },
   perplexity: {
-    'sonar': { input: 100, output: 100 },
+    sonar: { input: 100, output: 100 },
     'sonar-pro': { input: 300, output: 1500 },
     'sonar-reasoning': { input: 100, output: 500 },
   },
@@ -67,7 +67,7 @@ export const UsageService = {
    */
   async track({ userId, provider, model, inputTokens, outputTokens, duration }) {
     const cost = this.calculateCost(provider, model, inputTokens, outputTokens);
-    
+
     const usageRecord = {
       user_id: userId,
       provider,
@@ -145,7 +145,9 @@ export const UsageService = {
    */
   async getSummary(userId) {
     const today = new Date().toISOString().slice(0, 10);
-    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .slice(0, 10);
 
     const [todayUsage, monthUsage] = await Promise.all([
       this.getUsage(userId, { startDate: today }),
@@ -207,7 +209,7 @@ export const UsageService = {
    */
   async getCostBreakdown(userId, query) {
     const usage = await this.getUsage(userId, query);
-    
+
     return {
       total: usage.totals.cost,
       byProvider: usage.byProvider || {},
@@ -259,7 +261,8 @@ export const UsageService = {
       if (!byProvider[record.provider]) {
         byProvider[record.provider] = { tokens: 0, cost: 0, requests: 0 };
       }
-      byProvider[record.provider].tokens += (record.input_tokens || 0) + (record.output_tokens || 0);
+      byProvider[record.provider].tokens +=
+        (record.input_tokens || 0) + (record.output_tokens || 0);
       byProvider[record.provider].cost += record.cost_cents || 0;
       byProvider[record.provider].requests += 1;
 
@@ -297,7 +300,7 @@ export const UsageService = {
    */
   getPeriodKey(timestamp, granularity) {
     const date = new Date(timestamp);
-    
+
     switch (granularity) {
       case 'hour':
         return `${date.toISOString().slice(0, 13)}:00`;

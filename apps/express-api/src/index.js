@@ -15,9 +15,9 @@ import { initializeWebSocket, getWebSocketStats } from './websocket/index.js';
 const app = createApp();
 
 // Graceful shutdown handler
-const gracefulShutdown = (signal) => {
+const gracefulShutdown = signal => {
   logger.info({ signal }, 'Received shutdown signal');
-  
+
   server.close(() => {
     logger.info('HTTP server closed');
     process.exit(0);
@@ -34,14 +34,17 @@ const gracefulShutdown = (signal) => {
 const server = app.listen(config.port, () => {
   // Initialize WebSocket server
   const wss = initializeWebSocket(server);
-  
-  logger.info({
-    port: config.port,
-    env: config.env,
-    supabase: config.supabase.url ? 'connected' : 'not configured',
-    websocket: 'enabled'
-  }, '🚀 Velanova API Server started');
-  
+
+  logger.info(
+    {
+      port: config.port,
+      env: config.env,
+      supabase: config.supabase.url ? 'connected' : 'not configured',
+      websocket: 'enabled',
+    },
+    '🚀 Velanova API Server started'
+  );
+
   console.log(`
 ╔═══════════════════════════════════════════════════════════╗
 ║           Velanova API Server v${config.version}                   ║
@@ -68,7 +71,7 @@ process.on('unhandledRejection', (reason, promise) => {
   logger.error({ reason, promise }, 'Unhandled Rejection');
 });
 
-process.on('uncaughtException', (error) => {
+process.on('uncaughtException', error => {
   logger.fatal({ error }, 'Uncaught Exception');
   process.exit(1);
 });

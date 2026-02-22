@@ -31,6 +31,7 @@ pnpm dev
 ```
 
 Or run both at once from root:
+
 ```bash
 pnpm dev
 ```
@@ -43,6 +44,7 @@ cp .env.example .env
 ```
 
 Edit `.env` with your values:
+
 - Database URLs (PostgreSQL + MongoDB)
 - Payment API keys (Dodo, PayPal, Razorpay)
 - SMTP credentials for email
@@ -65,10 +67,12 @@ pnpm prisma studio
 ### 4. Test the Setup
 
 **Cloud Backend:**
+
 - Open http://localhost:3001
 - Should see "Velanova Cloud Backend" page
 
 **Desktop App:**
+
 - Electron window should open automatically
 - You'll see a sidebar with Dashboard, Connections, AI Queries, Settings
 
@@ -97,6 +101,7 @@ AI Adoption & Governance Engine/
 ## 🛠️ Available Commands
 
 ### Root Level
+
 ```bash
 pnpm dev              # Run all apps
 pnpm build            # Build all apps
@@ -106,6 +111,7 @@ pnpm format           # Format with Prettier
 ```
 
 ### Desktop App
+
 ```bash
 cd apps/desktop-app
 pnpm dev              # Development mode
@@ -116,6 +122,7 @@ pnpm build:linux      # Build for Linux
 ```
 
 ### Cloud Backend
+
 ```bash
 cd apps/cloud-backend
 pnpm dev              # Start Next.js dev server
@@ -128,6 +135,7 @@ pnpm prisma studio    # Database GUI
 ## 🔧 Troubleshooting
 
 ### Port Already in Use
+
 ```bash
 # Kill process on port 3000 (desktop)
 lsof -ti:3000 | xargs kill -9
@@ -137,6 +145,7 @@ lsof -ti:3001 | xargs kill -9
 ```
 
 ### Prisma Issues
+
 ```bash
 # Reset database (WARNING: deletes all data)
 cd apps/cloud-backend
@@ -147,6 +156,7 @@ pnpm prisma generate
 ```
 
 ### Clean Install
+
 ```bash
 # From root
 pnpm clean

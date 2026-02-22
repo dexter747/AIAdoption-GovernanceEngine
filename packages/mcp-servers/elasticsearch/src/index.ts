@@ -30,7 +30,7 @@ async function getElasticsearchClient() {
   const node = process.env.ELASTICSEARCH_URL || 'http://localhost:9200';
   const username = process.env.ELASTICSEARCH_USERNAME;
   const password = process.env.ELASTICSEARCH_PASSWORD;
-  
+
   esClient = new Client({
     node,
     auth: username && password ? { username, password } : undefined,
@@ -38,7 +38,7 @@ async function getElasticsearchClient() {
 
   const info = await esClient.info();
   console.error('Connected to Elasticsearch:', info.version.number);
-  
+
   return esClient;
 }
 
@@ -106,12 +106,12 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
 });
 
 // Handle tool execution
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   const { name, arguments: args } = request.params;
-  
+
   try {
     const client = await getElasticsearchClient();
-    
+
     switch (name) {
       case 'es_search': {
         const { index, query, size = 10 } = args as any;
@@ -129,7 +129,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           ],
         };
       }
-      
+
       case 'es_get': {
         const { index, id } = args as any;
         const result = await client.get({
@@ -145,7 +145,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           ],
         };
       }
-      
+
       case 'es_list_indices': {
         const result = await client.cat.indices({ format: 'json' });
         return {
@@ -157,7 +157,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           ],
         };
       }
-      
+
       case 'es_index_stats': {
         const { index } = args as any;
         const result = await client.indices.stats({ index });
@@ -170,7 +170,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           ],
         };
       }
-      
+
       case 'es_mapping': {
         const { index } = args as any;
         const result = await client.indices.getMapping({ index });
@@ -183,7 +183,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           ],
         };
       }
-      
+
       default:
         throw new Error(`Unknown tool: ${name}`);
     }
@@ -207,7 +207,7 @@ async function main() {
   console.error('Elasticsearch MCP server running on stdio');
 }
 
-main().catch((error) => {
+main().catch(error => {
   console.error('Fatal error:', error);
   process.exit(1);
 });

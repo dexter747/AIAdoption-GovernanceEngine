@@ -1,6 +1,10 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { CallToolRequestSchema, ListToolsRequestSchema, Tool } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+  Tool,
+} from '@modelcontextprotocol/sdk/types.js';
 import axios, { AxiosInstance } from 'axios';
 
 // Environment variables
@@ -31,8 +35,14 @@ const tools: Tool[] = [
     inputSchema: {
       type: 'object',
       properties: {
-        status: { type: 'string', description: 'Filter by report status (e.g., SUBMITTED, APPROVED, PAID)' },
-        modified_after: { type: 'string', description: 'Filter reports modified after this date (YYYY-MM-DD)' },
+        status: {
+          type: 'string',
+          description: 'Filter by report status (e.g., SUBMITTED, APPROVED, PAID)',
+        },
+        modified_after: {
+          type: 'string',
+          description: 'Filter reports modified after this date (YYYY-MM-DD)',
+        },
         user: { type: 'string', description: 'Filter by user login ID or email' },
         limit: { type: 'number', description: 'Number of results to return (default 25)' },
         offset: { type: 'number', description: 'Offset for pagination' },
@@ -57,7 +67,10 @@ const tools: Tool[] = [
       type: 'object',
       properties: {
         report_id: { type: 'string', description: 'Filter expenses by report ID' },
-        modified_after: { type: 'string', description: 'Filter expenses modified after this date (YYYY-MM-DD)' },
+        modified_after: {
+          type: 'string',
+          description: 'Filter expenses modified after this date (YYYY-MM-DD)',
+        },
         limit: { type: 'number', description: 'Number of results to return (default 25)' },
         offset: { type: 'number', description: 'Offset for pagination' },
       },
@@ -69,8 +82,14 @@ const tools: Tool[] = [
     inputSchema: {
       type: 'object',
       properties: {
-        start_date: { type: 'string', description: 'Filter trips starting after this date (YYYY-MM-DD)' },
-        end_date: { type: 'string', description: 'Filter trips ending before this date (YYYY-MM-DD)' },
+        start_date: {
+          type: 'string',
+          description: 'Filter trips starting after this date (YYYY-MM-DD)',
+        },
+        end_date: {
+          type: 'string',
+          description: 'Filter trips ending before this date (YYYY-MM-DD)',
+        },
         status: { type: 'string', description: 'Filter by trip status' },
         limit: { type: 'number', description: 'Number of results to return (default 25)' },
         offset: { type: 'number', description: 'Offset for pagination' },
@@ -83,9 +102,15 @@ const tools: Tool[] = [
     inputSchema: {
       type: 'object',
       properties: {
-        status: { type: 'string', description: 'Filter by request status (e.g., SUBMITTED, APPROVED)' },
+        status: {
+          type: 'string',
+          description: 'Filter by request status (e.g., SUBMITTED, APPROVED)',
+        },
         user: { type: 'string', description: 'Filter by user login ID or email' },
-        modified_after: { type: 'string', description: 'Filter requests modified after this date (YYYY-MM-DD)' },
+        modified_after: {
+          type: 'string',
+          description: 'Filter requests modified after this date (YYYY-MM-DD)',
+        },
         limit: { type: 'number', description: 'Number of results to return (default 25)' },
         offset: { type: 'number', description: 'Offset for pagination' },
       },
@@ -93,11 +118,16 @@ const tools: Tool[] = [
   },
   {
     name: 'api_call',
-    description: 'Make a generic API call to SAP Concur. Use for endpoints not covered by other tools.',
+    description:
+      'Make a generic API call to SAP Concur. Use for endpoints not covered by other tools.',
     inputSchema: {
       type: 'object',
       properties: {
-        method: { type: 'string', description: 'HTTP method (GET, POST, PUT, DELETE)', enum: ['GET', 'POST', 'PUT', 'DELETE'] },
+        method: {
+          type: 'string',
+          description: 'HTTP method (GET, POST, PUT, DELETE)',
+          enum: ['GET', 'POST', 'PUT', 'DELETE'],
+        },
         path: { type: 'string', description: 'API path (e.g., /expense/v4/reports)' },
         body: { type: 'object', description: 'Request body for POST/PUT requests' },
         params: { type: 'object', description: 'Query parameters' },
@@ -116,7 +146,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
   return { tools };
 });
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   const { name, arguments: args } = request.params;
   const client = await initConnection();
 

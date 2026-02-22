@@ -2,11 +2,25 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { 
-  Download, Sparkles, ArrowRight, Monitor, Apple, 
-  Terminal, CheckCircle2, FileText, Book, Code, 
-  ExternalLink, ChevronRight, Cpu, Database, MessageSquare,
-  HelpCircle, Zap, Shield
+import {
+  Download,
+  Sparkles,
+  ArrowRight,
+  Monitor,
+  Apple,
+  Terminal,
+  CheckCircle2,
+  FileText,
+  Book,
+  Code,
+  ExternalLink,
+  ChevronRight,
+  Cpu,
+  Database,
+  MessageSquare,
+  HelpCircle,
+  Zap,
+  Shield,
 } from 'lucide-react';
 
 type OS = 'windows' | 'macos' | 'linux';
@@ -28,8 +42,14 @@ const downloads: DownloadInfo[] = [
     icon: Monitor,
     version: '1.2.0',
     size: '89 MB',
-    downloadUrl: 'https://res.cloudinary.com/de1fjyofa/raw/upload/velanova/releases/latest/Velanova-Setup.exe',
-    requirements: ['Windows 10 or later', '64-bit processor', '4 GB RAM minimum', '500 MB disk space'],
+    downloadUrl:
+      'https://res.cloudinary.com/de1fjyofa/raw/upload/velanova/releases/latest/Velanova-Setup.exe',
+    requirements: [
+      'Windows 10 or later',
+      '64-bit processor',
+      '4 GB RAM minimum',
+      '500 MB disk space',
+    ],
   },
   {
     os: 'macos',
@@ -37,8 +57,14 @@ const downloads: DownloadInfo[] = [
     icon: Apple,
     version: '1.2.0',
     size: '95 MB',
-    downloadUrl: 'https://res.cloudinary.com/de1fjyofa/raw/upload/velanova/releases/latest/Velanova.dmg',
-    requirements: ['macOS 11 (Big Sur) or later', 'Apple Silicon or Intel', '4 GB RAM minimum', '500 MB disk space'],
+    downloadUrl:
+      'https://res.cloudinary.com/de1fjyofa/raw/upload/velanova/releases/latest/Velanova.dmg',
+    requirements: [
+      'macOS 11 (Big Sur) or later',
+      'Apple Silicon or Intel',
+      '4 GB RAM minimum',
+      '500 MB disk space',
+    ],
   },
   {
     os: 'linux',
@@ -46,8 +72,14 @@ const downloads: DownloadInfo[] = [
     icon: Terminal,
     version: '1.2.0',
     size: '92 MB',
-    downloadUrl: 'https://res.cloudinary.com/de1fjyofa/raw/upload/velanova/releases/latest/Velanova.AppImage',
-    requirements: ['Ubuntu 20.04+, Fedora 34+, or similar', '64-bit processor', '4 GB RAM minimum', '500 MB disk space'],
+    downloadUrl:
+      'https://res.cloudinary.com/de1fjyofa/raw/upload/velanova/releases/latest/Velanova.AppImage',
+    requirements: [
+      'Ubuntu 20.04+, Fedora 34+, or similar',
+      '64-bit processor',
+      '4 GB RAM minimum',
+      '500 MB disk space',
+    ],
   },
 ];
 
@@ -119,22 +151,37 @@ export default function DocsPage() {
             </Link>
 
             <div className="hidden md:flex items-center gap-1">
-              <Link href="/#features" className="px-4 py-2 text-sm font-medium text-zinc-500 hover:text-white rounded-lg hover:bg-white/10 transition-all">
+              <Link
+                href="/#features"
+                className="px-4 py-2 text-sm font-medium text-zinc-500 hover:text-white rounded-lg hover:bg-white/10 transition-all"
+              >
                 Features
               </Link>
-              <Link href="/#pricing" className="px-4 py-2 text-sm font-medium text-zinc-500 hover:text-white rounded-lg hover:bg-white/10 transition-all">
+              <Link
+                href="/#pricing"
+                className="px-4 py-2 text-sm font-medium text-zinc-500 hover:text-white rounded-lg hover:bg-white/10 transition-all"
+              >
                 Pricing
               </Link>
-              <Link href="/docs" className="px-4 py-2 text-sm font-medium text-zinc-400 bg-white/5 rounded-lg">
+              <Link
+                href="/docs"
+                className="px-4 py-2 text-sm font-medium text-zinc-400 bg-white/5 rounded-lg"
+              >
                 Docs
               </Link>
             </div>
 
             <div className="hidden md:flex items-center gap-3">
-              <Link href="/login" className="px-4 py-2.5 text-sm font-medium text-zinc-500 hover:text-white transition-colors">
+              <Link
+                href="/login"
+                className="px-4 py-2.5 text-sm font-medium text-zinc-500 hover:text-white transition-colors"
+              >
                 Sign In
               </Link>
-              <Link href="/subscribe" className="px-5 py-2.5 text-sm font-medium bg-gradient-to-r from-zinc-400 to-zinc-600 text-white rounded-xl shadow-lg shadow-white/5">
+              <Link
+                href="/subscribe"
+                className="px-5 py-2.5 text-sm font-medium bg-gradient-to-r from-zinc-400 to-zinc-600 text-white rounded-xl shadow-lg shadow-white/5"
+              >
                 Get Started
               </Link>
             </div>
@@ -147,7 +194,7 @@ export default function DocsPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/30 to-transparent" />
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
         <div className="absolute top-20 right-1/4 w-80 h-80 bg-white/5 rounded-full blur-3xl" />
-        
+
         <div className="relative max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <span className="inline-block px-4 py-2 rounded-full bg-white/5 text-zinc-400 text-sm font-medium mb-4">
@@ -166,7 +213,7 @@ export default function DocsPage() {
             <div className="bg-black rounded-3xl border border-white/10 shadow-xl overflow-hidden">
               {/* OS Selector */}
               <div className="flex border-b border-white/10">
-                {downloads.map((download) => {
+                {downloads.map(download => {
                   const Icon = download.icon;
                   const isSelected = selectedOS === download.os;
                   return (
@@ -174,8 +221,8 @@ export default function DocsPage() {
                       key={download.os}
                       onClick={() => setSelectedOS(download.os)}
                       className={`flex-1 px-6 py-4 flex items-center justify-center gap-3 transition-all ${
-                        isSelected 
-                          ? 'bg-white/5 text-zinc-400 border-b-2 border-zinc-700' 
+                        isSelected
+                          ? 'bg-white/5 text-zinc-400 border-b-2 border-zinc-700'
                           : 'text-zinc-500 hover:text-white hover:bg-white/10'
                       }`}
                     >
@@ -214,9 +261,14 @@ export default function DocsPage() {
 
                     <p className="text-sm text-zinc-500">
                       By downloading, you agree to our{' '}
-                      <Link href="/terms" className="text-zinc-400 hover:underline">Terms of Service</Link>
-                      {' '}and{' '}
-                      <Link href="/privacy" className="text-zinc-400 hover:underline">Privacy Policy</Link>.
+                      <Link href="/terms" className="text-zinc-400 hover:underline">
+                        Terms of Service
+                      </Link>{' '}
+                      and{' '}
+                      <Link href="/privacy" className="text-zinc-400 hover:underline">
+                        Privacy Policy
+                      </Link>
+                      .
                     </p>
                   </div>
 
@@ -237,8 +289,8 @@ export default function DocsPage() {
 
             {/* Quick Links */}
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-              <a 
-                href="https://github.com/velanova/releases" 
+              <a
+                href="https://github.com/velanova/releases"
                 className="flex items-center gap-2 px-4 py-2 text-sm text-zinc-500 hover:text-white bg-white/5 rounded-lg hover:bg-white/10 transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -247,8 +299,8 @@ export default function DocsPage() {
                 Release Notes
                 <ExternalLink className="w-3 h-3" />
               </a>
-              <a 
-                href="https://github.com/velanova/releases/archive" 
+              <a
+                href="https://github.com/velanova/releases/archive"
                 className="flex items-center gap-2 px-4 py-2 text-sm text-zinc-500 hover:text-white bg-white/5 rounded-lg hover:bg-white/10 transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -269,19 +321,17 @@ export default function DocsPage() {
             <span className="inline-block px-4 py-2 rounded-full bg-white/5 text-zinc-400 text-sm font-medium mb-4">
               Documentation
             </span>
-            <h2 className="text-4xl font-medium text-white mb-6">
-              Learn how to use Velanova
-            </h2>
+            <h2 className="text-4xl font-medium text-white mb-6">Learn how to use Velanova</h2>
             <p className="text-xl text-zinc-500 max-w-2xl mx-auto">
               Comprehensive guides and references to help you get the most out of Velanova.
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {docSections.map((section) => {
+            {docSections.map(section => {
               const Icon = section.icon;
               return (
-                <div 
+                <div
                   key={section.title}
                   className="bg-black rounded-2xl p-6 border border-white/10 hover:shadow-xl transition-all hover:-translate-y-1"
                 >
@@ -290,9 +340,9 @@ export default function DocsPage() {
                   </div>
                   <h3 className="text-lg font-medium text-white mb-4">{section.title}</h3>
                   <ul className="space-y-2">
-                    {section.links.map((link) => (
+                    {section.links.map(link => (
                       <li key={link.href}>
-                        <Link 
+                        <Link
                           href={link.href}
                           className="flex items-center gap-2 text-sm text-zinc-500 hover:text-zinc-400 transition-colors group"
                         >
@@ -316,9 +366,7 @@ export default function DocsPage() {
             <span className="inline-block px-4 py-2 rounded-full bg-zinc-900/50 text-zinc-300 text-sm font-medium mb-4">
               Quick Start
             </span>
-            <h2 className="text-4xl font-medium text-white mb-6">
-              Up and running in 3 steps
-            </h2>
+            <h2 className="text-4xl font-medium text-white mb-6">Up and running in 3 steps</h2>
           </div>
 
           <div className="grid lg:grid-cols-3 gap-8">
@@ -326,25 +374,28 @@ export default function DocsPage() {
               {
                 step: '1',
                 title: 'Download & Install',
-                description: 'Download Velanova for your operating system and run the installer. The app will be ready in under a minute.',
+                description:
+                  'Download Velanova for your operating system and run the installer. The app will be ready in under a minute.',
                 icon: Download,
               },
               {
                 step: '2',
                 title: 'Connect Your Database',
-                description: 'Click "Add Connection" and enter your database credentials. We support PostgreSQL, MySQL, Oracle, and more.',
+                description:
+                  'Click "Add Connection" and enter your database credentials. We support PostgreSQL, MySQL, Oracle, and more.',
                 icon: Database,
               },
               {
                 step: '3',
                 title: 'Ask Your First Question',
-                description: 'Type a question in natural language like "Show me all orders from last month" and watch AI generate the perfect SQL.',
+                description:
+                  'Type a question in natural language like "Show me all orders from last month" and watch AI generate the perfect SQL.',
                 icon: MessageSquare,
               },
-            ].map((item) => {
+            ].map(item => {
               const Icon = item.icon;
               return (
-                <div 
+                <div
                   key={item.step}
                   className="relative bg-black rounded-2xl p-8 border border-white/10 hover:shadow-xl transition-all"
                 >
@@ -378,14 +429,14 @@ export default function DocsPage() {
             Our support team is here to help. Check out our FAQ or reach out directly.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link 
-              href="/faq" 
+            <Link
+              href="/faq"
               className="px-8 py-4 bg-white/10 text-zinc-400 rounded-2xl font-medium hover:bg-black/20 transition-colors shadow-lg"
             >
               View FAQ
             </Link>
-            <Link 
-              href="/contact" 
+            <Link
+              href="/contact"
               className="px-8 py-4 bg-white/10 text-white rounded-2xl font-medium hover:bg-black/20 transition-colors border border-white/20"
             >
               Contact Support
@@ -406,8 +457,12 @@ export default function DocsPage() {
               &copy; {new Date().getFullYear()} Velanova. All rights reserved.
             </p>
             <div className="flex items-center gap-6 text-sm text-zinc-500">
-              <Link href="/privacy" className="hover:text-zinc-400 transition-colors">Privacy</Link>
-              <Link href="/terms" className="hover:text-zinc-400 transition-colors">Terms</Link>
+              <Link href="/privacy" className="hover:text-zinc-400 transition-colors">
+                Privacy
+              </Link>
+              <Link href="/terms" className="hover:text-zinc-400 transition-colors">
+                Terms
+              </Link>
             </div>
           </div>
         </div>

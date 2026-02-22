@@ -3,6 +3,7 @@
 ## Four Application Components
 
 ### 1. 🌐 Landing Site (Public Website)
+
 **URL:** domain.com (production) | localhost:3000 (dev)
 **Purpose:** Marketing, downloads, user login, payments
 
@@ -14,6 +15,7 @@ pnpm --filter landing-site dev
 Visit: http://localhost:3000
 
 **Pages:**
+
 - `/` - Home page with features
 - `/download` - Platform-specific downloads
 - `/subscribe` - Pricing and subscriptions
@@ -22,6 +24,7 @@ Visit: http://localhost:3000
 ---
 
 ### 2. 🔐 Admin Dashboard (Internal Tool)
+
 **URL:** admin.domain.com (production) | localhost:3001 (dev)
 **Purpose:** Admin management, analytics, user management
 
@@ -33,11 +36,14 @@ pnpm --filter admin-dashboard dev
 Visit: http://localhost:3001
 
 **Features:**
+
 - User management
 - License management
 - Subscription analytics
 - Usage tracking
+
 ### 3. 🖥️ Desktop App (End-User Application)
+
 **Platform:** Windows, macOS, Linux
 **Purpose:** Native desktop app with AI + database integration
 
@@ -49,6 +55,7 @@ pnpm --filter desktop-app dev
 Opens native Electron window (NOT a browser)
 
 **Features:**
+
 - Connect to 10+ database types
 - Query data with 10 AI providers
 - Offline AI with Ollama
@@ -58,6 +65,7 @@ Opens native Electron window (NOT a browser)
 ---
 
 ### 4. 🔌 Express API (Optional Backend)
+
 **URL:** api.domain.com (production) | localhost:5500 (dev)
 **Purpose:** Separate backend for license validation, AI routing
 
@@ -69,6 +77,7 @@ pnpm --filter express-api dev
 Visit: http://localhost:5500/health
 
 **Endpoints:**
+
 - `/api/licenses/validate` - License validation
 - `/api/ai/query` - AI routing
 - `/api/usage/track` - Usage analytics
@@ -104,22 +113,22 @@ pnpm install
 
 ## Port Map (Development)
 
-| Application | Port | Access |
-|-------------|------|--------|
-| Landing Site | 3000 | http://localhost:3000 |
-| Admin Dashboard | 3001 | http://localhost:3001 |
-| Desktop App (Vite) | 5173 | Internal (Electron loads this) |
-| Express API (optional) | 5500 | http://localhost:5500 |
+| Application            | Port | Access                         |
+| ---------------------- | ---- | ------------------------------ |
+| Landing Site           | 3000 | http://localhost:3000          |
+| Admin Dashboard        | 3001 | http://localhost:3001          |
+| Desktop App (Vite)     | 5173 | Internal (Electron loads this) |
+| Express API (optional) | 5500 | http://localhost:5500          |
 
 ---
 
 ## Production URLs
 
-| Application | Development | Production |
-|-------------|-------------|------------|
-| Landing Site | localhost:3000 | https://domain.com |
+| Application     | Development    | Production               |
+| --------------- | -------------- | ------------------------ |
+| Landing Site    | localhost:3000 | https://domain.com       |
 | Admin Dashboard | localhost:4000 | https://admin.domain.com |
-| Desktop App | Native window | Desktop application |
+| Desktop App     | Native window  | Desktop application      |
 
 ---
 
@@ -148,21 +157,26 @@ pnpm install
 ## What to Do Next
 
 ### 1. **Start Development**
+
 ```bash
 pnpm dev
 ```
 
 ### 2. **Access Applications**
+
 - Landing: http://localhost:3000
 - Admin: http://localhost:4000
 - Desktop: Native window opens automatically
 
 ### 3. **Set Up Environment Variables**
+
 Copy `.env.example` to `.env` in each app:
+
 - `apps/landing-site/.env`
 - `apps/admin-dashboard/.env`
 
 ### 4. **Configure Database**
+
 ```bash
 cd apps/landing-site
 pnpm prisma migrate dev
@@ -170,6 +184,7 @@ pnpm prisma generate
 ```
 
 ### 5. **Read Documentation**
+
 - [RUNNING.md](./RUNNING.md) - Detailed running instructions
 - [DEPLOYMENT.md](./DEPLOYMENT.md) - Production deployment guide
 - [QUICKSTART.md](./QUICKSTART.md) - Original development guide
@@ -179,21 +194,25 @@ pnpm prisma generate
 ## Architecture Benefits
 
 ### 🎯 Separation of Concerns
+
 - **Landing** = Marketing + Payments (public)
 - **Admin** = Management (internal)
 - **Desktop** = End-user tool (distributed)
 
 ### 🚀 Independent Scaling
+
 - Scale landing site to handle traffic spikes
 - Keep admin dashboard small and secure
 - Desktop app scales with user count (runs locally)
 
 ### 🔒 Enhanced Security
+
 - Admin dashboard on separate subdomain
 - Can IP-whitelist admin access
 - Desktop app data stays on user's machine
 
 ### 💰 Cost Effective
+
 - Deploy landing/admin to Vercel (free tier)
 - No server costs for desktop app logic
 - Only pay for API usage and storage
@@ -227,11 +246,13 @@ A: All data processing happens locally. Only license checks and anonymized analy
 4. Review code in `apps/` folder
 
 **Ready to start?**
+
 ```bash
 pnpm dev
 ```
 
 Then open:
+
 - http://localhost:3000 (Landing Site)
 - http://localhost:4000 (Admin Dashboard)
 - Electron window (Desktop App)

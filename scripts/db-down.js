@@ -2,10 +2,10 @@
 
 /**
  * Velanova Database Down Script
- * 
+ *
  * Drops all Velanova tables, functions, views, and policies from Supabase.
  * USE WITH EXTREME CAUTION — this is destructive and irreversible.
- * 
+ *
  * Usage:
  *   pnpm db:down                     # Interactive confirmation
  *   pnpm db:down -- --force          # Skip confirmation (CI usage)
@@ -98,9 +98,9 @@ DO $$ BEGIN RAISE NOTICE '🗑️  All Velanova tables, views, and functions dro
 // ---------- Prompt ----------
 
 function confirm(question) {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     const rl = createInterface({ input: process.stdin, output: process.stdout });
-    rl.question(question, (answer) => {
+    rl.question(question, answer => {
       rl.close();
       resolve(answer.toLowerCase().trim());
     });
@@ -147,7 +147,12 @@ async function main() {
 
   // Execute via psql or manual instruction
   const hasPsql = (() => {
-    try { execSync('psql --version', { stdio: 'pipe' }); return true; } catch { return false; }
+    try {
+      execSync('psql --version', { stdio: 'pipe' });
+      return true;
+    } catch {
+      return false;
+    }
   })();
 
   if (hasPsql && (config.databaseUrl || config.dbPassword)) {
@@ -174,7 +179,7 @@ async function main() {
   }
 }
 
-main().catch((err) => {
+main().catch(err => {
   console.error('Fatal error:', err);
   process.exit(1);
 });

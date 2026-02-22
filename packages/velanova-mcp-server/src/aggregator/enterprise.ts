@@ -10,7 +10,16 @@ const logger = createLogger('enterprise-aggregator');
 interface EnterpriseSystem {
   id: string;
   name: string;
-  type: 'sap' | 'salesforce' | 'epic' | 'servicenow' | 'jira' | 'workday' | 'dynamics365' | 'netsuite' | 'zendesk';
+  type:
+    | 'sap'
+    | 'salesforce'
+    | 'epic'
+    | 'servicenow'
+    | 'jira'
+    | 'workday'
+    | 'dynamics365'
+    | 'netsuite'
+    | 'zendesk';
   mcpEndpoint: string;
   status: 'connected' | 'disconnected' | 'error';
   description: string;
@@ -26,7 +35,7 @@ const ENTERPRISE_SERVERS: Record<string, Omit<EnterpriseSystem, 'id' | 'status'>
     mcpEndpoint: process.env.SAP_MCP_URL ?? 'http://sap-s4hana-mcp:3000',
     description: 'SAP S/4HANA ERP system - Finance, Supply Chain, Manufacturing',
     category: 'erp',
-    capabilities: ['bapi', 'rfc', 'odata', 'idocs', 'real-time-analytics']
+    capabilities: ['bapi', 'rfc', 'odata', 'idocs', 'real-time-analytics'],
   },
   'salesforce-main': {
     name: 'Salesforce',
@@ -34,7 +43,7 @@ const ENTERPRISE_SERVERS: Record<string, Omit<EnterpriseSystem, 'id' | 'status'>
     mcpEndpoint: process.env.SALESFORCE_MCP_URL ?? 'http://salesforce-mcp:3000',
     description: 'Salesforce CRM - Sales, Service, Marketing Cloud',
     category: 'crm',
-    capabilities: ['soql', 'sosl', 'crud', 'bulk-api', 'reports', 'dashboards']
+    capabilities: ['soql', 'sosl', 'crud', 'bulk-api', 'reports', 'dashboards'],
   },
   'epic-fhir': {
     name: 'Epic FHIR',
@@ -42,7 +51,7 @@ const ENTERPRISE_SERVERS: Record<string, Omit<EnterpriseSystem, 'id' | 'status'>
     mcpEndpoint: process.env.EPIC_MCP_URL ?? 'http://epic-fhir-mcp:3000',
     description: 'Epic EHR via FHIR R4 (HIPAA Compliant)',
     category: 'ehr',
-    capabilities: ['patient', 'observations', 'medications', 'conditions', 'appointments']
+    capabilities: ['patient', 'observations', 'medications', 'conditions', 'appointments'],
   },
   'servicenow-itsm': {
     name: 'ServiceNow',
@@ -50,7 +59,7 @@ const ENTERPRISE_SERVERS: Record<string, Omit<EnterpriseSystem, 'id' | 'status'>
     mcpEndpoint: process.env.SERVICENOW_MCP_URL ?? 'http://servicenow-mcp:3000',
     description: 'ServiceNow ITSM - Incidents, Changes, Problems, CMDB',
     category: 'itsm',
-    capabilities: ['incidents', 'changes', 'problems', 'cmdb', 'workflows', 'service-catalog']
+    capabilities: ['incidents', 'changes', 'problems', 'cmdb', 'workflows', 'service-catalog'],
   },
   'jira-main': {
     name: 'Jira',
@@ -58,7 +67,7 @@ const ENTERPRISE_SERVERS: Record<string, Omit<EnterpriseSystem, 'id' | 'status'>
     mcpEndpoint: process.env.JIRA_MCP_URL ?? 'http://jira-mcp:3000',
     description: 'Atlassian Jira - Agile Project Management',
     category: 'pm',
-    capabilities: ['jql', 'issues', 'projects', 'boards', 'sprints', 'workflows']
+    capabilities: ['jql', 'issues', 'projects', 'boards', 'sprints', 'workflows'],
   },
   'workday-hcm': {
     name: 'Workday HCM',
@@ -66,7 +75,7 @@ const ENTERPRISE_SERVERS: Record<string, Omit<EnterpriseSystem, 'id' | 'status'>
     mcpEndpoint: process.env.WORKDAY_MCP_URL ?? 'http://workday-mcp:3000',
     description: 'Workday Human Capital Management',
     category: 'hcm',
-    capabilities: ['workers', 'organizations', 'compensation', 'recruiting', 'time-off']
+    capabilities: ['workers', 'organizations', 'compensation', 'recruiting', 'time-off'],
   },
   'zendesk-support': {
     name: 'Zendesk',
@@ -74,8 +83,8 @@ const ENTERPRISE_SERVERS: Record<string, Omit<EnterpriseSystem, 'id' | 'status'>
     mcpEndpoint: process.env.ZENDESK_MCP_URL ?? 'http://zendesk-mcp:3000',
     description: 'Zendesk Customer Support Platform',
     category: 'support',
-    capabilities: ['tickets', 'users', 'organizations', 'triggers', 'macros', 'search']
-  }
+    capabilities: ['tickets', 'users', 'organizations', 'triggers', 'macros', 'search'],
+  },
 };
 
 export class EnterpriseAggregator {
@@ -90,7 +99,7 @@ export class EnterpriseAggregator {
       this.systems.set(id, {
         id,
         ...config,
-        status: 'disconnected'
+        status: 'disconnected',
       });
     }
 
@@ -123,8 +132,8 @@ export class EnterpriseAggregator {
         parameters,
         result: {
           message: `BAPI ${bapi} would be called here. Connect SAP MCP server for real results.`,
-          mock: true
-        }
+          mock: true,
+        },
       };
     }
 
@@ -139,14 +148,14 @@ export class EnterpriseAggregator {
       suggestedBapis,
       result: {
         message: 'Connect SAP MCP server to execute queries against real SAP system.',
-        mock: true
-      }
+        mock: true,
+      },
     };
   }
 
   private suggestSAPBAPI(intent: string, module?: string): string[] {
     const intentLower = intent.toLowerCase();
-    
+
     // Common BAPI suggestions based on intent
     if (intentLower.includes('purchase order')) {
       return ['BAPI_PO_GETITEMS', 'BAPI_PO_CREATE1', 'BAPI_PO_GETDETAIL'];
@@ -191,15 +200,15 @@ export class EnterpriseAggregator {
         records: [],
         totalSize: 0,
         message: 'Connect Salesforce MCP server to execute real queries.',
-        mock: true
-      }
+        mock: true,
+      },
     };
   }
 
   private naturalLanguageToSOQL(intent: string, objectType?: string): string {
     // Simple NL to SOQL conversion (in production, would use AI)
     const intentLower = intent.toLowerCase();
-    
+
     if (intentLower.includes('all accounts') || intentLower.includes('list accounts')) {
       return 'SELECT Id, Name, Industry, AnnualRevenue FROM Account LIMIT 100';
     }
@@ -222,7 +231,7 @@ export class EnterpriseAggregator {
     logger.info({ resource_type, redact_phi }, 'Querying Epic FHIR');
 
     // Build FHIR URL
-    const searchString = search_params 
+    const searchString = search_params
       ? '?' + new URLSearchParams(search_params as Record<string, string>).toString()
       : '';
 
@@ -236,16 +245,19 @@ export class EnterpriseAggregator {
         type: 'searchset',
         total: 0,
         entry: [] as any[],
-        message: 'Connect Epic FHIR MCP server to execute real queries. PHI will be redacted per HIPAA Safe Harbor.',
-        mock: true
-      }
+        message:
+          'Connect Epic FHIR MCP server to execute real queries. PHI will be redacted per HIPAA Safe Harbor.',
+        mock: true,
+      },
     };
 
     // If PHI redaction is enabled, note which fields would be redacted
     if (redact_phi) {
-      result.result.entry = [{
-        note: 'PHI fields that would be redacted: name, address, telecom, birthDate, identifier, photo, contact'
-      }];
+      result.result.entry = [
+        {
+          note: 'PHI fields that would be redacted: name, address, telecom, birthDate, identifier, photo, contact',
+        },
+      ];
     }
 
     return result;
@@ -268,8 +280,8 @@ export class EnterpriseAggregator {
         records: [],
         total: 0,
         message: 'Connect ServiceNow MCP server to execute real queries.',
-        mock: true
-      }
+        mock: true,
+      },
     };
   }
 
@@ -294,8 +306,8 @@ export class EnterpriseAggregator {
         issues: [],
         total: 0,
         message: 'Connect Jira MCP server to execute real queries.',
-        mock: true
-      }
+        mock: true,
+      },
     };
   }
 
@@ -318,7 +330,7 @@ export class EnterpriseAggregator {
 
   async healthCheck(): Promise<Record<string, unknown>> {
     const statuses: Record<string, string> = {};
-    
+
     for (const [id, system] of this.systems) {
       statuses[id] = system.status;
     }
@@ -326,7 +338,7 @@ export class EnterpriseAggregator {
     return {
       status: 'healthy',
       systems: statuses,
-      totalSystems: this.systems.size
+      totalSystems: this.systems.size,
     };
   }
 }

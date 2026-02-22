@@ -2,7 +2,7 @@
 
 /**
  * Velanova Health Check Script
- * 
+ *
  * Checks the health of all system components:
  * - Express API availability
  * - Supabase connection
@@ -11,7 +11,7 @@
  * - Desktop app build status
  * - MCP servers
  * - Environment variables
- * 
+ *
  * Usage:
  *   pnpm health                # Check all
  *   pnpm health -- --verbose   # Detailed output
@@ -46,25 +46,31 @@ function loadEnv() {
 }
 
 function checkPort(port) {
-  return new Promise((resolve) => {
-    const req = http.get(`http://localhost:${port}/`, (res) => {
+  return new Promise(resolve => {
+    const req = http.get(`http://localhost:${port}/`, res => {
       resolve(true);
       req.destroy();
     });
     req.on('error', () => resolve(false));
-    req.setTimeout(2000, () => { req.destroy(); resolve(false); });
+    req.setTimeout(2000, () => {
+      req.destroy();
+      resolve(false);
+    });
   });
 }
 
 function checkUrl(url) {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     const mod = url.startsWith('https') ? https : http;
-    const req = mod.get(url, (res) => {
+    const req = mod.get(url, res => {
       resolve(res.statusCode);
       req.destroy();
     });
     req.on('error', () => resolve(null));
-    req.setTimeout(5000, () => { req.destroy(); resolve(null); });
+    req.setTimeout(5000, () => {
+      req.destroy();
+      resolve(null);
+    });
   });
 }
 
@@ -84,7 +90,7 @@ async function main() {
     'Landing .env.local': join(ROOT_DIR, 'apps', 'landing-site', '.env.local'),
     'Admin .env.local': join(ROOT_DIR, 'apps', 'admin-dashboard', '.env.local'),
   };
-  
+
   console.log('📁 Environment Files:');
   for (const [name, path] of Object.entries(envFiles)) {
     const exists = existsSync(path);
@@ -95,8 +101,12 @@ async function main() {
   // 2. Key env vars
   console.log('\n🔑 Key Environment Variables:');
   const requiredVars = [
-    'SUPABASE_URL', 'SUPABASE_SERVICE_KEY', 'SUPABASE_ANON_KEY',
-    'GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'NEXTAUTH_SECRET',
+    'SUPABASE_URL',
+    'SUPABASE_SERVICE_KEY',
+    'SUPABASE_ANON_KEY',
+    'GOOGLE_CLIENT_ID',
+    'GOOGLE_CLIENT_SECRET',
+    'NEXTAUTH_SECRET',
     'JWT_SECRET',
   ];
   for (const v of requiredVars) {
@@ -123,9 +133,7 @@ async function main() {
   console.log('\n📦 MCP Servers (built):');
   const mcpDir = join(ROOT_DIR, 'packages', 'mcp-servers');
   if (existsSync(mcpDir)) {
-    const servers = readdirSync(mcpDir).filter(d => 
-      existsSync(join(mcpDir, d, 'package.json'))
-    );
+    const servers = readdirSync(mcpDir).filter(d => existsSync(join(mcpDir, d, 'package.json')));
     let built = 0;
     for (const server of servers) {
       const hasDistIndex = existsSync(join(mcpDir, server, 'dist', 'index.js'));
@@ -140,7 +148,8 @@ async function main() {
   console.log('\n🖥️  Desktop App:');
   const desktopDir = join(ROOT_DIR, 'apps', 'desktop-app');
   const hasRendererBuild = existsSync(join(desktopDir, 'dist'));
-  const hasMainBuild = existsSync(join(desktopDir, 'dist-electron')) || existsSync(join(desktopDir, 'dist', 'main'));
+  const hasMainBuild =
+    existsSync(join(desktopDir, 'dist-electron')) || existsSync(join(desktopDir, 'dist', 'main'));
   const hasRelease = existsSync(join(desktopDir, 'release'));
   console.log(`  ${hasRendererBuild ? '✅' : '❌'} Renderer built`);
   console.log(`  ${hasRelease ? '✅' : '⬜'} Package artifacts`);
@@ -155,7 +164,7 @@ async function main() {
   // Summary
   const okCount = results.filter(r => r.ok).length;
   const totalChecks = results.length;
-  
+
   console.log(`\n${'═'.repeat(50)}`);
   console.log(`  Health: ${okCount}/${totalChecks} checks passed`);
   console.log(`${'═'.repeat(50)}\n`);

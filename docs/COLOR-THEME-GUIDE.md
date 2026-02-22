@@ -5,12 +5,14 @@
 ### 🎨 Color Palette
 
 **Light Mode:**
+
 - Background: **White** (#ffffff)
 - Text: **Black** (#000000)
 - Accent: **Blue** (#3b82f6)
 - Secondary Text: **Gray** (#6b7280)
 
 **Dark Mode:**
+
 - Background: **Black** (#000000)
 - Text: **White** (#ffffff)
 - Accent: **Blue** (#3b82f6)
@@ -21,6 +23,7 @@
 ## Usage Examples
 
 ### Titles and Headings
+
 ```tsx
 // Main titles - Black in light mode, White in dark mode
 <h1 className="text-foreground text-4xl font-medium">
@@ -34,6 +37,7 @@
 ```
 
 ### Body Text
+
 ```tsx
 // Primary text - Black/White based on theme
 <p className="text-foreground">
@@ -52,6 +56,7 @@
 ```
 
 ### Buttons
+
 ```tsx
 // Primary button - Blue background
 <button className="bg-primary-500 text-white hover:bg-primary-600 px-4 py-2 rounded-lg">
@@ -70,6 +75,7 @@
 ```
 
 ### Cards and Containers
+
 ```tsx
 // White card in light mode, dark card in dark mode
 <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-6">
@@ -84,6 +90,7 @@
 ```
 
 ### Inputs
+
 ```tsx
 // Input field
 <input
@@ -94,6 +101,7 @@
 ```
 
 ### Links
+
 ```tsx
 // Blue link
 <a href="#" className="text-primary-500 hover:text-primary-600 underline">
@@ -111,6 +119,7 @@
 ## Available Tailwind Classes
 
 ### Background Colors
+
 ```css
 /* White/Black backgrounds */
 bg-background          /* White (light) / Black (dark) */
@@ -127,6 +136,7 @@ bg-gray-900            /* Very dark gray */
 ```
 
 ### Text Colors
+
 ```css
 /* Primary text */
 text-foreground        /* Black (light) / White (dark) */
@@ -143,6 +153,7 @@ text-muted-foreground  /* Auto-adjusting gray */
 ```
 
 ### Border Colors
+
 ```css
 border-gray-200 dark:border-gray-800  /* Borders */
 border-primary-500                     /* Blue borders */
@@ -155,6 +166,7 @@ border-primary-500                     /* Blue borders */
 ### 1. Wrap your app in ThemeProvider
 
 **Landing Site & Admin Dashboard** (`layout.tsx`):
+
 ```tsx
 import { ThemeProvider } from '@/components/ThemeProvider';
 
@@ -162,9 +174,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <ThemeProvider>
-          {children}
-        </ThemeProvider>
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );
@@ -191,20 +201,22 @@ export function Header() {
 ## Quick Reference
 
 ### Light Mode
-| Element | Color | Tailwind Class |
-|---------|-------|----------------|
-| Background | White | `bg-white` or `bg-background` |
-| Text | Black | `text-black` or `text-foreground` |
-| Accent | Blue | `text-primary-500` or `bg-primary-500` |
-| Secondary | Gray | `text-gray-500` |
+
+| Element    | Color | Tailwind Class                         |
+| ---------- | ----- | -------------------------------------- |
+| Background | White | `bg-white` or `bg-background`          |
+| Text       | Black | `text-black` or `text-foreground`      |
+| Accent     | Blue  | `text-primary-500` or `bg-primary-500` |
+| Secondary  | Gray  | `text-gray-500`                        |
 
 ### Dark Mode
-| Element | Color | Tailwind Class |
-|---------|-------|----------------|
-| Background | Black | `bg-black` or `bg-background` |
-| Text | White | `text-white` or `text-foreground` |
-| Accent | Blue | `text-primary-500` or `bg-primary-500` |
-| Secondary | Light Gray | `text-gray-400` |
+
+| Element    | Color      | Tailwind Class                         |
+| ---------- | ---------- | -------------------------------------- |
+| Background | Black      | `bg-black` or `bg-background`          |
+| Text       | White      | `text-white` or `text-foreground`      |
+| Accent     | Blue       | `text-primary-500` or `bg-primary-500` |
+| Secondary  | Light Gray | `text-gray-400`                        |
 
 ---
 
@@ -234,9 +246,7 @@ export function App() {
 
   return (
     <div className={theme}>
-      <div className="bg-background text-foreground min-h-screen">
-        {/* Your app content */}
-      </div>
+      <div className="bg-background text-foreground min-h-screen">{/* Your app content */}</div>
     </div>
   );
 }
@@ -256,18 +266,18 @@ export function ThemeTest() {
       {/* Backgrounds */}
       <div className="bg-background p-4 rounded">Background</div>
       <div className="bg-white dark:bg-black p-4 rounded border">White/Black</div>
-      
+
       {/* Text */}
       <h1 className="text-foreground text-3xl font-medium">Main Title</h1>
       <p className="text-foreground">Primary text content</p>
       <p className="text-muted-foreground">Secondary text (labels)</p>
-      
+
       {/* Accents */}
-      <button className="bg-primary-500 text-white px-4 py-2 rounded">
-        Primary Button
-      </button>
-      <a href="#" className="text-primary-500">Blue Link</a>
-      
+      <button className="bg-primary-500 text-white px-4 py-2 rounded">Primary Button</button>
+      <a href="#" className="text-primary-500">
+        Blue Link
+      </a>
+
       {/* Cards */}
       <div className="bg-white dark:bg-gray-900 p-6 rounded-lg border border-gray-200 dark:border-gray-800">
         <h3 className="text-foreground font-medium">Card Title</h3>

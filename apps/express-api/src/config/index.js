@@ -100,16 +100,12 @@ export const config = {
 let supabaseClient = null;
 
 if (config.supabase.url && config.supabase.serviceKey) {
-  supabaseClient = createClient(
-    config.supabase.url,
-    config.supabase.serviceKey,
-    {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false,
-      },
-    }
-  );
+  supabaseClient = createClient(config.supabase.url, config.supabase.serviceKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  });
 }
 
 export const supabase = supabaseClient;
@@ -117,7 +113,7 @@ export const supabase = supabaseClient;
 // Get enabled AI providers
 export function getEnabledProviders() {
   const providers = [];
-  
+
   if (config.ai.openai.apiKey) providers.push('openai');
   if (config.ai.anthropic.apiKey) providers.push('anthropic');
   if (config.ai.google.apiKey) providers.push('google');
@@ -127,6 +123,6 @@ export function getEnabledProviders() {
   if (config.ai.perplexity.apiKey) providers.push('perplexity');
   if (config.ai.deepseek.apiKey) providers.push('deepseek');
   if (config.ai.openrouter.apiKey) providers.push('openrouter');
-  
+
   return providers;
 }

@@ -2,7 +2,11 @@
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { CallToolRequestSchema, ListToolsRequestSchema, Tool } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+  Tool,
+} from '@modelcontextprotocol/sdk/types.js';
 import pg from 'pg';
 
 const { Pool } = pg;
@@ -14,19 +18,32 @@ const TOOLS: Tool[] = [
     description: 'Execute a SQL query on the PostgreSQL database',
     inputSchema: {
       type: 'object',
-      properties: { sql: { type: 'string', description: 'SQL query to execute' }, params: { type: 'array', description: 'Query parameters', items: { type: 'string' } } },
+      properties: {
+        sql: { type: 'string', description: 'SQL query to execute' },
+        params: { type: 'array', description: 'Query parameters', items: { type: 'string' } },
+      },
       required: ['sql'],
     },
   },
   {
     name: 'list_tables',
     description: 'List all tables in the current schema',
-    inputSchema: { type: 'object', properties: { schema: { type: 'string', description: 'Schema name (default: public)' } } },
+    inputSchema: {
+      type: 'object',
+      properties: { schema: { type: 'string', description: 'Schema name (default: public)' } },
+    },
   },
   {
     name: 'describe_table',
     description: 'Get column details for a table',
-    inputSchema: { type: 'object', properties: { table: { type: 'string', description: 'Table name' }, schema: { type: 'string', description: 'Schema name' } }, required: ['table'] },
+    inputSchema: {
+      type: 'object',
+      properties: {
+        table: { type: 'string', description: 'Table name' },
+        schema: { type: 'string', description: 'Schema name' },
+      },
+      required: ['table'],
+    },
   },
   {
     name: 'list_schemas',
@@ -40,7 +57,10 @@ const TOOLS: Tool[] = [
   },
 ];
 
-const server = new Server({ name: 'postgresql-mcp-server', version: '1.0.0' }, { capabilities: { tools: {} } });
+const server = new Server(
+  { name: 'postgresql-mcp-server', version: '1.0.0' },
+  { capabilities: { tools: {} } }
+);
 
 async function initConnection() {
   const connectionString = process.env.POSTGRES_CONNECTION_STRING;
@@ -65,7 +85,22 @@ async function handleQuery(sql: string, params?: string[]) {
   if (!pool) throw new Error('Not connected');
   try {
     const result = await pool.query(sql, params);
-    return { content: [{ type: 'text' as const, text: JSON.stringify({ rows: result.rows, rowCount: result.rowCount, fields: result.fields?.map((f: any) => f.name) }, null, 2) }] };
+    return {
+      content: [
+        {
+          type: 'text' as const,
+          text: JSON.stringify(
+            {
+              rows: result.rows,
+              rowCount: result.rowCount,
+              fields: result.fields?.map((f: any) => f.name),
+            },
+            null,
+            2
+          ),
+        },
+      ],
+    };
   } catch (error: any) {
     return { content: [{ type: 'text' as const, text: `Error: ${error.message}` }], isError: true };
   }
@@ -73,39 +108,55 @@ async function handleQuery(sql: string, params?: string[]) {
 
 async function handleListTables(schema: string = 'public') {
   if (!pool) throw new Error('Not connected');
-  const result = await pool.query(`SELECT table_name, table_type FROM information_schema.tables WHERE table_schema = $1 ORDER BY table_name`, [schema]);
+  const result = await pool.query(
+    `SELECT table_name, table_type FROM information_schema.tables WHERE table_schema = $1 ORDER BY table_name`,
+    [schema]
+  );
   return { content: [{ type: 'text' as const, text: JSON.stringify(result.rows, null, 2) }] };
 }
 
 async function handleDescribeTable(table: string, schema: string = 'public') {
   if (!pool) throw new Error('Not connected');
-  const result = await pool.query(`SELECT column_name, data_type, is_nullable, column_default, character_maximum_length FROM information_schema.columns WHERE table_schema = $1 AND table_name = $2 ORDER BY ordinal_position`, [schema, table]);
+  const result = await pool.query(
+    `SELECT column_name, data_type, is_nullable, column_default, character_maximum_length FROM information_schema.columns WHERE table_schema = $1 AND table_name = $2 ORDER BY ordinal_position`,
+    [schema, table]
+  );
   return { content: [{ type: 'text' as const, text: JSON.stringify(result.rows, null, 2) }] };
 }
 
 async function handleListSchemas() {
   if (!pool) throw new Error('Not connected');
-  const result = await pool.query(`SELECT schema_name FROM information_schema.schemata WHERE schema_name NOT IN ('pg_catalog', 'information_schema') ORDER BY schema_name`);
+  const result = await pool.query(
+    `SELECT schema_name FROM information_schema.schemata WHERE schema_name NOT IN ('pg_catalog', 'information_schema') ORDER BY schema_name`
+  );
   return { content: [{ type: 'text' as const, text: JSON.stringify(result.rows, null, 2) }] };
 }
 
 async function handleListDatabases() {
   if (!pool) throw new Error('Not connected');
-  const result = await pool.query(`SELECT datname FROM pg_database WHERE datistemplate = false ORDER BY datname`);
+  const result = await pool.query(
+    `SELECT datname FROM pg_database WHERE datistemplate = false ORDER BY datname`
+  );
   return { content: [{ type: 'text' as const, text: JSON.stringify(result.rows, null, 2) }] };
 }
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: TOOLS }));
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   const { name, arguments: args } = request.params;
   switch (name) {
-    case 'query': return handleQuery((args as any).sql, (args as any).params);
-    case 'list_tables': return handleListTables((args as any).schema);
-    case 'describe_table': return handleDescribeTable((args as any).table, (args as any).schema);
-    case 'list_schemas': return handleListSchemas();
-    case 'list_databases': return handleListDatabases();
-    default: throw new Error(`Unknown tool: ${name}`);
+    case 'query':
+      return handleQuery((args as any).sql, (args as any).params);
+    case 'list_tables':
+      return handleListTables((args as any).schema);
+    case 'describe_table':
+      return handleDescribeTable((args as any).table, (args as any).schema);
+    case 'list_schemas':
+      return handleListSchemas();
+    case 'list_databases':
+      return handleListDatabases();
+    default:
+      throw new Error(`Unknown tool: ${name}`);
   }
 });
 

@@ -39,7 +39,6 @@ export default function LoginPage() {
 
   return (
     <div className="relative min-h-screen bg-[#030303] flex items-center justify-center overflow-hidden select-none">
-
       {/* Dot grid */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -53,15 +52,30 @@ export default function LoginPage() {
       <div className="absolute inset-0 login-noise pointer-events-none" />
 
       {/* Ambient orbs */}
-      <div className="absolute top-[-15%] left-[-8%] w-[700px] h-[700px] rounded-full pointer-events-none"
-        style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.045) 0%, transparent 70%)', filter: 'blur(50px)' }} />
-      <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] rounded-full pointer-events-none"
-        style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%)', filter: 'blur(50px)' }} />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[280px] rounded-full pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse, rgba(255,255,255,0.018) 0%, transparent 70%)', filter: 'blur(70px)' }} />
+      <div
+        className="absolute top-[-15%] left-[-8%] w-[700px] h-[700px] rounded-full pointer-events-none"
+        style={{
+          background: 'radial-gradient(circle, rgba(255,255,255,0.045) 0%, transparent 70%)',
+          filter: 'blur(50px)',
+        }}
+      />
+      <div
+        className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] rounded-full pointer-events-none"
+        style={{
+          background: 'radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%)',
+          filter: 'blur(50px)',
+        }}
+      />
+      <div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[280px] rounded-full pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse, rgba(255,255,255,0.018) 0%, transparent 70%)',
+          filter: 'blur(70px)',
+        }}
+      />
 
       {/* Floating particles */}
-      {PARTICLES.map((p) => (
+      {PARTICLES.map(p => (
         <div
           key={p.id}
           className="absolute rounded-full bg-white/25 pointer-events-none login-particle"
@@ -78,7 +92,6 @@ export default function LoginPage() {
 
       {/* ── Main card area ── */}
       <div className="relative z-10 w-full max-w-[355px] px-4">
-
         {/* Logo + brand */}
         <div className="flex flex-col items-center mb-9">
           <div
@@ -128,8 +141,13 @@ export default function LoginPage() {
           style={{ willChange: 'transform' }}
         >
           {/* Card gradient border */}
-          <div className="absolute inset-0 rounded-2xl p-px pointer-events-none"
-            style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 50%, rgba(255,255,255,0.01) 100%)' }}>
+          <div
+            className="absolute inset-0 rounded-2xl p-px pointer-events-none"
+            style={{
+              background:
+                'linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 50%, rgba(255,255,255,0.01) 100%)',
+            }}
+          >
             <div className="w-full h-full rounded-2xl" />
           </div>
 
@@ -141,7 +159,9 @@ export default function LoginPage() {
                 <Lock className="w-3.5 h-3.5 text-zinc-400" />
               </div>
               <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
-              <div className="text-[10px] text-zinc-600 font-mono tracking-widest px-2">OAuth 2.0</div>
+              <div className="text-[10px] text-zinc-600 font-mono tracking-widest px-2">
+                OAuth 2.0
+              </div>
               <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
               <div className="w-7 h-7 rounded-lg bg-white/[0.06] border border-white/[0.07] flex items-center justify-center">
                 <Globe className="w-3.5 h-3.5 text-zinc-400" />
@@ -162,14 +182,16 @@ export default function LoginPage() {
               style={{
                 background: 'linear-gradient(160deg, #ffffff 0%, #e2e2e2 100%)',
                 color: '#080808',
-                boxShadow: '0 1px 0 0 rgba(255,255,255,0.25) inset, 0 6px 28px -6px rgba(255,255,255,0.18)',
+                boxShadow:
+                  '0 1px 0 0 rgba(255,255,255,0.25) inset, 0 6px 28px -6px rgba(255,255,255,0.18)',
               }}
             >
               {/* Shimmer on hover */}
               <div
                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                 style={{
-                  background: 'linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.5) 50%, transparent 65%)',
+                  background:
+                    'linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.5) 50%, transparent 65%)',
                   backgroundSize: '200% 100%',
                   animation: 'shimmer-sweep 1.4s ease infinite',
                 }}
@@ -190,11 +212,17 @@ export default function LoginPage() {
 
             <p className="mt-4 text-center text-[11px] text-zinc-600">
               By signing in you agree to our{' '}
-              <a href="#" className="text-zinc-400 hover:text-zinc-200 transition-colors underline underline-offset-2">
+              <a
+                href="#"
+                className="text-zinc-400 hover:text-zinc-200 transition-colors underline underline-offset-2"
+              >
                 Terms
               </a>{' '}
               and{' '}
-              <a href="#" className="text-zinc-400 hover:text-zinc-200 transition-colors underline underline-offset-2">
+              <a
+                href="#"
+                className="text-zinc-400 hover:text-zinc-200 transition-colors underline underline-offset-2"
+              >
                 Privacy Policy
               </a>
             </p>
@@ -211,7 +239,9 @@ export default function LoginPage() {
               <div className="w-8 h-8 rounded-lg bg-white/[0.05] group-hover:bg-white/[0.08] flex items-center justify-center mb-2 transition-colors duration-200">
                 <Icon className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-300 transition-colors" />
               </div>
-              <p className="text-[11.5px] font-medium text-zinc-300 mb-0.5 leading-tight">{label}</p>
+              <p className="text-[11.5px] font-medium text-zinc-300 mb-0.5 leading-tight">
+                {label}
+              </p>
               <p className="text-[10px] text-zinc-600 leading-snug">{sub}</p>
             </div>
           ))}

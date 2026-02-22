@@ -2,9 +2,9 @@
 
 /**
  * Velanova Admin Delete Script
- * 
+ *
  * Cleans up seeded/test data from the database.
- * 
+ *
  * Usage:
  *   pnpm admin:delete                      # Delete test users + their data
  *   pnpm admin:delete -- --all             # Delete ALL users (nuclear)
@@ -52,9 +52,9 @@ async function getSupabase(env) {
 }
 
 function confirm(question) {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     const rl = createInterface({ input: process.stdin, output: process.stdout });
-    rl.question(question, (answer) => {
+    rl.question(question, answer => {
       rl.close();
       resolve(answer.toLowerCase().trim());
     });
@@ -109,7 +109,9 @@ async function main() {
   }
 
   if (deleteAll) {
-    const answer = await confirm('\n⚠️  DELETE ALL USERS? This is irreversible. Type "yes" to confirm: ');
+    const answer = await confirm(
+      '\n⚠️  DELETE ALL USERS? This is irreversible. Type "yes" to confirm: '
+    );
     if (answer !== 'yes') {
       console.log('❌ Cancelled.\n');
       return;
@@ -124,14 +126,14 @@ async function main() {
   // Delete from tables that cascade from users
   const tables = [
     'audit_log',
-    'chat_messages',  // via chat_sessions
+    'chat_messages', // via chat_sessions
     'chat_sessions',
     'user_connections',
     'user_provider_keys',
     'api_keys',
     'usage_logs',
     'usage_records',
-    'license_activations',  // via licenses
+    'license_activations', // via licenses
     'invoices',
     'payments',
     'payment_sessions',
@@ -142,12 +144,17 @@ async function main() {
 
   for (const table of tables) {
     try {
-      const col = table === 'audit_log' ? 'actor_id' : 
-                  table === 'team_members' ? 'team_owner_id' :
-                  table === 'chat_messages' ? null :
-                  table === 'license_activations' ? null :
-                  'user_id';
-      
+      const col =
+        table === 'audit_log'
+          ? 'actor_id'
+          : table === 'team_members'
+            ? 'team_owner_id'
+            : table === 'chat_messages'
+              ? null
+              : table === 'license_activations'
+                ? null
+                : 'user_id';
+
       if (col) {
         const { error } = await supabase.from(table).delete().in(col, userIds);
         if (error && !error.message.includes('0 rows')) {
@@ -172,7 +179,7 @@ async function main() {
   console.log(`${'═'.repeat(50)}\n`);
 }
 
-main().catch((err) => {
+main().catch(err => {
   console.error('Fatal error:', err);
   process.exit(1);
 });

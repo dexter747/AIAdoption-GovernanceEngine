@@ -13,13 +13,13 @@ export class GoogleProvider {
     if (!config.apiKey) {
       throw new Error('Google AI API key not configured');
     }
-    
+
     this.client = new GoogleGenerativeAI(config.apiKey);
   }
 
   async chat({ model, messages, temperature, maxTokens }) {
     try {
-      const generativeModel = this.client.getGenerativeModel({ 
+      const generativeModel = this.client.getGenerativeModel({
         model,
         generationConfig: {
           temperature,
@@ -53,21 +53,21 @@ export class GoogleProvider {
       };
     } catch (err) {
       logger.error({ error: err.message, model }, 'Google chat failed');
-      
+
       if (err.message?.includes('429')) {
         throw ApiError.tooManyRequests('Google AI rate limit exceeded');
       }
       if (err.message?.includes('401') || err.message?.includes('API key')) {
         throw ApiError.unauthorized('Invalid Google AI API key');
       }
-      
+
       throw ApiError.internal(`Google AI error: ${err.message}`);
     }
   }
 
   async *chatStream({ model, messages, temperature, maxTokens }) {
     try {
-      const generativeModel = this.client.getGenerativeModel({ 
+      const generativeModel = this.client.getGenerativeModel({
         model,
         generationConfig: {
           temperature,
@@ -93,7 +93,7 @@ export class GoogleProvider {
           };
         }
       }
-      
+
       yield {
         content: '',
         finishReason: 'stop',
@@ -111,7 +111,7 @@ export class GoogleProvider {
 
     for (let i = 0; i < messages.length; i++) {
       const msg = messages[i];
-      
+
       if (msg.role === 'system') {
         systemInstruction += msg.content + '\n';
       } else if (i === messages.length - 1 && msg.role === 'user') {

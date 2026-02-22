@@ -25,23 +25,118 @@ interface ConnectionFieldSchema {
 const SAMPLE_SCHEMAS: Record<string, ConnectionFieldSchema> = {
   postgresql: {
     fields: [
-      { key: 'host', label: 'Host', placeholder: 'localhost', type: 'text', required: true, defaultValue: 'localhost', group: 'connection' },
-      { key: 'port', label: 'Port', placeholder: '5432', type: 'number', required: true, defaultValue: '5432', group: 'connection' },
-      { key: 'database', label: 'Database', placeholder: 'my_database', type: 'text', required: true, group: 'connection' },
-      { key: 'username', label: 'Username', placeholder: 'postgres', type: 'text', required: true, group: 'auth' },
-      { key: 'password', label: 'Password', placeholder: 'password', type: 'password', required: true, group: 'auth' },
-      { key: 'ssl', label: 'SSL Mode', placeholder: 'disable', type: 'text', required: false, defaultValue: 'disable', group: 'advanced' },
+      {
+        key: 'host',
+        label: 'Host',
+        placeholder: 'localhost',
+        type: 'text',
+        required: true,
+        defaultValue: 'localhost',
+        group: 'connection',
+      },
+      {
+        key: 'port',
+        label: 'Port',
+        placeholder: '5432',
+        type: 'number',
+        required: true,
+        defaultValue: '5432',
+        group: 'connection',
+      },
+      {
+        key: 'database',
+        label: 'Database',
+        placeholder: 'my_database',
+        type: 'text',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'username',
+        label: 'Username',
+        placeholder: 'postgres',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'password',
+        label: 'Password',
+        placeholder: 'password',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'ssl',
+        label: 'SSL Mode',
+        placeholder: 'disable',
+        type: 'text',
+        required: false,
+        defaultValue: 'disable',
+        group: 'advanced',
+      },
     ],
-    envMap: { host: 'PGHOST', port: 'PGPORT', database: 'PGDATABASE', username: 'PGUSER', password: 'PGPASSWORD', ssl: 'PGSSLMODE' },
+    envMap: {
+      host: 'PGHOST',
+      port: 'PGPORT',
+      database: 'PGDATABASE',
+      username: 'PGUSER',
+      password: 'PGPASSWORD',
+      ssl: 'PGSSLMODE',
+    },
   },
   salesforce: {
     fields: [
-      { key: 'instanceUrl', label: 'Instance URL', placeholder: 'https://myorg.salesforce.com', type: 'url', required: true, group: 'connection' },
-      { key: 'username', label: 'Username', placeholder: 'user@salesforce.com', type: 'email', required: false, group: 'auth' },
-      { key: 'password', label: 'Password', placeholder: 'password', type: 'password', required: false, group: 'auth' },
-      { key: 'securityToken', label: 'Security Token', placeholder: 'security token', type: 'password', required: false, group: 'auth' },
-      { key: 'accessToken', label: 'Access Token', placeholder: 'Bearer token', type: 'password', required: false, group: 'auth' },
-      { key: 'apiVersion', label: 'API Version', placeholder: '58.0', type: 'text', required: false, defaultValue: '58.0', group: 'advanced' },
+      {
+        key: 'instanceUrl',
+        label: 'Instance URL',
+        placeholder: 'https://myorg.salesforce.com',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
+      {
+        key: 'username',
+        label: 'Username',
+        placeholder: 'user@salesforce.com',
+        type: 'email',
+        required: false,
+        group: 'auth',
+      },
+      {
+        key: 'password',
+        label: 'Password',
+        placeholder: 'password',
+        type: 'password',
+        required: false,
+        group: 'auth',
+      },
+      {
+        key: 'securityToken',
+        label: 'Security Token',
+        placeholder: 'security token',
+        type: 'password',
+        required: false,
+        group: 'auth',
+      },
+      {
+        key: 'accessToken',
+        label: 'Access Token',
+        placeholder: 'Bearer token',
+        type: 'password',
+        required: false,
+        group: 'auth',
+      },
+      {
+        key: 'apiVersion',
+        label: 'API Version',
+        placeholder: '58.0',
+        type: 'text',
+        required: false,
+        defaultValue: '58.0',
+        group: 'advanced',
+      },
     ],
     envMap: {
       instanceUrl: 'SALESFORCE_INSTANCE_URL',
@@ -54,10 +149,38 @@ const SAMPLE_SCHEMAS: Record<string, ConnectionFieldSchema> = {
   },
   dynamics365: {
     fields: [
-      { key: 'tenantId', label: 'Tenant ID', placeholder: 'Azure AD Tenant ID', type: 'text', required: true, group: 'auth' },
-      { key: 'clientId', label: 'Client ID', placeholder: 'Application Client ID', type: 'text', required: true, group: 'auth' },
-      { key: 'clientSecret', label: 'Client Secret', placeholder: 'secret', type: 'password', required: true, group: 'auth' },
-      { key: 'resourceUrl', label: 'Resource URL', placeholder: 'https://org.crm.dynamics.com', type: 'url', required: true, group: 'connection' },
+      {
+        key: 'tenantId',
+        label: 'Tenant ID',
+        placeholder: 'Azure AD Tenant ID',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'clientId',
+        label: 'Client ID',
+        placeholder: 'Application Client ID',
+        type: 'text',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'clientSecret',
+        label: 'Client Secret',
+        placeholder: 'secret',
+        type: 'password',
+        required: true,
+        group: 'auth',
+      },
+      {
+        key: 'resourceUrl',
+        label: 'Resource URL',
+        placeholder: 'https://org.crm.dynamics.com',
+        type: 'url',
+        required: true,
+        group: 'connection',
+      },
     ],
     envMap: {
       tenantId: 'DYNAMICS365_TENANT_ID',
@@ -70,16 +193,18 @@ const SAMPLE_SCHEMAS: Record<string, ConnectionFieldSchema> = {
 
 describe('ConnectionFieldSchema validation', () => {
   describe('field structure', () => {
-    test.each(Object.keys(SAMPLE_SCHEMAS))('schema %s has at least 1 field', (type) => {
+    test.each(Object.keys(SAMPLE_SCHEMAS))('schema %s has at least 1 field', type => {
       expect(SAMPLE_SCHEMAS[type].fields.length).toBeGreaterThan(0);
     });
 
-    test.each(Object.keys(SAMPLE_SCHEMAS))('schema %s fields have required properties', (type) => {
+    test.each(Object.keys(SAMPLE_SCHEMAS))('schema %s fields have required properties', type => {
       for (const field of SAMPLE_SCHEMAS[type].fields) {
         expect(field.key).toBeTruthy();
         expect(field.label).toBeTruthy();
         expect(field.placeholder).toBeTruthy();
-        expect(['text', 'password', 'number', 'url', 'email', 'select', 'textarea']).toContain(field.type);
+        expect(['text', 'password', 'number', 'url', 'email', 'select', 'textarea']).toContain(
+          field.type
+        );
         expect(typeof field.required).toBe('boolean');
       }
     });
@@ -93,7 +218,7 @@ describe('ConnectionFieldSchema validation', () => {
   });
 
   describe('envMap consistency', () => {
-    test.each(Object.keys(SAMPLE_SCHEMAS))('schema %s envMap keys match field keys', (type) => {
+    test.each(Object.keys(SAMPLE_SCHEMAS))('schema %s envMap keys match field keys', type => {
       const schema = SAMPLE_SCHEMAS[type];
       const fieldKeys = new Set(schema.fields.map(f => f.key));
       for (const envMapKey of Object.keys(schema.envMap)) {
@@ -101,13 +226,13 @@ describe('ConnectionFieldSchema validation', () => {
       }
     });
 
-    test.each(Object.keys(SAMPLE_SCHEMAS))('schema %s envMap values are uppercase', (type) => {
+    test.each(Object.keys(SAMPLE_SCHEMAS))('schema %s envMap values are uppercase', type => {
       for (const envVar of Object.values(SAMPLE_SCHEMAS[type].envMap)) {
         expect(envVar).toBe(envVar.toUpperCase());
       }
     });
 
-    test.each(Object.keys(SAMPLE_SCHEMAS))('schema %s has no duplicate env var names', (type) => {
+    test.each(Object.keys(SAMPLE_SCHEMAS))('schema %s has no duplicate env var names', type => {
       const envVarNames = Object.values(SAMPLE_SCHEMAS[type].envMap);
       expect(new Set(envVarNames).size).toBe(envVarNames.length);
     });
@@ -152,7 +277,7 @@ describe('ConnectionFieldSchema validation', () => {
     test('instanceUrl is required, other auth fields optional', () => {
       const instance = sf.fields.find(f => f.key === 'instanceUrl');
       expect(instance?.required).toBe(true);
-      
+
       const acc = sf.fields.find(f => f.key === 'accessToken');
       expect(acc?.required).toBe(false);
     });
@@ -298,10 +423,35 @@ describe('mcp-manager.ts env building simulation', () => {
 
     // Use the same env map function
     const ENV_MAPS_LOCAL: Record<string, Record<string, string>> = {
-      postgresql: { host: 'PGHOST', port: 'PGPORT', database: 'PGDATABASE', username: 'PGUSER', password: 'PGPASSWORD', ssl: 'PGSSLMODE' },
-      salesforce: { instanceUrl: 'SALESFORCE_INSTANCE_URL', username: 'SALESFORCE_USERNAME', password: 'SALESFORCE_PASSWORD', securityToken: 'SALESFORCE_SECURITY_TOKEN', accessToken: 'SALESFORCE_ACCESS_TOKEN', apiVersion: 'SALESFORCE_API_VERSION' },
-      dynamics365: { tenantId: 'DYNAMICS365_TENANT_ID', clientId: 'DYNAMICS365_CLIENT_ID', clientSecret: 'DYNAMICS365_CLIENT_SECRET', resourceUrl: 'DYNAMICS365_RESOURCE_URL' },
-      netsuite: { accountId: 'NETSUITE_ACCOUNT_ID', consumerKey: 'NETSUITE_CONSUMER_KEY', consumerSecret: 'NETSUITE_CONSUMER_SECRET', tokenId: 'NETSUITE_TOKEN_ID', tokenSecret: 'NETSUITE_TOKEN_SECRET' },
+      postgresql: {
+        host: 'PGHOST',
+        port: 'PGPORT',
+        database: 'PGDATABASE',
+        username: 'PGUSER',
+        password: 'PGPASSWORD',
+        ssl: 'PGSSLMODE',
+      },
+      salesforce: {
+        instanceUrl: 'SALESFORCE_INSTANCE_URL',
+        username: 'SALESFORCE_USERNAME',
+        password: 'SALESFORCE_PASSWORD',
+        securityToken: 'SALESFORCE_SECURITY_TOKEN',
+        accessToken: 'SALESFORCE_ACCESS_TOKEN',
+        apiVersion: 'SALESFORCE_API_VERSION',
+      },
+      dynamics365: {
+        tenantId: 'DYNAMICS365_TENANT_ID',
+        clientId: 'DYNAMICS365_CLIENT_ID',
+        clientSecret: 'DYNAMICS365_CLIENT_SECRET',
+        resourceUrl: 'DYNAMICS365_RESOURCE_URL',
+      },
+      netsuite: {
+        accountId: 'NETSUITE_ACCOUNT_ID',
+        consumerKey: 'NETSUITE_CONSUMER_KEY',
+        consumerSecret: 'NETSUITE_CONSUMER_SECRET',
+        tokenId: 'NETSUITE_TOKEN_ID',
+        tokenSecret: 'NETSUITE_TOKEN_SECRET',
+      },
       jira: { baseUrl: 'JIRA_BASE_URL', email: 'JIRA_EMAIL', apiToken: 'JIRA_API_TOKEN' },
     };
 

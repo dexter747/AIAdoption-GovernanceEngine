@@ -53,9 +53,12 @@ export async function GET() {
       .select('*', { count: 'exact', head: true })
       .gte('created_at', thirtyDaysAgo.toISOString());
 
-    const userGrowth = prevUsers && prevUsers > 0 
-      ? ((newUsers || 0) / prevUsers) * 100 
-      : (newUsers || 0) > 0 ? 100 : 0;
+    const userGrowth =
+      prevUsers && prevUsers > 0
+        ? ((newUsers || 0) / prevUsers) * 100
+        : (newUsers || 0) > 0
+          ? 100
+          : 0;
 
     // Previous period activations (replaces downloads)
     const { count: prevDownloads } = await supabaseAdmin
@@ -73,7 +76,9 @@ export async function GET() {
     const downloadGrowth =
       prevDownloads && prevDownloads > 0
         ? (((currentDownloads || 0) - prevDownloads) / prevDownloads) * 100
-        : (currentDownloads || 0) > 0 ? 100 : 0;
+        : (currentDownloads || 0) > 0
+          ? 100
+          : 0;
 
     // Previous period revenue
     const { data: prevPayments } = await supabaseAdmin
@@ -94,9 +99,12 @@ export async function GET() {
 
     const currentRevenue = currentPayments?.reduce((sum, p) => sum + Number(p.amount), 0) || 0;
 
-    const revenueGrowth = prevRevenue > 0 
-      ? ((currentRevenue - prevRevenue) / prevRevenue) * 100 
-      : currentRevenue > 0 ? 100 : 0;
+    const revenueGrowth =
+      prevRevenue > 0
+        ? ((currentRevenue - prevRevenue) / prevRevenue) * 100
+        : currentRevenue > 0
+          ? 100
+          : 0;
 
     return NextResponse.json({
       totalUsers: totalUsers || 0,
@@ -110,9 +118,6 @@ export async function GET() {
     });
   } catch (error) {
     console.error('Error fetching stats:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch stats' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch stats' }, { status: 500 });
   }
 }
