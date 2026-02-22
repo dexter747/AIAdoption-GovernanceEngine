@@ -8,7 +8,6 @@ import {
   Monitor,
   Terminal,
   CheckCircle2,
-  Sparkles,
   Shield,
   Zap,
   Database,
@@ -17,9 +16,9 @@ import {
   ExternalLink,
   Lock,
   Loader2,
-  ArrowLeft,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Navbar } from '@/components/landing';
 
 interface UserSession {
   id: string;
@@ -139,10 +138,7 @@ export default function DownloadPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin text-zinc-300 mx-auto mb-4" />
-          <p className="text-zinc-500">Loading...</p>
-        </div>
+        <Loader2 className="w-8 h-8 animate-spin text-zinc-600" />
       </div>
     );
   }
@@ -151,64 +147,60 @@ export default function DownloadPage() {
   if (!user) {
     return (
       <div className="min-h-screen bg-background">
-        {/* Simple header */}
-        <header className="border-b border-white/10 bg-black/80 backdrop-blur-xl">
-          <div className="max-w-7xl mx-auto px-6 h-16 flex items-center">
-            <Link href="/" className="flex items-center gap-2.5">
-              <img src="/logo.png" alt="Velanova" className="w-10 h-10 rounded-xl" />
-              <span className="text-lg font-medium tracking-tight text-white">Velanova</span>
-            </Link>
-          </div>
-        </header>
+        <Navbar />
 
-        {/* Auth Required Content */}
-        <main className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
-          <div className="max-w-md w-full mx-auto px-6">
+        {/* Subtle background glow */}
+        <div className="fixed inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-white/[0.025] rounded-full blur-3xl" />
+        </div>
+
+        <main className="relative flex items-center justify-center min-h-screen px-6">
+          <div className="max-w-md w-full mx-auto">
             <div className="text-center mb-8">
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-zinc-400 to-zinc-600 flex items-center justify-center mx-auto mb-6 shadow-xl shadow-white/5">
-                <Lock className="w-10 h-10 text-white" />
+              <div className="w-16 h-16 rounded-2xl border border-zinc-800 bg-zinc-900/80 flex items-center justify-center mx-auto mb-6">
+                <Lock className="w-8 h-8 text-zinc-400" />
               </div>
-              <h1 className="text-3xl font-medium text-white mb-3">Sign in to Download</h1>
-              <p className="text-zinc-500 text-lg">
+              <h1 className="text-3xl font-medium text-white tracking-tight mb-3">
+                Sign in to Download
+              </h1>
+              <p className="text-zinc-500 text-base leading-relaxed">
                 Create a free account to download Velanova and unlock all features.
               </p>
             </div>
 
-            <div className="bg-white/5 rounded-2xl shadow-xl border border-white/10 p-8">
+            <div className="bg-zinc-900/50 rounded-2xl border border-zinc-800 p-8">
               <Link
                 href="/login?callbackUrl=/download"
-                className="flex items-center justify-center gap-3 w-full py-3.5 px-4 bg-gradient-to-r from-zinc-400 to-zinc-600 text-white font-medium rounded-xl hover:from-zinc-300 hover:to-zinc-700 transition-all shadow-lg shadow-white/5"
+                className="flex items-center justify-center gap-3 w-full py-3.5 px-4 bg-white text-black font-medium rounded-xl hover:bg-zinc-100 transition-all"
               >
                 Sign in with Google
-                <ArrowRight className="w-5 h-5" />
+                <ArrowRight className="w-4 h-4" />
               </Link>
 
-              <div className="mt-6 pt-6 border-t border-white/10">
-                <h3 className="font-medium text-white mb-3">Why create an account?</h3>
-                <ul className="space-y-2 text-sm text-zinc-500">
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-zinc-400 flex-shrink-0" />
-                    Free 14-day trial with all Pro features
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-zinc-400 flex-shrink-0" />
-                    Sync settings across devices
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-zinc-400 flex-shrink-0" />
-                    Get notified about updates
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-zinc-400 flex-shrink-0" />
-                    Access to community support
-                  </li>
+              <div className="mt-6 pt-6 border-t border-zinc-800">
+                <h3 className="text-sm font-medium text-zinc-400 mb-4">Why create an account?</h3>
+                <ul className="space-y-3">
+                  {[
+                    'Free 14-day trial with all Pro features',
+                    'Sync settings across devices',
+                    'Get notified about updates',
+                    'Access to community support',
+                  ].map(item => (
+                    <li key={item} className="flex items-center gap-3 text-sm text-zinc-500">
+                      <CheckCircle2 className="w-4 h-4 text-zinc-700 flex-shrink-0" />
+                      {item}
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>
 
-            <p className="text-center mt-6 text-sm text-zinc-500">
+            <p className="text-center mt-6 text-sm text-zinc-600">
               Already have the app?{' '}
-              <Link href="/login" className="text-zinc-400 hover:underline font-medium">
+              <Link
+                href="/login"
+                className="text-zinc-400 hover:text-white transition-colors font-medium"
+              >
                 Sign in
               </Link>
             </p>
@@ -221,61 +213,30 @@ export default function DownloadPage() {
   // Authenticated download page
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-white/10 bg-black/80 backdrop-blur-xl sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5">
-            <img src="/logo.png" alt="Velanova" className="w-10 h-10 rounded-xl" />
-            <span className="text-lg font-medium tracking-tight text-white">Velanova</span>
-          </Link>
-          <div className="flex items-center gap-4">
-            <Link
-              href="/"
-              className="text-sm text-zinc-500 hover:text-white flex items-center gap-1"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Back to Home
-            </Link>
-            <div className="flex items-center gap-2 pl-4 border-l border-white/10">
-              {user.image ? (
-                <img
-                  src={
-                    user.image.includes('googleusercontent.com')
-                      ? `/api/avatar/proxy?url=${encodeURIComponent(user.image)}`
-                      : user.image
-                  }
-                  alt=""
-                  className="w-8 h-8 rounded-full"
-                />
-              ) : (
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-zinc-400 to-zinc-600 flex items-center justify-center text-white text-sm font-medium">
-                  {user.name?.charAt(0) || user.email.charAt(0).toUpperCase()}
-                </div>
-              )}
-              <span className="text-sm font-medium text-white hidden sm:inline">{user.name}</span>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Navbar />
+
+      {/* Subtle background glows matching hero section */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-32 right-20 w-72 h-72 bg-white/[0.025] rounded-full blur-3xl" />
+        <div className="absolute bottom-40 left-20 w-96 h-96 bg-white/[0.02] rounded-full blur-3xl" />
+      </div>
 
       {/* Hero */}
-      <section className="relative overflow-hidden py-16 lg:py-20">
-        {/* Background gradient */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-gradient-to-br from-white/5 to-white/5 rounded-full blur-[100px]" />
-          <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-gradient-to-tr from-white/5 to-white/5 rounded-full blur-[80px]" />
-        </div>
-
+      <section className="relative pt-36 pb-16">
         <div className="container relative mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/5 text-zinc-400 rounded-full text-sm font-medium mb-6">
-              <CheckCircle2 className="w-4 h-4" />
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-zinc-900/40 border border-zinc-800 rounded-full text-sm text-zinc-400 mb-6">
+              <CheckCircle2 className="w-3.5 h-3.5" />
               Signed in as {user.email}
             </div>
-            <h1 className="text-4xl sm:text-5xl font-medium text-white mb-4">Download Velanova</h1>
+            <h1 className="text-4xl sm:text-5xl font-medium text-white tracking-tight mb-4">
+              Download Velanova
+            </h1>
             <p className="text-lg text-zinc-500">
-              Get started in minutes. Your {user.plan === 'trial' ? '14-day free trial' : user.plan}{' '}
-              is ready.
+              Get started in minutes.{' '}
+              {user.plan === 'trial'
+                ? 'Your 14-day free trial is ready.'
+                : `${user.plan} plan active.`}
             </p>
           </div>
 
@@ -288,8 +249,8 @@ export default function DownloadPage() {
                 className={cn(
                   'px-5 py-3 rounded-xl font-medium flex items-center gap-2 transition-all',
                   platform === key
-                    ? 'bg-gradient-to-r from-zinc-400 to-zinc-600 text-white shadow-lg shadow-white/5'
-                    : 'bg-white/5 text-zinc-500 hover:text-white border border-white/10 hover:border-white/20'
+                    ? 'bg-white text-black shadow-sm'
+                    : 'bg-zinc-900/50 text-zinc-500 hover:text-white border border-zinc-800 hover:border-zinc-700'
                 )}
               >
                 {data.icon}
@@ -299,27 +260,25 @@ export default function DownloadPage() {
           </div>
 
           {detected && (
-            <p className="text-center text-sm text-zinc-500 mb-8">
-              <CheckCircle2 className="w-4 h-4 inline mr-1 text-zinc-400" />
-              We detected you&apos;re on <strong className="text-zinc-400">{current.name}</strong>
+            <p className="text-center text-sm text-zinc-600 mb-8">
+              <CheckCircle2 className="w-3.5 h-3.5 inline mr-1.5 text-zinc-700" />
+              Detected: <span className="text-zinc-400 font-medium">{current.name}</span>
             </p>
           )}
 
           {/* Main Download Card */}
           <div className="max-w-2xl mx-auto">
-            <div className="bg-white/5 rounded-2xl overflow-hidden shadow-xl border border-white/10">
-              {/* Header */}
-              <div className="bg-gradient-to-r from-zinc-400 via-zinc-500 to-zinc-600 px-8 py-6 text-white">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-xl font-medium mb-1">Velanova for {current.name}</h2>
-                    <p className="text-white/80 text-sm">
-                      Version {currentVersion} • Released {releaseDate}
-                    </p>
-                  </div>
-                  <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center backdrop-blur-sm">
-                    {current.icon}
-                  </div>
+            <div className="bg-zinc-900/40 rounded-2xl overflow-hidden border border-zinc-800">
+              {/* Card Header */}
+              <div className="px-8 py-5 border-b border-zinc-800 bg-zinc-900/80 flex items-center justify-between">
+                <div>
+                  <h2 className="text-base font-medium text-white">Velanova for {current.name}</h2>
+                  <p className="text-zinc-500 text-sm mt-0.5">
+                    Version {currentVersion} · {releaseDate}
+                  </p>
+                </div>
+                <div className="w-11 h-11 rounded-xl border border-zinc-700 bg-zinc-800/80 flex items-center justify-center text-zinc-400">
+                  {current.icon}
                 </div>
               </div>
 
@@ -327,27 +286,27 @@ export default function DownloadPage() {
               <div className="p-8">
                 {/* Recommended Download */}
                 <div className="mb-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <span className="px-2.5 py-1 bg-white/5 text-zinc-400 text-xs font-medium rounded-full">
-                      RECOMMENDED
-                    </span>
-                  </div>
+                  <span className="text-xs font-medium text-zinc-600 tracking-widest uppercase mb-4 block">
+                    Recommended
+                  </span>
                   <a
                     href={`${ghRelease}/${current.recommended.file}`}
-                    className="group flex items-center justify-between p-5 bg-gradient-to-r from-zinc-900/30 to-zinc-900/30 border-2 border-zinc-700/40 rounded-xl hover:border-zinc-600 transition-all"
+                    className="group flex items-center justify-between p-5 bg-zinc-900 border border-zinc-800 rounded-xl hover:border-zinc-600 hover:bg-zinc-800/80 transition-all"
                   >
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-zinc-400 to-zinc-600 flex items-center justify-center text-white shadow-lg shadow-white/5">
-                        <Download className="w-6 h-6" />
+                      <div className="w-11 h-11 rounded-xl border border-zinc-700 bg-zinc-800 flex items-center justify-center text-zinc-300">
+                        <Download className="w-5 h-5" />
                       </div>
                       <div>
                         <p className="font-medium text-white">{current.recommended.name}</p>
                         <p className="text-sm text-zinc-500">{current.recommended.size}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 text-zinc-400 font-medium">
-                      <span className="hidden sm:inline">Download</span>
-                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    <div className="flex items-center gap-2">
+                      <span className="hidden sm:block px-4 py-2 bg-white text-black text-sm font-medium rounded-lg group-hover:bg-zinc-100 transition-colors">
+                        Download
+                      </span>
+                      <ArrowRight className="w-4 h-4 text-zinc-500 sm:hidden group-hover:translate-x-0.5 transition-transform" />
                     </div>
                   </a>
                 </div>
@@ -355,7 +314,7 @@ export default function DownloadPage() {
                 {/* Other Options */}
                 <button
                   onClick={() => setShowAllVersions(!showAllVersions)}
-                  className="flex items-center gap-2 text-sm text-zinc-500 hover:text-white mb-4"
+                  className="flex items-center gap-1.5 text-sm text-zinc-600 hover:text-zinc-400 transition-colors mb-4"
                 >
                   <span>Other download options</span>
                   <ChevronDown
@@ -369,10 +328,10 @@ export default function DownloadPage() {
                       <a
                         key={i}
                         href={`${ghRelease}/${option.file}`}
-                        className="flex items-center justify-between p-3 bg-white/5 border border-white/10 rounded-lg hover:border-zinc-700/60 hover:bg-white/5 transition-all group"
+                        className="flex items-center justify-between p-3.5 bg-zinc-900/50 border border-zinc-800 rounded-xl hover:border-zinc-700 hover:bg-zinc-900 transition-all group"
                       >
                         <div className="flex items-center gap-3">
-                          <Download className="w-4 h-4 text-zinc-500 group-hover:text-zinc-300" />
+                          <Download className="w-4 h-4 text-zinc-600 group-hover:text-zinc-400 transition-colors" />
                           <span className="text-zinc-400">{option.name}</span>
                         </div>
                         <span className="text-sm text-zinc-500">{option.size}</span>
@@ -382,24 +341,24 @@ export default function DownloadPage() {
                 )}
 
                 {/* System Requirements */}
-                <div className="pt-6 border-t border-white/10">
-                  <p className="text-sm text-zinc-500">
-                    <strong className="text-zinc-400">System requirements:</strong>{' '}
+                <div className="pt-5 border-t border-zinc-800/50">
+                  <p className="text-sm text-zinc-600">
+                    <span className="text-zinc-500 font-medium">System requirements: </span>
                     {current.requirements}
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Features */}
-            <div className="flex flex-wrap justify-center gap-6 mt-8">
+            {/* Feature pills */}
+            <div className="flex flex-wrap justify-center gap-3 mt-6">
               {features.map((feature, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-full border border-white/10"
+                  className="flex items-center gap-2 px-4 py-2 bg-zinc-900/40 rounded-full border border-zinc-800 text-zinc-500 text-sm"
                 >
-                  <span className="text-zinc-300">{feature.icon}</span>
-                  <span className="text-sm text-zinc-500">{feature.text}</span>
+                  <span className="text-zinc-600">{feature.icon}</span>
+                  {feature.text}
                 </div>
               ))}
             </div>
@@ -408,29 +367,37 @@ export default function DownloadPage() {
       </section>
 
       {/* Installation Guide */}
-      <section className="py-16 bg-white/5 border-t border-white/10">
+      <section className="py-20 border-t border-zinc-900">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-2xl font-medium text-white text-center mb-12">
+            <h2 className="text-2xl font-medium text-white text-center tracking-tight mb-14">
               Quick Installation
             </h2>
 
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-3 gap-10">
               {[
                 {
                   step: '1',
                   title: 'Download',
                   desc: 'Click the download button above for your platform',
                 },
-                { step: '2', title: 'Install', desc: 'Run the installer and follow the prompts' },
-                { step: '3', title: 'Sign In', desc: 'Use your Google account to sync everything' },
+                {
+                  step: '2',
+                  title: 'Install',
+                  desc: 'Run the installer and follow the on-screen prompts',
+                },
+                {
+                  step: '3',
+                  title: 'Sign In',
+                  desc: 'Use your Google account to sync everything instantly',
+                },
               ].map((item, i) => (
                 <div key={i} className="text-center">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-zinc-400 to-zinc-600 text-white font-medium text-xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-white/5">
+                  <div className="w-12 h-12 rounded-2xl border border-zinc-800 bg-zinc-900/80 text-zinc-400 font-medium text-lg flex items-center justify-center mx-auto mb-5">
                     {item.step}
                   </div>
                   <h3 className="font-medium text-white mb-2">{item.title}</h3>
-                  <p className="text-zinc-500 text-sm">{item.desc}</p>
+                  <p className="text-zinc-500 text-sm leading-relaxed">{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -439,18 +406,18 @@ export default function DownloadPage() {
       </section>
 
       {/* Previous Releases */}
-      <section className="py-16 border-t border-white/10">
+      <section className="py-16 border-t border-zinc-900">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center justify-between mb-8">
-              <h2 className="text-2xl font-medium text-white">Previous Releases</h2>
+              <h2 className="text-2xl font-medium text-white tracking-tight">Previous Releases</h2>
               <a
                 href="https://github.com/Nexolve-Technologies-India/AIAdoption-GovernanceEngine/releases"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm text-zinc-400 hover:text-zinc-400 flex items-center gap-1 font-medium"
+                className="text-sm text-zinc-500 hover:text-zinc-300 flex items-center gap-1.5 transition-colors"
               >
-                View changelog <ExternalLink className="w-4 h-4" />
+                View changelog <ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
 
@@ -464,15 +431,15 @@ export default function DownloadPage() {
               ].map((release, i) => (
                 <div
                   key={i}
-                  className="flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-xl hover:border-white/20 transition-colors"
+                  className="flex items-center justify-between p-5 bg-zinc-900/40 border border-zinc-800 rounded-xl hover:border-zinc-700 transition-colors"
                 >
                   <div>
                     <p className="font-medium text-white">Version {release.version}</p>
-                    <p className="text-sm text-zinc-500">{release.notes}</p>
+                    <p className="text-sm text-zinc-500 mt-0.5">{release.notes}</p>
                   </div>
                   <a
                     href={`https://github.com/Nexolve-Technologies-India/AIAdoption-GovernanceEngine/releases/download/v${release.version}/Velanova-Setup-${release.version}.exe`}
-                    className="text-sm text-zinc-400 hover:text-zinc-400 font-medium"
+                    className="text-sm text-zinc-400 hover:text-white font-medium transition-colors"
                   >
                     Download
                   </a>
@@ -484,39 +451,43 @@ export default function DownloadPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-16">
+      <section className="py-20 border-t border-zinc-900">
         <div className="container mx-auto px-6">
-          <div className="max-w-3xl mx-auto text-center bg-gradient-to-r from-zinc-400 via-zinc-500 to-zinc-600 rounded-3xl p-12 shadow-2xl shadow-white/5">
-            <h2 className="text-2xl sm:text-3xl font-medium text-white mb-4">
+          <div className="max-w-3xl mx-auto text-center bg-zinc-900/60 rounded-3xl border border-zinc-800 p-12">
+            <h2 className="text-2xl sm:text-3xl font-medium text-white tracking-tight mb-4">
               Need more features?
             </h2>
-            <p className="text-white/80 mb-8">
+            <p className="text-zinc-500 mb-8 max-w-md mx-auto leading-relaxed">
               Upgrade to Pro for unlimited queries, all AI providers, and priority support.
             </p>
             <Link
               href="/pricing"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white/10 text-zinc-400 rounded-xl hover:bg-white/10 transition-all font-medium shadow-lg"
+              className="inline-flex items-center gap-2 px-8 py-3.5 bg-white text-black font-medium rounded-xl hover:bg-zinc-100 transition-all"
             >
-              View Pricing <ArrowRight className="w-5 h-5" />
+              View Pricing <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/10 py-8 bg-white/5">
+      <footer className="border-t border-zinc-900 py-10">
         <div className="container mx-auto px-6 text-center">
-          <p className="text-sm text-zinc-500">© 2025 Velanova. All rights reserved.</p>
-          <div className="flex justify-center gap-6 mt-4">
-            <Link href="/privacy" className="text-sm text-zinc-500 hover:text-zinc-500">
-              Privacy
-            </Link>
-            <Link href="/terms" className="text-sm text-zinc-500 hover:text-zinc-500">
-              Terms
-            </Link>
-            <Link href="/contact" className="text-sm text-zinc-500 hover:text-zinc-500">
-              Contact
-            </Link>
+          <p className="text-sm text-zinc-700">© 2025 Velanova. All rights reserved.</p>
+          <div className="flex justify-center gap-8 mt-4">
+            {[
+              { name: 'Privacy', href: '/privacy' },
+              { name: 'Terms', href: '/terms' },
+              { name: 'Contact', href: '/contact' },
+            ].map(link => (
+              <Link
+                key={link.name}
+                href={link.href}
+                className="text-sm text-zinc-600 hover:text-zinc-400 transition-colors"
+              >
+                {link.name}
+              </Link>
+            ))}
           </div>
         </div>
       </footer>
