@@ -4,7 +4,7 @@ import { Navbar } from '@/components/landing';
 import { Footer } from '@/components/landing';
 
 export const metadata = {
-  title: 'Product Demo — Velanova',
+  title: 'Product Demo',
   description: 'Watch Velanova in action. See how AI connects to your legacy systems.',
 };
 

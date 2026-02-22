@@ -1,7 +1,12 @@
-'use client';
-
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Sparkles, ArrowLeft, CheckCircle2, XCircle, AlertCircle } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: 'Refund Policy',
+  description:
+    'Refund Policy for Velanova. 30-day money-back guarantee on all subscription plans, no questions asked.',
+};
 
 export default function RefundPolicy() {
   return (

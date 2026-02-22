@@ -1,5 +1,4 @@
-'use client';
-
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Sparkles, ArrowRight, Calendar, Clock, User } from 'lucide-react';
 
@@ -51,6 +50,12 @@ const posts = [
 ];
 
 const categories = ['All', 'Product', 'Engineering', 'Security', 'Tutorial'];
+
+export const metadata: Metadata = {
+  title: 'Blog',
+  description:
+    'Insights, tutorials, and updates on AI-powered database intelligence, enterprise integrations, and best practices.',
+};
 
 export default function BlogPage() {
   return (

@@ -1,7 +1,12 @@
-'use client';
-
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Sparkles, ArrowLeft } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy',
+  description:
+    'Privacy Policy for Velanova. Learn how we collect, use, and protect your data when using our AI-powered database platform.',
+};
 
 export default function PrivacyPolicy() {
   return (

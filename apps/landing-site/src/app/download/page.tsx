@@ -91,13 +91,17 @@ export default function DownloadPage() {
       name: 'macOS',
       icon: <Apple className="w-6 h-6" />,
       recommended: {
-        name: 'DMG Installer',
-        file: `Velanova-${currentVersion}.dmg`,
-        size: '156 MB',
+        name: 'Apple Silicon DMG',
+        file: `Velanova-${currentVersion}-mac-arm64.dmg`,
+        size: '175 MB',
       },
       options: [
-        { name: 'Intel DMG', file: `Velanova-${currentVersion}-x64.dmg`, size: '148 MB' },
-        { name: 'Apple Silicon DMG', file: `Velanova-${currentVersion}-arm64.dmg`, size: '142 MB' },
+        { name: 'Intel DMG', file: `Velanova-${currentVersion}-mac-x64.dmg`, size: '180 MB' },
+        {
+          name: 'Apple Silicon DMG',
+          file: `Velanova-${currentVersion}-mac-arm64.dmg`,
+          size: '175 MB',
+        },
       ],
       requirements: 'macOS 12 Monterey or later',
     },

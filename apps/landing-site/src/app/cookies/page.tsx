@@ -1,7 +1,12 @@
-'use client';
-
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Sparkles, ArrowLeft, Cookie, Shield, Settings, BarChart3 } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: 'Cookie Policy',
+  description:
+    'Cookie Policy for Velanova. Learn about the cookies we use and how to manage your cookie preferences.',
+};
 
 export default function CookiePolicy() {
   return (

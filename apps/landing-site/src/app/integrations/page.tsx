@@ -4,7 +4,7 @@ import { Navbar } from '@/components/landing';
 import { Footer } from '@/components/landing';
 
 export const metadata = {
-  title: 'All Integrations — Velanova',
+  title: 'All Integrations',
   description:
     'Connect to 64+ enterprise systems. Pre-built connectors for databases, ERPs, CRMs, data warehouses, and more.',
 };

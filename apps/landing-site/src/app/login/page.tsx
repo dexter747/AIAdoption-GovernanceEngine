@@ -2,13 +2,18 @@
 
 import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 
 function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [isEmailLoading, setIsEmailLoading] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [formError, setFormError] = useState('');
   const error = searchParams.get('error');
 
   // Check if this is a desktop app login request
@@ -16,54 +21,168 @@ function LoginContent() {
   const callbackUrl = searchParams.get('callbackUrl') || '/download';
 
   const handleGoogleSignIn = () => {
-    setIsLoading(true);
-    // Redirect to our JWT-based Google OAuth endpoint
+    setIsGoogleLoading(true);
     const authUrl = new URL('/api/auth/google', window.location.origin);
     authUrl.searchParams.set('desktop', isDesktop.toString());
     authUrl.searchParams.set('callbackUrl', callbackUrl);
     window.location.href = authUrl.toString();
   };
 
+  const handleEmailSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormError('');
+    setIsEmailLoading(true);
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        if (data.error === 'Please verify your email before signing in') {
+          router.push(`/verify-email?email=${encodeURIComponent(email)}`);
+          return;
+        }
+        setFormError(data.error || 'Sign in failed');
+        return;
+      }
+
+      // Successful login — redirect
+      router.push(callbackUrl);
+      router.refresh();
+    } catch {
+      setFormError('Network error. Please try again.');
+    } finally {
+      setIsEmailLoading(false);
+    }
+  };
+
+  const displayError =
+    formError ||
+    (error === 'oauth_error' && 'Authentication was cancelled or failed.') ||
+    (error === 'token_exchange_failed' && 'Failed to complete authentication.') ||
+    (error === 'callback_failed' && 'Something went wrong. Please try again.') ||
+    (error &&
+      !['oauth_error', 'token_exchange_failed', 'callback_failed'].includes(error) &&
+      'An error occurred. Please try again.') ||
+    '';
+
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-black">
       <div className="rounded-2xl shadow-lg p-8 md:p-12 w-full max-w-md bg-black border border-zinc-800">
         {/* Error Message */}
-        {error && (
-          <div className="mb-6 p-3 border rounded-lg bg-zinc-900/30 border-zinc-800">
-            <p className="text-zinc-400">
-              {error === 'oauth_error' && 'Authentication was cancelled or failed.'}
-              {error === 'token_exchange_failed' && 'Failed to complete authentication.'}
-              {error === 'callback_failed' && 'Something went wrong. Please try again.'}
-              {!['oauth_error', 'token_exchange_failed', 'callback_failed'].includes(error) &&
-                'An error occurred. Please try again.'}
-            </p>
+        {displayError && (
+          <div className="mb-6 p-3 border rounded-lg bg-red-500/10 border-red-500/20">
+            <p className="text-red-400 text-sm">{displayError}</p>
           </div>
         )}
 
         {/* Logo and Title */}
         <div className="flex flex-col items-center mb-8">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Sparkles className="w-10 h-10 text-zinc-300" />
-          </div>
-          <h1 className="font-medium text-white">Velanova</h1>
+          <Sparkles className="w-10 h-10 text-zinc-300 mb-4" />
+          <h1 className="font-medium text-white text-xl">Welcome Back</h1>
           <p className="text-muted-foreground text-sm mt-2">
             {isDesktop
               ? 'Sign in to continue to the desktop app'
-              : 'Bring AI to Your Legacy Systems'}
+              : 'Sign in to access your account'}
           </p>
         </div>
 
-        <div className="space-y-6">
-          {/* Heading */}
-          <div className="text-center space-y-2">
-            <h2 className="font-medium text-white">Welcome Back</h2>
-            <p className="text-muted-foreground text-sm">Sign in to access your account</p>
+        <div className="space-y-5">
+          {/* Email/Password Form */}
+          <form onSubmit={handleEmailSignIn} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-zinc-400 mb-1.5">Email</label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 text-white placeholder:text-zinc-600 focus:outline-none focus:border-zinc-600 transition-colors"
+                  placeholder="you@example.com"
+                />
+              </div>
+            </div>
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-sm font-medium text-zinc-400">Password</label>
+                <Link
+                  href="/forgot-password"
+                  className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  className="w-full pl-10 pr-12 py-3 rounded-xl bg-zinc-900 border border-zinc-800 text-white placeholder:text-zinc-600 focus:outline-none focus:border-zinc-600 transition-colors"
+                  placeholder="Your password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={isEmailLoading}
+              className="w-full py-3 px-4 bg-white text-black font-medium rounded-xl hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isEmailLoading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      fill="none"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    />
+                  </svg>
+                  Signing in...
+                </span>
+              ) : (
+                'Sign In'
+              )}
+            </button>
+          </form>
+
+          {/* Divider */}
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-zinc-800"></div>
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="px-3 text-muted-foreground font-medium bg-black">or</span>
+            </div>
           </div>
 
           {/* Google Sign In Button */}
           <button
             onClick={handleGoogleSignIn}
-            disabled={isLoading}
+            disabled={isGoogleLoading}
             className="w-full flex items-center justify-center gap-3 px-6 py-3 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed border border-zinc-700 hover:border-zinc-600 hover:bg-zinc-950"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -85,51 +204,19 @@ function LoginContent() {
               />
             </svg>
             <span className="font-medium text-white">
-              {isLoading ? (
-                <span className="flex items-center gap-2">
-                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                      fill="none"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                  Signing in...
-                </span>
-              ) : (
-                'Continue with Google'
-              )}
+              {isGoogleLoading ? 'Redirecting...' : 'Continue with Google'}
             </span>
           </button>
 
-          {/* Divider */}
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-zinc-800"></div>
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="px-3 text-muted-foreground font-medium bg-black">
-                New to Velanova?
-              </span>
-            </div>
+          {/* Sign Up Link */}
+          <div className="text-center">
+            <p className="text-sm text-zinc-500">
+              Don&apos;t have an account?{' '}
+              <Link href="/signup" className="text-white hover:underline font-medium">
+                Create one
+              </Link>
+            </p>
           </div>
-
-          {/* Subscribe Link */}
-          <Link
-            href="/subscribe"
-            className="block w-full text-center px-6 py-3 bg-white text-black rounded-xl hover:bg-zinc-200 transition-colors font-medium"
-          >
-            Get Started with a Free Trial
-          </Link>
         </div>
 
         {/* Footer Links */}

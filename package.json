@@ -58,6 +58,9 @@
     "debug:types": "node scripts/debug-all.js --types",
     "debug:coverage": "node scripts/debug-all.js --coverage",
     "test": "pnpm --recursive run test",
+    "test:e2e": "playwright test",
+    "test:e2e:landing": "playwright test --project=landing-site",
+    "test:e2e:admin": "playwright test --project=admin-dashboard",
     "health": "node scripts/health-check.js",
     "health:verbose": "node scripts/health-check.js --verbose",
     "clean": "pnpm --recursive run clean && rm -rf node_modules",
@@ -70,20 +73,36 @@
     "test-payment": "./scripts/test-payment-flow.sh",
     "deploy:landing": "pnpm build:landing && cd apps/landing-site && pnpx vercel --prod",
     "deploy:admin": "pnpm build:admin && cd apps/admin-dashboard && pnpx vercel --prod",
-    "deploy:all": "pnpm deploy:landing && pnpm deploy:admin"
+    "deploy:all": "pnpm deploy:landing && pnpm deploy:admin",
+    "prepare": "husky"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
     "@types/jest": "^30.0.0",
     "@types/node": "^20.11.5",
     "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
     "jest-environment-jsdom": "^30.2.0",
+    "lint-staged": "^16.2.7",
     "prettier": "^3.2.4",
     "ts-jest": "^29.4.6",
     "turbo": "^1.11.3",
     "typescript": "^5.3.3"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "prettier --write",
+      "eslint --fix --max-warnings 999"
+    ],
+    "*.{js,jsx}": [
+      "prettier --write"
+    ],
+    "*.{json,md,css}": [
+      "prettier --write"
+    ]
   },
   "engines": {
     "node": ">=20.0.0",

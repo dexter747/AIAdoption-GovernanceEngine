@@ -1,7 +1,12 @@
-'use client';
-
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Sparkles, ArrowLeft } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: 'Terms of Service',
+  description:
+    'Terms of Service for Velanova. Read our terms governing the use of our AI-powered database intelligence platform.',
+};
 
 export default function TermsOfService() {
   return (
