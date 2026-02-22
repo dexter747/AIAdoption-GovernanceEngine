@@ -12,9 +12,10 @@
  */
 
 import { readFileSync, existsSync } from 'fs';
-import { join } from 'path';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-const ROOT_DIR = join(new URL('.', import.meta.url).pathname, '..');
+const ROOT_DIR = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 function loadEnv() {
   const envPaths = [

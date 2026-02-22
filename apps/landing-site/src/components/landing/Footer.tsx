@@ -5,13 +5,12 @@ const footerLinks = {
     { name: "Features", href: "/#features" },
     { name: "Pricing", href: "/#pricing" },
     { name: "Download", href: "/download" },
-    { name: "Changelog", href: "/changelog" },
+    { name: "Release Notes", href: "https://github.com/Nexolve-Technologies-India/AIAdoption-GovernanceEngine/releases" },
   ],
   resources: [
     { name: "Documentation", href: "/docs" },
     { name: "Blog", href: "/blog" },
     { name: "Contact", href: "/contact" },
-    { name: "Tutorials", href: "/tutorials" },
   ],
   legal: [
     { name: "Privacy Policy", href: "/privacy" },
@@ -82,10 +81,7 @@ export function Footer() {
           </p>
           <div className="flex items-center gap-5 text-sm text-zinc-600">
             <div className="flex items-center gap-2.5 flex-wrap">
-              <span className="text-xs text-zinc-700 font-medium">Secure Payments By</span>
-              <img src="/paypal.svg" alt="PayPal" className="h-5 object-contain brightness-0 invert opacity-60 hover:opacity-90 transition-opacity" />
-              <span className="text-zinc-700 text-xs">&amp;</span>
-              <img src="/lemonsqueezy.svg" alt="Lemon Squeezy" className="h-4 object-contain brightness-0 invert opacity-60 hover:opacity-90 transition-opacity" />
+              <span className="text-xs text-zinc-700 font-medium">Verified by Dodo Payments</span>
             </div>
           </div>
         </div>

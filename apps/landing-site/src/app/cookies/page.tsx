@@ -165,7 +165,7 @@ export default function CookiePolicy() {
  </p>
  <ul className="list-disc pl-6 text-muted-foreground space-y-2 mt-4">
  <li><strong>Google Analytics:</strong> For understanding website usage (<a href="https://policies.google.com/privacy" className="text-primary hover:underline">Privacy Policy</a>)</li>
- <li><strong>Stripe:</strong> For processing payments (<a href="https://stripe.com/privacy" className="text-primary hover:underline">Privacy Policy</a>)</li>
+ <li><strong>Dodo Payments:</strong> For processing payments (<a href="https://dodopayments.com/legal/privacy" className="text-primary hover:underline">Privacy Policy</a>)</li>
  </ul>
  </section>
 
@@ -227,7 +227,7 @@ export default function CookiePolicy() {
  </p>
  <div className="bg-muted/50 rounded-lg p-4 mt-4">
  <p className="text-foreground">Velanova Privacy Team</p>
- <p className="text-muted-foreground">Email: <a href="mailto:privacy@velanova.io" className="text-primary hover:underline">privacy@velanova.io</a></p>
+ <p className="text-muted-foreground">Email: <a href="mailto:privacy@velanova.com" className="text-primary hover:underline">privacy@velanova.com</a></p>
  </div>
  </section>
  </div>

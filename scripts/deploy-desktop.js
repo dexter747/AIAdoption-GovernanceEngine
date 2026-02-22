@@ -21,12 +21,13 @@
 
 import { execSync } from 'child_process';
 import { readFileSync, existsSync, readdirSync, statSync } from 'fs';
-import { join, basename, extname } from 'path';
+import { join, basename, extname, dirname } from 'path';
+import { fileURLToPath } from 'url';
 import { createHash } from 'crypto';
 import https from 'https';
 import http from 'http';
 
-const ROOT_DIR = join(new URL('.', import.meta.url).pathname, '..');
+const ROOT_DIR = join(dirname(fileURLToPath(import.meta.url)), '..');
 const APP_DIR = join(ROOT_DIR, 'apps', 'desktop-app');
 const RELEASE_DIR = join(APP_DIR, 'release');
 

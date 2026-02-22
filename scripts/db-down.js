@@ -14,10 +14,11 @@
 
 import { execSync } from 'child_process';
 import { readFileSync, existsSync } from 'fs';
-import { join } from 'path';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 import { createInterface } from 'readline';
 
-const ROOT_DIR = join(new URL('.', import.meta.url).pathname, '..');
+const ROOT_DIR = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 // ---------- Config ----------
 

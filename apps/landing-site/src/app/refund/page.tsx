@@ -106,7 +106,7 @@ export default function RefundPolicy() {
  <div className="bg-muted/50 rounded-lg p-6">
  <ol className="list-decimal pl-6 text-muted-foreground space-y-4">
  <li>
- <strong className="text-foreground">Email us</strong> at <a href="mailto:billing@velanova.io" className="text-primary hover:underline">billing@velanova.io</a> with subject line &quot;Refund Request&quot;
+ <strong className="text-foreground">Email us</strong> at <a href="mailto:billing@velanova.com" className="text-primary hover:underline">billing@velanova.com</a> with subject line &quot;Refund Request&quot;
  </li>
  <li>
  <strong className="text-foreground">Include:</strong>
@@ -196,7 +196,7 @@ export default function RefundPolicy() {
  </p>
  <div className="bg-muted/50 rounded-lg p-4 mt-4">
  <p className="text-foreground">Velanova Billing Team</p>
- <p className="text-muted-foreground">Email: <a href="mailto:billing@velanova.io" className="text-primary hover:underline">billing@velanova.io</a></p>
+ <p className="text-muted-foreground">Email: <a href="mailto:billing@velanova.com" className="text-primary hover:underline">billing@velanova.com</a></p>
  <p className="text-muted-foreground">Response time: Within 2 business days</p>
  </div>
  </section>

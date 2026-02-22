@@ -57,8 +57,8 @@ export default function DownloadPage() {
     setDetected(true);
   }, []);
 
-  const currentVersion = '1.2.0';
-  const releaseDate = 'January 15, 2025';
+  const currentVersion = '1.0.0';
+  const releaseDate = 'Latest';
 
   const downloads = {
     windows: {
@@ -74,7 +74,7 @@ export default function DownloadPage() {
     mac: {
       name: 'macOS',
       icon: <Apple className="w-6 h-6" />,
-      recommended: { name: 'Universal DMG', file: `Velanova-${currentVersion}-universal.dmg`, size: '156 MB' },
+      recommended: { name: 'DMG Installer', file: `Velanova-${currentVersion}.dmg`, size: '156 MB' },
       options: [
         { name: 'Intel DMG', file: `Velanova-${currentVersion}-x64.dmg`, size: '148 MB' },
         { name: 'Apple Silicon DMG', file: `Velanova-${currentVersion}-arm64.dmg`, size: '142 MB' },
@@ -292,7 +292,7 @@ export default function DownloadPage() {
                     </span>
                   </div>
                   <a
-                    href={`/downloads/${current.recommended.file}`}
+                    href={`https://res.cloudinary.com/de1fjyofa/raw/upload/velanova/releases/v${currentVersion}/${current.recommended.file}`}
                     className="group flex items-center justify-between p-5 bg-gradient-to-r from-zinc-900/30 to-zinc-900/30 border-2 border-zinc-700/40 rounded-xl hover:border-zinc-600 transition-all"
                   >
                     <div className="flex items-center gap-4">
@@ -325,7 +325,7 @@ export default function DownloadPage() {
                     {current.options.map((option, i) => (
                       <a
                         key={i}
-                        href={`/downloads/${option.file}`}
+                        href={`https://res.cloudinary.com/de1fjyofa/raw/upload/velanova/releases/v${currentVersion}/${option.file}`}
                         className="flex items-center justify-between p-3 bg-white/5 border border-white/10 rounded-lg hover:border-zinc-700/60 hover:bg-white/5 transition-all group"
                       >
                         <div className="flex items-center gap-3">
@@ -391,25 +391,23 @@ export default function DownloadPage() {
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center justify-between mb-8">
               <h2 className="text-2xl font-medium text-white">Previous Releases</h2>
-              <Link href="/changelog" className="text-sm text-zinc-400 hover:text-zinc-400 flex items-center gap-1 font-medium">
+              <a href="https://github.com/Nexolve-Technologies-India/AIAdoption-GovernanceEngine/releases" target="_blank" rel="noopener noreferrer" className="text-sm text-zinc-400 hover:text-zinc-400 flex items-center gap-1 font-medium">
                 View changelog <ExternalLink className="w-4 h-4" />
-              </Link>
+              </a>
             </div>
 
             <div className="space-y-3">
               {[
-                { version: '1.1.2', date: 'December 28, 2024', notes: 'Bug fixes and performance improvements' },
-                { version: '1.1.0', date: 'December 15, 2024', notes: 'Added Claude 3.5 and Gemini 2.0 support' },
-                { version: '1.0.0', date: 'November 30, 2024', notes: 'Initial stable release' },
+                { version: '1.0.0', date: 'Initial stable release', notes: 'Full-featured desktop app with AI-powered database querying' },
               ].map((release, i) => (
                 <div key={i} className="flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-xl hover:border-white/20 transition-colors">
                   <div>
                     <p className="font-medium text-white">Version {release.version}</p>
-                    <p className="text-sm text-zinc-500">{release.date} • {release.notes}</p>
+                    <p className="text-sm text-zinc-500">{release.notes}</p>
                   </div>
-                  <Link href={`/downloads/archive/${release.version}`} className="text-sm text-zinc-400 hover:text-zinc-400 font-medium">
+                  <a href={`https://res.cloudinary.com/de1fjyofa/raw/upload/velanova/releases/v${release.version}/Velanova-Setup-${release.version}.exe`} className="text-sm text-zinc-400 hover:text-zinc-400 font-medium">
                     Download
-                  </Link>
+                  </a>
                 </div>
               ))}
             </div>

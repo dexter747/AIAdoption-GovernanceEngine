@@ -4,6 +4,8 @@ dotenv.config();
 
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 import { createClient } from '@supabase/supabase-js';
 import jwt from 'jsonwebtoken';
 import userApiKeysRoutes from './routes/user-api-keys.js';
@@ -32,12 +34,40 @@ if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY) {
 // =============================================================================
 // MIDDLEWARE
 // =============================================================================
+
+// Trust proxy (for correct client IP behind load balancers/Vercel/Railway)
+app.set('trust proxy', 1);
+
+// Security headers
+app.use(helmet({
+  contentSecurityPolicy: false,  // Allow API consumers
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+}));
+
+// Rate limiting
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 300,                  // 300 requests per window
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests, please try again later.' },
+});
+app.use('/api/', apiLimiter);
+
+// Strict rate limit for auth endpoints
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  message: { error: 'Too many authentication attempts.' },
+});
+app.use('/api/licenses/validate', authLimiter);
+
 app.use(cors({
-  origin: process.env.CORS_ORIGINS?.split(',') || ['http://localhost:3000'],
+  origin: process.env.CORS_ORIGINS?.split(',') || ['http://localhost:3000', 'http://localhost:3001'],
   credentials: true,
 }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
 // Request logging
 app.use((req, res, next) => {
@@ -638,28 +668,28 @@ async function handleSubscriptionCancelled(subscriptionData) {
 // ERROR HANDLING
 // =============================================================================
 
-app.use((err, req, res, next) => {
-  console.error('Express error:', err);
-  res.status(500).json({
-    error: 'Internal server error',
-    message: process.env.NODE_ENV === 'development' ? err.message : undefined,
-  });
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({ error: 'Not found', path: req.path });
 });
 
-// =============================================================================
-// START SERVER
-// =============================================================================
-// ERROR HANDLER (must be last middleware)
-// =============================================================================
+// Global error handler (must be last middleware)
 app.use(errorHandler);
 
 // =============================================================================
 
 app.listen(PORT, () => {
   console.log(`\n🚀 Velanova API Server running on port ${PORT}`);
-  console.log(`📊 Environment: ${process.env.NODE_ENV}`);
-  console.log(`🔗 Supabase URL: ${process.env.SUPABASE_URL}`);
-  console.log(`✅ Health check: http://localhost:${PORT}/health\n`);
+  console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🔗 Supabase: ${process.env.SUPABASE_URL ? '✅ Connected' : '❌ Not configured'}`);
+  console.log(`✅ Health check: http://localhost:${PORT}/health`);
+  if (!process.env.JWT_SECRET) {
+    console.warn('⚠️  WARNING: JWT_SECRET not set — using insecure default. Set this before deploying to production!');
+  }
+  if (!process.env.ENCRYPTION_KEY) {
+    console.warn('⚠️  WARNING: ENCRYPTION_KEY not set — connection data will not be encrypted.');
+  }
+  console.log('');
 });
 
 export default app;

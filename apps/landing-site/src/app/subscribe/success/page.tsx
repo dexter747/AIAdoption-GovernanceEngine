@@ -23,6 +23,7 @@ function SuccessContent() {
           billingCycle: 'monthly',
           nextBilling: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString(),
         });
+        // TODO: Fetch real license key from backend after payment verification
         // Generate mock license key for demo
         setLicenseKey(`AINX-${Math.random().toString(36).slice(2, 6).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`);
         setLoading(false);

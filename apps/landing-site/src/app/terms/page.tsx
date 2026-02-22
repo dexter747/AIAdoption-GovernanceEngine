@@ -200,7 +200,7 @@ export default function TermsOfService() {
  </p>
  <div className="bg-muted/50 rounded-lg p-4 mt-4">
  <p className="text-foreground">Velanova Legal Team</p>
- <p className="text-muted-foreground">Email: <a href="mailto:legal@velanova.io" className="text-primary hover:underline">legal@velanova.io</a></p>
+ <p className="text-muted-foreground">Email: <a href="mailto:legal@velanova.com" className="text-primary hover:underline">legal@velanova.com</a></p>
  <p className="text-muted-foreground">Address: 123 Tech Street, San Francisco, CA 94105, USA</p>
  </div>
  </section>

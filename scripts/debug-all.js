@@ -18,9 +18,10 @@
  */
 
 import { execSync } from 'child_process';
-import { join } from 'path';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-const ROOT_DIR = join(new URL('.', import.meta.url).pathname, '..');
+const ROOT_DIR = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 function run(cmd, label, optional = false) {
   console.log(`\n${'━'.repeat(60)}`);

@@ -17,11 +17,12 @@
  *   CLOUDINARY_API_SECRET
  */
 
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
-import { join } from 'path';
+import { readFileSync, writeFileSync, existsSync, mkdirSync, createWriteStream } from 'fs';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 import https from 'https';
 
-const ROOT_DIR = join(new URL('.', import.meta.url).pathname, '..');
+const ROOT_DIR = join(dirname(fileURLToPath(import.meta.url)), '..');
 const LANDING_DIR = join(ROOT_DIR, 'apps', 'landing-site');
 const DOWNLOAD_PAGE = join(LANDING_DIR, 'src', 'app', 'download', 'page.tsx');
 const PUBLIC_DOWNLOADS = join(LANDING_DIR, 'public', 'downloads');
@@ -67,7 +68,7 @@ function fetchJson(url) {
 
 function downloadFile(url, destPath) {
   return new Promise((resolve, reject) => {
-    const file = (await import('fs')).createWriteStream(destPath);
+    const file = createWriteStream(destPath);
     https.get(url, (res) => {
       if (res.statusCode === 301 || res.statusCode === 302) {
         file.close();

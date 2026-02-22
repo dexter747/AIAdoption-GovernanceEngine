@@ -301,8 +301,7 @@ function SubscribeContent() {
         <div className="mt-16 text-center">
           <p className="text-sm text-muted-foreground mb-4">Secure payments powered by</p>
           <div className="flex items-center justify-center gap-8 opacity-60">
-            <span className="text-lg font-medium text-muted-foreground">Stripe</span>
-            <span className="text-lg font-medium text-muted-foreground">PayPal</span>
+            <span className="text-lg font-medium text-muted-foreground">Dodo Payments</span>
             <span className="text-lg font-medium text-muted-foreground">256-bit SSL</span>
           </div>
         </div>

@@ -42,7 +42,7 @@ export default function PrivacyPolicy() {
  <h3 className="text-lg font-medium text-foreground mt-6 mb-3">2.1 Information You Provide</h3>
  <ul className="list-disc pl-6 text-muted-foreground space-y-2">
  <li>Account information (name, email address)</li>
- <li>Payment information (processed securely via Stripe)</li>
+ <li>Payment information (processed securely via Dodo Payments)</li>
  <li>Support communications</li>
  <li>Feedback and survey responses</li>
  </ul>
@@ -118,7 +118,7 @@ export default function PrivacyPolicy() {
  </div>
 
  <p className="text-muted-foreground leading-relaxed mt-4">
- To exercise these rights, contact us at <a href="mailto:privacy@velanova.io" className="text-primary hover:underline">privacy@velanova.io</a>
+ To exercise these rights, contact us at <a href="mailto:privacy@velanova.com" className="text-primary hover:underline">privacy@velanova.com</a>
  </p>
  </section>
 
@@ -152,7 +152,7 @@ export default function PrivacyPolicy() {
  <h2 className="text-2xl font-medium text-foreground mb-4">9. Third-Party Services</h2>
  <p className="text-muted-foreground leading-relaxed">We use the following third-party services:</p>
  <ul className="list-disc pl-6 text-muted-foreground space-y-2 mt-4">
- <li><strong>Stripe:</strong> Payment processing (<a href="https://stripe.com/privacy" className="text-primary hover:underline">Privacy Policy</a>)</li>
+ <li><strong>Dodo Payments:</strong> Payment processing (<a href="https://dodopayments.com/legal/privacy" className="text-primary hover:underline">Privacy Policy</a>)</li>
  <li><strong>Supabase:</strong> Authentication and database (<a href="https://supabase.com/privacy" className="text-primary hover:underline">Privacy Policy</a>)</li>
  <li><strong>Vercel:</strong> Website hosting (<a href="https://vercel.com/legal/privacy-policy" className="text-primary hover:underline">Privacy Policy</a>)</li>
  </ul>
@@ -179,7 +179,7 @@ export default function PrivacyPolicy() {
  </p>
  <div className="bg-muted/50 rounded-lg p-4 mt-4">
  <p className="text-foreground">Velanova Privacy Team</p>
- <p className="text-muted-foreground">Email: <a href="mailto:privacy@velanova.io" className="text-primary hover:underline">privacy@velanova.io</a></p>
+ <p className="text-muted-foreground">Email: <a href="mailto:privacy@velanova.com" className="text-primary hover:underline">privacy@velanova.com</a></p>
  <p className="text-muted-foreground">Address: 123 Tech Street, San Francisco, CA 94105, USA</p>
  </div>
  <p className="text-muted-foreground leading-relaxed mt-4">

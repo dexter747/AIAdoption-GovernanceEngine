@@ -4,19 +4,19 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
-import { Check, Sparkles, Building2, Rocket, X } from "lucide-react";
+import { Check, Sparkles, Building2, Rocket, Users, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const pricingTiers = [
   {
-    name: "Starter",
+    name: "Free Trial",
     icon: Rocket,
     price: "$0",
-    period: "/14 days",
-    description: "Perfect for trying out the platform",
-    features: ["1 device license", "100 queries per month", "All AI model providers", "Basic database connectors", "Email support", "7-day data retention"],
+    period: "/mo",
+    description: "14-day trial, no card required",
+    features: ["1 device license", "100 queries per month", "GPT-4o Mini & Groq models", "Basic database connectors", "Community support", "Basic documentation"],
     notIncluded: ["Advanced analytics", "Custom workflows", "API access"],
     cta: "Start Free Trial",
     ctaLink: "/download",
@@ -25,20 +25,31 @@ const pricingTiers = [
   {
     name: "Professional",
     icon: Sparkles,
-    price: "$199",
-    period: "/month per user",
-    description: "For teams that need unlimited power",
-    features: ["Up to 10 device licenses", "Unlimited queries", "All 64+ system connectors", "All AI model providers", "Advanced analytics & dashboards", "Custom workflows & automation", "Priority support (4h SLA)", "API access & webhooks", "90-day data retention", "SSO integration", "Custom reports"],
+    price: "$49",
+    period: "/mo",
+    description: "For individuals and power users",
+    features: ["Unlimited data source connections", "Unlimited queries", "All AI providers — GPT-5, Claude, Gemini, Grok", "BYOK — bring your own API keys", "Priority email support", "Full chat & query history", "Export to CSV/JSON", "Custom AI prompts"],
     cta: "Start 14-Day Trial",
-    ctaLink: "/subscribe?plan=pro",
+    ctaLink: "/subscribe?plan=professional",
     highlighted: true,
+  },
+  {
+    name: "Team",
+    icon: Users,
+    price: "$199",
+    period: "/mo",
+    description: "For growing teams",
+    features: ["Everything in Professional", "Up to 10 team members", "Shared connections & contexts", "Team analytics dashboard", "Admin controls & permissions", "SSO support", "Dedicated Slack support", "Unlimited query history"],
+    cta: "Start 14-Day Trial",
+    ctaLink: "/subscribe?plan=team",
+    highlighted: false,
   },
   {
     name: "Enterprise",
     icon: Building2,
     price: "Custom",
-    description: "For organizations with complex needs",
-    features: ["Unlimited device licenses", "Unlimited everything", "All Professional features", "On-premise / air-gapped deployment", "White-label & custom branding", "Dedicated account manager", "24/7 phone support (1h SLA)", "Custom integrations & development", "Unlimited data retention", "SLA guarantees", "Training & onboarding"],
+    description: "For large organizations",
+    features: ["Unlimited everything", "All Team features", "On-premise / air-gapped deployment", "White-label & custom branding", "Dedicated account manager", "24/7 phone support (1h SLA)", "Custom integrations & development", "Unlimited data retention", "SLA guarantees", "Training & onboarding"],
     cta: "Contact Sales",
     ctaLink: "/contact",
     highlighted: false,
@@ -84,7 +95,7 @@ export function PricingSection() {
           </p>
         </div>
 
-        <div className="price-grid grid md:grid-cols-3 gap-6 max-w-6xl mx-auto py-6 overflow-visible">
+        <div className="price-grid grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto py-6 overflow-visible">
           {pricingTiers.map((tier) => {
             const Icon = tier.icon;
             return (
@@ -160,10 +171,7 @@ export function PricingSection() {
           </div>
           {/* Secure Payments */}
           <div className="flex items-center justify-center gap-3 flex-wrap">
-            <span className="text-xs text-zinc-600 font-medium">Secure Payments By</span>
-            <img src="/paypal.svg" alt="PayPal" className="h-6 object-contain brightness-0 invert opacity-70 hover:opacity-100 transition-opacity" />
-            <span className="text-zinc-700 text-xs">&amp;</span>
-            <img src="/lemonsqueezy.svg" alt="Lemon Squeezy" className="h-5 object-contain brightness-0 invert opacity-70 hover:opacity-100 transition-opacity" />
+            <span className="text-xs text-zinc-600 font-medium">Secure Payments By Dodo Payments</span>
           </div>
         </div>
       </div>

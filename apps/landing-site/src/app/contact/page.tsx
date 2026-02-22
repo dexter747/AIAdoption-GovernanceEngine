@@ -55,7 +55,7 @@ export default function ContactPage() {
               </div>
               <h3 className="font-medium text-foreground mb-2">Email Us</h3>
               <p className="text-muted-foreground text-sm mb-4">For general inquiries and support</p>
-              <a href="mailto:hello@velanova.io" className="text-primary hover:underline">hello@velanova.io</a>
+              <a href="mailto:hello@velanova.com" className="text-primary hover:underline">hello@velanova.com</a>
             </div>
 
             <div className="bg-muted/30 border border-border rounded-2xl p-6 text-center hover:border-primary/50 transition-colors">
@@ -73,7 +73,7 @@ export default function ContactPage() {
               </div>
               <h3 className="font-medium text-foreground mb-2">Sales</h3>
               <p className="text-muted-foreground text-sm mb-4">For enterprise and partnership inquiries</p>
-              <a href="mailto:sales@velanova.io" className="text-primary hover:underline">sales@velanova.io</a>
+              <a href="mailto:sales@velanova.com" className="text-primary hover:underline">sales@velanova.com</a>
             </div>
           </div>
 

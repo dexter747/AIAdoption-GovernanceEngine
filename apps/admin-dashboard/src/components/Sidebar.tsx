@@ -6,6 +6,7 @@ import {
  LayoutDashboard, Users, Download, CreditCard, Settings, 
  LogOut, Key, BarChart2
 } from 'lucide-react';
+import { useAuth } from './SessionProvider';
 
 const navigation = [
  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -20,6 +21,7 @@ const navigation = [
 export function Sidebar() {
  const pathname = usePathname();
  const router = useRouter();
+ const { user } = useAuth();
 
  const handleSignOut = async () => {
  await fetch('/api/auth/session', { method: 'DELETE' });
@@ -68,11 +70,11 @@ export function Sidebar() {
  <div className="px-3 py-4 border-t border-white/[0.06]">
  <div className="flex items-center gap-3 px-3 py-2 mb-1">
  <div className="w-7 h-7 bg-white/[0.08] rounded-full flex items-center justify-center flex-shrink-0">
- <span className="text-zinc-300 text-xs font-medium">A</span>
+ <span className="text-zinc-300 text-xs font-medium">{user?.name?.charAt(0) || user?.email?.charAt(0)?.toUpperCase() || 'A'}</span>
  </div>
  <div className="flex-1 min-w-0">
- <p className="text-sm font-medium truncate text-white">Admin</p>
- <p className="text-xs text-zinc-600 truncate">admin@velanova.com</p>
+ <p className="text-sm font-medium truncate text-white">{user?.name || 'Admin'}</p>
+ <p className="text-xs text-zinc-600 truncate">{user?.email || 'Admin'}</p>
  </div>
  </div>
  <button
