@@ -245,7 +245,7 @@ export default function PricingPage() {
                 What payment methods do you accept?
               </h3>
               <p className="text-zinc-500">
-                We accept all major credit cards via Dodo Payments. Enterprise customers can pay via invoice.
+                We accept all major credit cards via PayPal & Lemon Squeezy. Enterprise customers can pay via invoice.
               </p>
             </div>
 

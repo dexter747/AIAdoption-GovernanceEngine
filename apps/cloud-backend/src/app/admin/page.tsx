@@ -292,11 +292,11 @@ function SettingsPanel() {
           <div className="space-y-2">
             <label className="flex items-center gap-2">
               <input type="checkbox" checked readOnly className="rounded" />
-              <span>Dodo Payments</span>
+              <span>PayPal</span>
             </label>
             <label className="flex items-center gap-2">
               <input type="checkbox" checked readOnly className="rounded" />
-              <span>PayPal</span>
+              <span>Lemon Squeezy</span>
             </label>
             <label className="flex items-center gap-2">
               <input type="checkbox" checked readOnly className="rounded" />

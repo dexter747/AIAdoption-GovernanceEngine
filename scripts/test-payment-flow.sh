@@ -110,7 +110,7 @@ test_create_payment_session() {
         echo ""
         echo "Next steps:"
         echo "1. Visit the checkout URL to complete payment"
-        echo "2. Use Dodo Payments test mode"
+        echo "2. Use Lemon Squeezy test mode"
         echo "3. Check webhook logs for payment.succeeded event"
     else
         echo -e "${RED}❌ Failed to create payment session${NC}"
@@ -225,7 +225,7 @@ test_full_flow() {
     
     echo ""
     echo -e "${YELLOW}⚠️  Manual step required:${NC}"
-    echo "1. Complete the payment in Dodo Payments test mode"
+    echo "1. Complete the payment in Lemon Squeezy test mode"
     echo "2. Wait for webhook to process"
     echo "3. Check your email for license key"
     echo ""

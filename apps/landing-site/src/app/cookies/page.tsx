@@ -165,7 +165,8 @@ export default function CookiePolicy() {
  </p>
  <ul className="list-disc pl-6 text-muted-foreground space-y-2 mt-4">
  <li><strong>Google Analytics:</strong> For understanding website usage (<a href="https://policies.google.com/privacy" className="text-primary hover:underline">Privacy Policy</a>)</li>
- <li><strong>Dodo Payments:</strong> For processing payments (<a href="https://dodopayments.com/legal/privacy" className="text-primary hover:underline">Privacy Policy</a>)</li>
+ <li><strong>PayPal:</strong> For processing payments (<a href="https://www.paypal.com/webapps/mpp/ua/privacy-full" className="text-primary hover:underline">Privacy Policy</a>)</li>
+ <li><strong>Lemon Squeezy:</strong> For subscription management (<a href="https://www.lemonsqueezy.com/privacy" className="text-primary hover:underline">Privacy Policy</a>)</li>
  </ul>
  </section>
 

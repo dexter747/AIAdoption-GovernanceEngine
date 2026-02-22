@@ -109,7 +109,7 @@ function CheckoutContent() {
  <div className="mt-6 p-4 rounded-lg bg-zinc-800/50">
  <div className="flex items-center gap-2 text-muted-foreground">
  <Lock className="w-4 h-4" />
- <span>Secure checkout powered by Dodo Payments</span>
+ <span>Secure checkout powered by Lemon Squeezy</span>
  </div>
  </div>
  </div>

@@ -1,25 +1,25 @@
 /**
- * Dodo Payments Webhook Handler
- * Receives and processes payment events
+ * Lemon Squeezy Webhook Handler
+ * Receives and processes payment events from Lemon Squeezy
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getDodoPaymentsClient } from '@/lib/payments/dodo';
+import { getLemonSqueezyClient } from '@/lib/payments/dodo';
 import { createClient } from '@/lib/supabase/server';
 
 export async function POST(request: NextRequest) {
   try {
-    const signature = request.headers.get('dodo-signature');
+    const signature = request.headers.get('x-signature');
     const payload = await request.text();
 
     if (!signature) {
       return NextResponse.json({ error: 'No signature' }, { status: 400 });
     }
 
-    const dodo = getDodoPaymentsClient();
+    const ls = getLemonSqueezyClient();
     
     // Verify webhook signature
-    if (!dodo.verifyWebhookSignature(payload, signature)) {
+    if (!ls.verifyWebhookSignature(payload, signature)) {
       return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
     }
 
@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ received: true });
   } catch (error: any) {
-    console.error('Webhook error:', error);
+    console.error('Lemon Squeezy webhook error:', error);
     return NextResponse.json(
       { error: error.message },
       { status: 500 }
@@ -40,93 +40,92 @@ export async function POST(request: NextRequest) {
 
 async function processWebhookEvent(event: any) {
   const supabase = await createClient();
-  const eventType = event.type;
+  const eventName: string = event.meta?.event_name ?? '';
+  const data = event.data;
+  const attrs = data?.attributes ?? {};
+  const customData = event.meta?.custom_data ?? {};
 
-  switch (eventType) {
-    case 'checkout.session.completed':
-      const session = event.data.object;
-      
-      // Get user from metadata
-      const userId = session.metadata.userId;
-      const planType = session.metadata.planType;
+  switch (eventName) {
+    case 'order_created': {
+      const userId = customData.user_id;
       
       // Update payment session
       await supabase
         .from('payment_sessions')
         .update({ status: 'completed' })
-        .eq('session_id', session.id);
+        .eq('session_id', data.id);
       
+      console.log(`Order created for user ${userId}`);
       break;
+    }
 
-    case 'customer.subscription.created':
-      const subscription = event.data.object;
-      
+    case 'subscription_created': {
+      const userId = customData.user_id;
+      const planType = customData.plan_type;
+
       // Create license
       await supabase.from('licenses').insert({
-        user_id: subscription.metadata.userId,
-        subscription_id: subscription.id,
-        plan_type: subscription.metadata.planType,
+        user_id: userId,
+        subscription_id: data.id,
+        plan_type: planType,
         status: 'active',
-        current_period_start: new Date(subscription.current_period_start * 1000),
-        current_period_end: new Date(subscription.current_period_end * 1000),
+        current_period_start: new Date(attrs.created_at),
+        current_period_end: new Date(attrs.renews_at),
       });
       
-      console.log(`License created for subscription ${subscription.id}`);
+      console.log(`License created for subscription ${data.id}`);
       break;
+    }
 
-    case 'customer.subscription.updated':
-      const updatedSub = event.data.object;
-      
+    case 'subscription_updated': {
       // Update license
       await supabase
         .from('licenses')
         .update({
-          status: updatedSub.status,
-          current_period_end: new Date(updatedSub.current_period_end * 1000),
+          status: attrs.status,
+          current_period_end: new Date(attrs.renews_at),
         })
-        .eq('subscription_id', updatedSub.id);
+        .eq('subscription_id', data.id);
       
       break;
+    }
 
-    case 'customer.subscription.deleted':
-      const deletedSub = event.data.object;
-      
+    case 'subscription_cancelled': {
       // Deactivate license
       await supabase
         .from('licenses')
         .update({ status: 'canceled' })
-        .eq('subscription_id', deletedSub.id);
+        .eq('subscription_id', data.id);
       
       break;
+    }
 
-    case 'invoice.payment_succeeded':
-      const invoice = event.data.object;
-      
+    case 'subscription_payment_success': {
       // Record payment
       await supabase.from('payments').insert({
-        subscription_id: invoice.subscription,
-        invoice_id: invoice.id,
-        amount: invoice.amount_paid / 100,
-        currency: invoice.currency,
+        subscription_id: attrs.subscription_id,
+        invoice_id: data.id,
+        amount: attrs.total / 100,
+        currency: attrs.currency,
         status: 'succeeded',
-        paid_at: new Date(invoice.status_transitions.paid_at * 1000),
+        paid_at: new Date(attrs.created_at),
       });
       
       break;
+    }
 
-    case 'invoice.payment_failed':
-      const failedInvoice = event.data.object;
-      
+    case 'subscription_payment_failed': {
       // Record failed payment
       await supabase.from('payments').insert({
-        subscription_id: failedInvoice.subscription,
-        invoice_id: failedInvoice.id,
-        amount: failedInvoice.amount_due / 100,
-        currency: failedInvoice.currency,
+        subscription_id: attrs.subscription_id,
+        invoice_id: data.id,
+        amount: attrs.total / 100,
+        currency: attrs.currency,
         status: 'failed',
       });
       
       // TODO: Send notification to user
       break;
+    }
   }
 }

@@ -50,9 +50,15 @@ NEXTAUTH_SECRET=REPLACE_WITH_GENERATED_SECRET
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
 
-# Dodo Payments
-DODO_API_KEY=your_dodo_api_key
-DODO_WEBHOOK_SECRET=your_dodo_webhook_secret
+# Lemon Squeezy (Subscription Management)
+LEMONSQUEEZY_API_KEY=your_lemonsqueezy_api_key
+LEMONSQUEEZY_STORE_ID=your_lemonsqueezy_store_id
+LEMONSQUEEZY_WEBHOOK_SECRET=your_lemonsqueezy_webhook_secret
+
+# PayPal (Card Payments)
+PAYPAL_CLIENT_ID=your_paypal_client_id
+PAYPAL_CLIENT_SECRET=your_paypal_client_secret
+PAYPAL_MODE=sandbox
 
 # Resend Email
 RESEND_API_KEY=your_resend_api_key
@@ -167,7 +173,7 @@ echo ""
 echo "📝 Next steps:"
 echo "1. Edit the .env files and replace placeholder values"
 echo "2. Add your Supabase credentials"
-echo "3. Add your Dodo Payments API keys"
+echo "3. Add your Lemon Squeezy and PayPal API keys"
 echo "4. Add your Resend API key"
 echo "5. Add your Google OAuth credentials"
 echo ""

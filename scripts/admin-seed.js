@@ -164,7 +164,7 @@ async function seedSubscriptions(supabase, userIds) {
   for (let i = 0; i < Math.min(userIds.length, plans.length); i++) {
     const { error } = await supabase.from('subscriptions').insert({
       user_id: userIds[i],
-      provider: 'dodo',
+      provider: 'lemonsqueezy',
       plan_type: plans[i].type,
       billing_cycle: 'monthly',
       status: 'active',

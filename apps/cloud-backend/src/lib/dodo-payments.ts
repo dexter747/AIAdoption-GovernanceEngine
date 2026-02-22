@@ -1,11 +1,8 @@
 import axios from 'axios';
 
-const DODO_API_URL =
-  process.env.NODE_ENV === 'production'
-    ? 'https://api.dodopayments.com'
-    : 'https://sandbox-api.dodopayments.com';
+const LS_API_URL = 'https://api.lemonsqueezy.com/v1';
 
-export class DodoPaymentsClient {
+export class LemonSqueezyPaymentsClient {
   private apiKey: string;
 
   constructor(apiKey: string) {
@@ -16,16 +13,17 @@ export class DodoPaymentsClient {
     try {
       const response = await axios({
         method,
-        url: `${DODO_API_URL}${endpoint}`,
+        url: `${LS_API_URL}${endpoint}`,
         headers: {
           'Authorization': `Bearer ${this.apiKey}`,
-          'Content-Type': 'application/json',
+          'Accept': 'application/vnd.api+json',
+          'Content-Type': 'application/vnd.api+json',
         },
         data,
       });
       return response.data;
     } catch (error: any) {
-      throw new Error(`Dodo Payments API error: ${error.response?.data?.message || error.message}`);
+      throw new Error(`Lemon Squeezy API error: ${error.response?.data?.message || error.message}`);
     }
   }
 
@@ -34,17 +32,32 @@ export class DodoPaymentsClient {
     name: string;
     metadata?: Record<string, any>;
   }) {
-    return await this.request('POST', '/customers', data);
+    return await this.request('POST', '/customers', {
+      data: {
+        type: 'customers',
+        attributes: { email: data.email, name: data.name },
+        relationships: {
+          store: { data: { type: 'stores', id: process.env.LEMONSQUEEZY_STORE_ID } },
+        },
+      },
+    });
   }
 
-  async createSubscription(data: {
-    customer_id: string;
-    product_id: string;
-    payment_method_id: string;
-    billing_period: 'monthly' | 'yearly';
-    metadata?: Record<string, any>;
+  async createCheckout(data: {
+    store_id: string;
+    variant_id: string;
+    custom_data?: Record<string, any>;
   }) {
-    return await this.request('POST', '/subscriptions', data);
+    return await this.request('POST', '/checkouts', {
+      data: {
+        type: 'checkouts',
+        attributes: { custom_price: null, product_options: {}, checkout_data: { custom: data.custom_data || {} } },
+        relationships: {
+          store: { data: { type: 'stores', id: data.store_id } },
+          variant: { data: { type: 'variants', id: data.variant_id } },
+        },
+      },
+    });
   }
 
   async getSubscription(subscriptionId: string) {
@@ -52,7 +65,7 @@ export class DodoPaymentsClient {
   }
 
   async cancelSubscription(subscriptionId: string) {
-    return await this.request('POST', `/subscriptions/${subscriptionId}/cancel`);
+    return await this.request('DELETE', `/subscriptions/${subscriptionId}`);
   }
 
   async createPaymentIntent(data: {
@@ -61,8 +74,15 @@ export class DodoPaymentsClient {
     customer_id?: string;
     metadata?: Record<string, any>;
   }) {
-    return await this.request('POST', '/payment-intents', data);
+    // Lemon Squeezy uses checkouts instead of payment intents
+    return await this.createCheckout({
+      store_id: process.env.LEMONSQUEEZY_STORE_ID || '',
+      variant_id: '',
+      custom_data: data.metadata,
+    });
   }
 }
 
-export const dodoPayments = new DodoPaymentsClient(process.env.DODO_API_KEY || '');
+export const lemonSqueezyPayments = new LemonSqueezyPaymentsClient(
+  process.env.LEMONSQUEEZY_API_KEY || ''
+);

@@ -192,7 +192,7 @@ export interface User {
 }
 
 // Payment Types
-export type PaymentProvider = 'dodo';
+export type PaymentProvider = 'lemonsqueezy' | 'paypal';
 
 export interface Subscription {
   id: string;

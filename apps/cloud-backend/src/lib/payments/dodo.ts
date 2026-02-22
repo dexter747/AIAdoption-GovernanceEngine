@@ -1,11 +1,13 @@
 /**
- * Dodo Payments Integration
+ * Lemon Squeezy Payments Integration
  * Primary payment provider for Velanova
+ * API docs: https://docs.lemonsqueezy.com/api
  */
 
-export interface DodoPaymentConfig {
+export interface LemonSqueezyConfig {
   apiKey: string;
   webhookSecret: string;
+  storeId: string;
   baseUrl: string;
 }
 
@@ -18,91 +20,102 @@ export interface CreateCheckoutSessionParams {
   cancelUrl: string;
 }
 
-export interface DodoCheckoutSession {
+export interface LemonSqueezyCheckoutSession {
   id: string;
   url: string;
   customerId: string;
   status: 'pending' | 'completed' | 'expired';
 }
 
-export interface DodoSubscription {
+export interface LemonSqueezySubscription {
   id: string;
   customerId: string;
-  planId: string;
-  status: 'active' | 'canceled' | 'past_due' | 'unpaid';
+  variantId: string;
+  status: 'active' | 'cancelled' | 'past_due' | 'unpaid' | 'on_trial' | 'paused';
   currentPeriodStart: Date;
   currentPeriodEnd: Date;
   cancelAtPeriodEnd: boolean;
 }
 
-export class DodoPaymentsClient {
+export class LemonSqueezyClient {
   private apiKey: string;
   private baseUrl: string;
   private webhookSecret: string;
+  private storeId: string;
 
-  constructor(config: DodoPaymentConfig) {
+  constructor(config: LemonSqueezyConfig) {
     this.apiKey = config.apiKey;
-    this.baseUrl = config.baseUrl || 'https://api.dodo.dev';
+    this.baseUrl = config.baseUrl || 'https://api.lemonsqueezy.com/v1';
     this.webhookSecret = config.webhookSecret;
+    this.storeId = config.storeId;
+  }
+
+  private get headers() {
+    return {
+      'Authorization': `Bearer ${this.apiKey}`,
+      'Accept': 'application/vnd.api+json',
+      'Content-Type': 'application/vnd.api+json',
+    };
   }
 
   /**
    * Create a checkout session for new subscription
    */
-  async createCheckoutSession(params: CreateCheckoutSessionParams): Promise<DodoCheckoutSession> {
-    const planPrices = {
-      trial: 0,
-      professional: params.billingCycle === 'monthly' ? 49 : 490, // $49/mo or $490/yr
-      team: params.billingCycle === 'monthly' ? 199 : 1990,
-      enterprise: 0, // Custom pricing
+  async createCheckoutSession(params: CreateCheckoutSessionParams): Promise<LemonSqueezyCheckoutSession> {
+    // Variant IDs should be configured per plan/billing cycle in env
+    const variantMap: Record<string, Record<string, string>> = {
+      trial: { monthly: process.env.LS_VARIANT_TRIAL || '', yearly: process.env.LS_VARIANT_TRIAL || '' },
+      professional: {
+        monthly: process.env.LS_VARIANT_PRO_MONTHLY || '',
+        yearly: process.env.LS_VARIANT_PRO_YEARLY || '',
+      },
+      team: {
+        monthly: process.env.LS_VARIANT_TEAM_MONTHLY || '',
+        yearly: process.env.LS_VARIANT_TEAM_YEARLY || '',
+      },
+      enterprise: { monthly: '', yearly: '' }, // Custom pricing
     };
 
-    const response = await fetch(`${this.baseUrl}/v1/checkout/sessions`, {
+    const variantId = variantMap[params.planType]?.[params.billingCycle];
+
+    const response = await fetch(`${this.baseUrl}/checkouts`, {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${this.apiKey}`,
-        'Content-Type': 'application/json',
-      },
+      headers: this.headers,
       body: JSON.stringify({
-        customer_email: params.email,
-        mode: 'subscription',
-        payment_method_types: ['card'],
-        line_items: [
-          {
-            price_data: {
-              currency: 'usd',
-              product_data: {
-                name: `Velanova ${params.planType.charAt(0).toUpperCase() + params.planType.slice(1)} Plan`,
-                description: `${params.billingCycle} subscription`,
-              },
-              unit_amount: planPrices[params.planType] * 100, // cents
-              recurring: {
-                interval: params.billingCycle === 'monthly' ? 'month' : 'year',
+        data: {
+          type: 'checkouts',
+          attributes: {
+            checkout_data: {
+              email: params.email,
+              custom: {
+                user_id: params.userId,
+                plan_type: params.planType,
+                billing_cycle: params.billingCycle,
               },
             },
-            quantity: 1,
+            product_options: {
+              redirect_url: params.successUrl,
+            },
           },
-        ],
-        success_url: params.successUrl,
-        cancel_url: params.cancelUrl,
-        metadata: {
-          userId: params.userId,
-          planType: params.planType,
-          billingCycle: params.billingCycle,
+          relationships: {
+            store: { data: { type: 'stores', id: this.storeId } },
+            variant: { data: { type: 'variants', id: variantId } },
+          },
         },
       }),
     });
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(`Dodo Payments error: ${error.message}`);
+      throw new Error(`Lemon Squeezy error: ${JSON.stringify(error.errors || error)}`);
     }
 
-    const data = await response.json();
+    const json = await response.json();
+    const checkout = json.data;
     return {
-      id: data.id,
-      url: data.url,
-      customerId: data.customer,
+      id: checkout.id,
+      url: checkout.attributes.url,
+      customerId: '',
       status: 'pending',
     };
   }
@@ -110,26 +123,25 @@ export class DodoPaymentsClient {
   /**
    * Retrieve subscription details
    */
-  async getSubscription(subscriptionId: string): Promise<DodoSubscription> {
-    const response = await fetch(`${this.baseUrl}/v1/subscriptions/${subscriptionId}`, {
-      headers: {
-        'Authorization': `Bearer ${this.apiKey}`,
-      },
+  async getSubscription(subscriptionId: string): Promise<LemonSqueezySubscription> {
+    const response = await fetch(`${this.baseUrl}/subscriptions/${subscriptionId}`, {
+      headers: this.headers,
     });
 
     if (!response.ok) {
       throw new Error('Failed to retrieve subscription');
     }
 
-    const data = await response.json();
+    const json = await response.json();
+    const sub = json.data.attributes;
     return {
-      id: data.id,
-      customerId: data.customer,
-      planId: data.items.data[0].price.id,
-      status: data.status,
-      currentPeriodStart: new Date(data.current_period_start * 1000),
-      currentPeriodEnd: new Date(data.current_period_end * 1000),
-      cancelAtPeriodEnd: data.cancel_at_period_end,
+      id: json.data.id,
+      customerId: String(sub.customer_id),
+      variantId: String(sub.variant_id),
+      status: sub.status,
+      currentPeriodStart: new Date(sub.renews_at),
+      currentPeriodEnd: new Date(sub.ends_at || sub.renews_at),
+      cancelAtPeriodEnd: sub.cancelled,
     };
   }
 
@@ -137,11 +149,9 @@ export class DodoPaymentsClient {
    * Cancel subscription at period end
    */
   async cancelSubscription(subscriptionId: string): Promise<void> {
-    const response = await fetch(`${this.baseUrl}/v1/subscriptions/${subscriptionId}`, {
+    const response = await fetch(`${this.baseUrl}/subscriptions/${subscriptionId}`, {
       method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${this.apiKey}`,
-      },
+      headers: this.headers,
     });
 
     if (!response.ok) {
@@ -150,18 +160,20 @@ export class DodoPaymentsClient {
   }
 
   /**
-   * Update subscription plan
+   * Update subscription variant (upgrade/downgrade)
    */
-  async updateSubscription(subscriptionId: string, newPlanId: string): Promise<DodoSubscription> {
-    const response = await fetch(`${this.baseUrl}/v1/subscriptions/${subscriptionId}`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${this.apiKey}`,
-        'Content-Type': 'application/json',
-      },
+  async updateSubscription(subscriptionId: string, newVariantId: string): Promise<LemonSqueezySubscription> {
+    const response = await fetch(`${this.baseUrl}/subscriptions/${subscriptionId}`, {
+      method: 'PATCH',
+      headers: this.headers,
       body: JSON.stringify({
-        items: [{ price: newPlanId }],
-        proration_behavior: 'create_prorations',
+        data: {
+          type: 'subscriptions',
+          id: subscriptionId,
+          attributes: {
+            variant_id: Number(newVariantId),
+          },
+        },
       }),
     });
 
@@ -169,12 +181,11 @@ export class DodoPaymentsClient {
       throw new Error('Failed to update subscription');
     }
 
-    const data = await response.json();
-    return this.getSubscription(data.id);
+    return this.getSubscription(subscriptionId);
   }
 
   /**
-   * Verify webhook signature
+   * Verify webhook signature (HMAC SHA-256 hex digest)
    */
   verifyWebhookSignature(payload: string, signature: string): boolean {
     const crypto = require('crypto');
@@ -182,7 +193,7 @@ export class DodoPaymentsClient {
       .createHmac('sha256', this.webhookSecret)
       .update(payload)
       .digest('hex');
-    
+
     return crypto.timingSafeEqual(
       Buffer.from(signature),
       Buffer.from(expectedSignature)
@@ -190,88 +201,83 @@ export class DodoPaymentsClient {
   }
 
   /**
-   * Handle webhook events
+   * Handle Lemon Squeezy webhook events
    */
   async handleWebhook(payload: any): Promise<void> {
-    const eventType = payload.type;
+    const eventName: string = payload.meta?.event_name ?? '';
 
-    switch (eventType) {
-      case 'checkout.session.completed':
-        // Handle successful checkout
-        await this.handleCheckoutCompleted(payload.data.object);
+    switch (eventName) {
+      case 'order_created':
+        await this.handleOrderCreated(payload.data);
         break;
-      
-      case 'customer.subscription.created':
-        // Handle new subscription
-        await this.handleSubscriptionCreated(payload.data.object);
+
+      case 'subscription_created':
+        await this.handleSubscriptionCreated(payload.data);
         break;
-      
-      case 'customer.subscription.updated':
-        // Handle subscription update
-        await this.handleSubscriptionUpdated(payload.data.object);
+
+      case 'subscription_updated':
+        await this.handleSubscriptionUpdated(payload.data);
         break;
-      
-      case 'customer.subscription.deleted':
-        // Handle subscription cancellation
-        await this.handleSubscriptionDeleted(payload.data.object);
+
+      case 'subscription_cancelled':
+        await this.handleSubscriptionCancelled(payload.data);
         break;
-      
-      case 'invoice.payment_succeeded':
-        // Handle successful payment
-        await this.handlePaymentSucceeded(payload.data.object);
+
+      case 'subscription_payment_success':
+        await this.handlePaymentSucceeded(payload.data);
         break;
-      
-      case 'invoice.payment_failed':
-        // Handle failed payment
-        await this.handlePaymentFailed(payload.data.object);
+
+      case 'subscription_payment_failed':
+        await this.handlePaymentFailed(payload.data);
         break;
-      
+
       default:
-        console.log(`Unhandled webhook event: ${eventType}`);
+        console.log(`Unhandled Lemon Squeezy webhook event: ${eventName}`);
     }
   }
 
-  private async handleCheckoutCompleted(session: any) {
-    console.log('Checkout completed:', session.id);
-    // Update database with subscription details
+  private async handleOrderCreated(data: any) {
+    console.log('Order created:', data.id);
+    // Update database with order details
   }
 
-  private async handleSubscriptionCreated(subscription: any) {
-    console.log('Subscription created:', subscription.id);
+  private async handleSubscriptionCreated(data: any) {
+    console.log('Subscription created:', data.id);
     // Create license in database
   }
 
-  private async handleSubscriptionUpdated(subscription: any) {
-    console.log('Subscription updated:', subscription.id);
+  private async handleSubscriptionUpdated(data: any) {
+    console.log('Subscription updated:', data.id);
     // Update license in database
   }
 
-  private async handleSubscriptionDeleted(subscription: any) {
-    console.log('Subscription deleted:', subscription.id);
+  private async handleSubscriptionCancelled(data: any) {
+    console.log('Subscription cancelled:', data.id);
     // Deactivate license in database
   }
 
-  private async handlePaymentSucceeded(invoice: any) {
-    console.log('Payment succeeded:', invoice.id);
+  private async handlePaymentSucceeded(data: any) {
+    console.log('Payment succeeded:', data.id);
     // Record payment in database
   }
 
-  private async handlePaymentFailed(invoice: any) {
-    console.log('Payment failed:', invoice.id);
+  private async handlePaymentFailed(data: any) {
+    console.log('Payment failed:', data.id);
     // Send notification to user
   }
 }
 
 // Singleton instance
-let dodoClient: DodoPaymentsClient | null = null;
+let lsClient: LemonSqueezyClient | null = null;
 
-export function getDodoPaymentsClient(): DodoPaymentsClient {
-  if (!dodoClient) {
-    dodoClient = new DodoPaymentsClient({
-      apiKey: process.env.DODO_API_KEY || '',
-      webhookSecret: process.env.DODO_WEBHOOK_SECRET || '',
-      baseUrl: process.env.DODO_BASE_URL || 'https://api.dodo.dev',
+export function getLemonSqueezyClient(): LemonSqueezyClient {
+  if (!lsClient) {
+    lsClient = new LemonSqueezyClient({
+      apiKey: process.env.LEMONSQUEEZY_API_KEY || '',
+      webhookSecret: process.env.LEMONSQUEEZY_WEBHOOK_SECRET || '',
+      storeId: process.env.LEMONSQUEEZY_STORE_ID || '',
+      baseUrl: 'https://api.lemonsqueezy.com/v1',
     });
   }
-  return dodoClient;
+  return lsClient;
 }

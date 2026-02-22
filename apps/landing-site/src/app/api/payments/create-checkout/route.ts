@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import jwt from 'jsonwebtoken';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -13,8 +12,20 @@ const PLAN_PRICES = {
   enterprise:   { monthly: 0, yearly: 0 },           // custom — contact sales
 };
 
-const DODO_API_URL = process.env.DODO_API_URL || 'https://api.dodopayments.com';
-const DODO_API_KEY = process.env.DODO_API_KEY;
+// Lemon Squeezy variant IDs — set these in env once you create products in Lemon Squeezy dashboard
+const LEMONSQUEEZY_VARIANT_IDS: Record<string, Record<string, string>> = {
+  professional: {
+    monthly: process.env.LS_VARIANT_PRO_MONTHLY || '',
+    yearly:  process.env.LS_VARIANT_PRO_YEARLY || '',
+  },
+  team: {
+    monthly: process.env.LS_VARIANT_TEAM_MONTHLY || '',
+    yearly:  process.env.LS_VARIANT_TEAM_YEARLY || '',
+  },
+};
+
+const LEMONSQUEEZY_API_KEY = process.env.LEMONSQUEEZY_API_KEY;
+const LEMONSQUEEZY_STORE_ID = process.env.LEMONSQUEEZY_STORE_ID;
 
 export async function POST(request: NextRequest) {
   try {
@@ -64,42 +75,61 @@ export async function POST(request: NextRequest) {
 
     if (dbError) {
       console.error('Database error:', dbError);
-      // Continue even if session tracking fails
     }
 
-    // If Dodo Payments is configured, create a real checkout session
-    if (DODO_API_KEY) {
-      try {
-        const dodoResponse = await fetch(`${DODO_API_URL}/v1/checkout/sessions`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${DODO_API_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            amount: price,
-            currency: 'usd',
-            customer_email: email,
-            metadata: {
-              plan_type: planType,
-              billing_cycle: billingCycle,
-              session_id: sessionId,
-            },
-            success_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/subscribe/success?session_id=${sessionId}`,
-            cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/pricing`,
-          }),
-        });
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
-        if (dodoResponse.ok) {
-          const dodoData = await dodoResponse.json();
-          return NextResponse.json({
-            sessionId,
-            url: dodoData.url,
+    // If Lemon Squeezy is configured, create a real checkout
+    if (LEMONSQUEEZY_API_KEY && LEMONSQUEEZY_STORE_ID) {
+      const variantId = LEMONSQUEEZY_VARIANT_IDS[planType]?.[billingCycle];
+      
+      if (variantId) {
+        try {
+          const lsResponse = await fetch('https://api.lemonsqueezy.com/v1/checkouts', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${LEMONSQUEEZY_API_KEY}`,
+              'Content-Type': 'application/vnd.api+json',
+              'Accept': 'application/vnd.api+json',
+            },
+            body: JSON.stringify({
+              data: {
+                type: 'checkouts',
+                attributes: {
+                  checkout_data: {
+                    email: email || undefined,
+                    custom: {
+                      session_id: sessionId,
+                      user_id: userId || '',
+                      plan_type: planType,
+                      billing_cycle: billingCycle,
+                    },
+                  },
+                  product_options: {
+                    redirect_url: `${appUrl}/subscribe/success?session_id=${sessionId}`,
+                  },
+                },
+                relationships: {
+                  store: { data: { type: 'stores', id: LEMONSQUEEZY_STORE_ID } },
+                  variant: { data: { type: 'variants', id: variantId } },
+                },
+              },
+            }),
           });
+
+          if (lsResponse.ok) {
+            const lsData = await lsResponse.json();
+            const checkoutUrl = lsData.data?.attributes?.url;
+            if (checkoutUrl) {
+              return NextResponse.json({ sessionId, url: checkoutUrl });
+            }
+          } else {
+            const errText = await lsResponse.text();
+            console.error('Lemon Squeezy API error:', lsResponse.status, errText);
+          }
+        } catch (lsError) {
+          console.error('Lemon Squeezy checkout error:', lsError);
         }
-      } catch (dodoError) {
-        console.error('Dodo Payments error:', dodoError);
-        // Fall through to mock checkout
       }
     }
 
@@ -110,7 +140,7 @@ export async function POST(request: NextRequest) {
       sessionId,
       url: mockCheckoutUrl,
       mock: true,
-      message: 'Development mode: Using mock checkout',
+      message: 'Development mode: Using mock checkout. Set LEMONSQUEEZY_API_KEY for real payments.',
     });
 
   } catch (error) {

@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getDodoPaymentsClient } from '@/lib/payments/dodo';
+import { getLemonSqueezyClient } from '@/lib/payments/dodo';
 import { getUserFromRequest } from '@/lib/jwt-auth';
 
 /**
@@ -29,9 +29,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const dodo = getDodoPaymentsClient();
+    const ls = getLemonSqueezyClient();
     
-    const session = await dodo.createCheckoutSession({
+    const session = await ls.createCheckoutSession({
       userId: user.sub,
       email: user.email,
       planType,

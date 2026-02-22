@@ -30,7 +30,7 @@ export interface Payment {
   id: string;
   user_id: string;
   subscription_id: string | null;
-  payment_provider: 'dodo' | 'paypal' | 'razorpay';
+  payment_provider: 'lemonsqueezy' | 'paypal' | 'razorpay';
   provider_payment_id: string;
   amount: number;
   currency: string;

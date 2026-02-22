@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getDodoPaymentsClient } from '@/lib/payments/dodo';
+import { getLemonSqueezyClient } from '@/lib/payments/dodo';
 import { getUserFromRequest } from '@/lib/jwt-auth';
 
 /**
@@ -56,8 +56,8 @@ export async function DELETE(request: NextRequest) {
     }
 
     // In production, cancel via payment provider and update database
-    const dodo = getDodoPaymentsClient();
-    // await dodo.cancelSubscription(subscriptionId);
+    const ls = getLemonSqueezyClient();
+    // await ls.cancelSubscription(subscriptionId);
 
     return NextResponse.json({
       message: 'Subscription will be canceled at period end',

@@ -555,33 +555,47 @@ app.delete('/api/user/connections/:id', validateJwtMiddleware, async (req, res) 
 });
 
 // =============================================================================
-// PAYMENTS WEBHOOK (Dodo Payments)
+// PAYMENTS WEBHOOK (Lemon Squeezy)
 // =============================================================================
 
-app.post('/api/webhooks/dodo', async (req, res) => {
+app.post('/api/webhooks/lemonsqueezy', async (req, res) => {
   try {
-    const signature = req.headers['dodo-signature'];
-    // TODO: Verify webhook signature
+    const signature = req.headers['x-signature'];
+    const webhookSecret = process.env.LEMONSQUEEZY_WEBHOOK_SECRET;
+    
+    // Verify webhook signature
+    if (webhookSecret && signature) {
+      const crypto = await import('crypto');
+      const expectedSig = crypto.default
+        .createHmac('sha256', webhookSecret)
+        .update(JSON.stringify(req.body))
+        .digest('hex');
+      if (signature !== expectedSig) {
+        return res.status(401).json({ error: 'Invalid signature' });
+      }
+    }
 
     const event = req.body;
+    const eventName = event.meta?.event_name;
 
-    console.log('Received Dodo webhook:', event.type);
+    console.log('Received Lemon Squeezy webhook:', eventName);
 
-    switch (event.type) {
-      case 'payment.succeeded':
-        await handlePaymentSuccess(event.data);
+    switch (eventName) {
+      case 'order_created':
+        await handlePaymentSuccess(event.data?.attributes || {});
         break;
-      case 'payment.failed':
-        await handlePaymentFailure(event.data);
+      case 'subscription_payment_failed':
+        await handlePaymentFailure(event.data?.attributes || {});
         break;
-      case 'subscription.created':
-        await handleSubscriptionCreated(event.data);
+      case 'subscription_created':
+      case 'subscription_updated':
+        await handleSubscriptionCreated(event.data?.attributes || {});
         break;
-      case 'subscription.cancelled':
-        await handleSubscriptionCancelled(event.data);
+      case 'subscription_cancelled':
+        await handleSubscriptionCancelled(event.data?.attributes || {});
         break;
       default:
-        console.log('Unhandled event type:', event.type);
+        console.log('Unhandled event type:', eventName);
     }
 
     res.json({ received: true });
@@ -589,6 +603,11 @@ app.post('/api/webhooks/dodo', async (req, res) => {
     console.error('Webhook error:', error);
     res.status(500).json({ error: 'Webhook processing failed' });
   }
+});
+
+// Keep legacy route for backward compatibility
+app.post('/api/webhooks/dodo', (req, res) => {
+  res.redirect(307, '/api/webhooks/lemonsqueezy');
 });
 
 // =============================================================================
@@ -610,7 +629,7 @@ async function handlePaymentSuccess(paymentData) {
     .insert({
       user_id: paymentData.userId,
       subscription_id: paymentData.subscriptionId,
-      payment_provider: 'dodo',
+      payment_provider: 'lemonsqueezy',
       provider_payment_id: paymentData.id,
       amount: paymentData.amount,
       currency: paymentData.currency,
@@ -636,7 +655,7 @@ async function handleSubscriptionCreated(subscriptionData) {
       user_id: subscriptionData.userId,
       plan: subscriptionData.plan,
       status: 'active',
-      payment_provider: 'dodo',
+      payment_provider: 'lemonsqueezy',
       subscription_id: subscriptionData.id,
       amount: subscriptionData.amount,
       currency: subscriptionData.currency,

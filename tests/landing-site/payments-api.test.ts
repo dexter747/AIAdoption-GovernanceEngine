@@ -213,7 +213,7 @@ describe('POST /api/payments/create-checkout', () => {
     });
   });
 
-  describe('Dodo Payments Integration', () => {
+  describe('Lemon Squeezy Integration', () => {
     it('should construct correct API request', () => {
       const request = {
         amount: 4900,
@@ -245,7 +245,7 @@ describe('POST /api/payments/create-checkout', () => {
     it('should return sessionId and URL on success', () => {
       const response = {
         sessionId: 'session_12345',
-        url: 'https://checkout.dodopayments.com/session_12345',
+        url: 'https://checkout.lemonsqueezy.com/session_12345',
       };
 
       expect(response.sessionId).toBeDefined();
@@ -309,8 +309,8 @@ describe('POST /api/payments/webhook', () => {
     });
 
     it('should skip verification in development', () => {
-      const DODO_WEBHOOK_SECRET = undefined;
-      const shouldVerify = !!DODO_WEBHOOK_SECRET;
+      const LEMONSQUEEZY_WEBHOOK_SECRET = undefined;
+      const shouldVerify = !!LEMONSQUEEZY_WEBHOOK_SECRET;
 
       expect(shouldVerify).toBe(false);
     });

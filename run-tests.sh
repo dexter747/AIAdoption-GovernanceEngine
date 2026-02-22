@@ -92,7 +92,7 @@ echo ""
 echo "✅ Components Validated:"
 echo "  - MCP Servers: $MCP_COUNT/13"
 echo "  - LLM Providers: $LLM_COUNT/9"
-echo "  - Payment System: Dodo Payments only"
+echo "  - Payment System: Lemon Squeezy + PayPal"
 echo "  - Database Schema: v4 (payments)"
 echo ""
 

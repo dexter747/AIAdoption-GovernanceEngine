@@ -1,17 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
+import jwt from 'jsonwebtoken';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-const DODO_WEBHOOK_SECRET = process.env.DODO_WEBHOOK_SECRET;
+const LEMONSQUEEZY_WEBHOOK_SECRET = process.env.LEMONSQUEEZY_WEBHOOK_SECRET;
 const LICENSE_JWT_SECRET = process.env.LICENSE_JWT_SECRET || 'dev-secret-key';
 
 function generateLicenseKey(userId: string, tier: string, expiresInDays = 365): string {
-  const jwt = require('jsonwebtoken');
   const exp = Math.floor(Date.now() / 1000) + (expiresInDays * 24 * 60 * 60);
   
   return jwt.sign(
@@ -26,10 +26,10 @@ function generateLicenseKey(userId: string, tier: string, expiresInDays = 365): 
 }
 
 function verifyWebhookSignature(payload: string, signature: string): boolean {
-  if (!DODO_WEBHOOK_SECRET) return true; // Skip in development
+  if (!LEMONSQUEEZY_WEBHOOK_SECRET) return true; // Skip in development
   
   const expectedSignature = crypto
-    .createHmac('sha256', DODO_WEBHOOK_SECRET)
+    .createHmac('sha256', LEMONSQUEEZY_WEBHOOK_SECRET)
     .update(payload)
     .digest('hex');
     
@@ -42,10 +42,10 @@ function verifyWebhookSignature(payload: string, signature: string): boolean {
 export async function POST(request: NextRequest) {
   try {
     const payload = await request.text();
-    const signature = request.headers.get('x-dodo-signature') || '';
+    const signature = request.headers.get('x-signature') || '';
 
-    // Verify webhook signature
-    if (DODO_WEBHOOK_SECRET && !verifyWebhookSignature(payload, signature)) {
+    // Verify Lemon Squeezy webhook signature
+    if (LEMONSQUEEZY_WEBHOOK_SECRET && !verifyWebhookSignature(payload, signature)) {
       return NextResponse.json(
         { error: 'Invalid signature' },
         { status: 401 }
@@ -53,55 +53,52 @@ export async function POST(request: NextRequest) {
     }
 
     const event = JSON.parse(payload);
-    const eventType = event.type;
-    const eventData = event.data;
+    const eventType = event.meta?.event_name;
+    const eventData = event.data?.attributes;
+    const customData = event.meta?.custom_data || {};
 
-    console.log(`Webhook received: ${eventType}`, { eventId: event.id });
+    console.log(`Webhook received: ${eventType}`, { eventId: event.meta?.event_id });
 
     switch (eventType) {
-      case 'checkout.session.completed': {
-        const { session_id, customer_id, customer_email, metadata } = eventData;
-        const { plan_type, billing_cycle } = metadata || {};
+      case 'order_created': {
+        // Lemon Squeezy: one-time or first subscription payment completed
+        const customerEmail = eventData.user_email;
+        const { session_id, plan_type, billing_cycle, user_id } = customData;
 
         // Update payment session status
-        await supabase
-          .from('payment_sessions')
-          .update({ 
-            status: 'completed',
-            customer_id,
-            completed_at: new Date().toISOString(),
-          })
-          .eq('session_id', session_id);
+        if (session_id) {
+          await supabase
+            .from('payment_sessions')
+            .update({ 
+              status: 'completed',
+              completed_at: new Date().toISOString(),
+            })
+            .eq('session_id', session_id);
+        }
 
         // Create or get user
-        let userId = metadata?.user_id;
+        let userId = user_id;
         
-        if (!userId && customer_email) {
-          // Check if user exists
+        if (!userId && customerEmail) {
           const { data: existingUser } = await supabase
             .from('users')
             .select('id')
-            .eq('email', customer_email)
+            .eq('email', customerEmail)
             .single();
 
           if (existingUser) {
             userId = existingUser.id;
           } else {
-            // Create user (they'll need to set password later)
             const { data: newUser } = await supabase
               .from('users')
-              .insert({
-                email: customer_email,
-                plan: plan_type,
-              })
+              .insert({ email: customerEmail, plan: plan_type || 'professional' })
               .select()
               .single();
             userId = newUser?.id;
           }
         }
 
-        if (userId) {
-          // Calculate billing period
+        if (userId && plan_type) {
           const now = new Date();
           const periodEnd = new Date(now);
           if (billing_cycle === 'yearly') {
@@ -110,7 +107,6 @@ export async function POST(request: NextRequest) {
             periodEnd.setMonth(periodEnd.getMonth() + 1);
           }
 
-          // Create subscription
           const subscriptionId = `sub_${Date.now()}_${Math.random().toString(36).slice(2)}`;
           
           await supabase
@@ -118,15 +114,14 @@ export async function POST(request: NextRequest) {
             .insert({
               user_id: userId,
               subscription_id: subscriptionId,
-              customer_id,
               plan_type,
               billing_cycle,
               status: 'active',
               current_period_start: now.toISOString(),
               current_period_end: periodEnd.toISOString(),
+              payment_provider: 'lemonsqueezy',
             });
 
-          // Generate and store license
           const licenseKey = generateLicenseKey(userId, plan_type, billing_cycle === 'yearly' ? 365 : 30);
           const keyHash = crypto.createHash('sha256').update(licenseKey).digest('hex');
 
@@ -134,7 +129,7 @@ export async function POST(request: NextRequest) {
             .from('licenses')
             .insert({
               user_id: userId,
-              license_key: licenseKey.slice(0, 10) + '...' + licenseKey.slice(-4), // preview only
+              license_key: licenseKey.slice(0, 10) + '...' + licenseKey.slice(-4),
               key_hash: keyHash,
               tier: plan_type,
               is_active: true,
@@ -142,7 +137,6 @@ export async function POST(request: NextRequest) {
               expires_at: periodEnd.toISOString(),
             });
 
-          // Update user plan
           await supabase
             .from('users')
             .update({ plan: plan_type })
@@ -154,94 +148,82 @@ export async function POST(request: NextRequest) {
         break;
       }
 
-      case 'subscription.updated': {
-        const { subscription_id, status, current_period_end } = eventData;
+      case 'subscription_updated': {
+        const lsSubId = event.data?.id;
+        const status = eventData.status; // active, paused, cancelled, expired
+        const renewsAt = eventData.renews_at;
 
-        await supabase
-          .from('subscriptions')
-          .update({
-            status,
-            current_period_end,
-            updated_at: new Date().toISOString(),
-          })
-          .eq('subscription_id', subscription_id);
-
-        break;
-      }
-
-      case 'subscription.canceled': {
-        const { subscription_id } = eventData;
-
-        await supabase
-          .from('subscriptions')
-          .update({
-            status: 'canceled',
-            canceled_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          })
-          .eq('subscription_id', subscription_id);
-
-        // Optionally deactivate license at period end
-        break;
-      }
-
-      case 'invoice.payment_failed': {
-        const { subscription_id, invoice_id } = eventData;
-
-        await supabase
-          .from('subscriptions')
-          .update({
-            status: 'past_due',
-            updated_at: new Date().toISOString(),
-          })
-          .eq('subscription_id', subscription_id);
-
-        // Record failed payment
-        await supabase
-          .from('payments')
-          .insert({
-            subscription_id,
-            invoice_id,
-            status: 'failed',
-            created_at: new Date().toISOString(),
-          });
+        if (lsSubId) {
+          await supabase
+            .from('subscriptions')
+            .update({
+              status: status === 'active' ? 'active' : status,
+              current_period_end: renewsAt,
+              updated_at: new Date().toISOString(),
+            })
+            .eq('subscription_id', lsSubId);
+        }
 
         break;
       }
 
-      case 'invoice.paid': {
-        const { subscription_id, invoice_id, amount_paid, currency } = eventData;
+      case 'subscription_cancelled': {
+        const lsSubId = event.data?.id;
 
-        // Get subscription to find user
+        if (lsSubId) {
+          await supabase
+            .from('subscriptions')
+            .update({
+              status: 'canceled',
+              canceled_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+            })
+            .eq('subscription_id', lsSubId);
+        }
+
+        break;
+      }
+
+      case 'subscription_payment_success': {
+        const lsSubId = eventData.subscription_id;
+        const amount = eventData.total;
+        const currency = eventData.currency;
+
         const { data: subscription } = await supabase
           .from('subscriptions')
           .select('id, user_id')
-          .eq('subscription_id', subscription_id)
+          .eq('subscription_id', String(lsSubId))
           .single();
 
         if (subscription) {
-          // Record payment
           await supabase
             .from('payments')
             .insert({
               subscription_id: subscription.id,
               user_id: subscription.user_id,
-              invoice_id,
-              amount: amount_paid / 100, // Convert from cents
+              amount: amount / 100,
               currency,
               status: 'succeeded',
+              payment_provider: 'lemonsqueezy',
               paid_at: new Date().toISOString(),
             });
 
-          // Update subscription status if it was past_due
           await supabase
             .from('subscriptions')
-            .update({
-              status: 'active',
-              updated_at: new Date().toISOString(),
-            })
-            .eq('subscription_id', subscription_id);
+            .update({ status: 'active', updated_at: new Date().toISOString() })
+            .eq('subscription_id', String(lsSubId));
         }
+
+        break;
+      }
+
+      case 'subscription_payment_failed': {
+        const lsSubId = eventData.subscription_id;
+
+        await supabase
+          .from('subscriptions')
+          .update({ status: 'past_due', updated_at: new Date().toISOString() })
+          .eq('subscription_id', String(lsSubId));
 
         break;
       }

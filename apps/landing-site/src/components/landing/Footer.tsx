@@ -81,7 +81,7 @@ export function Footer() {
           </p>
           <div className="flex items-center gap-5 text-sm text-zinc-600">
             <div className="flex items-center gap-2.5 flex-wrap">
-              <span className="text-xs text-zinc-700 font-medium">Verified by Dodo Payments</span>
+              <span className="text-xs text-zinc-700 font-medium">PayPal & Lemon Squeezy</span>
             </div>
           </div>
         </div>

@@ -171,7 +171,7 @@ export function PricingSection() {
           </div>
           {/* Secure Payments */}
           <div className="flex items-center justify-center gap-3 flex-wrap">
-            <span className="text-xs text-zinc-600 font-medium">Secure Payments By Dodo Payments</span>
+            <span className="text-xs text-zinc-600 font-medium">Secure Payments via PayPal & Lemon Squeezy</span>
           </div>
         </div>
       </div>

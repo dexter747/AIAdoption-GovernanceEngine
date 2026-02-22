@@ -259,7 +259,7 @@ describe('Express Server', () => {
       { method: 'get', path: '/api/user/connections' },
       { method: 'post', path: '/api/user/connections' },
       { method: 'delete', path: '/api/user/connections/:id' },
-      { method: 'post', path: '/api/webhooks/dodo' },
+      { method: 'post', path: '/api/webhooks/lemonsqueezy' },
     ];
 
     test.each(endpoints)('has $method $path endpoint', ({ method, path: ep }) => {

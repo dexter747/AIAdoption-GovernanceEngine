@@ -86,7 +86,7 @@ function SecurePaymentsBadge() {
   return (
     <div className="flex items-center justify-center gap-2.5 flex-wrap">
       <span className="text-[11px] text-white/25 font-medium">Powered by</span>
-      <span className="text-[11px] text-white/35 font-medium">Dodo Payments</span>
+      <span className="text-[11px] text-white/35 font-medium">PayPal & Lemon Squeezy</span>
       <span className="text-white/20 text-[11px]">·</span>
       <span className="text-[11px] text-white/25">Secure checkout · Cancel anytime</span>
     </div>

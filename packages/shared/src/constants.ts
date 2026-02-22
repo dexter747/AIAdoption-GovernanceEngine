@@ -78,7 +78,7 @@ export const API_ENDPOINTS = {
   payments: {
     createSubscription: '/api/payments/create-subscription',
     webhooks: {
-      dodo: '/api/payments/webhooks/dodo',
+      lemonsqueezy: '/api/webhooks/lemonsqueezy',
       paypal: '/api/payments/webhooks/paypal',
       razorpay: '/api/payments/webhooks/razorpay',
     },

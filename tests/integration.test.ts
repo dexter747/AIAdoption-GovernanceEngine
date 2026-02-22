@@ -243,7 +243,7 @@ describe('Payment Flow Integration Tests', () => {
   describe('Webhook Endpoint', () => {
     it('should have webhook endpoint available (or skip if API not running)', async () => {
       try {
-        const response = await fetch(`${BASE_URL}/api/webhooks/dodo`, {
+        const response = await fetch(`${BASE_URL}/api/webhooks/lemonsqueezy`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -314,9 +314,9 @@ describe('End-to-End Workflow Tests', () => {
 
       const optionalComponents = [
         'apps/cloud-backend/src/app/api/payments/create-checkout/route.ts',
-        'apps/cloud-backend/src/app/api/webhooks/dodo/route.ts',
+        'apps/cloud-backend/src/app/api/webhooks/lemonsqueezy/route.ts',
         'apps/cloud-backend/src/app/api/subscription/route.ts',
-        'apps/cloud-backend/src/lib/payments/dodo.ts',
+        'apps/cloud-backend/src/lib/payments/lemonsqueezy.ts',
       ];
 
       // Check required components exist
