@@ -11,9 +11,15 @@ import supabase from '@/lib/supabase';
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-const GOOGLE_REDIRECT_URI =
-  process.env.GOOGLE_REDIRECT_URI ||
-  `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/auth/google/callback`;
+
+/** Derive redirect URI from the request itself (fallback if not in state) */
+function getRedirectUri(request: NextRequest): string {
+  const reqUrl = new URL(request.url);
+  const host =
+    request.headers.get('x-forwarded-host') || request.headers.get('host') || reqUrl.host;
+  const proto = request.headers.get('x-forwarded-proto') ?? reqUrl.protocol.replace(':', '');
+  return `${proto}://${host}/api/auth/google/callback`;
+}
 
 interface GoogleTokenResponse {
   access_token: string;
@@ -50,7 +56,7 @@ export async function GET(request: NextRequest) {
   }
 
   // Parse state
-  let stateData: { isDesktop?: boolean; callbackUrl?: string } = {};
+  let stateData: { isDesktop?: boolean; callbackUrl?: string; redirectUri?: string } = {};
   try {
     if (state) {
       stateData = JSON.parse(Buffer.from(state, 'base64url').toString());
@@ -58,6 +64,10 @@ export async function GET(request: NextRequest) {
   } catch {
     console.error('Failed to parse state');
   }
+
+  // Use the redirect URI stored in state (guaranteed to match what was sent to Google)
+  // Fall back to deriving from the current request if state is missing/old
+  const redirectUri = stateData.redirectUri || getRedirectUri(request);
 
   try {
     // Exchange code for tokens
@@ -68,7 +78,7 @@ export async function GET(request: NextRequest) {
         code,
         client_id: GOOGLE_CLIENT_ID!,
         client_secret: GOOGLE_CLIENT_SECRET!,
-        redirect_uri: GOOGLE_REDIRECT_URI,
+        redirect_uri: redirectUri,
         grant_type: 'authorization_code',
       }),
     });
