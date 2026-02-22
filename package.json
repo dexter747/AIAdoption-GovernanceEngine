@@ -6,28 +6,83 @@
   "description": "AI Adoption & Governance Engine - Desktop App + Cloud Backend",
   "scripts": {
     "kill-ports": "bash kill-ports.sh",
+
     "dev": "pnpm --parallel --stream --filter '!cloud-backend' run dev",
     "dev:landing": "pnpm --filter landing-site dev",
     "dev:admin": "pnpm --filter admin-dashboard dev",
     "dev:desktop": "pnpm --filter desktop-app dev",
     "dev:api": "pnpm --filter cloud-backend dev",
     "dev:express": "node apps/express-api/server.js",
+    "dev:all": "pnpm kill-ports && pnpm --parallel --stream run dev",
+
     "build": "pnpm --recursive run build",
     "build:landing": "pnpm --filter landing-site build",
     "build:admin": "pnpm --filter admin-dashboard build",
-    "build:desktop": "pnpm --filter desktop-app build",
+    "build:desktop": "bash scripts/build-desktop.sh",
     "build:backend": "pnpm --filter cloud-backend build",
+    "build:express": "echo 'Express API is plain JS — no build needed'",
+    "build:mcp": "bash scripts/build-all-mcp-servers.sh",
+
+    "desktop:build": "bash scripts/build-desktop.sh",
+    "desktop:build:mac": "bash scripts/build-desktop.sh --mac",
+    "desktop:build:win": "bash scripts/build-desktop.sh --win",
+    "desktop:build:linux": "bash scripts/build-desktop.sh --linux",
+    "desktop:build:all": "bash scripts/build-desktop.sh --all",
+    "desktop:deploy": "node scripts/deploy-desktop.js",
+    "desktop:deploy:mac": "node scripts/deploy-desktop.js --mac",
+    "desktop:deploy:win": "node scripts/deploy-desktop.js --win",
+    "desktop:deploy:all": "node scripts/deploy-desktop.js --all",
+
+    "app:update": "node scripts/update-downloads.js",
+    "app:update:dry": "node scripts/update-downloads.js --dry-run",
+
+    "db:up": "node scripts/db-up.js",
+    "db:up:check": "node scripts/db-up.js --check",
+    "db:down": "node scripts/db-down.js",
+    "db:down:force": "node scripts/db-down.js --force",
+    "db:down:dry": "node scripts/db-down.js --dry-run",
+    "db:migrate": "./scripts/migrate-database.sh",
+    "db:reset": "node scripts/db-down.js --force && node scripts/db-up.js",
+
+    "admin:seed": "node scripts/admin-seed.js",
+    "admin:seed:full": "node scripts/admin-seed.js --with-test-data",
+    "admin:seed:admin": "node scripts/admin-seed.js --admin-only",
+    "admin:delete": "node scripts/admin-delete.js",
+    "admin:delete:test": "node scripts/admin-delete.js --test-only",
+    "admin:delete:all": "node scripts/admin-delete.js --all",
+
+    "tsc": "tsc --noEmit",
+    "type-check": "pnpm --recursive run type-check",
     "lint": "pnpm --recursive run lint",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
-    "type-check": "pnpm --recursive run type-check",
+
+    "debug": "node scripts/debug-all.js",
+    "debug:unit": "node scripts/debug-all.js --unit",
+    "debug:integration": "node scripts/debug-all.js --integration",
+    "debug:express": "node scripts/debug-all.js --express",
+    "debug:desktop": "node scripts/debug-all.js --desktop",
+    "debug:admin": "node scripts/debug-all.js --admin",
+    "debug:landing": "node scripts/debug-all.js --landing",
+    "debug:types": "node scripts/debug-all.js --types",
+    "debug:coverage": "node scripts/debug-all.js --coverage",
     "test": "pnpm --recursive run test",
+
+    "health": "node scripts/health-check.js",
+    "health:verbose": "node scripts/health-check.js --verbose",
+
     "clean": "pnpm --recursive run clean && rm -rf node_modules",
+    "clean:builds": "rm -rf apps/*/dist apps/*/.next apps/desktop-app/release packages/*/dist",
+    "clean:all": "pnpm clean:builds && pnpm clean",
+
     "check": "./scripts/check-system.sh",
     "setup": "./scripts/setup-env.sh",
     "migrate": "./scripts/migrate-database.sh",
     "start-dev": "./scripts/start-dev.sh",
     "test-payment": "./scripts/test-payment-flow.sh",
-    "build-mcp": "./scripts/build-all-mcp-servers.sh"
+
+    "deploy:landing": "pnpm build:landing && cd apps/landing-site && pnpx vercel --prod",
+    "deploy:admin": "pnpm build:admin && cd apps/admin-dashboard && pnpx vercel --prod",
+    "deploy:all": "pnpm deploy:landing && pnpm deploy:admin"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",

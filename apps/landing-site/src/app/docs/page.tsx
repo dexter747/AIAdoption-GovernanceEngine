@@ -28,7 +28,7 @@ const downloads: DownloadInfo[] = [
     icon: Monitor,
     version: '1.2.0',
     size: '89 MB',
-    downloadUrl: 'https://res.cloudinary.com/velanova/raw/upload/v1/releases/AINextus-Setup-1.2.0.exe',
+    downloadUrl: 'https://res.cloudinary.com/de1fjyofa/raw/upload/velanova/releases/latest/Velanova-Setup.exe',
     requirements: ['Windows 10 or later', '64-bit processor', '4 GB RAM minimum', '500 MB disk space'],
   },
   {
@@ -37,7 +37,7 @@ const downloads: DownloadInfo[] = [
     icon: Apple,
     version: '1.2.0',
     size: '95 MB',
-    downloadUrl: 'https://res.cloudinary.com/velanova/raw/upload/v1/releases/AINextus-1.2.0.dmg',
+    downloadUrl: 'https://res.cloudinary.com/de1fjyofa/raw/upload/velanova/releases/latest/Velanova.dmg',
     requirements: ['macOS 11 (Big Sur) or later', 'Apple Silicon or Intel', '4 GB RAM minimum', '500 MB disk space'],
   },
   {
@@ -46,7 +46,7 @@ const downloads: DownloadInfo[] = [
     icon: Terminal,
     version: '1.2.0',
     size: '92 MB',
-    downloadUrl: 'https://res.cloudinary.com/velanova/raw/upload/v1/releases/AINextus-1.2.0.AppImage',
+    downloadUrl: 'https://res.cloudinary.com/de1fjyofa/raw/upload/velanova/releases/latest/Velanova.AppImage',
     requirements: ['Ubuntu 20.04+, Fedora 34+, or similar', '64-bit processor', '4 GB RAM minimum', '500 MB disk space'],
   },
 ];

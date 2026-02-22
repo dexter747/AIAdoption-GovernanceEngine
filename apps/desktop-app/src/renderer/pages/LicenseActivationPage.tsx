@@ -163,7 +163,7 @@ export default function LicenseActivationPage() {
                <p className="text-[12px] font-medium text-white/60">Upgrade to Pro</p>
                <p className="text-[10.5px] text-white/30">Unlock all AI providers, MCP, and advanced features.</p>
              </div>
-             <button onClick={() => window.electron?.system.openExternal('https://domain.com/pricing')}
+             <button onClick={() => window.electron?.system.openExternal('https://velanova.ai/pricing')}
                className="flex items-center gap-1 text-[11px] text-white/40 hover:text-white/60 transition-colors flex-shrink-0">
                View plans <ExternalLink className="w-3 h-3" />
              </button>
@@ -211,7 +211,7 @@ export default function LicenseActivationPage() {
              <div>
                <p className="text-[12px] font-medium text-white/50">Free plan active</p>
                <p className="text-[10.5px] text-white/30 mt-0.5">Use Velanova with limited features, or
-                 <button onClick={() => window.electron?.system.openExternal('https://domain.com/pricing')}
+                 <button onClick={() => window.electron?.system.openExternal('https://velanova.ai/pricing')}
                    className="ml-1 text-white/40 hover:text-white/60 underline underline-offset-2 transition-colors">purchase a license
                  </button>
                </p>

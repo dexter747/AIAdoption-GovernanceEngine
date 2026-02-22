@@ -1,19 +1,19 @@
-import { Check, ExternalLink, Sparkles, Building2, Rocket } from 'lucide-react';
+import { Check, ExternalLink, Sparkles, Building2, Rocket, Users } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 const plans = [
   {
-    name: 'Starter',
+    name: 'Free Trial',
     icon: Rocket,
     price: '$0',
-    period: '/ 14-day trial',
+    period: '/ 14 days',
     description: 'Perfect for trying out the platform',
     features: [
       '1 device license',
       '100 queries per month',
-      'All AI model providers',
+      'GPT-4o Mini & Groq models',
       'Basic database connectors',
-      'Email support',
+      'Community support',
       '7-day data retention',
     ],
     cta: 'Download Free',
@@ -23,24 +23,42 @@ const plans = [
   {
     name: 'Professional',
     icon: Sparkles,
-    price: '$199',
-    period: '/ month per user',
-    description: 'For teams that need unlimited power',
+    price: '$49',
+    period: '/ month',
+    description: 'For individuals and power users',
     features: [
-      'Up to 10 device licenses',
-      'Unlimited queries',
-      'All 64+ system connectors',
-      'All AI model providers',
-      'Advanced analytics & dashboards',
-      'Custom workflows & automation',
-      'Priority support (4h SLA)',
-      'API access & webhooks',
-      '90-day data retention',
-      'SSO integration',
+      'Unlimited AI queries',
+      'Unlimited DB connections',
+      'All AI models — GPT-5, Claude, Gemini, Grok',
+      'BYOK — bring your own API keys',
+      'Full chat history',
+      'File attachments & context',
+      'Priority email support',
+      'Early feature access',
     ],
     cta: 'Start 14-Day Trial',
-    ctaAction: 'subscribe',
+    ctaAction: 'subscribe-professional',
     highlighted: true,
+  },
+  {
+    name: 'Team',
+    icon: Users,
+    price: '$199',
+    period: '/ month',
+    description: 'Everything in Pro plus team features',
+    features: [
+      'Everything in Professional',
+      'Up to 10 team members',
+      'Shared connections & contexts',
+      'Team chat history & analytics',
+      'Admin controls & permissions',
+      'Dedicated Slack support',
+      'Custom AI system prompts',
+      'SSO integration',
+    ],
+    cta: 'Start Team Trial',
+    ctaAction: 'subscribe-team',
+    highlighted: false,
   },
   {
     name: 'Enterprise',
@@ -49,16 +67,14 @@ const plans = [
     period: '',
     description: 'For organisations with complex needs',
     features: [
-      'Unlimited device licenses',
-      'Unlimited everything',
-      'All Professional features',
+      'Unlimited members & connections',
+      'All Team features',
       'On-premise / air-gapped deployment',
-      'White-label & custom branding',
+      'SSO / SAML / LDAP',
       'Dedicated account manager',
       '24/7 phone support (1h SLA)',
-      'Custom integrations & development',
-      'Unlimited data retention',
-      'SLA guarantees & training',
+      'Custom integrations & API',
+      'Audit logs & compliance',
     ],
     cta: 'Contact Sales',
     ctaAction: 'contact',
@@ -69,10 +85,10 @@ const plans = [
 function SecurePaymentsBadge() {
   return (
     <div className="flex items-center justify-center gap-2.5 flex-wrap">
-      <span className="text-[11px] text-white/25 font-medium">Secure Payments By</span>
-      <img src="/paypal.svg" alt="PayPal" className="h-5 object-contain opacity-50 hover:opacity-80 transition-opacity" />
-      <span className="text-white/20 text-[11px]">&amp;</span>
-      <img src="/lemonsqueezy.svg" alt="Lemon Squeezy" className="h-4 object-contain opacity-50 hover:opacity-80 transition-opacity" />
+      <span className="text-[11px] text-white/25 font-medium">Powered by</span>
+      <span className="text-[11px] text-white/35 font-medium">Dodo Payments</span>
+      <span className="text-white/20 text-[11px]">·</span>
+      <span className="text-[11px] text-white/25">Secure checkout · Cancel anytime</span>
     </div>
   );
 }
@@ -91,7 +107,7 @@ export default function PricingPage() {
 
       <div className="flex-1 overflow-auto bg-[#0b0b0b] p-6">
         {/* Plans grid */}
-        <div className="grid grid-cols-3 gap-4 max-w-5xl">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl">
           {plans.map(plan => {
             const Icon = plan.icon;
             return (
@@ -132,7 +148,8 @@ export default function PricingPage() {
                 <button
                   onClick={() => {
                     if (plan.ctaAction === 'download') open('https://velanova.ai/download');
-                    else if (plan.ctaAction === 'subscribe') open('https://velanova.ai/subscribe?plan=pro');
+                    else if (plan.ctaAction === 'subscribe-professional') open('https://velanova.ai/subscribe?plan=professional');
+                    else if (plan.ctaAction === 'subscribe-team') open('https://velanova.ai/subscribe?plan=team');
                     else open('https://velanova.ai/contact');
                   }}
                   className={cn('w-full py-2 rounded-[6px] text-[12px] font-medium transition-all flex items-center justify-center gap-1.5',

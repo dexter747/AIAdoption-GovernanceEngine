@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import {
- Database, Plus, Trash2,
+ Database, Plus, Trash2, X,
  Loader2, RefreshCw,
  Search, Grid3x3, List, Shield,
  Zap, HardDrive, Warehouse,
  Building2, Briefcase, Users, Heart, Truck,
  Banknote, ShoppingCart, Radio, FileText, Landmark, Monitor,
+ CheckCircle,
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { CONNECTION_LIBRARY as CONNECTION_TYPES } from '../config/connection-types';
@@ -53,6 +54,10 @@ export default function ConnectionsDashboard() {
  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
  const [selectedType, setSelectedType] = useState<string | null>(null);
  const [testingConnection, setTestingConnection] = useState<string | null>(null);
+ const [showAddModal, setShowAddModal] = useState(false);
+ const [addForm, setAddForm] = useState({ name: '', host: '', port: '', database: '', username: '', password: '', ssl: false });
+ const [addLoading, setAddLoading] = useState(false);
+ const [addError, setAddError] = useState<string | null>(null);
 
  useEffect(() => {
  loadConnections();
@@ -284,22 +289,142 @@ export default function ConnectionsDashboard() {
  </p>
  <div className="grid gap-2 grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8">
  {filteredTypes.map(([key, config]) => (
- <button key={key} onClick={() => setSelectedType(key)}
- className={cn(
- 'group flex flex-col items-start gap-2 p-3 rounded-lg border transition-all text-left',
- selectedType === key
- ? 'border-white/[0.18] bg-white/[0.06]'
- : 'border-white/[0.06] bg-[#111] hover:bg-[#151515] hover:border-white/[0.1]'
- )}>
- <ConnectionIcon logo={config.logo} icon={config.icon} color={config.color} bgColor={config.bgColor} size="sm"
- className="!w-8 !h-8 rounded-[7px] shadow-none" />
- <p className="text-[11.5px] font-medium text-white/70 leading-tight">{config.name}</p>
- </button>
- ))}
- </div>
- </div>
+     <button key={key} onClick={() => {
+       setSelectedType(key);
+       setAddForm({ name: `My ${config.name}`, host: '', port: '', database: '', username: '', password: '', ssl: false });
+       setAddError(null);
+       setShowAddModal(true);
+     }}
+     className={cn(
+     'group flex flex-col items-start gap-2 p-3 rounded-lg border transition-all text-left',
+     selectedType === key
+     ? 'border-white/[0.18] bg-white/[0.06]'
+     : 'border-white/[0.06] bg-[#111] hover:bg-[#151515] hover:border-white/[0.1]'
+     )}>
+     <ConnectionIcon logo={config.logo} icon={config.icon} color={config.color} bgColor={config.bgColor} size="sm"
+     className="!w-8 !h-8 rounded-[7px] shadow-none" />
+     <p className="text-[11.5px] font-medium text-white/70 leading-tight">{config.name}</p>
+     </button>
+     ))}
+     </div>
+     </div>
 
- </div>
- </div>
- );
-}
+     </div>
+
+     {/* ── Add Connection Modal ────────────────────────── */}
+     {showAddModal && selectedType && (() => {
+       const ct = CONNECTION_TYPES[selectedType as keyof typeof CONNECTION_TYPES];
+       return (
+         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+           <div className="w-full max-w-md rounded-xl border border-white/[0.10] bg-[#111] shadow-2xl p-6">
+             <div className="flex items-center justify-between mb-5">
+               <div className="flex items-center gap-3">
+                 {ct && <ConnectionIcon logo={ct.logo} icon={ct.icon} color={ct.color} bgColor={ct.bgColor} size="sm" />}
+                 <div>
+                   <h2 className="text-[14px] font-medium text-white">Add {ct?.name || selectedType}</h2>
+                   <p className="text-[11px] text-white/35">Enter connection details</p>
+                 </div>
+               </div>
+               <button onClick={() => setShowAddModal(false)} className="p-1.5 rounded-lg hover:bg-white/[0.06] text-white/30 hover:text-white/60 transition-all">
+                 <X className="w-4 h-4" />
+               </button>
+             </div>
+
+             {addError && (
+               <div className="mb-4 flex items-center gap-2 text-[11px] text-red-400/80 px-3 py-2 rounded-[5px] border border-red-500/20 bg-red-950/20">
+                 <X className="w-3.5 h-3.5 flex-shrink-0" />{addError}
+               </div>
+             )}
+
+             <div className="space-y-3">
+               <div>
+                 <label className="block text-[10.5px] font-medium text-white/40 uppercase tracking-wider mb-1">Name</label>
+                 <input type="text" value={addForm.name} onChange={e => setAddForm(f => ({ ...f, name: e.target.value }))}
+                   className="input-desktop w-full" placeholder="My Database" />
+               </div>
+               <div className="grid grid-cols-3 gap-2">
+                 <div className="col-span-2">
+                   <label className="block text-[10.5px] font-medium text-white/40 uppercase tracking-wider mb-1">Host</label>
+                   <input type="text" value={addForm.host} onChange={e => setAddForm(f => ({ ...f, host: e.target.value }))}
+                     className="input-desktop w-full" placeholder="localhost" />
+                 </div>
+                 <div>
+                   <label className="block text-[10.5px] font-medium text-white/40 uppercase tracking-wider mb-1">Port</label>
+                   <input type="text" value={addForm.port} onChange={e => setAddForm(f => ({ ...f, port: e.target.value }))}
+                     className="input-desktop w-full" placeholder="5432" />
+                 </div>
+               </div>
+               <div>
+                 <label className="block text-[10.5px] font-medium text-white/40 uppercase tracking-wider mb-1">Database</label>
+                 <input type="text" value={addForm.database} onChange={e => setAddForm(f => ({ ...f, database: e.target.value }))}
+                   className="input-desktop w-full" placeholder="mydb" />
+               </div>
+               <div className="grid grid-cols-2 gap-2">
+                 <div>
+                   <label className="block text-[10.5px] font-medium text-white/40 uppercase tracking-wider mb-1">Username</label>
+                   <input type="text" value={addForm.username} onChange={e => setAddForm(f => ({ ...f, username: e.target.value }))}
+                     className="input-desktop w-full" placeholder="admin" />
+                 </div>
+                 <div>
+                   <label className="block text-[10.5px] font-medium text-white/40 uppercase tracking-wider mb-1">Password</label>
+                   <input type="password" value={addForm.password} onChange={e => setAddForm(f => ({ ...f, password: e.target.value }))}
+                     className="input-desktop w-full" placeholder="••••••" />
+                 </div>
+               </div>
+               <label className="flex items-center gap-2 cursor-pointer">
+                 <input type="checkbox" checked={addForm.ssl} onChange={e => setAddForm(f => ({ ...f, ssl: e.target.checked }))}
+                   className="w-3.5 h-3.5 rounded border-white/20 bg-white/[0.05] accent-emerald-500" />
+                 <span className="text-[11px] text-white/50">Use SSL/TLS</span>
+               </label>
+             </div>
+
+             <div className="flex items-center gap-2 mt-5">
+               <button onClick={() => setShowAddModal(false)}
+                 className="flex-1 h-8 rounded-[5px] text-[11px] font-medium border border-white/[0.08] text-white/50 hover:bg-white/[0.04] transition-all">
+                 Cancel
+               </button>
+               <button
+                 disabled={addLoading || !addForm.name.trim()}
+                 onClick={async () => {
+                   setAddLoading(true);
+                   setAddError(null);
+                   try {
+                     const config = {
+                       name: addForm.name,
+                       type: selectedType,
+                       host: addForm.host || undefined,
+                       port: addForm.port ? parseInt(addForm.port, 10) : undefined,
+                       database: addForm.database || undefined,
+                       username: addForm.username || undefined,
+                       password: addForm.password || undefined,
+                       ssl: addForm.ssl,
+                     };
+                     // Try MCP first, fall back to Express
+                     try {
+                       await window.electron.mcp?.addConnection?.(config);
+                     } catch {
+                       await window.electron.express?.addUserConnection?.(
+                         config.name,
+                         config.type,
+                         { host: config.host, port: config.port, database: config.database, username: config.username, password: config.password, ssl: config.ssl },
+                       );
+                     }
+                     setShowAddModal(false);
+                     setSelectedType(null);
+                     loadConnections();
+                   } catch (err: any) {
+                     setAddError(err?.message || 'Failed to add connection');
+                   } finally {
+                     setAddLoading(false);
+                   }
+                 }}
+                 className="flex-1 h-8 rounded-[5px] text-[11px] font-medium bg-white/[0.10] text-white/80 hover:bg-white/[0.16] flex items-center justify-center gap-1.5 transition-all disabled:opacity-40"
+               >
+                 {addLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Plus className="w-3 h-3" />}
+                 {addLoading ? 'Adding…' : 'Add Connection'}
+               </button>
+             </div>
+           </div>
+         </div>
+       );
+     })()}

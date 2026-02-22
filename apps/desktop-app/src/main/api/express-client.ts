@@ -429,6 +429,32 @@ export class ExpressClient {
     return await response.json();
   }
 
+  // Cancel subscription
+  async cancelSubscription(userId: string): Promise<any> {
+    const response = await fetch(`${this.baseURL}/api/subscriptions/${userId}/cancel`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+    });
+    if (!response.ok) {
+      const error = (await response.json()) as { message?: string };
+      throw new Error(error.message || 'Failed to cancel subscription');
+    }
+    return await response.json();
+  }
+
+  // Reactivate subscription
+  async reactivateSubscription(userId: string): Promise<any> {
+    const response = await fetch(`${this.baseURL}/api/subscriptions/${userId}/reactivate`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+    });
+    if (!response.ok) {
+      const error = (await response.json()) as { message?: string };
+      throw new Error(error.message || 'Failed to reactivate subscription');
+    }
+    return await response.json();
+  }
+
   // Update configuration
   updateConfig(config: Partial<ExpressClientConfig>) {
     if (config.baseURL) this.baseURL = config.baseURL;

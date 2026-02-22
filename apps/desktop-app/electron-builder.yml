@@ -37,6 +37,9 @@ mac:
     - from: "node_modules/@modelcontextprotocol"
       to: "mcp-servers"
       filter: ["**/*"]
+    - from: "../../packages/mcp-servers"
+      to: "mcp-servers-custom"
+      filter: ["*/dist/**", "*/package.json"]
 
 dmg:
   contents:
@@ -61,6 +64,9 @@ win:
     - from: "node_modules/@modelcontextprotocol"
       to: "mcp-servers"
       filter: ["**/*"]
+    - from: "../../packages/mcp-servers"
+      to: "mcp-servers-custom"
+      filter: ["*/dist/**", "*/package.json"]
 
 nsis:
   oneClick: false
@@ -89,6 +95,9 @@ linux:
     - from: "node_modules/@modelcontextprotocol"
       to: "mcp-servers"
       filter: ["**/*"]
+    - from: "../../packages/mcp-servers"
+      to: "mcp-servers-custom"
+      filter: ["*/dist/**", "*/package.json"]
 
 appImage:
   license: LICENSE

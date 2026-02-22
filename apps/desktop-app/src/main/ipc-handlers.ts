@@ -746,7 +746,8 @@ ipcMain.handle('payments:create-checkout', async (_event, params) => {
     const baseUrl = isDev 
       ? (process.env.LANDING_SITE_URL || 'http://localhost:3000')
       : (process.env.LANDING_SITE_URL || 'https://velanova.com');
-    const checkoutUrl = `${baseUrl}/subscribe?plan=${params.plan}`;
+    const billing = params.billing || 'monthly';
+    const checkoutUrl = `${baseUrl}/subscribe?plan=${params.plan}&billing=${billing}`;
     shell.openExternal(checkoutUrl);
     return { success: true, checkoutUrl };
   } catch (error: any) {
@@ -759,9 +760,8 @@ ipcMain.handle('subscription:cancel', async () => {
     const userId = await settingsManager.get('userId');
     if (!userId) throw new Error('User not authenticated');
     
-    // TODO: Implement cancel subscription via API
-    console.log('Cancelling subscription for user:', userId);
-    return { success: true };
+    const result = await expressClient.cancelSubscription(userId);
+    return { success: true, ...result };
   } catch (error: any) {
     throw new Error(`Failed to cancel subscription: ${error.message}`);
   }
@@ -772,9 +772,8 @@ ipcMain.handle('subscription:reactivate', async () => {
     const userId = await settingsManager.get('userId');
     if (!userId) throw new Error('User not authenticated');
     
-    // TODO: Implement reactivate subscription via API
-    console.log('Reactivating subscription for user:', userId);
-    return { success: true };
+    const result = await expressClient.reactivateSubscription(userId);
+    return { success: true, ...result };
   } catch (error: any) {
     throw new Error(`Failed to reactivate subscription: ${error.message}`);
   }

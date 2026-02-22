@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 // ─── Pricing Plans ────────────────────────────────────────────────────────────
 const PLANS = [
@@ -233,6 +234,7 @@ function PlanCard({
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 export default function SubscriptionPage() {
+  const navigate = useNavigate();
   const [billing, setBilling] = useState<'monthly' | 'yearly'>('monthly');
   const [currentPlan, setCurrentPlan] = useState<PlanId | null>(null);
   const [isLoading, setIsLoading] = useState<string | null>(null);
@@ -493,7 +495,7 @@ export default function SubscriptionPage() {
               directly to your provider account.
             </p>
             <button
-              onClick={() => { window.location.hash = '#/settings/api-keys'; }}
+              onClick={() => navigate('/settings/api-keys')}
               className="mt-3 flex items-center gap-1.5 text-[13px] text-zinc-300 hover:text-white transition-colors"
             >
               Manage API Keys <ArrowRight className="w-3.5 h-3.5" />

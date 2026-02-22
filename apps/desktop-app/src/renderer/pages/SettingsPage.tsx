@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Key, Bell, Database, Shield } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import { Key, Bell, Database, Shield, Loader2, CheckCircle, Download } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 function Toggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
@@ -15,10 +15,19 @@ function Toggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
   );
 }
 
+interface ConnectionOption {
+  id: string;
+  name: string;
+  type: string;
+}
+
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('general');
+  const [loading, setLoading] = useState(true);
+  const [saved, setSaved] = useState(false);
+  const [connections, setConnections] = useState<ConnectionOption[]>([]);
   const [settings, setSettings] = useState({
-    defaultDatabase: 'production',
+    defaultDatabase: '',
     autoConnect: true,
     saveHistory: true,
     apiProvider: 'openai',
@@ -34,11 +43,139 @@ export default function SettingsPage() {
     { id: 'security',      name: 'Security',      icon: Shield },
   ];
 
+  // Load settings + connections on mount
+  useEffect(() => {
+    (async () => {
+      try {
+        setLoading(true);
+        const [allSettings, conns] = await Promise.all([
+          window.electron.settings?.getAll?.(),
+          window.electron.mcp?.getAllConnections?.()
+            .catch(() => window.electron.express?.getUserConnections?.())
+            .catch(() => []),
+        ]);
+
+        if (allSettings && typeof allSettings === 'object') {
+          setSettings(prev => ({
+            ...prev,
+            defaultDatabase: (allSettings as any).defaultDatabase ?? prev.defaultDatabase,
+            autoConnect: (allSettings as any).autoConnect ?? prev.autoConnect,
+            saveHistory: (allSettings as any).saveHistory ?? prev.saveHistory,
+            apiProvider: (allSettings as any).apiProvider ?? prev.apiProvider,
+            apiKey: (allSettings as any).apiKey ?? prev.apiKey,
+            notifications: (allSettings as any).notifications ?? prev.notifications,
+            soundEffects: (allSettings as any).soundEffects ?? prev.soundEffects,
+          }));
+        }
+
+        const connsArray = Array.isArray(conns) ? conns : (conns as any)?.data || [];
+        const mapped: ConnectionOption[] = connsArray.map((c: any) => ({
+          id: c.id,
+          name: c.name || c.type || 'Unknown',
+          type: c.type || 'unknown',
+        }));
+        setConnections(mapped);
+        if (mapped.length > 0 && !(allSettings as any)?.defaultDatabase) {
+          setSettings(prev => ({ ...prev, defaultDatabase: mapped[0].id }));
+        }
+      } catch (err) {
+        console.error('Failed to load settings:', err);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  // Persist a single setting
+  const persist = useCallback(async (key: string, value: any) => {
+    try {
+      await window.electron.settings?.set?.(key, value);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 1500);
+    } catch (err) {
+      console.error('Failed to save setting:', key, err);
+    }
+  }, []);
+
+  // Update state + persist
+  const updateSetting = useCallback((key: string, value: any) => {
+    setSettings(prev => ({ ...prev, [key]: value }));
+    persist(key, value);
+  }, [persist]);
+
+  // Clear all data
+  const handleClearData = async () => {
+    if (!confirm('This will remove all connections, history, and settings. Continue?')) return;
+    try {
+      // Clear settings
+      const keys = ['defaultDatabase', 'autoConnect', 'saveHistory', 'apiProvider', 'apiKey', 'notifications', 'soundEffects'];
+      for (const key of keys) {
+        await window.electron.settings?.set?.(key, null);
+      }
+      // Reset state
+      setSettings({
+        defaultDatabase: '',
+        autoConnect: true,
+        saveHistory: true,
+        apiProvider: 'openai',
+        apiKey: '',
+        notifications: true,
+        soundEffects: false,
+      });
+      alert('All stored data has been cleared.');
+    } catch (err) {
+      console.error('Failed to clear data:', err);
+      alert('Failed to clear data. Check the console for details.');
+    }
+  };
+
+  // Export data as JSON
+  const handleExportData = async () => {
+    try {
+      const allSettings = await window.electron.settings?.getAll?.();
+      const conversations = await window.electron.chat?.getAllConversations?.().catch(() => []);
+      const connections = await window.electron.mcp?.getAllConnections?.().catch(() => []);
+      const contexts = await window.electron.context?.list?.().catch(() => []);
+
+      const exportData = {
+        exportDate: new Date().toISOString(),
+        settings: allSettings,
+        conversations,
+        connections,
+        contexts,
+      };
+
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `velanova-export-${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Failed to export data:', err);
+      alert('Failed to export data. Check the console for details.');
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="h-full flex items-center justify-center bg-[#0b0b0b]">
+        <Loader2 className="w-5 h-5 text-white/30 animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="h-full flex flex-col overflow-hidden">
       {/* Toolbar */}
       <div className="toolbar app-region-drag">
         <h1 className="text-[13px] font-medium text-white/80 app-region-no-drag select-none">Settings</h1>
+        {saved && (
+          <span className="ml-3 flex items-center gap-1 text-[11px] text-emerald-400/70 app-region-no-drag">
+            <CheckCircle className="w-3 h-3" /> Saved
+          </span>
+        )}
         <div className="w-px h-4 bg-white/[0.08] mx-3" />
         <div className="flex items-center gap-0.5 app-region-no-drag">
           {tabs.map(tab => (
@@ -59,14 +196,19 @@ export default function SettingsPage() {
             <>
               <div>
                 <label className="block text-[11px] font-medium text-white/40 uppercase tracking-wider mb-1.5">Default Database</label>
-                <select
-                  value={settings.defaultDatabase}
-                  onChange={e => setSettings({ ...settings, defaultDatabase: e.target.value })}
-                  className="input-desktop w-full"
-                >
-                  <option value="production">Production DB</option>
-                  <option value="analytics">Analytics DB</option>
-                </select>
+                {connections.length === 0 ? (
+                  <p className="text-[12px] text-white/30">No connections — add one in the Connections page</p>
+                ) : (
+                  <select
+                    value={settings.defaultDatabase}
+                    onChange={e => updateSetting('defaultDatabase', e.target.value)}
+                    className="input-desktop w-full"
+                  >
+                    {connections.map(c => (
+                      <option key={c.id} value={c.id}>{c.name} ({c.type})</option>
+                    ))}
+                  </select>
+                )}
               </div>
               <div className="rounded-lg border border-white/[0.06] overflow-hidden">
                 {([
@@ -78,7 +220,7 @@ export default function SettingsPage() {
                       <p className="text-[12px] font-medium text-white/70">{label}</p>
                       <p className="text-[10.5px] text-white/30">{desc}</p>
                     </div>
-                    <Toggle on={settings[key]} onToggle={() => setSettings({ ...settings, [key]: !settings[key] })} />
+                    <Toggle on={settings[key]} onToggle={() => updateSetting(key, !settings[key])} />
                   </div>
                 ))}
               </div>
@@ -91,12 +233,18 @@ export default function SettingsPage() {
                 <label className="block text-[11px] font-medium text-white/40 uppercase tracking-wider mb-1.5">AI Provider</label>
                 <select
                   value={settings.apiProvider}
-                  onChange={e => setSettings({ ...settings, apiProvider: e.target.value })}
+                  onChange={e => updateSetting('apiProvider', e.target.value)}
                   className="input-desktop w-full"
                 >
                   <option value="openai">OpenAI (GPT-4)</option>
                   <option value="anthropic">Anthropic (Claude)</option>
                   <option value="google">Google (Gemini)</option>
+                  <option value="groq">Groq</option>
+                  <option value="xai">xAI (Grok)</option>
+                  <option value="mistral">Mistral</option>
+                  <option value="deepseek">DeepSeek</option>
+                  <option value="cohere">Cohere</option>
+                  <option value="perplexity">Perplexity</option>
                   <option value="ollama">Ollama (Local)</option>
                 </select>
               </div>
@@ -105,7 +253,10 @@ export default function SettingsPage() {
                 <input
                   type="password"
                   value={settings.apiKey}
-                  onChange={e => setSettings({ ...settings, apiKey: e.target.value })}
+                  onChange={e => {
+                    setSettings(prev => ({ ...prev, apiKey: e.target.value }));
+                  }}
+                  onBlur={e => { if (e.target.value) persist('apiKey', e.target.value); }}
                   placeholder="sk-..."
                   className="input-desktop w-full"
                 />
@@ -125,7 +276,7 @@ export default function SettingsPage() {
                     <p className="text-[12px] font-medium text-white/70">{label}</p>
                     <p className="text-[10.5px] text-white/30">{desc}</p>
                   </div>
-                  <Toggle on={settings[key]} onToggle={() => setSettings({ ...settings, [key]: !settings[key] })} />
+                  <Toggle on={settings[key]} onToggle={() => updateSetting(key, !settings[key])} />
                 </div>
               ))}
             </div>
@@ -140,13 +291,22 @@ export default function SettingsPage() {
                   <p className="text-[10.5px] text-white/30">All sensitive data is encrypted locally</p>
                 </div>
               </div>
-              <button className="w-full text-left px-4 py-3 rounded-lg border border-white/[0.06] bg-white/[0.015] hover:bg-white/[0.03] transition-colors">
+              <button
+                onClick={handleClearData}
+                className="w-full text-left px-4 py-3 rounded-lg border border-white/[0.06] bg-white/[0.015] hover:bg-white/[0.03] transition-colors"
+              >
                 <p className="text-[12px] font-medium text-white/70">Clear all stored data</p>
                 <p className="text-[10.5px] text-white/30">Remove all connections, history, and settings</p>
               </button>
-              <button className="w-full text-left px-4 py-3 rounded-lg border border-white/[0.06] bg-white/[0.015] hover:bg-white/[0.03] transition-colors">
-                <p className="text-[12px] font-medium text-white/70">Export data</p>
-                <p className="text-[10.5px] text-white/30">Download all your data in JSON format</p>
+              <button
+                onClick={handleExportData}
+                className="w-full text-left px-4 py-3 rounded-lg border border-white/[0.06] bg-white/[0.015] hover:bg-white/[0.03] transition-colors flex items-center gap-3"
+              >
+                <div className="flex-1">
+                  <p className="text-[12px] font-medium text-white/70">Export data</p>
+                  <p className="text-[10.5px] text-white/30">Download all your data in JSON format</p>
+                </div>
+                <Download className="w-4 h-4 text-white/25 flex-shrink-0" />
               </button>
             </div>
           )}
