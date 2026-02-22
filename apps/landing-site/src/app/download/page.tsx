@@ -71,6 +71,7 @@ export default function DownloadPage() {
 
   const currentVersion = '1.0.0';
   const releaseDate = 'Latest';
+  const ghRelease = `https://github.com/Nexolve-Technologies-India/AIAdoption-GovernanceEngine/releases/download/v${currentVersion}`;
 
   const downloads = {
     windows: {
@@ -332,7 +333,7 @@ export default function DownloadPage() {
                     </span>
                   </div>
                   <a
-                    href={`https://res.cloudinary.com/de1fjyofa/raw/upload/velanova/releases/v${currentVersion}/${current.recommended.file}`}
+                    href={`${ghRelease}/${current.recommended.file}`}
                     className="group flex items-center justify-between p-5 bg-gradient-to-r from-zinc-900/30 to-zinc-900/30 border-2 border-zinc-700/40 rounded-xl hover:border-zinc-600 transition-all"
                   >
                     <div className="flex items-center gap-4">
@@ -367,7 +368,7 @@ export default function DownloadPage() {
                     {current.options.map((option, i) => (
                       <a
                         key={i}
-                        href={`https://res.cloudinary.com/de1fjyofa/raw/upload/velanova/releases/v${currentVersion}/${option.file}`}
+                        href={`${ghRelease}/${option.file}`}
                         className="flex items-center justify-between p-3 bg-white/5 border border-white/10 rounded-lg hover:border-zinc-700/60 hover:bg-white/5 transition-all group"
                       >
                         <div className="flex items-center gap-3">
@@ -470,7 +471,7 @@ export default function DownloadPage() {
                     <p className="text-sm text-zinc-500">{release.notes}</p>
                   </div>
                   <a
-                    href={`https://res.cloudinary.com/de1fjyofa/raw/upload/velanova/releases/v${release.version}/Velanova-Setup-${release.version}.exe`}
+                    href={`https://github.com/Nexolve-Technologies-India/AIAdoption-GovernanceEngine/releases/download/v${release.version}/Velanova-Setup-${release.version}.exe`}
                     className="text-sm text-zinc-400 hover:text-zinc-400 font-medium"
                   >
                     Download

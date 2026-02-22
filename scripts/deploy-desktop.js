@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 /**
- * Velanova Desktop App Deploy Script
+ * Velanova Desktop App Deploy Script — GitHub Releases
  *
- * Builds the desktop app and uploads artifacts to Cloudinary.
+ * Builds the desktop app and publishes artifacts as a GitHub Release.
  *
  * Usage:
  *   pnpm desktop:deploy              # Build current platform + upload
@@ -12,11 +12,15 @@
  *   pnpm desktop:deploy -- --linux   # Build Linux + upload
  *   pnpm desktop:deploy -- --all     # Build all platforms + upload
  *   pnpm desktop:deploy -- --skip-build  # Upload existing artifacts only
+ *   pnpm desktop:deploy -- --dry-run    # List artifacts without uploading
  *
- * Required env vars (in .env or apps/express-api/.env):
- *   CLOUDINARY_CLOUD_NAME
- *   CLOUDINARY_API_KEY
- *   CLOUDINARY_API_SECRET
+ * Required env vars:
+ *   GITHUB_TOKEN   — Personal Access Token with 'repo' scope
+ *                    (or a fine-grained token with Contents: write)
+ *
+ * Optional env vars:
+ *   GITHUB_OWNER   — defaults to 'Nexolve-Technologies-India'
+ *   GITHUB_REPO    — defaults to 'AIAdoption-GovernanceEngine'
  */
 
 import { execSync } from 'child_process';
@@ -25,11 +29,13 @@ import { join, basename, extname, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { createHash } from 'crypto';
 import https from 'https';
-import http from 'http';
 
 const ROOT_DIR = join(dirname(fileURLToPath(import.meta.url)), '..');
 const APP_DIR = join(ROOT_DIR, 'apps', 'desktop-app');
 const RELEASE_DIR = join(APP_DIR, 'release');
+
+const GITHUB_OWNER = process.env.GITHUB_OWNER || 'Nexolve-Technologies-India';
+const GITHUB_REPO = process.env.GITHUB_REPO || 'AIAdoption-GovernanceEngine';
 
 // ---------- Config ----------
 
@@ -61,94 +67,101 @@ function getDesktopVersion() {
 
 function buildDesktop(platform) {
   console.log(`\n🔨 Building desktop app for: ${platform || 'current platform'}...\n`);
-  const platformFlag = platform ? `--${platform}` : '';
+  const platformFlag = platform ? `--${platform}` : '--mac';
   try {
-    execSync(`bash scripts/build-desktop.sh ${platformFlag}`, {
+    execSync(`pnpm --filter desktop-app build:${platformFlag.replace('--', '')}`, {
       cwd: ROOT_DIR,
       stdio: 'inherit',
       env: { ...process.env, FORCE_COLOR: '1' },
     });
-  } catch (err) {
-    console.error('❌ Desktop build failed');
-    process.exit(1);
+  } catch {
+    // electron-builder exits non-zero on warnings; check if release dir has files
+    if (!existsSync(RELEASE_DIR) || readdirSync(RELEASE_DIR).length === 0) {
+      console.error('❌ Desktop build failed — no artifacts produced.');
+      process.exit(1);
+    }
   }
 }
 
-// ---------- Cloudinary Upload ----------
+// ---------- GitHub API helpers ----------
 
-function cloudinaryUpload(filePath, publicId, resourceType, env) {
+function githubRequest(method, path, token, body, extraHeaders = {}) {
   return new Promise((resolve, reject) => {
-    const cloudName = env.CLOUDINARY_CLOUD_NAME;
-    const apiKey = env.CLOUDINARY_API_KEY;
-    const apiSecret = env.CLOUDINARY_API_SECRET;
-
-    if (!cloudName || !apiKey || !apiSecret) {
-      reject(
-        new Error(
-          'Missing Cloudinary credentials. Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET'
-        )
-      );
-      return;
-    }
-
-    const timestamp = Math.floor(Date.now() / 1000);
-    const paramsToSign = `folder=velanova/releases&public_id=${publicId}&resource_type=${resourceType}&timestamp=${timestamp}`;
-    const signature = createHash('sha1')
-      .update(paramsToSign + apiSecret)
-      .digest('hex');
-
-    const fileData = readFileSync(filePath);
-    const boundary = '----VelanovaBoundary' + Date.now();
-
-    const fields = {
-      file: null, // handled separately
-      public_id: publicId,
-      folder: 'velanova/releases',
-      resource_type: resourceType,
-      timestamp: String(timestamp),
-      api_key: apiKey,
-      signature,
-    };
-
-    // Build multipart body
-    let body = Buffer.alloc(0);
-    for (const [key, val] of Object.entries(fields)) {
-      if (key === 'file') continue;
-      const part = `--${boundary}\r\nContent-Disposition: form-data; name="${key}"\r\n\r\n${val}\r\n`;
-      body = Buffer.concat([body, Buffer.from(part)]);
-    }
-    // File part
-    const fileHeader = `--${boundary}\r\nContent-Disposition: form-data; name="file"; filename="${basename(filePath)}"\r\nContent-Type: application/octet-stream\r\n\r\n`;
-    const fileFooter = `\r\n--${boundary}--\r\n`;
-    body = Buffer.concat([body, Buffer.from(fileHeader), fileData, Buffer.from(fileFooter)]);
-
+    const bodyBuf = body ? Buffer.from(JSON.stringify(body)) : null;
     const options = {
-      hostname: 'api.cloudinary.com',
+      hostname: 'api.github.com',
       port: 443,
-      path: `/v1_1/${cloudName}/${resourceType}/upload`,
-      method: 'POST',
+      path,
+      method,
       headers: {
-        'Content-Type': `multipart/form-data; boundary=${boundary}`,
-        'Content-Length': body.length,
+        'User-Agent': 'velanova-deploy-script/1.0',
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28',
+        ...(bodyBuf
+          ? { 'Content-Type': 'application/json', 'Content-Length': bodyBuf.length }
+          : {}),
+        ...extraHeaders,
       },
     };
-
     const req = https.request(options, res => {
-      let data = '';
-      res.on('data', chunk => (data += chunk));
+      const chunks = [];
+      res.on('data', c => chunks.push(c));
       res.on('end', () => {
+        const text = Buffer.concat(chunks).toString();
         try {
-          const json = JSON.parse(data);
-          if (json.error) reject(new Error(json.error.message));
-          else resolve(json);
-        } catch (e) {
-          reject(new Error(`Cloudinary response parse error: ${data.slice(0, 500)}`));
+          resolve({ status: res.statusCode, body: JSON.parse(text) });
+        } catch {
+          resolve({ status: res.statusCode, body: text });
         }
       });
     });
-
     req.on('error', reject);
-    req.write(body);
+    if (bodyBuf) req.write(bodyBuf);
+    req.end();
+  });
+}
+
+function uploadAsset(uploadUrl, filePath, filename, token) {
+  // uploadUrl looks like: https://uploads.github.com/repos/:owner/:repo/releases/:id/assets{?name,label}
+  const base = uploadUrl.replace('{?name,label}', '');
+  const url = new URL(`${base}?name=${encodeURIComponent(filename)}`);
+
+  return new Promise((resolve, reject) => {
+    const fileData = readFileSync(filePath);
+    const options = {
+      hostname: url.hostname,
+      port: 443,
+      path: url.pathname + url.search,
+      method: 'POST',
+      headers: {
+        'User-Agent': 'velanova-deploy-script/1.0',
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28',
+        'Content-Type': 'application/octet-stream',
+        'Content-Length': fileData.length,
+      },
+    };
+    const req = https.request(options, res => {
+      const chunks = [];
+      res.on('data', c => chunks.push(c));
+      res.on('end', () => {
+        const text = Buffer.concat(chunks).toString();
+        try {
+          const json = JSON.parse(text);
+          if (json.errors || json.message) {
+            reject(new Error(json.message || JSON.stringify(json.errors)));
+          } else {
+            resolve(json);
+          }
+        } catch {
+          reject(new Error(`Unexpected response: ${text.slice(0, 300)}`));
+        }
+      });
+    });
+    req.on('error', reject);
+    req.write(fileData);
     req.end();
   });
 }
@@ -162,78 +175,30 @@ function collectArtifacts() {
     process.exit(1);
   }
 
-  const validExtensions = [
-    '.exe',
-    '.msi',
-    '.dmg',
-    '.zip',
-    '.AppImage',
-    '.deb',
-    '.rpm',
-    '.tar.gz',
-    '.blockmap',
-  ];
+  const uploadExtensions = ['.exe', '.msi', '.dmg', '.zip', '.AppImage', '.deb', '.rpm'];
+  const metaFiles = ['latest.yml', 'latest-mac.yml', 'latest-linux.yml'];
   const artifacts = [];
 
   function walk(dir) {
     for (const entry of readdirSync(dir)) {
       const full = join(dir, entry);
-      const stat = statSync(full);
-      if (stat.isDirectory()) {
+      if (statSync(full).isDirectory()) {
         walk(full);
-      } else if (stat.isFile()) {
-        const ext = extname(entry).toLowerCase();
-        const isValidExt = validExtensions.some(ve =>
-          entry.toLowerCase().endsWith(ve.toLowerCase())
-        );
-        // Also grab latest.yml / latest-mac.yml / latest-linux.yml for auto-updater
-        const isYml = entry.endsWith('.yml') && entry.includes('latest');
-        if (isValidExt || isYml) {
-          artifacts.push({
-            path: full,
-            name: entry,
-            size: stat.size,
-            sizeMB: (stat.size / 1024 / 1024).toFixed(1),
-          });
-        }
+        continue;
+      }
+      const isAsset = uploadExtensions.some(e => entry.toLowerCase().endsWith(e.toLowerCase()));
+      const isMeta = metaFiles.includes(entry);
+      if (isAsset || isMeta) {
+        artifacts.push({
+          path: full,
+          name: entry,
+          sizeMB: (statSync(full).size / 1024 / 1024).toFixed(1),
+        });
       }
     }
   }
-
   walk(RELEASE_DIR);
   return artifacts;
-}
-
-// ---------- Create Manifest ----------
-
-function createManifest(artifacts, version, uploadResults) {
-  return {
-    version,
-    releaseDate: new Date().toISOString(),
-    artifacts: artifacts.map((a, i) => ({
-      filename: a.name,
-      sizeMB: a.sizeMB,
-      platform: detectPlatform(a.name),
-      cloudinaryUrl: uploadResults[i]?.secure_url || null,
-      cloudinaryPublicId: uploadResults[i]?.public_id || null,
-      sha256: createHash('sha256').update(readFileSync(a.path)).digest('hex'),
-    })),
-  };
-}
-
-function detectPlatform(filename) {
-  const lower = filename.toLowerCase();
-  if (lower.endsWith('.exe') || lower.endsWith('.msi') || lower.includes('win')) return 'windows';
-  if (lower.endsWith('.dmg') || lower.includes('mac') || lower.includes('darwin')) return 'macos';
-  if (
-    lower.endsWith('.appimage') ||
-    lower.endsWith('.deb') ||
-    lower.endsWith('.rpm') ||
-    lower.includes('linux')
-  )
-    return 'linux';
-  if (lower.endsWith('.yml')) return 'meta';
-  return 'unknown';
 }
 
 // ---------- Main ----------
@@ -242,8 +207,9 @@ async function main() {
   const args = process.argv.slice(2);
   const skipBuild = args.includes('--skip-build');
   const dryRun = args.includes('--dry-run');
+  const prerelease = args.includes('--prerelease');
 
-  let platform = '';
+  let platform = 'mac';
   for (const arg of args) {
     if (['--mac', '--win', '--linux', '--all'].includes(arg)) {
       platform = arg.replace('--', '');
@@ -251,84 +217,156 @@ async function main() {
   }
 
   const env = loadEnv();
+  const token = env.GITHUB_TOKEN;
   const version = getDesktopVersion();
+  const tag = `v${version}`;
 
   console.log('╔══════════════════════════════════════════════════╗');
-  console.log('║       Velanova Desktop Deploy to Cloudinary      ║');
+  console.log('║     Velanova Desktop Deploy → GitHub Releases    ║');
   console.log('╚══════════════════════════════════════════════════╝');
-  console.log(`  Version: ${version}`);
-  console.log(`  Platform: ${platform || 'current'}`);
-  console.log(`  Cloudinary: ${env.CLOUDINARY_CLOUD_NAME || '(not configured)'}`);
+  console.log(`  Version  : ${version}`);
+  console.log(`  Tag      : ${tag}`);
+  console.log(`  Platform : ${platform}`);
+  console.log(`  Repo     : ${GITHUB_OWNER}/${GITHUB_REPO}`);
+  console.log(`  Token    : ${token ? token.slice(0, 8) + '...' : '(not set — set GITHUB_TOKEN)'}`);
   console.log('');
 
-  // Step 1: Build (unless skipped)
-  if (!skipBuild) {
-    buildDesktop(platform);
-  }
+  // Step 1: Build
+  if (!skipBuild) buildDesktop(platform);
 
   // Step 2: Collect artifacts
   const artifacts = collectArtifacts();
   if (artifacts.length === 0) {
-    console.error('❌ No artifacts found in release directory.');
+    console.error('❌ No artifacts found in release directory. Did the build succeed?');
     process.exit(1);
   }
 
   console.log(`\n📦 Found ${artifacts.length} artifacts:\n`);
-  for (const a of artifacts) {
-    console.log(`  • ${a.name} (${a.sizeMB} MB)`);
-  }
+  for (const a of artifacts) console.log(`   • ${a.name}  (${a.sizeMB} MB)`);
 
   if (dryRun) {
     console.log('\n🔍 Dry run — skipping upload.');
+    console.log(`\n   Download URLs would be:`);
+    for (const a of artifacts) {
+      console.log(
+        `   https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/releases/download/${tag}/${a.name}`
+      );
+    }
     return;
   }
 
-  // Step 3: Upload to Cloudinary
-  if (!env.CLOUDINARY_CLOUD_NAME) {
-    console.error(
-      '\n❌ Cloudinary not configured. Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET'
-    );
-    console.log('\n💡 You can still find the built artifacts in:');
-    console.log(`   ${RELEASE_DIR}`);
+  if (!token) {
+    console.error('\n❌ GITHUB_TOKEN is not set.');
+    console.error('   Create one at: https://github.com/settings/tokens');
+    console.error('   Required scopes: repo  (or Contents: write for fine-grained tokens)');
+    console.error('\n   Then add it to apps/landing-site/.env.local:');
+    console.error('   GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxx');
     process.exit(1);
   }
 
-  console.log('\n☁️  Uploading to Cloudinary...\n');
-  const uploadResults = [];
+  // Step 3: Create (or get existing) GitHub Release
+  console.log(`\n🚀 Creating GitHub Release ${tag}...`);
+
+  let releaseId;
+  let uploadUrl;
+
+  // Check if release already exists
+  const existing = await githubRequest(
+    'GET',
+    `/repos/${GITHUB_OWNER}/${GITHUB_REPO}/releases/tags/${tag}`,
+    token
+  );
+
+  if (existing.status === 200) {
+    releaseId = existing.body.id;
+    uploadUrl = existing.body.upload_url;
+    console.log(
+      `   ℹ️  Release ${tag} already exists (id: ${releaseId}) — uploading assets to it.`
+    );
+  } else {
+    // Create new release
+    const created = await githubRequest(
+      'POST',
+      `/repos/${GITHUB_OWNER}/${GITHUB_REPO}/releases`,
+      token,
+      {
+        tag_name: tag,
+        target_commitish: 'master',
+        name: `Velanova Desktop ${tag}`,
+        body: [
+          `## Velanova Desktop ${tag}`,
+          '',
+          '### Downloads',
+          '| Platform | File | Size |',
+          '|----------|------|------|',
+          ...artifacts
+            .filter(a => !a.name.endsWith('.yml'))
+            .map(a => `| ${detectPlatform(a.name)} | \`${a.name}\` | ${a.sizeMB} MB |`),
+          '',
+          '> **macOS note:** The app is not code-signed. On first open, right-click → Open.',
+        ].join('\n'),
+        draft: false,
+        prerelease,
+      }
+    );
+
+    if (created.status !== 201) {
+      console.error(`❌ Failed to create release: ${JSON.stringify(created.body)}`);
+      process.exit(1);
+    }
+
+    releaseId = created.body.id;
+    uploadUrl = created.body.upload_url;
+    console.log(`   ✅ Release created: ${created.body.html_url}`);
+  }
+
+  // Step 4: Upload assets
+  console.log('\n☁️  Uploading assets...\n');
+  let succeeded = 0;
+
   for (const artifact of artifacts) {
-    const publicId = `v${version}/${artifact.name.replace(/\.[^.]+$/, '')}`;
-    console.log(`  Uploading ${artifact.name}...`);
+    process.stdout.write(`   Uploading ${artifact.name} (${artifact.sizeMB} MB)...`);
     try {
-      const result = await cloudinaryUpload(artifact.path, publicId, 'raw', env);
-      console.log(`  ✅ ${artifact.name} → ${result.secure_url}`);
-      uploadResults.push(result);
+      const result = await uploadAsset(uploadUrl, artifact.path, artifact.name, token);
+      const url = `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/releases/download/${tag}/${artifact.name}`;
+      process.stdout.write(` ✅\n`);
+      console.log(`           → ${url}`);
+      succeeded++;
     } catch (err) {
-      console.error(`  ❌ ${artifact.name}: ${err.message}`);
-      uploadResults.push(null);
+      process.stdout.write(` ❌\n`);
+      // 422 = asset with this name already exists — not a real error
+      if (err.message && err.message.includes('already_exists')) {
+        const url = `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/releases/download/${tag}/${artifact.name}`;
+        console.log(`           ℹ️  Already uploaded → ${url}`);
+        succeeded++;
+      } else {
+        console.error(`           Error: ${err.message}`);
+      }
     }
   }
 
-  // Step 4: Upload manifest
-  const manifest = createManifest(artifacts, version, uploadResults);
-  const manifestPath = join(RELEASE_DIR, 'manifest.json');
-  const { writeFileSync } = await import('fs');
-  writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
-  console.log(`\n📄 Manifest saved to ${manifestPath}`);
-
-  try {
-    const manifestResult = await cloudinaryUpload(manifestPath, `v${version}/manifest`, 'raw', env);
-    console.log(`  ✅ Manifest → ${manifestResult.secure_url}`);
-  } catch (err) {
-    console.error(`  ❌ Manifest upload failed: ${err.message}`);
-  }
-
   // Summary
-  const successful = uploadResults.filter(Boolean).length;
-  console.log(`\n${'═'.repeat(50)}`);
-  console.log(`✅ Deploy complete: ${successful}/${artifacts.length} artifacts uploaded`);
-  console.log(`   Version: ${version}`);
-  console.log(`   Cloudinary folder: velanova/releases/v${version}/`);
-  console.log(`${'═'.repeat(50)}\n`);
+  const releaseUrl = `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/releases/tag/${tag}`;
+  console.log(`\n${'═'.repeat(60)}`);
+  console.log(`✅ Deploy complete: ${succeeded}/${artifacts.length} assets uploaded`);
+  console.log(`   Release : ${releaseUrl}`);
+  console.log(`${'═'.repeat(60)}\n`);
+  console.log('Download URLs:');
+  for (const a of artifacts) {
+    console.log(
+      `  https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/releases/download/${tag}/${a.name}`
+    );
+  }
+  console.log('');
+}
+
+function detectPlatform(filename) {
+  const f = filename.toLowerCase();
+  if (f.endsWith('.exe') || f.endsWith('.msi') || f.includes('win')) return 'Windows';
+  if (f.endsWith('.dmg') || f.includes('mac') || f.includes('darwin')) return 'macOS';
+  if (f.endsWith('.appimage') || f.endsWith('.deb') || f.endsWith('.rpm') || f.includes('linux'))
+    return 'Linux';
+  return 'Unknown';
 }
 
 main().catch(err => {
