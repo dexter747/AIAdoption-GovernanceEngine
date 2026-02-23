@@ -361,14 +361,7 @@ async function main() {
       succeeded++;
     } catch (err) {
       process.stdout.write(` ❌\n`);
-      // 422 = asset with this name already exists — not a real error
-      if (err.message && err.message.includes('already_exists')) {
-        const url = `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/releases/download/${tag}/${artifact.name}`;
-        console.log(`           ℹ️  Already uploaded → ${url}`);
-        succeeded++;
-      } else {
-        console.error(`           Error: ${err.message}`);
-      }
+      console.error(`           Error: ${err.message}`);
     }
   }
 
