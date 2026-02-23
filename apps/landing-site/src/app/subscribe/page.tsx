@@ -337,11 +337,20 @@ function SubscribeContent() {
         {/* Trust Badges */}
         <div className="mt-16 text-center">
           <p className="text-sm text-muted-foreground mb-4">Secure payments powered by</p>
-          <div className="flex items-center justify-center gap-8 opacity-60">
-            <span className="text-lg font-medium text-muted-foreground">
-              PayPal & Lemon Squeezy
+          <div className="flex items-center justify-center gap-6">
+            <img src="/paypal.svg" alt="PayPal" className="h-7" />
+            <img src="/lemonsqueezy.svg" alt="Lemon Squeezy" className="h-7" />
+            <span className="text-sm font-medium text-muted-foreground flex items-center gap-1.5">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                />
+              </svg>
+              256-bit SSL
             </span>
-            <span className="text-lg font-medium text-muted-foreground">256-bit SSL</span>
           </div>
         </div>
       </div>

@@ -116,9 +116,10 @@ rpm:
     - libXScrnSaver
 
 publish:
-  provider: generic
-  url: https://releases.velanova.com
-  channel: latest
+  provider: github
+  owner: Nexolve-Technologies-India
+  repo: AIAdoption-GovernanceEngine
+  releaseType: release
 
 # Auto-updater configuration
 electronUpdaterCompatibility: ">=2.16"

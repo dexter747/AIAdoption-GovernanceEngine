@@ -102,9 +102,13 @@ function CheckoutContent() {
 
               {/* Security Notice */}
               <div className="mt-6 p-4 rounded-lg bg-zinc-800/50">
-                <div className="flex items-center gap-2 text-muted-foreground">
+                <div className="flex items-center gap-3 text-muted-foreground mb-3">
                   <Lock className="w-4 h-4" />
-                  <span>Secure checkout powered by Lemon Squeezy</span>
+                  <span>Secure checkout powered by</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <img src="/paypal.svg" alt="PayPal" className="h-6" />
+                  <img src="/lemonsqueezy.svg" alt="Lemon Squeezy" className="h-6" />
                 </div>
               </div>
             </div>

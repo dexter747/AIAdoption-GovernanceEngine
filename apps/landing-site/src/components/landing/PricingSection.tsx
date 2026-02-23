@@ -151,7 +151,7 @@ export function PricingSection() {
               <div
                 key={tier.name}
                 className={cn(
-                  'price-card relative p-8 rounded-2xl border transition-all duration-500',
+                  'price-card relative p-8 rounded-2xl border transition-all duration-500 flex flex-col',
                   tier.highlighted
                     ? 'border-white/20 bg-white/[0.05] shadow-2xl shadow-white/[0.05] ring-1 ring-white/[0.12]'
                     : 'border-white/[0.06] bg-white/[0.02] hover:border-white/[0.12] card-hover'
@@ -177,7 +177,7 @@ export function PricingSection() {
                   {tier.period && <span className="text-sm text-zinc-500">{tier.period}</span>}
                 </div>
 
-                <ul className="space-y-3 mb-8">
+                <ul className="space-y-3 mb-8 flex-1">
                   {tier.features.map(feature => (
                     <li key={feature} className="flex items-start gap-3 text-sm">
                       <Check className="w-4 h-4 flex-shrink-0 mt-0.5 text-zinc-500" />
@@ -196,7 +196,7 @@ export function PricingSection() {
                 <Link
                   href={tier.ctaLink}
                   className={cn(
-                    'block w-full text-center py-3.5 rounded-xl font-medium text-sm transition-all duration-300',
+                    'block w-full text-center py-3.5 rounded-xl font-medium text-sm transition-all duration-300 mt-auto',
                     tier.highlighted
                       ? 'bg-white text-black hover:bg-zinc-200 shadow-lg shadow-white/5'
                       : 'border border-white/[0.08] text-zinc-300 hover:border-white/[0.15] hover:bg-white/[0.03]'
@@ -223,10 +223,12 @@ export function PricingSection() {
             ))}
           </div>
           {/* Secure Payments */}
-          <div className="flex items-center justify-center gap-3 flex-wrap">
-            <span className="text-xs text-zinc-600 font-medium">
-              Secure Payments via PayPal & Lemon Squeezy
-            </span>
+          <div className="flex items-center justify-center gap-4 flex-wrap">
+            <span className="text-xs text-zinc-600 font-medium">Secure payments via</span>
+            <div className="flex items-center gap-3">
+              <img src="/paypal.svg" alt="PayPal" className="h-6" />
+              <img src="/lemonsqueezy.svg" alt="Lemon Squeezy" className="h-6" />
+            </div>
           </div>
         </div>
       </div>

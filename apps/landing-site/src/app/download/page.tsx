@@ -173,7 +173,7 @@ export default function DownloadPage() {
                 href="/login?callbackUrl=/download"
                 className="flex items-center justify-center gap-3 w-full py-3.5 px-4 bg-white text-black font-medium rounded-xl hover:bg-zinc-100 transition-all"
               >
-                Sign in with Google
+                Sign In To Continue
                 <ArrowRight className="w-4 h-4" />
               </Link>
 

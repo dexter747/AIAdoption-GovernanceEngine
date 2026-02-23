@@ -141,7 +141,7 @@ export default function PricingPage() {
           {plans.map(plan => (
             <div
               key={plan.name}
-              className={`relative bg-zinc-900 rounded-2xl p-8 ${
+              className={`relative bg-zinc-900 rounded-2xl p-8 flex flex-col ${
                 plan.popular ? 'ring-2 ring-zinc-600 shadow-2xl shadow-white/5' : ''
               }`}
             >
@@ -173,7 +173,7 @@ export default function PricingPage() {
                 )}
               </div>
 
-              <ul className="space-y-4 mb-8">
+              <ul className="space-y-4 mb-8 flex-1">
                 {plan.features.map((feature, index) => (
                   <li key={index} className="flex items-start">
                     <svg
@@ -197,7 +197,7 @@ export default function PricingPage() {
               <button
                 onClick={() => handleSubscribe(plan.name)}
                 disabled={loading !== null}
-                className={`w-full py-3 px-6 rounded-lg font-medium transition-all ${
+                className={`w-full py-3 px-6 rounded-lg font-medium transition-all mt-auto ${
                   plan.popular
                     ? 'bg-white hover:bg-zinc-200 text-white'
                     : 'bg-zinc-800 hover:bg-zinc-800 text-white'
@@ -228,10 +228,14 @@ export default function PricingPage() {
               <h3 className="text-lg font-medium text-white mb-2">
                 What payment methods do you accept?
               </h3>
-              <p className="text-zinc-500">
-                We accept all major credit cards via PayPal & Lemon Squeezy. Enterprise customers
-                can pay via invoice.
+              <p className="text-zinc-500 mb-4">
+                We accept all major credit cards, PayPal, and more. Enterprise customers can pay via
+                invoice.
               </p>
+              <div className="flex items-center gap-3">
+                <img src="/paypal.svg" alt="PayPal" className="h-6" />
+                <img src="/lemonsqueezy.svg" alt="Lemon Squeezy" className="h-6" />
+              </div>
             </div>
 
             <div className="bg-zinc-900 rounded-lg p-6">
@@ -251,6 +255,15 @@ export default function PricingPage() {
                 downgrades apply at the end of your billing period.
               </p>
             </div>
+          </div>
+        </div>
+
+        {/* Payment Logos */}
+        <div className="mt-16 text-center">
+          <p className="text-sm text-zinc-500 mb-4">Secure payments powered by</p>
+          <div className="flex items-center justify-center gap-5">
+            <img src="/paypal.svg" alt="PayPal" className="h-7" />
+            <img src="/lemonsqueezy.svg" alt="Lemon Squeezy" className="h-7" />
           </div>
         </div>
       </div>

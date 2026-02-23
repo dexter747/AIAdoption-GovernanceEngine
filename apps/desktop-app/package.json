@@ -124,8 +124,8 @@
     ],
     "publish": {
       "provider": "github",
-      "owner": "velanova",
-      "repo": "desktop-app"
+      "owner": "Nexolve-Technologies-India",
+      "repo": "AIAdoption-GovernanceEngine"
     },
     "mac": {
       "category": "public.app-category.developer-tools",

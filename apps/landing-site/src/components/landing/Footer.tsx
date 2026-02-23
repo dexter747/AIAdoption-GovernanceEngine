@@ -98,9 +98,11 @@ export function Footer() {
           <p className="text-sm text-zinc-600">
             &copy; {new Date().getFullYear()} Velanova. All rights reserved.
           </p>
-          <div className="flex items-center gap-5 text-sm text-zinc-600">
-            <div className="flex items-center gap-2.5 flex-wrap">
-              <span className="text-xs text-zinc-700 font-medium">PayPal & Lemon Squeezy</span>
+          <div className="flex items-center gap-4">
+            <span className="text-xs text-zinc-600 font-medium">Secure payments via</span>
+            <div className="flex items-center gap-3">
+              <img src="/paypal.svg" alt="PayPal" className="h-6" />
+              <img src="/lemonsqueezy.svg" alt="Lemon Squeezy" className="h-6" />
             </div>
           </div>
         </div>

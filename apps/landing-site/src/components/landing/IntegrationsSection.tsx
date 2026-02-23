@@ -41,24 +41,66 @@ const featured = [
   },
 ];
 
-// Category summary counts
+// Category summary counts — matching the full integrations-data catalog
 const categorySummary = [
+  {
+    name: 'MCP Servers',
+    count: 20,
+    examples: 'PostgreSQL MCP, GitHub MCP, Slack MCP, Notion MCP, Supabase MCP',
+  },
+  {
+    name: 'API Connectors',
+    count: 8,
+    examples: 'REST API, GraphQL, SOAP, gRPC, Webhook, JDBC, ODBC',
+  },
   {
     name: 'Databases',
     count: 14,
     examples: 'PostgreSQL, MySQL, MongoDB, Oracle, SQL Server, Redis',
   },
-  { name: 'ERP', count: 8, examples: 'SAP, Oracle EBS, NetSuite, Microsoft Dynamics, Infor' },
-  { name: 'CRM', count: 7, examples: 'Salesforce, HubSpot, Dynamics 365, Pipedrive, Zoho' },
+  {
+    name: 'Legacy & Mainframe',
+    count: 18,
+    examples: 'IBM CICS, IBM IMS, COBOL, SWIFT FIN, SAP R/2, SAP R/3',
+  },
+  {
+    name: 'Financial Markets',
+    count: 8,
+    examples: 'Bloomberg Terminal, Reuters 3000, Murex MX.3, Calypso',
+  },
+  {
+    name: 'ERP Systems',
+    count: 8,
+    examples: 'SAP S/4HANA, Oracle EBS, NetSuite, Microsoft Dynamics',
+  },
+  {
+    name: 'CRM & Sales',
+    count: 19,
+    examples: 'Salesforce, HubSpot, Zoho, Pipedrive, Freshsales, SugarCRM',
+  },
   {
     name: 'Data Warehouse',
     count: 9,
-    examples: 'Snowflake, BigQuery, Redshift, Azure Synapse, Databricks',
+    examples: 'Snowflake, BigQuery, Redshift, Databricks, Teradata',
   },
+  { name: 'Project Mgmt', count: 8, examples: 'Jira, Trello, Asana, Monday.com, ClickUp, Wrike' },
+  {
+    name: 'Communication',
+    count: 9,
+    examples: 'Slack, Teams, Zoom, Confluence, Notion, Google Workspace',
+  },
+  { name: 'HR & People', count: 5, examples: 'Workday, BambooHR, Gusto, Rippling, Deel' },
+  { name: 'Finance', count: 5, examples: 'QuickBooks, Xero, FreshBooks, Hyperion, Cognos' },
+  { name: 'Identity', count: 4, examples: 'Okta, JumpCloud, Active Directory, 1Password' },
+  { name: 'Dev Tools', count: 4, examples: 'GitHub, GitLab, Bitbucket, Jenkins' },
+  { name: 'Cloud', count: 8, examples: 'AWS RDS, Azure SQL, Google Cloud SQL, Supabase, Neon' },
   { name: 'E-commerce', count: 6, examples: 'Shopify, Magento, WooCommerce, BigCommerce' },
-  { name: 'Dev Tools', count: 5, examples: 'GitHub, GitLab, Jira, Confluence, Jenkins' },
-  { name: 'Cloud', count: 8, examples: 'AWS RDS, Azure SQL, Google Cloud SQL, Aurora' },
-  { name: 'Other', count: 7, examples: 'ServiceNow, Workday, Zendesk, Tableau, Power BI' },
+  {
+    name: 'BI & Reporting',
+    count: 7,
+    examples: 'Tableau, Power BI, Looker, Qlik, Crystal Reports',
+  },
+  { name: 'Enterprise IT', count: 14, examples: 'SAP, Oracle, IBM, Microsoft, OpenText, Broadcom' },
 ];
 
 const totalCount = categorySummary.reduce((sum, c) => sum + c.count, 0);

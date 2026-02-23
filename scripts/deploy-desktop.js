@@ -281,8 +281,35 @@ async function main() {
     releaseId = existing.body.id;
     uploadUrl = existing.body.upload_url;
     console.log(
-      `   ℹ️  Release ${tag} already exists (id: ${releaseId}) — uploading assets to it.`
+      `   ℹ️  Release ${tag} already exists (id: ${releaseId}) — checking for stale assets...`
     );
+
+    // Fetch existing assets on this release and delete any that we're about to re-upload
+    const assetsRes = await githubRequest(
+      'GET',
+      `/repos/${GITHUB_OWNER}/${GITHUB_REPO}/releases/${releaseId}/assets?per_page=100`,
+      token
+    );
+    if (assetsRes.status === 200 && Array.isArray(assetsRes.body) && assetsRes.body.length > 0) {
+      const artifactNames = new Set(artifacts.map(a => a.name));
+      const toDelete = assetsRes.body.filter(a => artifactNames.has(a.name));
+      if (toDelete.length > 0) {
+        console.log(`   🗑️  Deleting ${toDelete.length} existing asset(s) before re-upload...`);
+        for (const asset of toDelete) {
+          const del = await githubRequest(
+            'DELETE',
+            `/repos/${GITHUB_OWNER}/${GITHUB_REPO}/releases/assets/${asset.id}`,
+            token
+          );
+          const ok = del.status === 204;
+          console.log(
+            `      ${ok ? '✅' : '❌'} Deleted ${asset.name}${ok ? '' : ` (status ${del.status})`}`
+          );
+        }
+      } else {
+        console.log(`   ✅ No existing assets conflict — uploading fresh.`);
+      }
+    }
   } else {
     // Create new release
     const created = await githubRequest(
