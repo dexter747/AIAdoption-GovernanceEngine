@@ -4,6 +4,27 @@
  * All pages import from here to avoid duplicated lists.
  */
 
+export type FieldType =
+  | 'text'
+  | 'password'
+  | 'url'
+  | 'number'
+  | 'select'
+  | 'toggle'
+  | 'file'
+  | 'textarea';
+
+export interface ConnectionField {
+  name: string;
+  key: string;
+  type: FieldType;
+  placeholder?: string;
+  required?: boolean;
+  options?: string[];
+  hint?: string;
+  defaultValue?: string | number;
+}
+
 export interface ConnectionTypeConfig {
   icon: string;
   /** Path to a static logo image (relative to public root, e.g. /legacy/mysql.svg).
@@ -15,6 +36,8 @@ export interface ConnectionTypeConfig {
   bgColor: string;
   borderColor: string;
   category: ConnectionCategory;
+  /** Per-software connection fields. When absent, falls back to generic Host/Port/DB/User/Pass. */
+  fields?: ConnectionField[];
 }
 
 export type ConnectionCategory =
@@ -37,7 +60,202 @@ export type ConnectionCategory =
   | 'procurement'
   | 'legacy'
   | 'warehouse'
-  | 'mcp';
+  | 'mcp'
+  | 'communication'
+  | 'project-mgmt'
+  | 'bi'
+  | 'devtools'
+  | 'cloud'
+  | 'ecommerce'
+  | 'hr'
+  | 'identity'
+  | 'ai-ml'
+  | 'finance-markets'
+  | 'api';
+
+// ─── Field Templates ──────────────────────────────────────────────────
+const dbFields = (defaultPort: number): ConnectionField[] => [
+  { name: 'Host', key: 'host', type: 'text', placeholder: 'localhost', required: true },
+  {
+    name: 'Port',
+    key: 'port',
+    type: 'number',
+    placeholder: String(defaultPort),
+    defaultValue: defaultPort,
+    required: true,
+  },
+  { name: 'Database', key: 'database', type: 'text', placeholder: 'mydb', required: true },
+  { name: 'Username', key: 'username', type: 'text', placeholder: 'user', required: true },
+  { name: 'Password', key: 'password', type: 'password', placeholder: '••••••••', required: true },
+  {
+    name: 'SSL',
+    key: 'ssl',
+    type: 'select',
+    options: ['Disabled', 'Require', 'Verify-CA', 'Verify-Full'],
+  },
+];
+
+const oauthFields = (service: string): ConnectionField[] => [
+  {
+    name: 'Client ID',
+    key: 'clientId',
+    type: 'text',
+    required: true,
+    hint: `From ${service} developer console`,
+  },
+  { name: 'Client Secret', key: 'clientSecret', type: 'password', required: true },
+  {
+    name: 'Redirect URI',
+    key: 'redirectUri',
+    type: 'url',
+    placeholder: 'http://localhost/callback',
+  },
+  { name: 'Scopes', key: 'scopes', type: 'text', hint: 'Space-separated OAuth scopes' },
+];
+
+const apiKeyFields = (service: string): ConnectionField[] => [
+  {
+    name: 'API Key',
+    key: 'apiKey',
+    type: 'password',
+    required: true,
+    hint: `From ${service} settings`,
+  },
+];
+
+const apiTokenFields = (service: string): ConnectionField[] => [
+  {
+    name: 'API Token',
+    key: 'apiToken',
+    type: 'password',
+    required: true,
+    hint: `Generate in ${service} settings`,
+  },
+  {
+    name: 'Base URL',
+    key: 'baseUrl',
+    type: 'url',
+    placeholder: 'https://your-instance.example.com',
+  },
+];
+
+const mcpFields = (): ConnectionField[] => [
+  {
+    name: 'Server Command',
+    key: 'command',
+    type: 'text',
+    required: true,
+    placeholder: 'npx @modelcontextprotocol/server-postgres',
+    hint: 'CLI command to start the MCP server',
+  },
+  {
+    name: 'Arguments',
+    key: 'args',
+    type: 'text',
+    placeholder: 'postgresql://user:pass@host/db',
+    hint: 'Args passed to the server command',
+  },
+  {
+    name: 'Environment Variables',
+    key: 'env',
+    type: 'textarea',
+    placeholder: 'KEY=value (one per line)',
+    hint: 'Extra env vars for the MCP process',
+  },
+];
+
+const sapFields = (): ConnectionField[] => [
+  {
+    name: 'Application Server',
+    key: 'host',
+    type: 'text',
+    required: true,
+    placeholder: 'sap.example.com',
+  },
+  {
+    name: 'Instance Number',
+    key: 'instanceNumber',
+    type: 'text',
+    required: true,
+    placeholder: '00',
+  },
+  { name: 'System ID', key: 'systemId', type: 'text', required: true, placeholder: 'S4H' },
+  { name: 'Client', key: 'client', type: 'text', required: true, placeholder: '100' },
+  { name: 'Username', key: 'username', type: 'text', required: true },
+  { name: 'Password', key: 'password', type: 'password', required: true },
+  { name: 'Router String', key: 'routerString', type: 'text', hint: 'SAP Router string if needed' },
+];
+
+const mainframeFields = (): ConnectionField[] => [
+  { name: 'Host', key: 'host', type: 'text', required: true, placeholder: 'mainframe.example.com' },
+  {
+    name: 'Port',
+    key: 'port',
+    type: 'number',
+    placeholder: '23',
+    defaultValue: 23,
+    required: true,
+  },
+  { name: 'LU Name', key: 'luName', type: 'text', hint: 'Logical Unit name' },
+  { name: 'Username', key: 'username', type: 'text', required: true },
+  { name: 'Password', key: 'password', type: 'password', required: true },
+  {
+    name: 'Code Page',
+    key: 'codePage',
+    type: 'text',
+    placeholder: '037',
+    hint: 'EBCDIC code page',
+  },
+];
+
+const awsFields = (service: string): ConnectionField[] => [
+  {
+    name: 'Region',
+    key: 'region',
+    type: 'select',
+    options: [
+      'us-east-1',
+      'us-west-2',
+      'eu-west-1',
+      'eu-central-1',
+      'ap-southeast-1',
+      'ap-northeast-1',
+    ],
+    required: true,
+  },
+  {
+    name: 'Access Key ID',
+    key: 'accessKeyId',
+    type: 'text',
+    required: true,
+    hint: `AWS IAM key for ${service}`,
+  },
+  { name: 'Secret Access Key', key: 'secretAccessKey', type: 'password', required: true },
+  {
+    name: 'Session Token',
+    key: 'sessionToken',
+    type: 'password',
+    hint: 'Optional STS session token',
+  },
+];
+
+const azureFields = (service: string): ConnectionField[] => [
+  {
+    name: 'Tenant ID',
+    key: 'tenantId',
+    type: 'text',
+    required: true,
+    hint: `Azure AD tenant for ${service}`,
+  },
+  { name: 'Client ID', key: 'clientId', type: 'text', required: true },
+  { name: 'Client Secret', key: 'clientSecret', type: 'password', required: true },
+  {
+    name: 'Resource URL',
+    key: 'resourceUrl',
+    type: 'url',
+    placeholder: 'https://your-resource.azure.com',
+  },
+];
 
 export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
   // ─── Relational Databases ────────────────────────────────────────────
@@ -50,6 +268,7 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-blue-500/10',
     borderColor: 'border-blue-500/30',
     category: 'database',
+    fields: dbFields(3306),
   },
   postgresql: {
     icon: '🐘',
@@ -60,6 +279,7 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-indigo-500/10',
     borderColor: 'border-indigo-500/30',
     category: 'database',
+    fields: dbFields(5432),
   },
   mariadb: {
     icon: '🦭',
@@ -70,6 +290,7 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-sky-500/10',
     borderColor: 'border-sky-500/30',
     category: 'database',
+    fields: dbFields(3306),
   },
   sqlserver: {
     icon: '🔷',
@@ -80,6 +301,28 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-red-500/10',
     borderColor: 'border-red-500/30',
     category: 'database',
+    fields: [
+      {
+        name: 'Server',
+        key: 'host',
+        type: 'text',
+        required: true,
+        placeholder: 'server\\instance',
+      },
+      { name: 'Port', key: 'port', type: 'number', placeholder: '1433', defaultValue: 1433 },
+      { name: 'Database', key: 'database', type: 'text', required: true },
+      {
+        name: 'Authentication',
+        key: 'authType',
+        type: 'select',
+        options: ['SQL Login', 'Windows Auth', 'Azure AD'],
+        required: true,
+      },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+      { name: 'Encrypt', key: 'encrypt', type: 'select', options: ['Yes', 'No', 'Strict'] },
+      { name: 'Trust Server Cert', key: 'trustCert', type: 'select', options: ['Yes', 'No'] },
+    ],
   },
   oracle: {
     icon: '🔴',
@@ -90,6 +333,28 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-orange-500/10',
     borderColor: 'border-orange-500/30',
     category: 'database',
+    fields: [
+      {
+        name: 'Host',
+        key: 'host',
+        type: 'text',
+        required: true,
+        placeholder: 'oracle.example.com',
+      },
+      { name: 'Port', key: 'port', type: 'number', placeholder: '1521', defaultValue: 1521 },
+      {
+        name: 'Service Name',
+        key: 'serviceName',
+        type: 'text',
+        placeholder: 'ORCL',
+        hint: 'Or use SID below',
+      },
+      { name: 'SID', key: 'sid', type: 'text', hint: 'Alternative to Service Name' },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+      { name: 'Role', key: 'role', type: 'select', options: ['Default', 'SYSDBA', 'SYSOPER'] },
+      { name: 'Wallet Path', key: 'walletPath', type: 'text', hint: 'For Oracle Wallet / mTLS' },
+    ],
   },
   sqlite: {
     icon: '📦',
@@ -100,6 +365,16 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-gray-500/10',
     borderColor: 'border-gray-500/30',
     category: 'database',
+    fields: [
+      {
+        name: 'File Path',
+        key: 'filePath',
+        type: 'text',
+        required: true,
+        placeholder: '/path/to/database.sqlite',
+      },
+      { name: 'Read Only', key: 'readOnly', type: 'select', options: ['No', 'Yes'] },
+    ],
   },
 
   // ─── NoSQL Databases ─────────────────────────────────────────────────
@@ -112,6 +387,27 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-green-500/10',
     borderColor: 'border-green-500/30',
     category: 'nosql',
+    fields: [
+      {
+        name: 'Connection String',
+        key: 'connectionString',
+        type: 'text',
+        placeholder: 'mongodb://user:pass@host:27017/db',
+        hint: 'Full URI or fill fields below',
+      },
+      { name: 'Host', key: 'host', type: 'text', placeholder: 'localhost' },
+      { name: 'Port', key: 'port', type: 'number', placeholder: '27017', defaultValue: 27017 },
+      { name: 'Database', key: 'database', type: 'text', placeholder: 'mydb' },
+      { name: 'Username', key: 'username', type: 'text' },
+      { name: 'Password', key: 'password', type: 'password' },
+      { name: 'Auth Source', key: 'authSource', type: 'text', placeholder: 'admin' },
+      {
+        name: 'Replica Set',
+        key: 'replicaSet',
+        type: 'text',
+        hint: 'Replica set name if applicable',
+      },
+    ],
   },
   redis: {
     icon: '🔥',
@@ -122,6 +418,26 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-red-400/10',
     borderColor: 'border-red-400/30',
     category: 'nosql',
+    fields: [
+      { name: 'Host', key: 'host', type: 'text', placeholder: 'localhost', required: true },
+      {
+        name: 'Port',
+        key: 'port',
+        type: 'number',
+        placeholder: '6379',
+        defaultValue: 6379,
+        required: true,
+      },
+      { name: 'Password', key: 'password', type: 'password', hint: 'AUTH password if set' },
+      {
+        name: 'Database Index',
+        key: 'database',
+        type: 'number',
+        placeholder: '0',
+        defaultValue: 0,
+      },
+      { name: 'TLS', key: 'tls', type: 'select', options: ['Disabled', 'Enabled'] },
+    ],
   },
   elasticsearch: {
     icon: '🔍',
@@ -132,6 +448,19 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-yellow-500/10',
     borderColor: 'border-yellow-500/30',
     category: 'nosql',
+    fields: [
+      {
+        name: 'Node URL',
+        key: 'host',
+        type: 'url',
+        placeholder: 'https://localhost:9200',
+        required: true,
+      },
+      { name: 'Username', key: 'username', type: 'text', placeholder: 'elastic' },
+      { name: 'Password', key: 'password', type: 'password' },
+      { name: 'API Key', key: 'apiKey', type: 'password', hint: 'Alternative to user/pass' },
+      { name: 'CA Certificate', key: 'caCert', type: 'text', hint: 'Path to CA cert for TLS' },
+    ],
   },
   dynamodb: {
     icon: '⚡',
@@ -142,6 +471,7 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-purple-500/10',
     borderColor: 'border-purple-500/30',
     category: 'nosql',
+    fields: awsFields('DynamoDB'),
   },
   cassandra: {
     icon: '👁️',
@@ -152,6 +482,26 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-teal-500/10',
     borderColor: 'border-teal-500/30',
     category: 'nosql',
+    fields: [
+      {
+        name: 'Contact Points',
+        key: 'host',
+        type: 'text',
+        required: true,
+        placeholder: 'node1.example.com,node2.example.com',
+      },
+      { name: 'Port', key: 'port', type: 'number', placeholder: '9042', defaultValue: 9042 },
+      {
+        name: 'Datacenter',
+        key: 'datacenter',
+        type: 'text',
+        required: true,
+        placeholder: 'datacenter1',
+      },
+      { name: 'Keyspace', key: 'database', type: 'text', placeholder: 'my_keyspace' },
+      { name: 'Username', key: 'username', type: 'text' },
+      { name: 'Password', key: 'password', type: 'password' },
+    ],
   },
   couchdb: {
     icon: '🛋️',
@@ -162,6 +512,18 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-red-500/10',
     borderColor: 'border-red-500/30',
     category: 'nosql',
+    fields: [
+      {
+        name: 'URL',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'http://localhost:5984',
+      },
+      { name: 'Database', key: 'database', type: 'text', required: true },
+      { name: 'Username', key: 'username', type: 'text' },
+      { name: 'Password', key: 'password', type: 'password' },
+    ],
   },
   neo4j: {
     icon: '🕸️',
@@ -172,6 +534,18 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-blue-400/10',
     borderColor: 'border-blue-400/30',
     category: 'nosql',
+    fields: [
+      {
+        name: 'URI',
+        key: 'host',
+        type: 'text',
+        required: true,
+        placeholder: 'neo4j://localhost:7687',
+      },
+      { name: 'Database', key: 'database', type: 'text', placeholder: 'neo4j' },
+      { name: 'Username', key: 'username', type: 'text', required: true, placeholder: 'neo4j' },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+    ],
   },
 
   // ─── Enterprise / ERP ────────────────────────────────────────────────
@@ -184,6 +558,21 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-cyan-500/10',
     borderColor: 'border-cyan-500/30',
     category: 'enterprise',
+    fields: [
+      { name: 'Host', key: 'host', type: 'text', required: true, placeholder: 'hana.example.com' },
+      {
+        name: 'Instance Number',
+        key: 'instanceNumber',
+        type: 'text',
+        required: true,
+        placeholder: '00',
+      },
+      { name: 'Port', key: 'port', type: 'number', placeholder: '30015', defaultValue: 30015 },
+      { name: 'Database Name', key: 'database', type: 'text', placeholder: 'SYSTEMDB' },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+      { name: 'Encrypt', key: 'encrypt', type: 'select', options: ['true', 'false'] },
+    ],
   },
   dynamics365: {
     icon: '🟦',
@@ -194,15 +583,39 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-blue-600/10',
     borderColor: 'border-blue-600/30',
     category: 'erp',
+    fields: [
+      {
+        name: 'Environment URL',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'https://your-org.crm.dynamics.com',
+      },
+      ...azureFields('Dynamics 365'),
+    ],
   },
   netsuite: {
     icon: '🌐',
+    logo: '/legacy/oraclenetsuite.jpeg',
     name: 'NetSuite',
     description: 'Oracle cloud ERP platform',
     color: 'from-gray-600 to-gray-700',
     bgColor: 'bg-gray-600/10',
     borderColor: 'border-gray-600/30',
     category: 'erp',
+    fields: [
+      {
+        name: 'Account ID',
+        key: 'accountId',
+        type: 'text',
+        required: true,
+        hint: 'NetSuite account ID (e.g. 123456)',
+      },
+      { name: 'Consumer Key', key: 'consumerKey', type: 'text', required: true },
+      { name: 'Consumer Secret', key: 'consumerSecret', type: 'password', required: true },
+      { name: 'Token ID', key: 'tokenId', type: 'text', required: true },
+      { name: 'Token Secret', key: 'tokenSecret', type: 'password', required: true },
+    ],
   },
   'sap-successfactors': {
     icon: '🏢',
@@ -213,6 +626,19 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-blue-500/10',
     borderColor: 'border-blue-500/30',
     category: 'hcm',
+    fields: [
+      {
+        name: 'API Server',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'https://api12.successfactors.eu',
+      },
+      { name: 'Company ID', key: 'companyId', type: 'text', required: true },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+      ...oauthFields('SAP SuccessFactors'),
+    ],
   },
   'infor-cloudsuite': {
     icon: '☁️',
@@ -223,16 +649,45 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-amber-500/10',
     borderColor: 'border-amber-500/30',
     category: 'erp',
+    fields: [
+      {
+        name: 'ION API Gateway',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'https://mingle-ionapi.inforcloudsuite.com',
+      },
+      { name: 'Tenant ID', key: 'tenantId', type: 'text', required: true },
+      ...oauthFields('Infor ION'),
+    ],
   },
   'jd-edwards': {
     icon: '🏗️',
-    logo: '/legacy/JDEdwards.svg',
+    logo: '/legacy/oracle.svg',
     name: 'JD Edwards',
     description: 'Oracle JD Edwards ERP',
     color: 'from-red-600 to-red-700',
     bgColor: 'bg-red-600/10',
     borderColor: 'border-red-600/30',
     category: 'erp',
+    fields: [
+      {
+        name: 'AIS Server',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'https://jde-ais.example.com',
+      },
+      {
+        name: 'Environment',
+        key: 'environment',
+        type: 'text',
+        required: true,
+        placeholder: 'JDV920',
+      },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+    ],
   },
   epicor: {
     icon: '🔧',
@@ -243,6 +698,19 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-green-600/10',
     borderColor: 'border-green-600/30',
     category: 'erp',
+    fields: [
+      {
+        name: 'Server URL',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'https://epicor.example.com',
+      },
+      { name: 'Company', key: 'company', type: 'text', required: true },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+      ...apiKeyFields('Epicor REST'),
+    ],
   },
   'sage-intacct': {
     icon: '📗',
@@ -253,6 +721,19 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-green-500/10',
     borderColor: 'border-green-500/30',
     category: 'erp',
+    fields: [
+      { name: 'Company ID', key: 'companyId', type: 'text', required: true },
+      { name: 'User ID', key: 'username', type: 'text', required: true },
+      { name: 'User Password', key: 'password', type: 'password', required: true },
+      {
+        name: 'Sender ID',
+        key: 'senderId',
+        type: 'text',
+        required: true,
+        hint: 'Web Services sender ID',
+      },
+      { name: 'Sender Password', key: 'senderPassword', type: 'password', required: true },
+    ],
   },
   'oracle-peoplesoft': {
     icon: '👤',
@@ -263,6 +744,24 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-red-500/10',
     borderColor: 'border-red-500/30',
     category: 'erp',
+    fields: [
+      {
+        name: 'PS Gateway URL',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'https://peoplesoft.example.com',
+      },
+      {
+        name: 'Node Name',
+        key: 'nodeName',
+        type: 'text',
+        required: true,
+        hint: 'Integration Broker node',
+      },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+    ],
   },
   'oracle-opera': {
     icon: '🏨',
@@ -273,6 +772,11 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-red-600/10',
     borderColor: 'border-red-600/30',
     category: 'erp',
+    fields: [
+      { name: 'Environment URL', key: 'host', type: 'url', required: true },
+      { name: 'Enterprise ID', key: 'enterpriseId', type: 'text', required: true },
+      ...oauthFields('OHIP'),
+    ],
   },
 
   // ─── CRM & Sales ─────────────────────────────────────────────────────
@@ -285,6 +789,26 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-sky-400/10',
     borderColor: 'border-sky-400/30',
     category: 'crm',
+    fields: [
+      {
+        name: 'Login URL',
+        key: 'host',
+        type: 'url',
+        placeholder: 'https://login.salesforce.com',
+        required: true,
+      },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+      {
+        name: 'Security Token',
+        key: 'securityToken',
+        type: 'password',
+        required: true,
+        hint: 'Appended to password for API auth',
+      },
+      { name: 'Client ID', key: 'clientId', type: 'text', hint: 'For OAuth Connected App' },
+      { name: 'Client Secret', key: 'clientSecret', type: 'password' },
+    ],
   },
   hubspot: {
     icon: '🧡',
@@ -295,6 +819,21 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-orange-500/10',
     borderColor: 'border-orange-500/30',
     category: 'crm',
+    fields: [
+      {
+        name: 'Access Token',
+        key: 'apiToken',
+        type: 'password',
+        required: true,
+        hint: 'Private app access token from HubSpot',
+      },
+      {
+        name: 'Portal ID',
+        key: 'portalId',
+        type: 'text',
+        hint: 'Hub ID (optional for some endpoints)',
+      },
+    ],
   },
   'oracle-siebel': {
     icon: '📞',
@@ -305,6 +844,12 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-red-500/10',
     borderColor: 'border-red-500/30',
     category: 'crm',
+    fields: [
+      { name: 'Gateway URL', key: 'host', type: 'url', required: true },
+      { name: 'Enterprise', key: 'enterprise', type: 'text', required: true },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+    ],
   },
   zendesk: {
     icon: '🎫',
@@ -315,6 +860,24 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-emerald-500/10',
     borderColor: 'border-emerald-500/30',
     category: 'crm',
+    fields: [
+      {
+        name: 'Subdomain',
+        key: 'host',
+        type: 'text',
+        required: true,
+        placeholder: 'your-company',
+        hint: 'your-company.zendesk.com',
+      },
+      { name: 'Email', key: 'username', type: 'text', required: true },
+      {
+        name: 'API Token',
+        key: 'apiToken',
+        type: 'password',
+        required: true,
+        hint: 'Zendesk API token',
+      },
+    ],
   },
 
   // ─── ITSM & Support ──────────────────────────────────────────────────
@@ -327,6 +890,18 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-teal-400/10',
     borderColor: 'border-teal-400/30',
     category: 'enterprise',
+    fields: [
+      {
+        name: 'Instance URL',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'https://your-instance.service-now.com',
+      },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+      ...oauthFields('ServiceNow'),
+    ],
   },
   jira: {
     icon: '📋',
@@ -337,6 +912,23 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-blue-400/10',
     borderColor: 'border-blue-400/30',
     category: 'enterprise',
+    fields: [
+      {
+        name: 'Jira URL',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'https://your-org.atlassian.net',
+      },
+      { name: 'Email', key: 'username', type: 'text', required: true },
+      {
+        name: 'API Token',
+        key: 'apiToken',
+        type: 'password',
+        required: true,
+        hint: 'Generate at id.atlassian.com/manage-profile/security/api-tokens',
+      },
+    ],
   },
 
   // ─── HCM & HR ─────────────────────────────────────────────────────────
@@ -349,6 +941,25 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-orange-400/10',
     borderColor: 'border-orange-400/30',
     category: 'hcm',
+    fields: [
+      {
+        name: 'Tenant URL',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'https://wd5-impl-services1.workday.com',
+      },
+      { name: 'Tenant Name', key: 'tenantName', type: 'text', required: true },
+      {
+        name: 'Username',
+        key: 'username',
+        type: 'text',
+        required: true,
+        hint: 'Integration system user',
+      },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+      ...oauthFields('Workday'),
+    ],
   },
   adp: {
     icon: '💼',
@@ -359,6 +970,16 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-red-500/10',
     borderColor: 'border-red-500/30',
     category: 'hcm',
+    fields: [
+      ...oauthFields('ADP Marketplace'),
+      {
+        name: 'SSL Certificate',
+        key: 'sslCert',
+        type: 'text',
+        hint: 'Path to ADP-issued certificate',
+      },
+      { name: 'SSL Key', key: 'sslKey', type: 'text', hint: 'Path to private key' },
+    ],
   },
   'ukg-kronos': {
     icon: '⏰',
@@ -369,6 +990,12 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-green-500/10',
     borderColor: 'border-green-500/30',
     category: 'hcm',
+    fields: [
+      { name: 'API URL', key: 'host', type: 'url', required: true },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+      ...apiKeyFields('UKG Pro'),
+    ],
   },
   'sap-concur': {
     icon: '✈️',
@@ -379,6 +1006,17 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-blue-500/10',
     borderColor: 'border-blue-500/30',
     category: 'hcm',
+    fields: [
+      {
+        name: 'Data Center',
+        key: 'host',
+        type: 'select',
+        options: ['us', 'eu', 'cn', 'us2', 'eu2'],
+        required: true,
+      },
+      { name: 'Company UUID', key: 'companyUuid', type: 'text', required: true },
+      ...oauthFields('SAP Concur'),
+    ],
   },
 
   // ─── Healthcare ──────────────────────────────────────────────────────
@@ -391,6 +1029,29 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-red-500/10',
     borderColor: 'border-red-500/30',
     category: 'healthcare',
+    fields: [
+      {
+        name: 'FHIR Base URL',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'https://fhir.epic.com/interconnect-fhir-oauth',
+      },
+      {
+        name: 'Client ID',
+        key: 'clientId',
+        type: 'text',
+        required: true,
+        hint: 'Non-production or production app ID',
+      },
+      {
+        name: 'Private Key (JWK)',
+        key: 'privateKey',
+        type: 'textarea',
+        required: true,
+        hint: 'RSA/EC private key for backend auth',
+      },
+    ],
   },
   cerner: {
     icon: '🩺',
@@ -401,6 +1062,12 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-blue-500/10',
     borderColor: 'border-blue-500/30',
     category: 'healthcare',
+    fields: [
+      { name: 'FHIR Endpoint', key: 'host', type: 'url', required: true },
+      { name: 'System Account ID', key: 'clientId', type: 'text', required: true },
+      { name: 'Secret', key: 'clientSecret', type: 'password', required: true },
+      { name: 'Tenant ID', key: 'tenantId', type: 'text' },
+    ],
   },
   meditech: {
     icon: '💊',
@@ -411,6 +1078,18 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-teal-500/10',
     borderColor: 'border-teal-500/30',
     category: 'healthcare',
+    fields: [
+      { name: 'Server', key: 'host', type: 'text', required: true },
+      {
+        name: 'Platform',
+        key: 'platform',
+        type: 'select',
+        options: ['Expanse', 'Magic', '6.x'],
+        required: true,
+      },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+    ],
   },
   allscripts: {
     icon: '📋',
@@ -421,6 +1100,12 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-green-600/10',
     borderColor: 'border-green-600/30',
     category: 'healthcare',
+    fields: [
+      { name: 'API URL', key: 'host', type: 'url', required: true },
+      { name: 'App Name', key: 'appName', type: 'text', required: true },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+    ],
   },
 
   // ─── Insurance ───────────────────────────────────────────────────────
@@ -433,6 +1118,10 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-blue-600/10',
     borderColor: 'border-blue-600/30',
     category: 'insurance',
+    fields: [
+      { name: 'Cloud API URL', key: 'host', type: 'url', required: true },
+      ...oauthFields('Guidewire Cloud'),
+    ],
   },
   'duck-creek': {
     icon: '🦆',
@@ -443,6 +1132,11 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-yellow-500/10',
     borderColor: 'border-yellow-500/30',
     category: 'insurance',
+    fields: [
+      { name: 'API Endpoint', key: 'host', type: 'url', required: true },
+      { name: 'Subscription Key', key: 'apiKey', type: 'password', required: true },
+      ...oauthFields('Duck Creek OnDemand'),
+    ],
   },
   'applied-epic': {
     icon: '📄',
@@ -453,6 +1147,12 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-indigo-500/10',
     borderColor: 'border-indigo-500/30',
     category: 'insurance',
+    fields: [
+      { name: 'Server', key: 'host', type: 'text', required: true },
+      { name: 'Database', key: 'database', type: 'text', required: true },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+    ],
   },
 
   // ─── Supply Chain & Logistics ────────────────────────────────────────
@@ -465,6 +1165,7 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-blue-500/10',
     borderColor: 'border-blue-500/30',
     category: 'supply-chain',
+    fields: apiTokenFields('Manhattan Active'),
   },
   'blue-yonder': {
     icon: '🔵',
@@ -475,6 +1176,7 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-blue-400/10',
     borderColor: 'border-blue-400/30',
     category: 'supply-chain',
+    fields: apiTokenFields('Blue Yonder'),
   },
   descartes: {
     icon: '🚚',
@@ -485,6 +1187,7 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-green-500/10',
     borderColor: 'border-green-500/30',
     category: 'supply-chain',
+    fields: apiTokenFields('Descartes'),
   },
 
   // ─── Finance & Banking ───────────────────────────────────────────────
@@ -497,6 +1200,7 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-blue-700/10',
     borderColor: 'border-blue-700/30',
     category: 'finance',
+    fields: apiTokenFields('FIS'),
   },
   finastra: {
     icon: '💳',
@@ -507,6 +1211,7 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-purple-600/10',
     borderColor: 'border-purple-600/30',
     category: 'finance',
+    fields: oauthFields('Finastra FusionFabric'),
   },
   temenos: {
     icon: '🏛️',
@@ -517,6 +1222,7 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-blue-500/10',
     borderColor: 'border-blue-500/30',
     category: 'finance',
+    fields: apiTokenFields('Temenos'),
   },
   blackline: {
     icon: '📊',
@@ -527,6 +1233,7 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-gray-700/10',
     borderColor: 'border-gray-700/30',
     category: 'finance',
+    fields: apiTokenFields('BlackLine'),
   },
   quickbooks: {
     icon: '📒',
@@ -537,6 +1244,10 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-green-500/10',
     borderColor: 'border-green-500/30',
     category: 'finance',
+    fields: [
+      { name: 'Company ID', key: 'companyId', type: 'text', required: true, hint: 'Realm ID' },
+      ...oauthFields('QuickBooks'),
+    ],
   },
 
   // ─── Commerce ────────────────────────────────────────────────────────
@@ -549,6 +1260,23 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-green-500/10',
     borderColor: 'border-green-500/30',
     category: 'commerce',
+    fields: [
+      {
+        name: 'Store URL',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'https://your-store.myshopify.com',
+      },
+      {
+        name: 'Admin API Access Token',
+        key: 'apiToken',
+        type: 'password',
+        required: true,
+        hint: 'From Shopify Admin > Apps > Custom app',
+      },
+      { name: 'API Version', key: 'apiVersion', type: 'text', placeholder: '2024-01' },
+    ],
   },
   magento: {
     icon: '🧲',
@@ -559,6 +1287,22 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-orange-500/10',
     borderColor: 'border-orange-500/30',
     category: 'commerce',
+    fields: [
+      {
+        name: 'Base URL',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'https://magento.example.com',
+      },
+      {
+        name: 'Access Token',
+        key: 'apiToken',
+        type: 'password',
+        required: true,
+        hint: 'Integration access token',
+      },
+    ],
   },
 
   // ─── Telecom ─────────────────────────────────────────────────────────
@@ -571,6 +1315,7 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-blue-500/10',
     borderColor: 'border-blue-500/30',
     category: 'telecom',
+    fields: apiTokenFields('Amdocs'),
   },
   'ericsson-bss': {
     icon: '📶',
@@ -581,6 +1326,7 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-blue-600/10',
     borderColor: 'border-blue-600/30',
     category: 'telecom',
+    fields: apiTokenFields('Ericsson'),
   },
 
   // ─── Document Management ─────────────────────────────────────────────
@@ -593,6 +1339,16 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-teal-500/10',
     borderColor: 'border-teal-500/30',
     category: 'document',
+    fields: [
+      {
+        name: 'Site URL',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'https://your-org.sharepoint.com/sites/mysite',
+      },
+      ...azureFields('SharePoint'),
+    ],
   },
   documentum: {
     icon: '🗄️',
@@ -603,6 +1359,12 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-blue-500/10',
     borderColor: 'border-blue-500/30',
     category: 'document',
+    fields: [
+      { name: 'Repository URL', key: 'host', type: 'url', required: true },
+      { name: 'Repository', key: 'database', type: 'text', required: true },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+    ],
   },
   'ibm-filenet': {
     icon: '📂',
@@ -613,6 +1375,12 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-blue-600/10',
     borderColor: 'border-blue-600/30',
     category: 'document',
+    fields: [
+      { name: 'Content Engine URL', key: 'host', type: 'url', required: true },
+      { name: 'Object Store', key: 'database', type: 'text', required: true },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+    ],
   },
   box: {
     icon: '📥',
@@ -623,6 +1391,7 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-blue-400/10',
     borderColor: 'border-blue-400/30',
     category: 'document',
+    fields: oauthFields('Box'),
   },
 
   // ─── Government ──────────────────────────────────────────────────────
@@ -635,6 +1404,7 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-purple-500/10',
     borderColor: 'border-purple-500/30',
     category: 'government',
+    fields: apiTokenFields('CGI'),
   },
   'tyler-technologies': {
     icon: '🏫',
@@ -645,6 +1415,7 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-blue-500/10',
     borderColor: 'border-blue-500/30',
     category: 'government',
+    fields: apiTokenFields('Tyler'),
   },
 
   // ─── Education ───────────────────────────────────────────────────────
@@ -657,6 +1428,7 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-purple-500/10',
     borderColor: 'border-purple-500/30',
     category: 'education',
+    fields: apiTokenFields('Ellucian'),
   },
 
   // ─── Asset & Facilities ──────────────────────────────────────────────
@@ -669,6 +1441,7 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-blue-600/10',
     borderColor: 'border-blue-600/30',
     category: 'asset',
+    fields: apiTokenFields('Maximo'),
   },
   'ibm-tririga': {
     icon: '🏢',
@@ -679,6 +1452,7 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-blue-500/10',
     borderColor: 'border-blue-500/30',
     category: 'asset',
+    fields: apiTokenFields('TRIRIGA'),
   },
   'ge-predix': {
     icon: '⚙️',
@@ -689,6 +1463,7 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-blue-500/10',
     borderColor: 'border-blue-500/30',
     category: 'asset',
+    fields: oauthFields('GE Predix'),
   },
 
   // ─── Procurement ─────────────────────────────────────────────────────
@@ -701,6 +1476,18 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-blue-500/10',
     borderColor: 'border-blue-500/30',
     category: 'procurement',
+    fields: [
+      { name: 'Realm', key: 'realm', type: 'text', required: true },
+      {
+        name: 'API URL',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'https://openapi.ariba.com',
+      },
+      ...apiKeyFields('SAP Ariba'),
+      ...oauthFields('SAP Ariba'),
+    ],
   },
   coupa: {
     icon: '💰',
@@ -711,6 +1498,16 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-blue-400/10',
     borderColor: 'border-blue-400/30',
     category: 'procurement',
+    fields: [
+      {
+        name: 'Instance URL',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'https://your-company.coupahost.com',
+      },
+      ...apiKeyFields('Coupa'),
+    ],
   },
 
   // ─── Legacy / Mainframe ──────────────────────────────────────────────
@@ -723,9 +1520,10 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-gray-600/10',
     borderColor: 'border-gray-600/30',
     category: 'legacy',
+    fields: mainframeFields(),
   },
 
-  // ─── Cloud Data Warehouses (display-only, no MCP server) ─────────────
+  // ─── Cloud Data Warehouses ───────────────────────────────────────────
   snowflake: {
     icon: '❄️',
     logo: '/legacy/snowflake.svg',
@@ -735,6 +1533,27 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-cyan-400/10',
     borderColor: 'border-cyan-400/30',
     category: 'warehouse',
+    fields: [
+      {
+        name: 'Account Identifier',
+        key: 'host',
+        type: 'text',
+        required: true,
+        placeholder: 'abc12345.us-east-1',
+      },
+      {
+        name: 'Warehouse',
+        key: 'warehouse',
+        type: 'text',
+        required: true,
+        placeholder: 'COMPUTE_WH',
+      },
+      { name: 'Database', key: 'database', type: 'text', required: true },
+      { name: 'Schema', key: 'schema', type: 'text', placeholder: 'PUBLIC' },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+      { name: 'Role', key: 'role', type: 'text', placeholder: 'ACCOUNTADMIN' },
+    ],
   },
   bigquery: {
     icon: '📊',
@@ -745,6 +1564,18 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-blue-500/10',
     borderColor: 'border-blue-500/30',
     category: 'warehouse',
+    fields: [
+      { name: 'Project ID', key: 'projectId', type: 'text', required: true },
+      { name: 'Dataset', key: 'database', type: 'text', placeholder: 'my_dataset' },
+      {
+        name: 'Service Account JSON',
+        key: 'serviceAccountKey',
+        type: 'textarea',
+        required: true,
+        hint: 'Paste the full service account JSON key',
+      },
+      { name: 'Location', key: 'location', type: 'text', placeholder: 'US' },
+    ],
   },
   redshift: {
     icon: '🔶',
@@ -755,6 +1586,7 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-red-500/10',
     borderColor: 'border-red-500/30',
     category: 'warehouse',
+    fields: dbFields(5439),
   },
   databricks: {
     icon: '🧱',
@@ -765,9 +1597,34 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-red-400/10',
     borderColor: 'border-red-400/30',
     category: 'warehouse',
+    fields: [
+      {
+        name: 'Workspace URL',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'https://adb-1234567890.17.azuredatabricks.net',
+      },
+      {
+        name: 'HTTP Path',
+        key: 'httpPath',
+        type: 'text',
+        required: true,
+        placeholder: '/sql/1.0/warehouses/abc123',
+      },
+      {
+        name: 'Access Token',
+        key: 'apiToken',
+        type: 'password',
+        required: true,
+        hint: 'Personal access token or service principal token',
+      },
+      { name: 'Catalog', key: 'catalog', type: 'text', placeholder: 'main' },
+      { name: 'Schema', key: 'schema', type: 'text', placeholder: 'default' },
+    ],
   },
 
-  // ─── MCP Servers / Custom ────────────────────────────────────────────
+  // ─── MCP Servers ─────────────────────────────────────────────────────
   'mcp-server': {
     icon: '🔌',
     logo: '/legacy/mcp.jpg',
@@ -777,6 +1634,170 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-purple-500/10',
     borderColor: 'border-purple-500/30',
     category: 'mcp',
+    fields: mcpFields(),
+  },
+  'mcp-postgres': {
+    icon: '🐘',
+    logo: '/legacy/mcp.jpg',
+    name: 'PostgreSQL MCP',
+    description: 'Query Postgres via MCP',
+    color: 'from-indigo-500 to-purple-500',
+    bgColor: 'bg-indigo-500/10',
+    borderColor: 'border-indigo-500/30',
+    category: 'mcp',
+    fields: [...mcpFields(), ...dbFields(5432)],
+  },
+  'mcp-mysql': {
+    icon: '🐬',
+    logo: '/legacy/mcp.jpg',
+    name: 'MySQL MCP',
+    description: 'Query MySQL via MCP',
+    color: 'from-blue-500 to-purple-500',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    category: 'mcp',
+    fields: [...mcpFields(), ...dbFields(3306)],
+  },
+  'mcp-sqlite': {
+    icon: '📦',
+    logo: '/legacy/mcp.jpg',
+    name: 'SQLite MCP',
+    description: 'Lightweight local DB via MCP',
+    color: 'from-gray-500 to-purple-500',
+    bgColor: 'bg-gray-500/10',
+    borderColor: 'border-gray-500/30',
+    category: 'mcp',
+    fields: [
+      ...mcpFields(),
+      {
+        name: 'File Path',
+        key: 'filePath',
+        type: 'text',
+        required: true,
+        placeholder: '/path/to/database.sqlite',
+      },
+    ],
+  },
+  'mcp-mongodb': {
+    icon: '🍃',
+    logo: '/legacy/mcp.jpg',
+    name: 'MongoDB MCP',
+    description: 'Document DB queries over MCP',
+    color: 'from-green-500 to-purple-500',
+    bgColor: 'bg-green-500/10',
+    borderColor: 'border-green-500/30',
+    category: 'mcp',
+    fields: mcpFields(),
+  },
+  'mcp-redis': {
+    icon: '🔥',
+    logo: '/legacy/mcp.jpg',
+    name: 'Redis MCP',
+    description: 'In-memory store via MCP',
+    color: 'from-red-500 to-purple-500',
+    bgColor: 'bg-red-500/10',
+    borderColor: 'border-red-500/30',
+    category: 'mcp',
+    fields: mcpFields(),
+  },
+  'mcp-github': {
+    icon: '🐙',
+    logo: '/legacy/mcp.jpg',
+    name: 'GitHub MCP',
+    description: 'Repos, issues, PRs via MCP',
+    color: 'from-gray-500 to-purple-500',
+    bgColor: 'bg-gray-500/10',
+    borderColor: 'border-gray-500/30',
+    category: 'mcp',
+    fields: mcpFields(),
+  },
+  'mcp-slack': {
+    icon: '💬',
+    logo: '/legacy/Slack.svg',
+    name: 'Slack MCP',
+    description: 'Channels & messages over MCP',
+    color: 'from-purple-500 to-pink-500',
+    bgColor: 'bg-purple-500/10',
+    borderColor: 'border-purple-500/30',
+    category: 'mcp',
+    fields: mcpFields(),
+  },
+  'mcp-gdrive': {
+    icon: '📁',
+    logo: '/legacy/google.svg',
+    name: 'Google Drive MCP',
+    description: 'Drive files & folders via MCP',
+    color: 'from-yellow-500 to-purple-500',
+    bgColor: 'bg-yellow-500/10',
+    borderColor: 'border-yellow-500/30',
+    category: 'mcp',
+    fields: mcpFields(),
+  },
+  'mcp-notion': {
+    icon: '📝',
+    logo: '/legacy/mcp.jpg',
+    name: 'Notion MCP',
+    description: 'Pages & databases over MCP',
+    color: 'from-gray-600 to-purple-500',
+    bgColor: 'bg-gray-600/10',
+    borderColor: 'border-gray-600/30',
+    category: 'mcp',
+    fields: mcpFields(),
+  },
+  'mcp-stripe': {
+    icon: '💳',
+    logo: '/legacy/mcp.jpg',
+    name: 'Stripe MCP',
+    description: 'Payments & invoices over MCP',
+    color: 'from-indigo-500 to-purple-500',
+    bgColor: 'bg-indigo-500/10',
+    borderColor: 'border-indigo-500/30',
+    category: 'mcp',
+    fields: mcpFields(),
+  },
+  'mcp-sentry': {
+    icon: '🐛',
+    logo: '/legacy/mcp.jpg',
+    name: 'Sentry MCP',
+    description: 'Error monitoring over MCP',
+    color: 'from-red-500 to-purple-500',
+    bgColor: 'bg-red-500/10',
+    borderColor: 'border-red-500/30',
+    category: 'mcp',
+    fields: mcpFields(),
+  },
+  'mcp-filesystem': {
+    icon: '📂',
+    logo: '/legacy/mcp.jpg',
+    name: 'Filesystem MCP',
+    description: 'Local file access via MCP',
+    color: 'from-amber-500 to-purple-500',
+    bgColor: 'bg-amber-500/10',
+    borderColor: 'border-amber-500/30',
+    category: 'mcp',
+    fields: mcpFields(),
+  },
+  'mcp-docker': {
+    icon: '🐳',
+    logo: '/legacy/mcp.jpg',
+    name: 'Docker MCP',
+    description: 'Container management via MCP',
+    color: 'from-blue-400 to-purple-500',
+    bgColor: 'bg-blue-400/10',
+    borderColor: 'border-blue-400/30',
+    category: 'mcp',
+    fields: mcpFields(),
+  },
+  'mcp-kubernetes': {
+    icon: '☸️',
+    logo: '/legacy/mcp.jpg',
+    name: 'Kubernetes MCP',
+    description: 'Cluster ops via MCP',
+    color: 'from-blue-500 to-purple-500',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    category: 'mcp',
+    fields: mcpFields(),
   },
   'custom-api': {
     icon: '🔗',
@@ -787,6 +1808,2416 @@ export const CONNECTION_LIBRARY: Record<string, ConnectionTypeConfig> = {
     bgColor: 'bg-gray-500/10',
     borderColor: 'border-gray-500/30',
     category: 'mcp',
+    fields: [
+      {
+        name: 'Base URL',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'https://api.example.com/v1',
+      },
+      {
+        name: 'Auth Type',
+        key: 'authType',
+        type: 'select',
+        options: ['None', 'Bearer Token', 'API Key', 'Basic Auth', 'OAuth 2.0'],
+        required: true,
+      },
+      {
+        name: 'Auth Token',
+        key: 'apiToken',
+        type: 'password',
+        hint: 'Bearer token, API key, or password',
+      },
+      {
+        name: 'Headers',
+        key: 'headers',
+        type: 'textarea',
+        placeholder: 'Content-Type: application/json',
+        hint: 'One header per line',
+      },
+    ],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════
+  //  NEW: Communication, Project Mgmt, BI, DevTools, Cloud, etc.
+  // ═══════════════════════════════════════════════════════════════════════
+
+  // ─── Communication ───────────────────────────────────────────────────
+  slack: {
+    icon: '💬',
+    logo: '/legacy/Slack.svg',
+    name: 'Slack',
+    description: 'Team messaging platform',
+    color: 'from-purple-500 to-purple-600',
+    bgColor: 'bg-purple-500/10',
+    borderColor: 'border-purple-500/30',
+    category: 'communication',
+    fields: [
+      {
+        name: 'Bot Token',
+        key: 'apiToken',
+        type: 'password',
+        required: true,
+        hint: 'xoxb-... bot user OAuth token',
+      },
+      {
+        name: 'Signing Secret',
+        key: 'signingSecret',
+        type: 'password',
+        hint: 'For webhook verification',
+      },
+      { name: 'App Token', key: 'appToken', type: 'password', hint: 'xapp-... for socket mode' },
+    ],
+  },
+  'ms-teams': {
+    icon: '💜',
+    logo: '/legacy/msteams.svg',
+    name: 'Microsoft Teams',
+    description: 'Enterprise team collaboration',
+    color: 'from-indigo-500 to-indigo-600',
+    bgColor: 'bg-indigo-500/10',
+    borderColor: 'border-indigo-500/30',
+    category: 'communication',
+    fields: azureFields('Teams Bot Framework'),
+  },
+  zoom: {
+    icon: '📹',
+    logo: '/legacy/zoom.svg',
+    name: 'Zoom',
+    description: 'Video conferencing platform',
+    color: 'from-blue-400 to-blue-500',
+    bgColor: 'bg-blue-400/10',
+    borderColor: 'border-blue-400/30',
+    category: 'communication',
+    fields: [
+      { name: 'Account ID', key: 'accountId', type: 'text', required: true },
+      ...oauthFields('Zoom'),
+    ],
+  },
+  'google-workspace': {
+    icon: '📧',
+    logo: '/legacy/google.svg',
+    name: 'Google Workspace',
+    description: 'Gmail, Drive, Docs, Sheets & more',
+    color: 'from-blue-500 to-green-500',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    category: 'communication',
+    fields: [
+      ...oauthFields('Google Cloud'),
+      {
+        name: 'Service Account JSON',
+        key: 'serviceAccountKey',
+        type: 'textarea',
+        hint: 'For server-to-server auth',
+      },
+      {
+        name: 'Delegated User Email',
+        key: 'delegatedEmail',
+        type: 'text',
+        hint: 'For domain-wide delegation',
+      },
+    ],
+  },
+  confluence: {
+    icon: '📖',
+    logo: '/legacy/Confluence.svg',
+    name: 'Confluence',
+    description: 'Team knowledge wiki',
+    color: 'from-blue-500 to-blue-600',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    category: 'communication',
+    fields: [
+      {
+        name: 'Confluence URL',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'https://your-org.atlassian.net/wiki',
+      },
+      { name: 'Email', key: 'username', type: 'text', required: true },
+      { name: 'API Token', key: 'apiToken', type: 'password', required: true },
+    ],
+  },
+  notion: {
+    icon: '📝',
+    name: 'Notion',
+    description: 'All-in-one workspace',
+    color: 'from-gray-600 to-gray-700',
+    bgColor: 'bg-gray-600/10',
+    borderColor: 'border-gray-600/30',
+    category: 'communication',
+    fields: [
+      {
+        name: 'Integration Token',
+        key: 'apiToken',
+        type: 'password',
+        required: true,
+        hint: 'Internal integration token from notion.so/my-integrations',
+      },
+    ],
+  },
+  'dropbox-business': {
+    icon: '📦',
+    name: 'Dropbox Business',
+    description: 'Cloud file storage & sharing',
+    color: 'from-blue-500 to-blue-600',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    category: 'communication',
+    fields: oauthFields('Dropbox'),
+  },
+
+  // ─── Project Management ──────────────────────────────────────────────
+  trello: {
+    icon: '📋',
+    logo: '/legacy/trello.png',
+    name: 'Trello',
+    description: 'Kanban-style project boards',
+    color: 'from-blue-400 to-blue-500',
+    bgColor: 'bg-blue-400/10',
+    borderColor: 'border-blue-400/30',
+    category: 'project-mgmt',
+    fields: [
+      {
+        name: 'API Key',
+        key: 'apiKey',
+        type: 'password',
+        required: true,
+        hint: 'From trello.com/power-ups/admin',
+      },
+      { name: 'Token', key: 'apiToken', type: 'password', required: true },
+    ],
+  },
+  asana: {
+    icon: '🎯',
+    logo: '/legacy/asana.svg',
+    name: 'Asana',
+    description: 'Work management platform',
+    color: 'from-pink-500 to-pink-600',
+    bgColor: 'bg-pink-500/10',
+    borderColor: 'border-pink-500/30',
+    category: 'project-mgmt',
+    fields: [
+      {
+        name: 'Personal Access Token',
+        key: 'apiToken',
+        type: 'password',
+        required: true,
+        hint: 'From app.asana.com/0/developer-console',
+      },
+    ],
+  },
+  'monday-com': {
+    icon: '📅',
+    logo: '/legacy/monday.jpeg',
+    name: 'Monday.com',
+    description: 'Work OS platform',
+    color: 'from-red-500 to-red-600',
+    bgColor: 'bg-red-500/10',
+    borderColor: 'border-red-500/30',
+    category: 'project-mgmt',
+    fields: apiTokenFields('Monday.com'),
+  },
+  clickup: {
+    icon: '✅',
+    logo: '/legacy/clickup.svg',
+    name: 'ClickUp',
+    description: 'All-in-one productivity',
+    color: 'from-purple-500 to-purple-600',
+    bgColor: 'bg-purple-500/10',
+    borderColor: 'border-purple-500/30',
+    category: 'project-mgmt',
+    fields: apiTokenFields('ClickUp'),
+  },
+  linear: {
+    icon: '📐',
+    logo: '/legacy/linear.svg',
+    name: 'Linear',
+    description: 'Modern issue tracking',
+    color: 'from-indigo-500 to-indigo-600',
+    bgColor: 'bg-indigo-500/10',
+    borderColor: 'border-indigo-500/30',
+    category: 'project-mgmt',
+    fields: apiKeyFields('Linear'),
+  },
+  wrike: {
+    icon: '📊',
+    logo: '/legacy/wrike.svg',
+    name: 'Wrike',
+    description: 'Versatile work management',
+    color: 'from-green-500 to-green-600',
+    bgColor: 'bg-green-500/10',
+    borderColor: 'border-green-500/30',
+    category: 'project-mgmt',
+    fields: oauthFields('Wrike'),
+  },
+  smartsheet: {
+    icon: '📑',
+    logo: '/legacy/smartsheet.jpeg',
+    name: 'Smartsheet',
+    description: 'Spreadsheet-style project mgmt',
+    color: 'from-blue-500 to-blue-600',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    category: 'project-mgmt',
+    fields: apiTokenFields('Smartsheet'),
+  },
+
+  // ─── BI & Reporting ──────────────────────────────────────────────────
+  tableau: {
+    icon: '📊',
+    name: 'Tableau',
+    description: 'Business intelligence & viz',
+    color: 'from-blue-500 to-orange-500',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    category: 'bi',
+    fields: [
+      {
+        name: 'Server URL',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'https://tableau.example.com',
+      },
+      { name: 'Site Name', key: 'siteName', type: 'text', hint: 'Content URL (blank for Default)' },
+      { name: 'Personal Access Token Name', key: 'tokenName', type: 'text', required: true },
+      { name: 'Personal Access Token Secret', key: 'apiToken', type: 'password', required: true },
+    ],
+  },
+  'power-bi': {
+    icon: '📈',
+    name: 'Power BI',
+    description: 'Microsoft analytics tool',
+    color: 'from-yellow-500 to-yellow-600',
+    bgColor: 'bg-yellow-500/10',
+    borderColor: 'border-yellow-500/30',
+    category: 'bi',
+    fields: azureFields('Power BI'),
+  },
+  looker: {
+    icon: '🔍',
+    name: 'Looker',
+    description: 'Google data platform',
+    color: 'from-blue-500 to-blue-600',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    category: 'bi',
+    fields: [
+      {
+        name: 'Instance URL',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'https://your-instance.looker.com:19999',
+      },
+      { name: 'Client ID', key: 'clientId', type: 'text', required: true },
+      { name: 'Client Secret', key: 'clientSecret', type: 'password', required: true },
+    ],
+  },
+  qlik: {
+    icon: '🟢',
+    name: 'Qlik',
+    description: 'Data analytics platform',
+    color: 'from-green-500 to-green-600',
+    bgColor: 'bg-green-500/10',
+    borderColor: 'border-green-500/30',
+    category: 'bi',
+    fields: apiKeyFields('Qlik Cloud'),
+  },
+
+  // ─── Dev Tools & CI/CD ───────────────────────────────────────────────
+  github: {
+    icon: '🐙',
+    name: 'GitHub',
+    description: 'Code hosting & CI/CD',
+    color: 'from-gray-600 to-gray-700',
+    bgColor: 'bg-gray-600/10',
+    borderColor: 'border-gray-600/30',
+    category: 'devtools',
+    fields: [
+      {
+        name: 'Personal Access Token',
+        key: 'apiToken',
+        type: 'password',
+        required: true,
+        hint: 'Fine-grained or classic PAT',
+      },
+      {
+        name: 'Enterprise URL',
+        key: 'host',
+        type: 'url',
+        placeholder: 'https://github.example.com/api/v3',
+        hint: 'Leave blank for github.com',
+      },
+    ],
+  },
+  gitlab: {
+    icon: '🦊',
+    name: 'GitLab',
+    description: 'DevOps lifecycle platform',
+    color: 'from-orange-500 to-orange-600',
+    bgColor: 'bg-orange-500/10',
+    borderColor: 'border-orange-500/30',
+    category: 'devtools',
+    fields: [
+      { name: 'Personal Access Token', key: 'apiToken', type: 'password', required: true },
+      {
+        name: 'GitLab URL',
+        key: 'host',
+        type: 'url',
+        placeholder: 'https://gitlab.com',
+        hint: 'Your self-hosted URL or gitlab.com',
+      },
+    ],
+  },
+  jenkins: {
+    icon: '🏗️',
+    name: 'Jenkins',
+    description: 'Automation & CI server',
+    color: 'from-red-500 to-red-600',
+    bgColor: 'bg-red-500/10',
+    borderColor: 'border-red-500/30',
+    category: 'devtools',
+    fields: [
+      {
+        name: 'Jenkins URL',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'https://jenkins.example.com',
+      },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'API Token', key: 'apiToken', type: 'password', required: true },
+    ],
+  },
+  bitbucket: {
+    icon: '🪣',
+    name: 'Bitbucket',
+    description: 'Atlassian code hosting',
+    color: 'from-blue-500 to-blue-600',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    category: 'devtools',
+    fields: [
+      {
+        name: 'Workspace URL',
+        key: 'host',
+        type: 'url',
+        placeholder: 'https://api.bitbucket.org/2.0',
+      },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      {
+        name: 'App Password',
+        key: 'password',
+        type: 'password',
+        required: true,
+        hint: 'Generate at Bitbucket > Personal settings > App passwords',
+      },
+    ],
+  },
+
+  // ─── Cloud Platforms ─────────────────────────────────────────────────
+  'aws-rds': {
+    icon: '☁️',
+    name: 'AWS RDS',
+    description: 'Amazon relational DB service',
+    color: 'from-orange-500 to-orange-600',
+    bgColor: 'bg-orange-500/10',
+    borderColor: 'border-orange-500/30',
+    category: 'cloud',
+    fields: awsFields('RDS'),
+  },
+  'azure-sql': {
+    icon: '☁️',
+    name: 'Azure SQL',
+    description: 'Microsoft cloud SQL',
+    color: 'from-blue-500 to-blue-600',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    category: 'cloud',
+    fields: [
+      {
+        name: 'Server',
+        key: 'host',
+        type: 'text',
+        required: true,
+        placeholder: 'your-server.database.windows.net',
+      },
+      { name: 'Database', key: 'database', type: 'text', required: true },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+    ],
+  },
+  'google-cloud-sql': {
+    icon: '☁️',
+    logo: '/legacy/google.svg',
+    name: 'Google Cloud SQL',
+    description: 'Managed relational DB',
+    color: 'from-blue-400 to-green-400',
+    bgColor: 'bg-blue-400/10',
+    borderColor: 'border-blue-400/30',
+    category: 'cloud',
+    fields: [
+      {
+        name: 'Instance Connection Name',
+        key: 'host',
+        type: 'text',
+        required: true,
+        placeholder: 'project:region:instance',
+      },
+      { name: 'Database', key: 'database', type: 'text', required: true },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+      {
+        name: 'Service Account JSON',
+        key: 'serviceAccountKey',
+        type: 'textarea',
+        hint: 'For Cloud SQL Proxy auth',
+      },
+    ],
+  },
+  supabase: {
+    icon: '⚡',
+    name: 'Supabase',
+    description: 'Open-source Firebase alt',
+    color: 'from-green-500 to-green-600',
+    bgColor: 'bg-green-500/10',
+    borderColor: 'border-green-500/30',
+    category: 'cloud',
+    fields: [
+      {
+        name: 'Project URL',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'https://abcdefgh.supabase.co',
+      },
+      { name: 'Anon Key', key: 'anonKey', type: 'password', required: true },
+      {
+        name: 'Service Role Key',
+        key: 'serviceRoleKey',
+        type: 'password',
+        hint: 'For admin operations',
+      },
+      { name: 'DB Password', key: 'password', type: 'password', hint: 'Direct Postgres password' },
+    ],
+  },
+  planetscale: {
+    icon: '🪐',
+    name: 'PlanetScale',
+    description: 'MySQL-compatible serverless',
+    color: 'from-gray-600 to-gray-700',
+    bgColor: 'bg-gray-600/10',
+    borderColor: 'border-gray-600/30',
+    category: 'cloud',
+    fields: [
+      {
+        name: 'Host',
+        key: 'host',
+        type: 'text',
+        required: true,
+        placeholder: 'aws.connect.psdb.cloud',
+      },
+      { name: 'Database', key: 'database', type: 'text', required: true },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+    ],
+  },
+  neon: {
+    icon: '🟢',
+    name: 'Neon',
+    description: 'Serverless Postgres',
+    color: 'from-green-400 to-green-500',
+    bgColor: 'bg-green-400/10',
+    borderColor: 'border-green-400/30',
+    category: 'cloud',
+    fields: [
+      {
+        name: 'Connection String',
+        key: 'connectionString',
+        type: 'text',
+        required: true,
+        placeholder: 'postgres://user:pass@ep-cool-name.us-east-1.aws.neon.tech/neondb',
+      },
+    ],
+  },
+
+  // ─── E-commerce (extras) ─────────────────────────────────────────────
+  woocommerce: {
+    icon: '🛍️',
+    name: 'WooCommerce',
+    description: 'WordPress commerce plugin',
+    color: 'from-purple-500 to-purple-600',
+    bgColor: 'bg-purple-500/10',
+    borderColor: 'border-purple-500/30',
+    category: 'commerce',
+    fields: [
+      {
+        name: 'Store URL',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'https://your-store.com',
+      },
+      {
+        name: 'Consumer Key',
+        key: 'username',
+        type: 'text',
+        required: true,
+        hint: 'WooCommerce REST API key',
+      },
+      { name: 'Consumer Secret', key: 'password', type: 'password', required: true },
+    ],
+  },
+  bigcommerce: {
+    icon: '🛒',
+    name: 'BigCommerce',
+    description: 'SaaS commerce platform',
+    color: 'from-blue-600 to-blue-700',
+    bgColor: 'bg-blue-600/10',
+    borderColor: 'border-blue-600/30',
+    category: 'commerce',
+    fields: [
+      { name: 'Store Hash', key: 'storeHash', type: 'text', required: true },
+      { name: 'Access Token', key: 'apiToken', type: 'password', required: true },
+    ],
+  },
+  stripe: {
+    icon: '💳',
+    name: 'Stripe',
+    description: 'Online payment processing',
+    color: 'from-indigo-500 to-indigo-600',
+    bgColor: 'bg-indigo-500/10',
+    borderColor: 'border-indigo-500/30',
+    category: 'commerce',
+    fields: [
+      {
+        name: 'Secret Key',
+        key: 'apiKey',
+        type: 'password',
+        required: true,
+        hint: 'sk_live_... or sk_test_...',
+      },
+      {
+        name: 'Webhook Secret',
+        key: 'webhookSecret',
+        type: 'password',
+        hint: 'whsec_... for webhook signature verification',
+      },
+    ],
+  },
+
+  // ─── HR & People (extras) ───────────────────────────────────────────
+  bamboohr: {
+    icon: '🎋',
+    name: 'BambooHR',
+    description: 'HR software for SMBs',
+    color: 'from-green-500 to-green-600',
+    bgColor: 'bg-green-500/10',
+    borderColor: 'border-green-500/30',
+    category: 'hcm',
+    fields: [
+      {
+        name: 'Subdomain',
+        key: 'host',
+        type: 'text',
+        required: true,
+        placeholder: 'your-company',
+        hint: 'your-company.bamboohr.com',
+      },
+      ...apiKeyFields('BambooHR'),
+    ],
+  },
+  gusto: {
+    icon: '💵',
+    name: 'Gusto',
+    description: 'Payroll & benefits platform',
+    color: 'from-pink-500 to-pink-600',
+    bgColor: 'bg-pink-500/10',
+    borderColor: 'border-pink-500/30',
+    category: 'hcm',
+    fields: oauthFields('Gusto'),
+  },
+  rippling: {
+    icon: '🌊',
+    name: 'Rippling',
+    description: 'Unified HR, IT & finance',
+    color: 'from-blue-500 to-blue-600',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    category: 'hcm',
+    fields: oauthFields('Rippling'),
+  },
+  deel: {
+    icon: '🌍',
+    name: 'Deel',
+    description: 'Global HR & payroll',
+    color: 'from-blue-400 to-blue-500',
+    bgColor: 'bg-blue-400/10',
+    borderColor: 'border-blue-400/30',
+    category: 'hcm',
+    fields: apiTokenFields('Deel'),
+  },
+
+  // ─── Identity & Security ────────────────────────────────────────────
+  okta: {
+    icon: '🔐',
+    name: 'Okta',
+    description: 'Identity & access management',
+    color: 'from-blue-500 to-blue-600',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    category: 'identity',
+    fields: [
+      {
+        name: 'Okta Domain',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'https://your-org.okta.com',
+      },
+      { name: 'API Token', key: 'apiToken', type: 'password', required: true },
+    ],
+  },
+  'active-directory': {
+    icon: '🏢',
+    name: 'Active Directory',
+    description: 'Microsoft directory service',
+    color: 'from-blue-600 to-blue-700',
+    bgColor: 'bg-blue-600/10',
+    borderColor: 'border-blue-600/30',
+    category: 'identity',
+    fields: [
+      {
+        name: 'Domain Controller',
+        key: 'host',
+        type: 'text',
+        required: true,
+        placeholder: 'dc.example.com',
+      },
+      { name: 'Port', key: 'port', type: 'number', placeholder: '636', defaultValue: 636 },
+      {
+        name: 'Base DN',
+        key: 'baseDn',
+        type: 'text',
+        required: true,
+        placeholder: 'DC=example,DC=com',
+      },
+      { name: 'Bind DN', key: 'username', type: 'text', required: true },
+      { name: 'Bind Password', key: 'password', type: 'password', required: true },
+      { name: 'Use LDAPS', key: 'tls', type: 'select', options: ['Yes', 'No'] },
+    ],
+  },
+
+  // ─── AI & ML ─────────────────────────────────────────────────────────
+  openai: {
+    icon: '🤖',
+    name: 'OpenAI',
+    description: 'GPT & DALL-E APIs',
+    color: 'from-green-500 to-green-600',
+    bgColor: 'bg-green-500/10',
+    borderColor: 'border-green-500/30',
+    category: 'ai-ml',
+    fields: [
+      {
+        name: 'API Key',
+        key: 'apiKey',
+        type: 'password',
+        required: true,
+        hint: 'sk-... key from platform.openai.com',
+      },
+      { name: 'Organization ID', key: 'orgId', type: 'text', hint: 'Optional org ID' },
+      {
+        name: 'Base URL',
+        key: 'host',
+        type: 'url',
+        placeholder: 'https://api.openai.com/v1',
+        hint: 'Custom for Azure OpenAI or proxy',
+      },
+    ],
+  },
+  anthropic: {
+    icon: '🧠',
+    name: 'Anthropic',
+    description: 'Claude AI API',
+    color: 'from-orange-500 to-orange-600',
+    bgColor: 'bg-orange-500/10',
+    borderColor: 'border-orange-500/30',
+    category: 'ai-ml',
+    fields: [
+      {
+        name: 'API Key',
+        key: 'apiKey',
+        type: 'password',
+        required: true,
+        hint: 'From console.anthropic.com',
+      },
+    ],
+  },
+  'google-ai': {
+    icon: '✨',
+    logo: '/legacy/google.svg',
+    name: 'Google Gemini',
+    description: 'Gemini & Vertex AI',
+    color: 'from-blue-400 to-blue-500',
+    bgColor: 'bg-blue-400/10',
+    borderColor: 'border-blue-400/30',
+    category: 'ai-ml',
+    fields: [
+      {
+        name: 'API Key',
+        key: 'apiKey',
+        type: 'password',
+        required: true,
+        hint: 'From Google AI Studio',
+      },
+      { name: 'Project ID', key: 'projectId', type: 'text', hint: 'For Vertex AI' },
+      {
+        name: 'Location',
+        key: 'location',
+        type: 'text',
+        placeholder: 'us-central1',
+        hint: 'Vertex AI region',
+      },
+    ],
+  },
+  ollama: {
+    icon: '🦙',
+    name: 'Ollama',
+    description: 'Local LLM runner',
+    color: 'from-gray-500 to-gray-600',
+    bgColor: 'bg-gray-500/10',
+    borderColor: 'border-gray-500/30',
+    category: 'ai-ml',
+    fields: [
+      {
+        name: 'Base URL',
+        key: 'host',
+        type: 'url',
+        placeholder: 'http://localhost:11434',
+        required: true,
+      },
+      {
+        name: 'Model',
+        key: 'model',
+        type: 'text',
+        placeholder: 'llama3',
+        hint: 'Default model to use',
+      },
+    ],
+  },
+
+  // ─── Additional MCP Servers ──────────────────────────────────────────
+  'mcp-supabase': {
+    icon: '⚡',
+    logo: '/legacy/mcp.jpg',
+    name: 'Supabase MCP',
+    description: 'Supabase DB & auth via MCP',
+    color: 'from-green-500 to-purple-500',
+    bgColor: 'bg-green-500/10',
+    borderColor: 'border-green-500/30',
+    category: 'mcp',
+    fields: mcpFields(),
+  },
+  'mcp-linear': {
+    icon: '📐',
+    logo: '/legacy/mcp.jpg',
+    name: 'Linear MCP',
+    description: 'Issue tracking via MCP',
+    color: 'from-indigo-500 to-purple-500',
+    bgColor: 'bg-indigo-500/10',
+    borderColor: 'border-indigo-500/30',
+    category: 'mcp',
+    fields: mcpFields(),
+  },
+  'mcp-brave-search': {
+    icon: '🦁',
+    logo: '/legacy/mcp.jpg',
+    name: 'Brave Search MCP',
+    description: 'Web search via MCP',
+    color: 'from-orange-500 to-purple-500',
+    bgColor: 'bg-orange-500/10',
+    borderColor: 'border-orange-500/30',
+    category: 'mcp',
+    fields: mcpFields(),
+  },
+  'mcp-puppeteer': {
+    icon: '🤖',
+    logo: '/legacy/mcp.jpg',
+    name: 'Puppeteer MCP',
+    description: 'Browser automation via MCP',
+    color: 'from-green-500 to-purple-500',
+    bgColor: 'bg-green-500/10',
+    borderColor: 'border-green-500/30',
+    category: 'mcp',
+    fields: mcpFields(),
+  },
+  'mcp-elasticsearch': {
+    icon: '🔍',
+    logo: '/legacy/mcp.jpg',
+    name: 'Elasticsearch MCP',
+    description: 'Search & analytics over MCP',
+    color: 'from-yellow-500 to-purple-500',
+    bgColor: 'bg-yellow-500/10',
+    borderColor: 'border-yellow-500/30',
+    category: 'mcp',
+    fields: mcpFields(),
+  },
+  'mcp-cloudflare': {
+    icon: '☁️',
+    logo: '/legacy/mcp.jpg',
+    name: 'Cloudflare MCP',
+    description: 'CDN & Workers via MCP',
+    color: 'from-orange-400 to-purple-500',
+    bgColor: 'bg-orange-400/10',
+    borderColor: 'border-orange-400/30',
+    category: 'mcp',
+    fields: mcpFields(),
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════
+  //  API CONNECTORS
+  // ═══════════════════════════════════════════════════════════════════════
+  'rest-api': {
+    icon: '🔗',
+    name: 'REST API',
+    description: 'Connect to any REST API endpoint',
+    color: 'from-blue-500 to-blue-600',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    category: 'api',
+    fields: [
+      {
+        name: 'Base URL',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'https://api.example.com/v1',
+      },
+      {
+        name: 'Auth Type',
+        key: 'authType',
+        type: 'select',
+        options: ['None', 'Bearer Token', 'API Key', 'Basic Auth', 'OAuth 2.0'],
+        required: true,
+      },
+      {
+        name: 'Auth Token',
+        key: 'apiToken',
+        type: 'password',
+        hint: 'Bearer token, API key, or password',
+      },
+      {
+        name: 'Headers',
+        key: 'headers',
+        type: 'textarea',
+        placeholder: 'Content-Type: application/json',
+        hint: 'One header per line',
+      },
+    ],
+  },
+  'graphql-api': {
+    icon: '◈',
+    name: 'GraphQL API',
+    description: 'Connect to any GraphQL endpoint',
+    color: 'from-pink-500 to-pink-600',
+    bgColor: 'bg-pink-500/10',
+    borderColor: 'border-pink-500/30',
+    category: 'api',
+    fields: [
+      {
+        name: 'Endpoint URL',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'https://api.example.com/graphql',
+      },
+      { name: 'Auth Header', key: 'authHeader', type: 'text', placeholder: 'Authorization' },
+      { name: 'Auth Value', key: 'apiToken', type: 'password', placeholder: 'Bearer your-token' },
+      {
+        name: 'Custom Headers',
+        key: 'headers',
+        type: 'textarea',
+        hint: 'One per line: Header-Name: value',
+      },
+    ],
+  },
+  'soap-api': {
+    icon: '🧼',
+    name: 'SOAP / XML API',
+    description: 'Legacy SOAP web services',
+    color: 'from-gray-500 to-gray-600',
+    bgColor: 'bg-gray-500/10',
+    borderColor: 'border-gray-500/30',
+    category: 'api',
+    fields: [
+      {
+        name: 'WSDL URL',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'https://service.example.com?wsdl',
+      },
+      { name: 'Username', key: 'username', type: 'text' },
+      { name: 'Password', key: 'password', type: 'password' },
+      { name: 'SOAP Action', key: 'soapAction', type: 'text', hint: 'SOAPAction header value' },
+    ],
+  },
+  'webhook-listener': {
+    icon: '📡',
+    name: 'Webhook Listener',
+    description: 'Receive real-time webhook events',
+    color: 'from-green-500 to-green-600',
+    bgColor: 'bg-green-500/10',
+    borderColor: 'border-green-500/30',
+    category: 'api',
+    fields: [
+      {
+        name: 'Webhook URL',
+        key: 'host',
+        type: 'url',
+        required: true,
+        hint: 'Auto-generated endpoint',
+      },
+      { name: 'Secret Key', key: 'password', type: 'password', hint: 'For signature verification' },
+      {
+        name: 'Events',
+        key: 'events',
+        type: 'text',
+        placeholder: 'order.created, user.updated',
+        hint: 'Comma-separated event types',
+      },
+    ],
+  },
+  grpc: {
+    icon: '⚡',
+    name: 'gRPC',
+    description: 'High-performance RPC connector',
+    color: 'from-blue-400 to-blue-500',
+    bgColor: 'bg-blue-400/10',
+    borderColor: 'border-blue-400/30',
+    category: 'api',
+    fields: [
+      {
+        name: 'Server Address',
+        key: 'host',
+        type: 'text',
+        required: true,
+        placeholder: 'grpc.example.com:443',
+      },
+      {
+        name: 'Proto File Path',
+        key: 'protoFile',
+        type: 'text',
+        hint: 'Path to .proto service definition',
+      },
+      { name: 'Use TLS', key: 'tls', type: 'select', options: ['Yes', 'No'] },
+      { name: 'Auth Token', key: 'apiToken', type: 'password' },
+    ],
+  },
+  jdbc: {
+    icon: '🔌',
+    name: 'JDBC Connector',
+    description: 'Universal Java database connector',
+    color: 'from-amber-500 to-amber-600',
+    bgColor: 'bg-amber-500/10',
+    borderColor: 'border-amber-500/30',
+    category: 'api',
+    fields: [
+      {
+        name: 'JDBC URL',
+        key: 'host',
+        type: 'text',
+        required: true,
+        placeholder: 'jdbc:postgresql://host:5432/db',
+      },
+      {
+        name: 'Driver Class',
+        key: 'driverClass',
+        type: 'text',
+        required: true,
+        placeholder: 'org.postgresql.Driver',
+      },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+    ],
+  },
+  odbc: {
+    icon: '🗄️',
+    name: 'ODBC Connector',
+    description: 'Open Database Connectivity bridge',
+    color: 'from-gray-600 to-gray-700',
+    bgColor: 'bg-gray-600/10',
+    borderColor: 'border-gray-600/30',
+    category: 'api',
+    fields: [
+      { name: 'DSN', key: 'dsn', type: 'text', required: true, placeholder: 'MyDataSource' },
+      { name: 'Username', key: 'username', type: 'text' },
+      { name: 'Password', key: 'password', type: 'password' },
+      { name: 'Driver', key: 'driver', type: 'text', placeholder: '/usr/lib/odbc/driver.so' },
+    ],
+  },
+  odata: {
+    icon: '📊',
+    name: 'OData',
+    description: 'Open Data Protocol connector',
+    color: 'from-blue-500 to-blue-600',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    category: 'api',
+    fields: [
+      {
+        name: 'Service Root URL',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'https://services.odata.org/V4/',
+      },
+      {
+        name: 'Auth Type',
+        key: 'authType',
+        type: 'select',
+        options: ['None', 'Basic', 'OAuth 2.0'],
+      },
+      { name: 'Username', key: 'username', type: 'text' },
+      { name: 'Password', key: 'password', type: 'password' },
+    ],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════
+  //  FINANCIAL MARKETS & TRADING
+  // ═══════════════════════════════════════════════════════════════════════
+  'bloomberg-terminal': {
+    icon: '📈',
+    logo: '/legacy/bloomberg.png',
+    name: 'Bloomberg Terminal',
+    description: 'Bloomberg market data (BLPAPI)',
+    color: 'from-orange-500 to-orange-600',
+    bgColor: 'bg-orange-500/10',
+    borderColor: 'border-orange-500/30',
+    category: 'finance-markets',
+    fields: [
+      { name: 'Server Host', key: 'host', type: 'text', required: true, placeholder: 'localhost' },
+      {
+        name: 'Port',
+        key: 'port',
+        type: 'number',
+        placeholder: '8194',
+        defaultValue: 8194,
+        required: true,
+      },
+      { name: 'UUID', key: 'uuid', type: 'text', required: true, hint: 'Bloomberg UUID' },
+      { name: 'Application Name', key: 'appName', type: 'text' },
+      {
+        name: 'Auth Type',
+        key: 'authType',
+        type: 'select',
+        options: ['OS_LOGON', 'APPLICATION', 'USER_AND_APPLICATION', 'TOKEN'],
+      },
+    ],
+  },
+  'reuters-3000': {
+    icon: '📰',
+    logo: '/legacy/reuters.svg',
+    name: 'Reuters 3000',
+    description: 'Thomson Reuters / LSEG market data',
+    color: 'from-blue-600 to-blue-700',
+    bgColor: 'bg-blue-600/10',
+    borderColor: 'border-blue-600/30',
+    category: 'finance-markets',
+    fields: [
+      { name: 'TREP Host', key: 'host', type: 'text', required: true },
+      { name: 'DACS Username', key: 'username', type: 'text', required: true },
+      { name: 'DACS Position', key: 'position', type: 'text', required: true },
+      { name: 'Application ID', key: 'appId', type: 'text', placeholder: '256' },
+      { name: 'Service Name', key: 'serviceName', type: 'text', placeholder: 'ELEKTRON_DD' },
+    ],
+  },
+  murex: {
+    icon: '💹',
+    logo: '/legacy/murex.jpeg',
+    name: 'Murex MX.3',
+    description: 'Trading & risk management',
+    color: 'from-teal-600 to-teal-700',
+    bgColor: 'bg-teal-600/10',
+    borderColor: 'border-teal-600/30',
+    category: 'finance-markets',
+    fields: [
+      { name: 'Murex Server', key: 'host', type: 'text', required: true },
+      { name: 'Port', key: 'port', type: 'number', required: true },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+      { name: 'MX Environment', key: 'environment', type: 'text', required: true },
+      { name: 'MXML Gateway', key: 'gateway', type: 'url', hint: 'For MXML API access' },
+    ],
+  },
+  calypso: {
+    icon: '🌊',
+    logo: '/legacy/calypso.png',
+    name: 'Calypso',
+    description: 'Cross-asset trading platform',
+    color: 'from-cyan-500 to-cyan-600',
+    bgColor: 'bg-cyan-500/10',
+    borderColor: 'border-cyan-500/30',
+    category: 'finance-markets',
+    fields: [
+      { name: 'Server URL', key: 'host', type: 'url', required: true },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+      {
+        name: 'Environment',
+        key: 'environment',
+        type: 'select',
+        options: ['Production', 'UAT', 'DR'],
+      },
+      { name: 'RMI Port', key: 'rmiPort', type: 'number', placeholder: '1099' },
+    ],
+  },
+  frontarena: {
+    icon: '🏟️',
+    name: 'FrontArena',
+    description: 'SunGard / ION trading system',
+    color: 'from-blue-500 to-blue-600',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    category: 'finance-markets',
+    fields: [
+      { name: 'ADS Host', key: 'host', type: 'text', required: true },
+      {
+        name: 'ADS Port',
+        key: 'port',
+        type: 'number',
+        required: true,
+        placeholder: '9100',
+        defaultValue: 9100,
+      },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+      {
+        name: 'AMBA Connection',
+        key: 'ambaConnection',
+        type: 'text',
+        hint: 'Message broker integration',
+      },
+    ],
+  },
+  simcorp: {
+    icon: '📉',
+    logo: '/legacy/simcorp.jpeg',
+    name: 'SimCorp Dimension',
+    description: 'Investment management platform',
+    color: 'from-blue-700 to-blue-800',
+    bgColor: 'bg-blue-700/10',
+    borderColor: 'border-blue-700/30',
+    category: 'finance-markets',
+    fields: [
+      { name: 'Server URL', key: 'host', type: 'url', required: true },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+      { name: 'Domain', key: 'domain', type: 'text', required: true },
+      { name: 'Installation', key: 'installation', type: 'text' },
+    ],
+  },
+  'blackrock-aladdin': {
+    icon: '🔮',
+    logo: '/legacy/blackrock.jpeg',
+    name: 'BlackRock Aladdin',
+    description: 'Risk & portfolio management',
+    color: 'from-gray-700 to-gray-800',
+    bgColor: 'bg-gray-700/10',
+    borderColor: 'border-gray-700/30',
+    category: 'finance-markets',
+    fields: [
+      { name: 'API URL', key: 'host', type: 'url', required: true },
+      ...oauthFields('Aladdin'),
+      { name: 'Account Group', key: 'accountGroup', type: 'text' },
+      {
+        name: 'Data Scope',
+        key: 'dataScope',
+        type: 'select',
+        options: ['Portfolio', 'Risk', 'Compliance', 'Trading'],
+      },
+    ],
+  },
+  'charles-river': {
+    icon: '🌊',
+    logo: '/legacy/charlesriver.png',
+    name: 'Charles River IMS',
+    description: 'Investment management system',
+    color: 'from-blue-600 to-blue-700',
+    bgColor: 'bg-blue-600/10',
+    borderColor: 'border-blue-600/30',
+    category: 'finance-markets',
+    fields: [
+      { name: 'Server URL', key: 'host', type: 'url', required: true },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+      { name: 'Fund Family', key: 'fundFamily', type: 'text' },
+      {
+        name: 'Data Feed',
+        key: 'dataFeed',
+        type: 'select',
+        options: ['Real-time', 'Batch', 'On-demand'],
+      },
+    ],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════
+  //  ADDITIONAL LEGACY / MAINFRAME
+  // ═══════════════════════════════════════════════════════════════════════
+  'ibm-cics': {
+    icon: '🖥️',
+    name: 'IBM CICS',
+    description: 'Customer Information Control System',
+    color: 'from-blue-700 to-blue-800',
+    bgColor: 'bg-blue-700/10',
+    borderColor: 'border-blue-700/30',
+    category: 'legacy',
+    fields: [
+      ...mainframeFields(),
+      {
+        name: 'CICS Region',
+        key: 'cicsRegion',
+        type: 'text',
+        required: true,
+        hint: 'CICS region name (e.g. CICSPROD)',
+      },
+      {
+        name: 'Transaction ID',
+        key: 'transactionId',
+        type: 'text',
+        placeholder: 'CEDA',
+        hint: '4-char transaction code',
+      },
+    ],
+  },
+  'ibm-ims': {
+    icon: '📟',
+    name: 'IBM IMS',
+    description: 'Information Management System',
+    color: 'from-blue-600 to-blue-700',
+    bgColor: 'bg-blue-600/10',
+    borderColor: 'border-blue-600/30',
+    category: 'legacy',
+    fields: [
+      ...mainframeFields(),
+      { name: 'Data Store', key: 'dataStore', type: 'text', required: true },
+      { name: 'Program Name', key: 'programName', type: 'text', hint: 'IMS transaction program' },
+      { name: 'IMS Connect Port', key: 'imsPort', type: 'number', placeholder: '9999' },
+    ],
+  },
+  'cobol-banking': {
+    icon: '🏦',
+    name: 'COBOL Banking Systems',
+    description: 'COBOL-based core banking',
+    color: 'from-gray-700 to-gray-800',
+    bgColor: 'bg-gray-700/10',
+    borderColor: 'border-gray-700/30',
+    category: 'legacy',
+    fields: [
+      ...mainframeFields(),
+      {
+        name: 'JCL Job Name',
+        key: 'jclJobName',
+        type: 'text',
+        hint: 'Batch job name for scheduled runs',
+      },
+      { name: 'Dataset Name', key: 'datasetName', type: 'text', placeholder: 'USER.BANKING.DATA' },
+    ],
+  },
+  'fis-profile': {
+    icon: '🏦',
+    name: 'FIS Profile',
+    description: 'FIS core banking platform',
+    color: 'from-blue-600 to-blue-700',
+    bgColor: 'bg-blue-600/10',
+    borderColor: 'border-blue-600/30',
+    category: 'legacy',
+    fields: [
+      { name: 'Host', key: 'host', type: 'text', required: true },
+      { name: 'Port', key: 'port', type: 'number', required: true },
+      { name: 'Institution ID', key: 'institutionId', type: 'text', required: true },
+      { name: 'User ID', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+      {
+        name: 'Environment',
+        key: 'environment',
+        type: 'select',
+        options: ['Production', 'UAT', 'Development'],
+      },
+    ],
+  },
+  'fis-world': {
+    icon: '🌍',
+    name: 'FIS/World',
+    description: 'FIS World banking system',
+    color: 'from-blue-500 to-blue-600',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    category: 'legacy',
+    fields: [
+      { name: 'Host', key: 'host', type: 'text', required: true },
+      { name: 'Port', key: 'port', type: 'number', required: true },
+      { name: 'Bank Number', key: 'bankNumber', type: 'text', required: true },
+      { name: 'User ID', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+    ],
+  },
+  'temenos-t24': {
+    icon: '🏛️',
+    name: 'Temenos T24',
+    description: 'Legacy core banking (T24/jBASE)',
+    color: 'from-blue-500 to-blue-600',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    category: 'legacy',
+    fields: [
+      { name: 'T24 Server URL', key: 'host', type: 'url', required: true },
+      { name: 'Company ID', key: 'companyId', type: 'text', required: true },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+      { name: 'Channel', key: 'channel', type: 'text', placeholder: 'BROWSER.API' },
+    ],
+  },
+  'sap-r2': {
+    icon: '⚙️',
+    name: 'SAP R/2',
+    description: 'Legacy SAP mainframe ERP',
+    color: 'from-blue-500 to-cyan-500',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    category: 'legacy',
+    fields: sapFields(),
+  },
+  'sap-r3': {
+    icon: '⚙️',
+    name: 'SAP R/3',
+    description: 'SAP R/3 early version ERP',
+    color: 'from-blue-500 to-cyan-500',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    category: 'legacy',
+    fields: [
+      ...sapFields(),
+      {
+        name: 'Router String',
+        key: 'routerString',
+        type: 'text',
+        hint: 'SAProuter for remote access',
+      },
+      {
+        name: 'Language',
+        key: 'language',
+        type: 'select',
+        options: ['EN', 'DE', 'FR', 'ES', 'JA', 'ZH'],
+      },
+    ],
+  },
+  'oracle-ebs': {
+    icon: '🔴',
+    name: 'Oracle E-Business Suite',
+    description: 'Legacy Oracle EBS modules',
+    color: 'from-red-500 to-red-600',
+    bgColor: 'bg-red-500/10',
+    borderColor: 'border-red-500/30',
+    category: 'legacy',
+    fields: [
+      { name: 'Host', key: 'host', type: 'text', required: true },
+      {
+        name: 'Port',
+        key: 'port',
+        type: 'number',
+        required: true,
+        placeholder: '1521',
+        defaultValue: 1521,
+      },
+      { name: 'SID', key: 'sid', type: 'text', required: true, placeholder: 'VIS' },
+      { name: 'Apps Username', key: 'username', type: 'text', required: true, placeholder: 'APPS' },
+      { name: 'Apps Password', key: 'password', type: 'password', required: true },
+      {
+        name: 'Responsibility',
+        key: 'responsibility',
+        type: 'text',
+        hint: 'EBS responsibility key',
+      },
+    ],
+  },
+  'jde-world': {
+    icon: '🏗️',
+    logo: '/legacy/oracle.svg',
+    name: 'JD Edwards World',
+    description: 'JDE World (AS/400-based)',
+    color: 'from-orange-600 to-orange-700',
+    bgColor: 'bg-orange-600/10',
+    borderColor: 'border-orange-600/30',
+    category: 'legacy',
+    fields: [
+      { name: 'AS/400 Host', key: 'host', type: 'text', required: true },
+      { name: 'Library', key: 'database', type: 'text', required: true },
+      { name: 'User Profile', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+      { name: 'Environment', key: 'environment', type: 'text', placeholder: 'JDE' },
+    ],
+  },
+  'jde-oneworld': {
+    icon: '🌐',
+    logo: '/legacy/oracle.svg',
+    name: 'JD Edwards OneWorld',
+    description: 'JDE OneWorld / EnterpriseOne',
+    color: 'from-red-500 to-red-600',
+    bgColor: 'bg-red-500/10',
+    borderColor: 'border-red-500/30',
+    category: 'legacy',
+    fields: [
+      { name: 'Enterprise Server', key: 'host', type: 'text', required: true },
+      {
+        name: 'Port',
+        key: 'port',
+        type: 'number',
+        required: true,
+        placeholder: '6016',
+        defaultValue: 6016,
+      },
+      {
+        name: 'Environment',
+        key: 'environment',
+        type: 'text',
+        required: true,
+        placeholder: 'JDV920',
+      },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+      { name: 'Role', key: 'role', type: 'text', placeholder: '*ALL' },
+    ],
+  },
+  'peoplesoft-financials': {
+    icon: '👤',
+    name: 'PeopleSoft Financials',
+    description: 'Oracle PeopleSoft Finance modules',
+    color: 'from-red-500 to-orange-500',
+    bgColor: 'bg-red-500/10',
+    borderColor: 'border-red-500/30',
+    category: 'legacy',
+    fields: [
+      { name: 'PeopleSoft URL', key: 'host', type: 'url', required: true },
+      {
+        name: 'Node',
+        key: 'nodeName',
+        type: 'text',
+        required: true,
+        hint: 'Integration Broker node',
+      },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+      { name: 'Business Unit', key: 'businessUnit', type: 'text' },
+    ],
+  },
+  'swift-fin': {
+    icon: '⚡',
+    name: 'SWIFT FIN',
+    description: 'SWIFT financial messaging network',
+    color: 'from-blue-700 to-blue-800',
+    bgColor: 'bg-blue-700/10',
+    borderColor: 'border-blue-700/30',
+    category: 'legacy',
+    fields: [
+      { name: 'BIC Code', key: 'bicCode', type: 'text', required: true, placeholder: 'DEUTDEFF' },
+      { name: 'Alliance Lite2 URL', key: 'host', type: 'url', required: true },
+      {
+        name: 'Certificate File Path',
+        key: 'certFile',
+        type: 'text',
+        required: true,
+        hint: 'X.509 certificate path (.pem)',
+      },
+      { name: 'Private Key Path', key: 'privateKey', type: 'text', required: true },
+      { name: 'Passphrase', key: 'passphrase', type: 'password' },
+    ],
+  },
+  'ach-mainframe': {
+    icon: '🏦',
+    name: 'ACH Mainframe',
+    description: 'Automated Clearing House systems',
+    color: 'from-green-700 to-green-800',
+    bgColor: 'bg-green-700/10',
+    borderColor: 'border-green-700/30',
+    category: 'legacy',
+    fields: [
+      ...mainframeFields(),
+      { name: 'Routing Number', key: 'routingNumber', type: 'text', required: true },
+      { name: 'Company ID', key: 'companyId', type: 'text', required: true },
+      {
+        name: 'NACHA File Path',
+        key: 'nachaPath',
+        type: 'text',
+        hint: 'Input/output file location',
+      },
+    ],
+  },
+  'chips-mainframe': {
+    icon: '🏛️',
+    name: 'CHIPS Mainframe',
+    description: 'Clearing House Interbank Payments',
+    color: 'from-gray-700 to-gray-800',
+    bgColor: 'bg-gray-700/10',
+    borderColor: 'border-gray-700/30',
+    category: 'legacy',
+    fields: [
+      ...mainframeFields(),
+      { name: 'Participant ID', key: 'participantId', type: 'text', required: true },
+      { name: 'Universal ID', key: 'universalId', type: 'text', required: true },
+      { name: 'Certificate File Path', key: 'certFile', type: 'text', required: true },
+    ],
+  },
+  'unisys-clearpath': {
+    icon: '🖥️',
+    name: 'Unisys ClearPath',
+    description: 'Unisys mainframe platform',
+    color: 'from-blue-700 to-blue-800',
+    bgColor: 'bg-blue-700/10',
+    borderColor: 'border-blue-700/30',
+    category: 'legacy',
+    fields: mainframeFields(),
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════
+  //  DATABASES (more)
+  // ═══════════════════════════════════════════════════════════════════════
+  influxdb: {
+    icon: '📈',
+    name: 'InfluxDB',
+    description: 'Time-series database',
+    color: 'from-blue-500 to-blue-600',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    category: 'nosql',
+    fields: [
+      {
+        name: 'URL',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'http://localhost:8086',
+      },
+      { name: 'Token', key: 'apiToken', type: 'password', required: true },
+      { name: 'Organization', key: 'organization', type: 'text', required: true },
+      { name: 'Bucket', key: 'database', type: 'text', required: true },
+    ],
+  },
+  firestore: {
+    icon: '🔥',
+    name: 'Firestore',
+    description: 'Google Cloud NoSQL database',
+    color: 'from-yellow-500 to-orange-500',
+    bgColor: 'bg-yellow-500/10',
+    borderColor: 'border-yellow-500/30',
+    category: 'nosql',
+    fields: [
+      { name: 'Project ID', key: 'projectId', type: 'text', required: true },
+      {
+        name: 'Service Account JSON',
+        key: 'serviceAccountKey',
+        type: 'textarea',
+        required: true,
+        hint: 'Paste full JSON key',
+      },
+      { name: 'Database ID', key: 'database', type: 'text', placeholder: '(default)' },
+    ],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════
+  //  DATA WAREHOUSE (more)
+  // ═══════════════════════════════════════════════════════════════════════
+  'azure-synapse': {
+    icon: '🌌',
+    name: 'Azure Synapse',
+    description: 'Microsoft analytics service',
+    color: 'from-blue-600 to-blue-700',
+    bgColor: 'bg-blue-600/10',
+    borderColor: 'border-blue-600/30',
+    category: 'warehouse',
+    fields: [
+      {
+        name: 'Server',
+        key: 'host',
+        type: 'text',
+        required: true,
+        placeholder: 'ws.sql.azuresynapse.net',
+      },
+      { name: 'Database', key: 'database', type: 'text', required: true },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+      { name: 'Port', key: 'port', type: 'number', placeholder: '1433', defaultValue: 1433 },
+    ],
+  },
+  teradata: {
+    icon: '🏢',
+    name: 'Teradata',
+    description: 'Enterprise data warehouse',
+    color: 'from-orange-500 to-orange-600',
+    bgColor: 'bg-orange-500/10',
+    borderColor: 'border-orange-500/30',
+    category: 'warehouse',
+    fields: [
+      { name: 'Host', key: 'host', type: 'text', required: true },
+      {
+        name: 'DBS Port',
+        key: 'port',
+        type: 'number',
+        required: true,
+        placeholder: '1025',
+        defaultValue: 1025,
+      },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+      { name: 'Database', key: 'database', type: 'text' },
+      {
+        name: 'Logon Mechanism',
+        key: 'logon',
+        type: 'select',
+        options: ['TD2', 'LDAP', 'KRB5', 'JWT'],
+      },
+    ],
+  },
+  firebolt: {
+    icon: '🔥',
+    name: 'Firebolt',
+    description: 'Sub-second cloud analytics',
+    color: 'from-yellow-400 to-yellow-500',
+    bgColor: 'bg-yellow-400/10',
+    borderColor: 'border-yellow-400/30',
+    category: 'warehouse',
+    fields: [
+      { name: 'Account', key: 'account', type: 'text', required: true },
+      { name: 'Engine URL', key: 'host', type: 'url', required: true },
+      { name: 'Database', key: 'database', type: 'text', required: true },
+      ...oauthFields('Firebolt'),
+    ],
+  },
+  dremio: {
+    icon: '💧',
+    name: 'Dremio',
+    description: 'Lakehouse platform',
+    color: 'from-blue-400 to-blue-500',
+    bgColor: 'bg-blue-400/10',
+    borderColor: 'border-blue-400/30',
+    category: 'warehouse',
+    fields: [
+      { name: 'Host', key: 'host', type: 'text', required: true },
+      { name: 'Port', key: 'port', type: 'number', placeholder: '31010', defaultValue: 31010 },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+      { name: 'Project ID', key: 'projectId', type: 'text', hint: 'For Dremio Cloud' },
+    ],
+  },
+  starburst: {
+    icon: '⭐',
+    name: 'Starburst',
+    description: 'Distributed SQL engine (Trino)',
+    color: 'from-purple-500 to-purple-600',
+    bgColor: 'bg-purple-500/10',
+    borderColor: 'border-purple-500/30',
+    category: 'warehouse',
+    fields: [
+      { name: 'Host', key: 'host', type: 'text', required: true },
+      {
+        name: 'Port',
+        key: 'port',
+        type: 'number',
+        required: true,
+        placeholder: '443',
+        defaultValue: 443,
+      },
+      { name: 'Catalog', key: 'catalog', type: 'text', required: true },
+      { name: 'Schema', key: 'schema', type: 'text' },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password' },
+    ],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════
+  //  CRM (more)
+  // ═══════════════════════════════════════════════════════════════════════
+  'zoho-crm': {
+    icon: '🐘',
+    name: 'Zoho CRM',
+    description: 'SMB-focused CRM platform',
+    color: 'from-red-500 to-red-600',
+    bgColor: 'bg-red-500/10',
+    borderColor: 'border-red-500/30',
+    category: 'crm',
+    fields: [
+      ...oauthFields('Zoho'),
+      {
+        name: 'Domain',
+        key: 'domain',
+        type: 'select',
+        options: ['zoho.com', 'zoho.eu', 'zoho.in', 'zoho.com.cn', 'zoho.com.au'],
+        required: true,
+      },
+    ],
+  },
+  pipedrive: {
+    icon: '📊',
+    name: 'Pipedrive',
+    description: 'Sales pipeline CRM',
+    color: 'from-green-600 to-green-700',
+    bgColor: 'bg-green-600/10',
+    borderColor: 'border-green-600/30',
+    category: 'crm',
+    fields: [
+      {
+        name: 'API Token',
+        key: 'apiToken',
+        type: 'password',
+        required: true,
+        hint: 'From Settings > Personal Preferences > API',
+      },
+      {
+        name: 'Company Domain',
+        key: 'host',
+        type: 'text',
+        placeholder: 'yourcompany.pipedrive.com',
+      },
+    ],
+  },
+  freshsales: {
+    icon: '🌿',
+    name: 'Freshsales',
+    description: 'Freshworks CRM for sales',
+    color: 'from-green-500 to-green-600',
+    bgColor: 'bg-green-500/10',
+    borderColor: 'border-green-500/30',
+    category: 'crm',
+    fields: [
+      {
+        name: 'Bundle Alias',
+        key: 'subdomain',
+        type: 'text',
+        required: true,
+        placeholder: 'yourcompany',
+      },
+      { name: 'API Key', key: 'apiKey', type: 'password', required: true },
+    ],
+  },
+  sugarcrm: {
+    icon: '🍬',
+    name: 'SugarCRM',
+    description: 'Flexible open-source CRM',
+    color: 'from-red-400 to-red-500',
+    bgColor: 'bg-red-400/10',
+    borderColor: 'border-red-400/30',
+    category: 'crm',
+    fields: [
+      {
+        name: 'Instance URL',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'https://yourinstance.sugarondemand.com',
+      },
+      ...oauthFields('SugarCRM'),
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+    ],
+  },
+  creatio: {
+    icon: '🎨',
+    name: 'Creatio',
+    description: 'No-code CRM & process platform',
+    color: 'from-blue-500 to-blue-600',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    category: 'crm',
+    fields: [
+      { name: 'Instance URL', key: 'host', type: 'url', required: true },
+      ...oauthFields('Creatio'),
+    ],
+  },
+  'zendesk-sell': {
+    icon: '🎯',
+    name: 'Zendesk Sell',
+    description: 'Zendesk CRM for sales teams',
+    color: 'from-emerald-500 to-emerald-600',
+    bgColor: 'bg-emerald-500/10',
+    borderColor: 'border-emerald-500/30',
+    category: 'crm',
+    fields: [
+      { name: 'Access Token', key: 'apiToken', type: 'password', required: true },
+      { name: 'Subdomain', key: 'host', type: 'text', placeholder: 'yourcompany' },
+    ],
+  },
+  'copper-crm': {
+    icon: '🪙',
+    name: 'Copper',
+    description: 'CRM built for Google Workspace',
+    color: 'from-orange-400 to-orange-500',
+    bgColor: 'bg-orange-400/10',
+    borderColor: 'border-orange-400/30',
+    category: 'crm',
+    fields: [
+      ...apiKeyFields('Copper'),
+      {
+        name: 'User Email',
+        key: 'username',
+        type: 'text',
+        required: true,
+        hint: 'Email tied to Copper account',
+      },
+    ],
+  },
+  'close-crm': {
+    icon: '❌',
+    name: 'Close CRM',
+    description: 'CRM for inside sales teams',
+    color: 'from-blue-400 to-blue-500',
+    bgColor: 'bg-blue-400/10',
+    borderColor: 'border-blue-400/30',
+    category: 'crm',
+    fields: apiKeyFields('Close'),
+  },
+  insightly: {
+    icon: '💡',
+    name: 'Insightly',
+    description: 'CRM & project management',
+    color: 'from-blue-500 to-blue-600',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    category: 'crm',
+    fields: [
+      ...apiKeyFields('Insightly'),
+      {
+        name: 'Pod',
+        key: 'pod',
+        type: 'select',
+        options: ['na1', 'au1', 'eu1'],
+        hint: 'Your Insightly data center',
+      },
+    ],
+  },
+  bitrix24: {
+    icon: '🔲',
+    name: 'Bitrix24',
+    description: 'Collaboration suite with CRM',
+    color: 'from-red-500 to-red-600',
+    bgColor: 'bg-red-500/10',
+    borderColor: 'border-red-500/30',
+    category: 'crm',
+    fields: [
+      {
+        name: 'Portal URL',
+        key: 'host',
+        type: 'url',
+        required: true,
+        placeholder: 'https://yourcompany.bitrix24.com',
+      },
+      { name: 'Webhook Token', key: 'apiToken', type: 'password', hint: 'Inbound webhook secret' },
+      ...oauthFields('Bitrix24'),
+    ],
+  },
+  apptivo: {
+    icon: '📱',
+    name: 'Apptivo',
+    description: 'Business management suite',
+    color: 'from-blue-500 to-blue-600',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    category: 'crm',
+    fields: [
+      ...apiKeyFields('Apptivo'),
+      { name: 'Access Key', key: 'accessKey', type: 'password', required: true },
+    ],
+  },
+  nimble: {
+    icon: '🐇',
+    name: 'Nimble',
+    description: 'Simple CRM for small business',
+    color: 'from-green-400 to-green-500',
+    bgColor: 'bg-green-400/10',
+    borderColor: 'border-green-400/30',
+    category: 'crm',
+    fields: apiTokenFields('Nimble'),
+  },
+  keap: {
+    icon: '🔑',
+    name: 'Keap',
+    description: 'CRM & marketing automation',
+    color: 'from-green-500 to-green-600',
+    bgColor: 'bg-green-500/10',
+    borderColor: 'border-green-500/30',
+    category: 'crm',
+    fields: [...oauthFields('Keap'), ...apiKeyFields('Keap')],
+  },
+  'capsule-crm': {
+    icon: '💊',
+    name: 'Capsule CRM',
+    description: 'Simple online CRM',
+    color: 'from-blue-400 to-blue-500',
+    bgColor: 'bg-blue-400/10',
+    borderColor: 'border-blue-400/30',
+    category: 'crm',
+    fields: apiTokenFields('Capsule'),
+  },
+  'peoplesoft-crm': {
+    icon: '👥',
+    name: 'PeopleSoft CRM',
+    description: 'Oracle PeopleSoft HR & CRM',
+    color: 'from-red-500 to-orange-500',
+    bgColor: 'bg-red-500/10',
+    borderColor: 'border-red-500/30',
+    category: 'crm',
+    fields: [
+      { name: 'URL', key: 'host', type: 'url', required: true },
+      { name: 'Node', key: 'nodeName', type: 'text', required: true },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+    ],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════
+  //  ERP (more)
+  // ═══════════════════════════════════════════════════════════════════════
+  'sap-s4hana': {
+    icon: '💎',
+    logo: '/legacy/saphana.svg',
+    name: 'SAP S/4HANA',
+    description: 'In-memory SAP ERP platform',
+    color: 'from-blue-500 to-cyan-500',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    category: 'erp',
+    fields: [
+      ...sapFields(),
+      {
+        name: 'Language',
+        key: 'language',
+        type: 'select',
+        options: ['EN', 'DE', 'FR', 'ES', 'JA', 'ZH'],
+      },
+    ],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════
+  //  FINANCE (more)
+  // ═══════════════════════════════════════════════════════════════════════
+  xero: {
+    icon: '💙',
+    logo: '/legacy/xero.png',
+    name: 'Xero',
+    description: 'Cloud accounting software',
+    color: 'from-blue-400 to-blue-500',
+    bgColor: 'bg-blue-400/10',
+    borderColor: 'border-blue-400/30',
+    category: 'finance',
+    fields: [
+      ...oauthFields('Xero'),
+      {
+        name: 'Tenant ID',
+        key: 'tenantId',
+        type: 'text',
+        required: true,
+        hint: 'Xero organization ID',
+      },
+      { name: 'Scopes', key: 'scopes', type: 'text', placeholder: 'accounting.transactions.read' },
+    ],
+  },
+  freshbooks: {
+    icon: '📗',
+    logo: '/legacy/freshbooks.svg',
+    name: 'FreshBooks',
+    description: 'Invoicing & accounting platform',
+    color: 'from-blue-500 to-blue-600',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    category: 'finance',
+    fields: [
+      ...oauthFields('FreshBooks'),
+      { name: 'Account ID', key: 'accountId', type: 'text', required: true },
+    ],
+  },
+  hyperion: {
+    icon: '🌐',
+    logo: '/legacy/oracle.svg',
+    name: 'Hyperion Financial Mgmt',
+    description: 'Oracle EPM consolidation',
+    color: 'from-red-500 to-red-600',
+    bgColor: 'bg-red-500/10',
+    borderColor: 'border-red-500/30',
+    category: 'finance',
+    fields: [
+      { name: 'Server URL', key: 'host', type: 'url', required: true },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+      { name: 'Application', key: 'application', type: 'text', required: true },
+      { name: 'Cluster', key: 'cluster', type: 'text' },
+    ],
+  },
+  cognos: {
+    icon: '📊',
+    name: 'IBM Cognos',
+    description: 'IBM business intelligence & EPM',
+    color: 'from-blue-600 to-blue-700',
+    bgColor: 'bg-blue-600/10',
+    borderColor: 'border-blue-600/30',
+    category: 'bi',
+    fields: [
+      { name: 'Dispatcher URL', key: 'host', type: 'url', required: true },
+      { name: 'Namespace', key: 'namespace', type: 'text', required: true },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+    ],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════
+  //  BI (more)
+  // ═══════════════════════════════════════════════════════════════════════
+  'crystal-reports': {
+    icon: '🔮',
+    name: 'Crystal Reports',
+    description: 'SAP enterprise reporting tool',
+    color: 'from-blue-500 to-blue-600',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    category: 'bi',
+    fields: [
+      {
+        name: 'CMS Server',
+        key: 'host',
+        type: 'text',
+        required: true,
+        hint: 'Central Management Server hostname',
+      },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+      {
+        name: 'Auth Type',
+        key: 'authType',
+        type: 'select',
+        options: ['secEnterprise', 'secLDAP', 'secWinAD'],
+      },
+    ],
+  },
+  brio: {
+    icon: '📋',
+    name: 'Brio',
+    description: 'Legacy BI & reporting tool',
+    color: 'from-gray-600 to-gray-700',
+    bgColor: 'bg-gray-600/10',
+    borderColor: 'border-gray-600/30',
+    category: 'bi',
+    fields: [
+      { name: 'Server', key: 'host', type: 'text', required: true },
+      { name: 'Port', key: 'port', type: 'number', required: true },
+      { name: 'Repository', key: 'database', type: 'text', required: true },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+    ],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════
+  //  IDENTITY (more)
+  // ═══════════════════════════════════════════════════════════════════════
+  jumpcloud: {
+    icon: '☁️',
+    name: 'JumpCloud',
+    description: 'Cloud directory platform',
+    color: 'from-green-500 to-green-600',
+    bgColor: 'bg-green-500/10',
+    borderColor: 'border-green-500/30',
+    category: 'identity',
+    fields: [
+      ...apiKeyFields('JumpCloud'),
+      { name: 'Organization ID', key: 'orgId', type: 'text', required: true },
+      { name: 'LDAP Bind DN', key: 'ldapBindDn', type: 'text', hint: 'For LDAP integration' },
+      { name: 'LDAP Password', key: 'ldapPassword', type: 'password' },
+    ],
+  },
+  '1password': {
+    icon: '🔐',
+    name: '1Password',
+    description: 'Password manager for teams',
+    color: 'from-blue-500 to-blue-600',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    category: 'identity',
+    fields: [
+      { name: 'Connect Server URL', key: 'host', type: 'url', required: true },
+      { name: 'Connect Token', key: 'apiToken', type: 'password', required: true },
+      { name: 'Vault UUID', key: 'vaultId', type: 'text', hint: 'Specific vault to access' },
+    ],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════
+  //  CLOUD (more)
+  // ═══════════════════════════════════════════════════════════════════════
+  'amazon-aurora': {
+    icon: '🌅',
+    name: 'Amazon Aurora',
+    description: 'AWS high-performance managed DB',
+    color: 'from-orange-500 to-orange-600',
+    bgColor: 'bg-orange-500/10',
+    borderColor: 'border-orange-500/30',
+    category: 'cloud',
+    fields: [
+      { name: 'Cluster Endpoint', key: 'host', type: 'text', required: true },
+      {
+        name: 'Port',
+        key: 'port',
+        type: 'number',
+        required: true,
+        placeholder: '3306',
+        defaultValue: 3306,
+      },
+      { name: 'Database', key: 'database', type: 'text', required: true },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+      {
+        name: 'Engine',
+        key: 'engine',
+        type: 'select',
+        options: ['aurora-mysql', 'aurora-postgresql'],
+      },
+    ],
+  },
+  cockroachdb: {
+    icon: '🪲',
+    name: 'CockroachDB',
+    description: 'Distributed SQL database',
+    color: 'from-blue-400 to-blue-500',
+    bgColor: 'bg-blue-400/10',
+    borderColor: 'border-blue-400/30',
+    category: 'cloud',
+    fields: [
+      { name: 'Host', key: 'host', type: 'text', required: true },
+      {
+        name: 'Port',
+        key: 'port',
+        type: 'number',
+        required: true,
+        placeholder: '26257',
+        defaultValue: 26257,
+      },
+      { name: 'Database', key: 'database', type: 'text', required: true },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password' },
+      { name: 'Cluster ID', key: 'clusterId', type: 'text', hint: 'For CockroachDB Cloud' },
+    ],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════
+  //  COMMUNICATION (more)
+  // ═══════════════════════════════════════════════════════════════════════
+  'google-meet': {
+    icon: '📹',
+    logo: '/legacy/google.svg',
+    name: 'Google Meet',
+    description: 'Google video meetings API',
+    color: 'from-green-500 to-green-600',
+    bgColor: 'bg-green-500/10',
+    borderColor: 'border-green-500/30',
+    category: 'communication',
+    fields: [
+      ...oauthFields('Google Cloud'),
+      {
+        name: 'Service Account JSON',
+        key: 'serviceAccountKey',
+        type: 'textarea',
+        hint: 'For server-to-server access',
+      },
+    ],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════
+  //  PROJECT MANAGEMENT (more)
+  // ═══════════════════════════════════════════════════════════════════════
+  basecamp: {
+    icon: '⛺',
+    logo: '/legacy/basecamp.jpeg',
+    name: 'Basecamp',
+    description: 'Simple project management',
+    color: 'from-green-500 to-green-600',
+    bgColor: 'bg-green-500/10',
+    borderColor: 'border-green-500/30',
+    category: 'project-mgmt',
+    fields: [
+      ...oauthFields('Basecamp'),
+      { name: 'Account ID', key: 'accountId', type: 'text', required: true },
+    ],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════
+  //  E-COMMERCE (more)
+  // ═══════════════════════════════════════════════════════════════════════
+  squarespace: {
+    icon: '⬛',
+    name: 'Squarespace',
+    description: 'Website & commerce builder',
+    color: 'from-gray-700 to-gray-800',
+    bgColor: 'bg-gray-700/10',
+    borderColor: 'border-gray-700/30',
+    category: 'commerce',
+    fields: [...oauthFields('Squarespace'), { name: 'Site ID', key: 'siteId', type: 'text' }],
+  },
+  prestashop: {
+    icon: '🛍️',
+    name: 'PrestaShop',
+    description: 'Open-source e-commerce',
+    color: 'from-indigo-500 to-indigo-600',
+    bgColor: 'bg-indigo-500/10',
+    borderColor: 'border-indigo-500/30',
+    category: 'commerce',
+    fields: [
+      { name: 'Store URL', key: 'host', type: 'url', required: true },
+      { name: 'Web Service Key', key: 'apiKey', type: 'password', required: true },
+    ],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════
+  //  ENTERPRISE IT PLATFORMS
+  // ═══════════════════════════════════════════════════════════════════════
+  'sap-enterprise': {
+    icon: '💎',
+    name: 'SAP',
+    description: 'Enterprise resource planning giant',
+    color: 'from-blue-500 to-cyan-500',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    category: 'enterprise',
+    fields: sapFields(),
+  },
+  opentext: {
+    icon: '📝',
+    name: 'OpenText',
+    description: 'Content management & ECM',
+    color: 'from-teal-500 to-teal-600',
+    bgColor: 'bg-teal-500/10',
+    borderColor: 'border-teal-500/30',
+    category: 'enterprise',
+    fields: [
+      { name: 'Server URL', key: 'host', type: 'url', required: true },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+      { name: 'Library', key: 'library', type: 'text' },
+    ],
+  },
+  'micro-focus': {
+    icon: '🔬',
+    name: 'Micro Focus',
+    description: 'COBOL dev & enterprise tools',
+    color: 'from-blue-600 to-blue-700',
+    bgColor: 'bg-blue-600/10',
+    borderColor: 'border-blue-600/30',
+    category: 'enterprise',
+    fields: [
+      { name: 'Server URL', key: 'host', type: 'url', required: true },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+      { name: 'Region', key: 'region', type: 'text' },
+    ],
+  },
+  'progress-software': {
+    icon: '⚡',
+    name: 'Progress Software',
+    description: 'OpenEdge & DataDirect',
+    color: 'from-green-600 to-green-700',
+    bgColor: 'bg-green-600/10',
+    borderColor: 'border-green-600/30',
+    category: 'enterprise',
+    fields: [
+      { name: 'Server URL', key: 'host', type: 'url', required: true },
+      { name: 'Database', key: 'database', type: 'text', required: true },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+    ],
+  },
+  broadcom: {
+    icon: '📡',
+    name: 'Broadcom',
+    description: 'CA Automic & Rally DevOps',
+    color: 'from-red-500 to-red-600',
+    bgColor: 'bg-red-500/10',
+    borderColor: 'border-red-500/30',
+    category: 'enterprise',
+    fields: [
+      { name: 'Server URL', key: 'host', type: 'url', required: true },
+      ...apiKeyFields('Broadcom'),
+      { name: 'Username', key: 'username', type: 'text' },
+      { name: 'Password', key: 'password', type: 'password' },
+    ],
+  },
+  accenture: {
+    icon: '🏢',
+    name: 'Accenture',
+    description: 'Enterprise technology solutions',
+    color: 'from-purple-600 to-purple-700',
+    bgColor: 'bg-purple-600/10',
+    borderColor: 'border-purple-600/30',
+    category: 'enterprise',
+    fields: [
+      { name: 'Platform URL', key: 'host', type: 'url', required: true },
+      ...oauthFields('Accenture'),
+    ],
+  },
+  'dxc-technology': {
+    icon: '🌐',
+    name: 'DXC Technology',
+    description: 'IT services & managed cloud',
+    color: 'from-blue-600 to-blue-700',
+    bgColor: 'bg-blue-600/10',
+    borderColor: 'border-blue-600/30',
+    category: 'enterprise',
+    fields: [
+      { name: 'Service URL', key: 'host', type: 'url', required: true },
+      ...apiTokenFields('DXC'),
+      { name: 'Organization ID', key: 'orgId', type: 'text' },
+    ],
+  },
+  tcs: {
+    icon: '🏦',
+    name: 'TCS (Tata Consultancy)',
+    description: 'IT services & BaNCS platform',
+    color: 'from-blue-700 to-blue-800',
+    bgColor: 'bg-blue-700/10',
+    borderColor: 'border-blue-700/30',
+    category: 'enterprise',
+    fields: [
+      { name: 'BaNCS Server URL', key: 'host', type: 'url' },
+      { name: 'Bank Code', key: 'bankCode', type: 'text' },
+      ...oauthFields('TCS BaNCS'),
+    ],
+  },
+  infosys: {
+    icon: '🔷',
+    name: 'Infosys',
+    description: 'Finacle & enterprise solutions',
+    color: 'from-blue-500 to-blue-600',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    category: 'enterprise',
+    fields: [
+      { name: 'Finacle Server URL', key: 'host', type: 'url' },
+      { name: 'Bank ID', key: 'bankId', type: 'text', required: true },
+      { name: 'Username', key: 'username', type: 'text', required: true },
+      { name: 'Password', key: 'password', type: 'password', required: true },
+    ],
+  },
+  wipro: {
+    icon: '🌟',
+    name: 'Wipro',
+    description: 'HOLMES AI & enterprise solutions',
+    color: 'from-blue-500 to-blue-600',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    category: 'enterprise',
+    fields: [
+      { name: 'Platform URL', key: 'host', type: 'url', required: true },
+      ...apiKeyFields('Wipro'),
+      { name: 'Tenant ID', key: 'tenantId', type: 'text' },
+    ],
   },
 };
 
@@ -813,6 +4244,8 @@ export const CONNECTION_CATEGORIES = [
   { id: 'legacy', name: 'Mainframe' },
   { id: 'warehouse', name: 'Data Warehouse' },
   { id: 'mcp', name: 'MCP & APIs' },
+  { id: 'api', name: 'API Connectors' },
+  { id: 'finance-markets', name: 'Financial Markets' },
 ] as const;
 
 /** Helper: get connection info with a safe fallback */

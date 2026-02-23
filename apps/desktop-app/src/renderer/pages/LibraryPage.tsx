@@ -6,8 +6,6 @@ import {
   Plus,
   Check,
   Database,
-  HardDrive,
-  Warehouse,
   Zap,
   Loader2,
   Building2,
@@ -25,6 +23,14 @@ import {
   Wrench,
   ShoppingBag,
   Monitor,
+  MessageSquare,
+  Kanban,
+  BarChart3,
+  Code2,
+  Cloud,
+  Fingerprint,
+  ChevronDown,
+  Globe,
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -34,16 +40,22 @@ import ConnectionIcon from '../components/ConnectionIcon';
 
 const CATEGORIES = [
   { id: 'all', name: 'All', icon: Grid3x3 },
-  { id: 'database', name: 'Databases', icon: Database },
-  { id: 'nosql', name: 'NoSQL', icon: HardDrive },
-  { id: 'enterprise', name: 'Enterprise', icon: Building2 },
+  { id: 'mcp', name: 'MCP Servers', icon: Zap },
   { id: 'erp', name: 'ERP', icon: Briefcase },
+  { id: 'finance', name: 'Finance & Markets', icon: Banknote },
+  { id: 'project-mgmt', name: 'Project Mgmt', icon: Kanban },
+  { id: 'database', name: 'Databases', icon: Database },
+  { id: 'cloud', name: 'Cloud', icon: Cloud },
+  { id: 'communication', name: 'Communication', icon: MessageSquare },
+  { id: 'devtools', name: 'Dev Tools', icon: Code2 },
+  { id: 'bi', name: 'BI & Reporting', icon: BarChart3 },
+  { id: 'enterprise', name: 'Enterprise', icon: Building2 },
   { id: 'crm', name: 'CRM & Sales', icon: Users },
   { id: 'hcm', name: 'HCM & HR', icon: Heart },
+  { id: 'identity', name: 'Identity', icon: Fingerprint },
   { id: 'healthcare', name: 'Healthcare', icon: Heart },
   { id: 'insurance', name: 'Insurance', icon: Shield },
   { id: 'supply-chain', name: 'Supply Chain', icon: Truck },
-  { id: 'finance', name: 'Finance', icon: Banknote },
   { id: 'commerce', name: 'Commerce', icon: ShoppingCart },
   { id: 'telecom', name: 'Telecom', icon: Radio },
   { id: 'document', name: 'Documents', icon: FileText },
@@ -52,8 +64,7 @@ const CATEGORIES = [
   { id: 'asset', name: 'Assets', icon: Wrench },
   { id: 'procurement', name: 'Procurement', icon: ShoppingBag },
   { id: 'legacy', name: 'Mainframe', icon: Monitor },
-  { id: 'warehouse', name: 'Data Warehouse', icon: Warehouse },
-  { id: 'mcp', name: 'MCP & APIs', icon: Zap },
+  { id: 'api', name: 'API Connectors', icon: Globe },
 ];
 
 interface ConnectionConfig {
@@ -113,7 +124,13 @@ export default function LibraryPage() {
     const matchesSearch =
       value.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       value.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || value.category === selectedCategory;
+    const matchesCategory =
+      selectedCategory === 'all' ||
+      (selectedCategory === 'database'
+        ? ['database', 'nosql', 'warehouse'].includes(value.category)
+        : selectedCategory === 'finance'
+          ? ['finance', 'finance-markets'].includes(value.category)
+          : value.category === selectedCategory);
     return matchesSearch && matchesCategory;
   });
 
@@ -424,101 +441,139 @@ export default function LibraryPage() {
                     </div>
                   </div>
 
-                  {/* Fields */}
-                  <div className="px-5 py-4 space-y-3">
+                  {/* Fields – dynamic per integration */}
+                  <div className="px-5 py-4 space-y-3 max-h-[55vh] overflow-y-auto">
                     {addError && (
                       <div className="flex items-start gap-2 px-3 py-2.5 rounded-lg border border-red-500/20 bg-red-950/20 text-[11px] text-red-400/80">
                         <span className="flex-shrink-0 mt-0.5">⚠</span>
                         <span>{addError}</span>
                       </div>
                     )}
-                    {[
-                      { label: 'Name', key: 'name', placeholder: `My ${ct?.name}`, type: 'text' },
-                    ].map(f => (
-                      <div key={f.key}>
+
+                    {/* Connection Name – always first */}
+                    <div>
+                      <label className="block text-[11px] font-medium text-white/40 uppercase tracking-wider mb-1">
+                        Name *
+                      </label>
+                      <input
+                        type="text"
+                        placeholder={`My ${ct?.name}`}
+                        value={(connectionConfig as any).name ?? ''}
+                        onChange={e =>
+                          setConnectionConfig({ ...connectionConfig, name: e.target.value })
+                        }
+                        className="input-desktop w-full"
+                      />
+                    </div>
+
+                    {/* Per-software fields */}
+                    {(
+                      ct?.fields ?? [
+                        {
+                          name: 'Host',
+                          key: 'host',
+                          type: 'text' as const,
+                          placeholder: 'localhost',
+                        },
+                        { name: 'Port', key: 'port', type: 'number' as const, placeholder: '5432' },
+                        {
+                          name: 'Database',
+                          key: 'database',
+                          type: 'text' as const,
+                          placeholder: 'mydb',
+                        },
+                        { name: 'Username', key: 'username', type: 'text' as const },
+                        { name: 'Password', key: 'password', type: 'password' as const },
+                      ]
+                    ).map(field => (
+                      <div key={field.key}>
                         <label className="block text-[11px] font-medium text-white/40 uppercase tracking-wider mb-1">
-                          {f.label}
+                          {field.name}
+                          {field.required ? ' *' : ''}
                         </label>
-                        <input
-                          type={f.type}
-                          placeholder={f.placeholder}
-                          value={(connectionConfig as any)[f.key]}
-                          onChange={e =>
-                            setConnectionConfig({ ...connectionConfig, [f.key]: e.target.value })
-                          }
-                          className="input-desktop w-full"
-                        />
-                      </div>
-                    ))}
-                    <div className="grid grid-cols-2 gap-3">
-                      {[
-                        { label: 'Host', key: 'host', placeholder: 'localhost', type: 'text' },
-                        { label: 'Port', key: 'port', placeholder: '5432', type: 'number' },
-                      ].map(f => (
-                        <div key={f.key}>
-                          <label className="block text-[11px] font-medium text-white/40 uppercase tracking-wider mb-1">
-                            {f.label}
-                          </label>
-                          <input
-                            type={f.type}
-                            placeholder={f.placeholder}
-                            value={(connectionConfig as any)[f.key]}
+                        {field.type === 'select' && field.options ? (
+                          <div className="relative">
+                            <select
+                              value={
+                                (connectionConfig as any)[field.key] ?? field.defaultValue ?? ''
+                              }
+                              onChange={e =>
+                                setConnectionConfig({
+                                  ...connectionConfig,
+                                  [field.key]: e.target.value,
+                                })
+                              }
+                              className="input-desktop w-full appearance-none cursor-pointer pr-8"
+                            >
+                              <option value="">Select…</option>
+                              {field.options.map((opt: string) => (
+                                <option key={opt} value={opt}>
+                                  {opt}
+                                </option>
+                              ))}
+                            </select>
+                            <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30 pointer-events-none" />
+                          </div>
+                        ) : field.type === 'textarea' ? (
+                          <textarea
+                            placeholder={field.placeholder}
+                            rows={3}
+                            value={(connectionConfig as any)[field.key] ?? ''}
                             onChange={e =>
                               setConnectionConfig({
                                 ...connectionConfig,
-                                [f.key]:
-                                  f.type === 'number' ? parseInt(e.target.value) : e.target.value,
+                                [field.key]: e.target.value,
+                              })
+                            }
+                            className="input-desktop w-full resize-none"
+                          />
+                        ) : field.type === 'toggle' ? (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setConnectionConfig({
+                                ...connectionConfig,
+                                [field.key]: !(connectionConfig as any)[field.key],
+                              })
+                            }
+                            className={cn(
+                              'h-6 w-11 rounded-full transition-colors',
+                              (connectionConfig as any)[field.key]
+                                ? 'bg-emerald-500'
+                                : 'bg-white/10'
+                            )}
+                          >
+                            <div
+                              className={cn(
+                                'h-4 w-4 rounded-full bg-white transition-transform mx-1',
+                                (connectionConfig as any)[field.key] && 'translate-x-5'
+                              )}
+                            />
+                          </button>
+                        ) : (
+                          <input
+                            type={field.type === 'file' ? 'text' : field.type}
+                            placeholder={field.placeholder}
+                            value={(connectionConfig as any)[field.key] ?? field.defaultValue ?? ''}
+                            onChange={e =>
+                              setConnectionConfig({
+                                ...connectionConfig,
+                                [field.key]:
+                                  field.type === 'number'
+                                    ? e.target.value === ''
+                                      ? ''
+                                      : parseInt(e.target.value)
+                                    : e.target.value,
                               })
                             }
                             className="input-desktop w-full"
                           />
-                        </div>
-                      ))}
-                    </div>
-                    {[
-                      { label: 'Database', key: 'database', placeholder: 'mydb', type: 'text' },
-                    ].map(f => (
-                      <div key={f.key}>
-                        <label className="block text-[11px] font-medium text-white/40 uppercase tracking-wider mb-1">
-                          {f.label}
-                        </label>
-                        <input
-                          type={f.type}
-                          placeholder={f.placeholder}
-                          value={(connectionConfig as any)[f.key]}
-                          onChange={e =>
-                            setConnectionConfig({ ...connectionConfig, [f.key]: e.target.value })
-                          }
-                          className="input-desktop w-full"
-                        />
+                        )}
+                        {field.hint && (
+                          <p className="text-[10px] text-white/25 mt-0.5">{field.hint}</p>
+                        )}
                       </div>
                     ))}
-                    <div className="grid grid-cols-2 gap-3">
-                      {[
-                        { label: 'Username', key: 'username', placeholder: 'user', type: 'text' },
-                        {
-                          label: 'Password',
-                          key: 'password',
-                          placeholder: '••••••••',
-                          type: 'password',
-                        },
-                      ].map(f => (
-                        <div key={f.key}>
-                          <label className="block text-[11px] font-medium text-white/40 uppercase tracking-wider mb-1">
-                            {f.label}
-                          </label>
-                          <input
-                            type={f.type}
-                            placeholder={f.placeholder}
-                            value={(connectionConfig as any)[f.key]}
-                            onChange={e =>
-                              setConnectionConfig({ ...connectionConfig, [f.key]: e.target.value })
-                            }
-                            className="input-desktop w-full"
-                          />
-                        </div>
-                      ))}
-                    </div>
 
                     {/* MCP notice */}
                     <div className="flex items-start gap-2.5 bg-white/[0.03] border border-white/[0.06] rounded-lg px-3 py-2.5">
