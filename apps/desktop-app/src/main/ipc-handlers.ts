@@ -442,6 +442,112 @@ ipcMain.handle('express:query-ai', async (_event, request) => {
   return await expressClient.queryAI(request);
 });
 
+// =========================================================================
+// AI + MCP TOOL-CALLING LOOP
+// When a connection is active, gets its MCP tools, passes them to the LLM,
+// and executes any tool_calls locally via mcpClient, then re-calls the LLM
+// with results until a final text response is produced.
+// =========================================================================
+ipcMain.handle('express:query-ai-with-tools', async (_event, request) => {
+  const { connectionId, ...aiRequest } = request;
+  const MAX_TOOL_ITERATIONS = 10;
+
+  try {
+    // 1. Get tools from the connected MCP server
+    const tools = mcpClient.getTools(connectionId);
+    if (!tools || tools.length === 0) {
+      // No tools available — fall back to plain AI query
+      console.log('[MCP-Tools] No tools found, falling back to plain AI query');
+      return await expressClient.queryAI(aiRequest);
+    }
+
+    // 2. Convert MCP tools to OpenAI function-calling format
+    const openaiTools = tools.map((t: any) => ({
+      type: 'function' as const,
+      function: {
+        name: t.name,
+        description: t.description || t.name,
+        parameters: t.inputSchema || { type: 'object', properties: {} },
+      },
+    }));
+
+    console.log(
+      `[MCP-Tools] Sending ${openaiTools.length} tools to LLM:`,
+      openaiTools.map((t: any) => t.function.name)
+    );
+
+    // 3. Call AI with tools
+    const messages = [...aiRequest.messages];
+    let response = await expressClient.queryAI({ ...aiRequest, messages, tools: openaiTools });
+
+    // 4. Tool-calling loop: if AI returns tool_calls, execute them and re-call
+    let iterations = 0;
+    while (response.tool_calls && iterations < MAX_TOOL_ITERATIONS) {
+      console.log(
+        `[MCP-Tools] Iteration ${iterations + 1}: LLM requested ${response.tool_calls.length} tool call(s)`
+      );
+
+      // Add assistant message with tool_calls to conversation
+      messages.push({
+        role: 'assistant',
+        content: null as any,
+        tool_calls: response.tool_calls,
+      });
+
+      // Execute each tool call via local MCP server
+      for (const toolCall of response.tool_calls) {
+        const fnName = toolCall.function.name;
+        let fnArgs: Record<string, any> = {};
+        try {
+          fnArgs = JSON.parse(toolCall.function.arguments || '{}');
+        } catch {
+          fnArgs = {};
+        }
+
+        console.log(`[MCP-Tools] Executing tool: ${fnName}`, fnArgs);
+
+        let toolResult: string;
+        try {
+          const result = await mcpClient.callTool(connectionId, fnName, fnArgs);
+          // MCP results come as { content: [{ type: 'text', text: '...' }] }
+          if (result?.content && Array.isArray(result.content)) {
+            toolResult = result.content
+              .filter((c: any) => c.type === 'text')
+              .map((c: any) => c.text)
+              .join('\n');
+          } else {
+            toolResult = typeof result === 'string' ? result : JSON.stringify(result, null, 2);
+          }
+        } catch (toolError: any) {
+          console.error(`[MCP-Tools] Tool ${fnName} failed:`, toolError.message);
+          toolResult = JSON.stringify({ error: toolError.message });
+        }
+
+        // Add tool result to conversation
+        messages.push({
+          role: 'tool',
+          tool_call_id: toolCall.id,
+          content: toolResult,
+        } as any);
+      }
+
+      // Re-call AI with tool results
+      response = await expressClient.queryAI({ ...aiRequest, messages, tools: openaiTools });
+      iterations++;
+    }
+
+    if (iterations >= MAX_TOOL_ITERATIONS) {
+      console.warn('[MCP-Tools] Max tool iterations reached');
+    }
+
+    console.log(`[MCP-Tools] Final response after ${iterations} tool iteration(s)`);
+    return response;
+  } catch (error: any) {
+    console.error('[MCP-Tools] Tool-calling flow failed:', error);
+    throw new Error(`MCP tool-calling failed: ${error.message}`);
+  }
+});
+
 ipcMain.handle('express:validate-license', async (_event, licenseKey, deviceId, deviceInfo) => {
   return await expressClient.validateLicense(licenseKey, deviceId, deviceInfo);
 });

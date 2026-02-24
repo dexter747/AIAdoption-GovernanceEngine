@@ -49,8 +49,14 @@ const MODEL_PROVIDER_MAP = {
   // Groq
   'llama-3.3-70b-versatile': 'groq',
   'llama-3.1-8b-instant': 'groq',
-  'mixtral-8x7b-32768': 'groq',
-  'gemma2-9b-it': 'groq',
+  'meta-llama/llama-4-maverick-17b-128e-instruct': 'groq',
+  'meta-llama/llama-4-scout-17b-16e-instruct': 'groq',
+  'qwen/qwen3-32b': 'groq',
+  'groq/compound': 'groq',
+  'groq/compound-mini': 'groq',
+  'openai/gpt-oss-120b': 'groq',
+  'openai/gpt-oss-20b': 'groq',
+  'allam-2-7b': 'groq',
 
   // Cohere
   'command-r-plus': 'cohere',

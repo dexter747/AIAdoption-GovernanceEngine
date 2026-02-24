@@ -12,7 +12,7 @@ const faqs = [
   {
     question: 'How does Velanova connect to my legacy systems?',
     answer:
-      'Velanova uses MCP (Model Context Protocol) servers that act as secure bridges between your systems and AI models. We support 64+ enterprise systems including Oracle, SAP, Salesforce, ServiceNow, and more. No migration required - we connect to your existing databases and APIs using industry-standard secure protocols.',
+      'Velanova uses MCP (Model Context Protocol) servers that act as secure bridges between your systems and AI models. We support 200+ enterprise systems including Oracle, SAP, Salesforce, ServiceNow, and more. No migration required - we connect to your existing databases and APIs using industry-standard secure protocols.',
   },
   {
     question: 'Is my data secure? Do you store any sensitive information?',

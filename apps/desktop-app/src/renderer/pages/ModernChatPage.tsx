@@ -256,8 +256,15 @@ const LLM_MODELS = [
     hasIcon: true,
   },
   {
-    id: 'mixtral-8x7b-32768',
-    name: 'Mixtral 8x7B',
+    id: 'meta-llama/llama-4-scout-17b-16e-instruct',
+    name: 'Llama 4 Scout',
+    provider: 'Groq',
+    icon: '/groq.svg',
+    hasIcon: true,
+  },
+  {
+    id: 'meta-llama/llama-4-maverick-17b-128e-instruct',
+    name: 'Llama 4 Maverick',
     provider: 'Groq',
     icon: '/groq.svg',
     hasIcon: true,
@@ -736,53 +743,144 @@ export default function ModernChatPage() {
       }
 
       if (selectedConnection) {
-        // DATABASE MODE: Query via MCP, then optionally analyze with AI
-        const mcp = window.electron.mcp as any;
-        const isNaturalLanguage =
-          !input.trim().toUpperCase().startsWith('SELECT') &&
-          !input.trim().toUpperCase().startsWith('INSERT') &&
-          !input.trim().toUpperCase().startsWith('UPDATE') &&
-          !input.trim().toUpperCase().startsWith('DELETE') &&
-          !input.trim().toUpperCase().startsWith('CREATE') &&
-          !input.trim().toUpperCase().startsWith('ALTER') &&
-          !input.trim().toUpperCase().startsWith('DROP') &&
-          !input.trim().toUpperCase().startsWith('SHOW') &&
-          !input.trim().toUpperCase().startsWith('DESCRIBE') &&
-          !input.trim().toUpperCase().startsWith('PRAGMA');
+        // Determine connection type — database vs API/SaaS
+        const connInfo = connections.find((c: any) => c.id === selectedConnection);
+        const connType = connInfo?.type || connInfo?.connection_type || '';
+        const DATABASE_TYPES = new Set([
+          'postgresql',
+          'mysql',
+          'sqlite',
+          'mongodb',
+          'sqlserver',
+          'oracle',
+          'sap-hana',
+          'mariadb',
+          'redis',
+          'elasticsearch',
+          'cassandra',
+          'couchdb',
+          'neo4j',
+          'dynamodb',
+          'amazon-aurora',
+          'aws-rds',
+          'azure-sql',
+          'google-cloud-sql',
+          'cockroachdb',
+          'neon',
+          'planetscale',
+          'supabase',
+          'firestore',
+          'influxdb',
+          'snowflake',
+          'bigquery',
+          'redshift',
+          'databricks',
+          'azure-synapse',
+          'teradata',
+          'dremio',
+          'starburst',
+          'firebolt',
+        ]);
+        const isDatabase = DATABASE_TYPES.has(connType);
 
-        if (isNaturalLanguage) {
-          // Natural language → Ask AI to generate SQL first, with DB schema context
-          const connName =
-            connections.find(c => c.id === selectedConnection)?.name || selectedConnection;
-          const queryMessages = [
+        if (!isDatabase) {
+          // ═══════════════════════════════════════════════════════════
+          // MCP TOOL MODE — for API/SaaS connections (Trello, Slack, etc.)
+          // The LLM gets the MCP tools and decides which to call.
+          // Tool execution happens locally in the main process.
+          // ═══════════════════════════════════════════════════════════
+          const connName = connInfo?.name || connType;
+          const toolMessages = [
             ...systemMessages,
             {
               role: 'system',
-              content: `You are connected to database "${connName}". The user will ask questions about the data. Generate and explain SQL queries, or analyze results. When generating SQL, wrap it in \`\`\`sql code blocks.`,
+              content: `You are connected to "${connName}" (${connType}). You have access to tools that can interact with this system. Use the available tools to answer the user's questions. Always call tools when the user asks for data or actions — do not make up information. Summarize tool results clearly.`,
             },
             ...updatedMessages.map(m => ({ role: m.role, content: m.content })),
           ];
 
-          response = await window.electron.express?.queryAI?.({
+          response = await (window.electron.express as any)?.queryAIWithTools?.({
             userId: 'local-user',
             licenseId: 'local',
             provider,
             model: selectedModel,
-            messages: queryMessages,
+            messages: toolMessages,
             connectionId: selectedConnection,
           });
-        } else if (mcp?.query) {
-          // Direct SQL → Execute via MCP, then format results
-          const mcpResult = await mcp.query(selectedConnection, input.trim());
+        } else {
+          // DATABASE MODE: Query via MCP, then optionally analyze with AI
+          const mcp = window.electron.mcp as any;
+          const isNaturalLanguage =
+            !input.trim().toUpperCase().startsWith('SELECT') &&
+            !input.trim().toUpperCase().startsWith('INSERT') &&
+            !input.trim().toUpperCase().startsWith('UPDATE') &&
+            !input.trim().toUpperCase().startsWith('DELETE') &&
+            !input.trim().toUpperCase().startsWith('CREATE') &&
+            !input.trim().toUpperCase().startsWith('ALTER') &&
+            !input.trim().toUpperCase().startsWith('DROP') &&
+            !input.trim().toUpperCase().startsWith('SHOW') &&
+            !input.trim().toUpperCase().startsWith('DESCRIBE') &&
+            !input.trim().toUpperCase().startsWith('PRAGMA');
 
-          if (mcpResult?.success && mcpResult?.data) {
-            // Format MCP results as AI-friendly response
-            const resultText =
-              typeof mcpResult.data === 'string'
-                ? mcpResult.data
-                : JSON.stringify(mcpResult.data, null, 2);
+          if (isNaturalLanguage) {
+            // Natural language → Ask AI to generate SQL first, with DB schema context
+            const connName =
+              connections.find(c => c.id === selectedConnection)?.name || selectedConnection;
+            const queryMessages = [
+              ...systemMessages,
+              {
+                role: 'system',
+                content: `You are connected to database "${connName}". The user will ask questions about the data. Generate and explain SQL queries, or analyze results. When generating SQL, wrap it in \`\`\`sql code blocks.`,
+              },
+              ...updatedMessages.map(m => ({ role: m.role, content: m.content })),
+            ];
 
-            // Send to AI for analysis
+            response = await window.electron.express?.queryAI?.({
+              userId: 'local-user',
+              licenseId: 'local',
+              provider,
+              model: selectedModel,
+              messages: queryMessages,
+              connectionId: selectedConnection,
+            });
+          } else if (mcp?.query) {
+            // Direct SQL → Execute via MCP, then format results
+            const mcpResult = await mcp.query(selectedConnection, input.trim());
+
+            if (mcpResult?.success && mcpResult?.data) {
+              // Format MCP results as AI-friendly response
+              const resultText =
+                typeof mcpResult.data === 'string'
+                  ? mcpResult.data
+                  : JSON.stringify(mcpResult.data, null, 2);
+
+              // Send to AI for analysis
+              response = await window.electron.express?.queryAI?.({
+                userId: 'local-user',
+                licenseId: 'local',
+                provider,
+                model: selectedModel,
+                messages: [
+                  ...systemMessages,
+                  {
+                    role: 'system',
+                    content:
+                      'Analyze the following database query results and provide a clear summary.',
+                  },
+                  {
+                    role: 'user',
+                    content: `SQL Query: ${input.trim()}\n\nResults:\n\`\`\`json\n${resultText}\n\`\`\``,
+                  },
+                ],
+              });
+            } else {
+              // MCP query failed, return error
+              response = {
+                content: `Database query failed: ${mcpResult?.error || 'Unknown error'}`,
+              };
+            }
+          } else {
+            // Fallback: send via Express with connection context
             response = await window.electron.express?.queryAI?.({
               userId: 'local-user',
               licenseId: 'local',
@@ -790,35 +888,12 @@ export default function ModernChatPage() {
               model: selectedModel,
               messages: [
                 ...systemMessages,
-                {
-                  role: 'system',
-                  content:
-                    'Analyze the following database query results and provide a clear summary.',
-                },
-                {
-                  role: 'user',
-                  content: `SQL Query: ${input.trim()}\n\nResults:\n\`\`\`json\n${resultText}\n\`\`\``,
-                },
+                ...updatedMessages.map(m => ({ role: m.role, content: m.content })),
               ],
+              connectionId: selectedConnection,
             });
-          } else {
-            // MCP query failed, return error
-            response = { content: `Database query failed: ${mcpResult?.error || 'Unknown error'}` };
           }
-        } else {
-          // Fallback: send via Express with connection context
-          response = await window.electron.express?.queryAI?.({
-            userId: 'local-user',
-            licenseId: 'local',
-            provider,
-            model: selectedModel,
-            messages: [
-              ...systemMessages,
-              ...updatedMessages.map(m => ({ role: m.role, content: m.content })),
-            ],
-            connectionId: selectedConnection,
-          });
-        }
+        } // end database else
       } else {
         // CHAT MODE: Standard AI conversation with compiled contexts
         response = await window.electron.express?.queryAI?.({

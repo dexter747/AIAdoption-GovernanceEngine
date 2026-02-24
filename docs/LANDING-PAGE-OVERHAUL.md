@@ -140,7 +140,7 @@ Transformed the landing page into a **premium, conversion-optimized sales master
 
 **12 Premium Features** (upgraded from 6):
 
-- 64+ System Connectors (vs 10+)
+- 200+ System Connectors (vs 10+)
 - Multi-Model AI Engine
 - Enterprise Security (SOC 2, HIPAA, GDPR)
 - Natural Language Interface (89% time saved)
@@ -184,7 +184,7 @@ Transformed the landing page into a **premium, conversion-optimized sales master
 
 - 10 device licenses
 - Unlimited queries
-- All 64+ connectors
+- All 200+ connectors
 - Advanced analytics
 - Custom workflows
 - Priority support (4h SLA)

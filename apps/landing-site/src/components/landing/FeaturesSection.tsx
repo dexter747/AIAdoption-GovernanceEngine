@@ -31,7 +31,7 @@ interface Feature {
 const features: Feature[] = [
   {
     icon: Database,
-    title: '64+ System Connectors',
+    title: '200+ System Connectors',
     description:
       'Connect to any database, ERP, CRM, or legacy system. PostgreSQL, Oracle, SAP, Salesforce, and 60+ more.',
     metric: '95% Compatibility',

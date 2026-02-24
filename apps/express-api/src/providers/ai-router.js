@@ -30,7 +30,9 @@ const providers = {
       'o4-mini',
       'gpt-3.5-turbo',
     ],
-    enabled: Boolean(process.env.OPENAI_API_KEY),
+    get enabled() {
+      return Boolean(process.env.OPENAI_API_KEY);
+    },
   },
   anthropic: {
     name: 'Anthropic',
@@ -40,7 +42,9 @@ const providers = {
       'claude-3-5-haiku-20241022',
       'claude-3-opus-20240229',
     ],
-    enabled: Boolean(process.env.ANTHROPIC_API_KEY),
+    get enabled() {
+      return Boolean(process.env.ANTHROPIC_API_KEY);
+    },
   },
   google: {
     name: 'Google AI',
@@ -50,111 +54,126 @@ const providers = {
       'gemini-1.5-pro',
       'gemini-1.5-flash',
     ],
-    enabled: Boolean(process.env.GOOGLE_AI_API_KEY),
+    get enabled() {
+      return Boolean(process.env.GOOGLE_AI_API_KEY);
+    },
   },
   groq: {
     name: 'Groq',
     models: [
       'llama-3.3-70b-versatile',
-      'llama-3.1-70b-versatile',
       'llama-3.1-8b-instant',
-      'llama-3.2-90b-vision-preview',
-      'llama-4-maverick-17b-128e-instruct',
-      'llama-4-scout-17b-16e-instruct',
-      'mixtral-8x7b-32768',
+      'meta-llama/llama-4-maverick-17b-128e-instruct',
+      'meta-llama/llama-4-scout-17b-16e-instruct',
       'qwen/qwen3-32b',
       'moonshotai/kimi-k2-instruct-0905',
       'openai/gpt-oss-120b',
       'openai/gpt-oss-20b',
       'groq/compound',
       'groq/compound-mini',
+      'allam-2-7b',
     ],
-    enabled: Boolean(process.env.GROQ_API_KEY),
+    get enabled() {
+      return Boolean(process.env.GROQ_API_KEY);
+    },
   },
   xai: {
     name: 'xAI',
     models: ['grok-2-1212', 'grok-2-vision-1212', 'grok-beta'],
-    enabled: Boolean(process.env.XAI_API_KEY),
+    get enabled() {
+      return Boolean(process.env.XAI_API_KEY);
+    },
   },
   mistral: {
     name: 'Mistral AI',
     models: ['mistral-large-latest', 'mistral-medium-latest', 'mistral-small-latest'],
-    enabled: Boolean(process.env.MISTRAL_API_KEY),
+    get enabled() {
+      return Boolean(process.env.MISTRAL_API_KEY);
+    },
   },
   deepseek: {
     name: 'DeepSeek',
     models: ['deepseek-chat', 'deepseek-reasoner'],
-    enabled: Boolean(process.env.DEEPSEEK_API_KEY),
+    get enabled() {
+      return Boolean(process.env.DEEPSEEK_API_KEY);
+    },
   },
   cohere: {
     name: 'Cohere',
     models: ['command', 'command-light'],
-    enabled: Boolean(process.env.COHERE_API_KEY),
+    get enabled() {
+      return Boolean(process.env.COHERE_API_KEY);
+    },
   },
   perplexity: {
     name: 'Perplexity',
     models: ['pplx-70b-online', 'pplx-7b-chat'],
-    enabled: Boolean(process.env.PERPLEXITY_API_KEY),
+    get enabled() {
+      return Boolean(process.env.PERPLEXITY_API_KEY);
+    },
   },
 };
 
-// Initialize clients
+// Lazy-initialized client cache (avoids ES module hoisting issues with dotenv)
 const clients = {};
 
-if (providers.openai.enabled) {
-  clients.openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-}
+function getClient(providerName) {
+  if (clients[providerName]) return clients[providerName];
 
-if (providers.anthropic.enabled) {
-  clients.anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-}
+  switch (providerName) {
+    case 'openai':
+      if (process.env.OPENAI_API_KEY)
+        clients.openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+      break;
+    case 'anthropic':
+      if (process.env.ANTHROPIC_API_KEY)
+        clients.anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+      break;
+    case 'google':
+      if (process.env.GOOGLE_AI_API_KEY)
+        clients.google = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY);
+      break;
+    case 'groq':
+      if (process.env.GROQ_API_KEY) clients.groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+      break;
+    case 'xai':
+      if (process.env.XAI_API_KEY)
+        clients.xai = new OpenAI({
+          apiKey: process.env.XAI_API_KEY,
+          baseURL: 'https://api.x.ai/v1',
+        });
+      break;
+    case 'mistral':
+      if (process.env.MISTRAL_API_KEY)
+        clients.mistral = new OpenAI({
+          apiKey: process.env.MISTRAL_API_KEY,
+          baseURL: 'https://api.mistral.ai/v1',
+        });
+      break;
+    case 'deepseek':
+      if (process.env.DEEPSEEK_API_KEY)
+        clients.deepseek = new OpenAI({
+          apiKey: process.env.DEEPSEEK_API_KEY,
+          baseURL: 'https://api.deepseek.com',
+        });
+      break;
+    case 'cohere':
+      if (process.env.COHERE_API_KEY)
+        clients.cohere = new OpenAI({
+          apiKey: process.env.COHERE_API_KEY,
+          baseURL: 'https://api.cohere.com/v2',
+        });
+      break;
+    case 'perplexity':
+      if (process.env.PERPLEXITY_API_KEY)
+        clients.perplexity = new OpenAI({
+          apiKey: process.env.PERPLEXITY_API_KEY,
+          baseURL: 'https://api.perplexity.ai',
+        });
+      break;
+  }
 
-if (providers.google.enabled) {
-  clients.google = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY);
-}
-
-if (providers.groq.enabled) {
-  clients.groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-}
-
-// xAI (Grok) - Uses OpenAI-compatible API
-if (providers.xai.enabled) {
-  clients.xai = new OpenAI({
-    apiKey: process.env.XAI_API_KEY,
-    baseURL: 'https://api.x.ai/v1',
-  });
-}
-
-// Mistral - Uses OpenAI-compatible API
-if (providers.mistral.enabled) {
-  clients.mistral = new OpenAI({
-    apiKey: process.env.MISTRAL_API_KEY,
-    baseURL: 'https://api.mistral.ai/v1',
-  });
-}
-
-// DeepSeek - Uses OpenAI-compatible API
-if (providers.deepseek.enabled) {
-  clients.deepseek = new OpenAI({
-    apiKey: process.env.DEEPSEEK_API_KEY,
-    baseURL: 'https://api.deepseek.com',
-  });
-}
-
-// Cohere - Uses OpenAI-compatible API
-if (providers.cohere.enabled) {
-  clients.cohere = new OpenAI({
-    apiKey: process.env.COHERE_API_KEY,
-    baseURL: 'https://api.cohere.com/v2',
-  });
-}
-
-// Perplexity - Uses OpenAI-compatible API
-if (providers.perplexity.enabled) {
-  clients.perplexity = new OpenAI({
-    apiKey: process.env.PERPLEXITY_API_KEY,
-    baseURL: 'https://api.perplexity.ai',
-  });
+  return clients[providerName] || null;
 }
 
 // Supabase client for usage tracking (optional - lazy init)
@@ -179,6 +198,7 @@ export async function routeAIRequest({
   temperature = 0.7,
   maxTokens = 1000,
   stream = false,
+  tools = null,
 }) {
   try {
     // Validate provider
@@ -212,6 +232,7 @@ export async function routeAIRequest({
           maxTokens,
           stream,
           userApiKey,
+          tools,
         });
         tokensUsed = response.usage?.total_tokens || 0;
         cost = calculateOpenAICost(model, tokensUsed);
@@ -230,7 +251,7 @@ export async function routeAIRequest({
         break;
 
       case 'groq':
-        response = await callGroq({ model, messages, temperature, maxTokens, userApiKey });
+        response = await callGroq({ model, messages, temperature, maxTokens, userApiKey, tools });
         tokensUsed = response.usage?.total_tokens || 0;
         cost = 0; // Groq is free during beta
         break;
@@ -244,6 +265,7 @@ export async function routeAIRequest({
           maxTokens,
           userApiKey,
           baseURL: 'https://api.x.ai/v1',
+          tools,
         });
         tokensUsed = response.usage?.total_tokens || 0;
         cost = calculateOpenAICost(model, tokensUsed);
@@ -258,6 +280,7 @@ export async function routeAIRequest({
           maxTokens,
           userApiKey,
           baseURL: 'https://api.mistral.ai/v1',
+          tools,
         });
         tokensUsed = response.usage?.total_tokens || 0;
         cost = calculateOpenAICost(model, tokensUsed);
@@ -272,6 +295,7 @@ export async function routeAIRequest({
           maxTokens,
           userApiKey,
           baseURL: 'https://api.deepseek.com',
+          tools,
         });
         tokensUsed = response.usage?.total_tokens || 0;
         cost = calculateOpenAICost(model, tokensUsed);
@@ -286,6 +310,7 @@ export async function routeAIRequest({
           maxTokens,
           userApiKey,
           baseURL: 'https://api.cohere.com/v2',
+          tools,
         });
         tokensUsed = response.usage?.total_tokens || 0;
         cost = calculateOpenAICost(model, tokensUsed);
@@ -300,6 +325,7 @@ export async function routeAIRequest({
           maxTokens,
           userApiKey,
           baseURL: 'https://api.perplexity.ai',
+          tools,
         });
         tokensUsed = response.usage?.total_tokens || 0;
         cost = calculateOpenAICost(model, tokensUsed);
@@ -319,6 +345,17 @@ export async function routeAIRequest({
       cost,
       metadata: { messages: messages.length },
     });
+
+    // If the LLM requested tool calls, return them for the client to execute
+    if (response.tool_calls) {
+      return {
+        success: true,
+        tool_calls: response.tool_calls,
+        usage: { tokensUsed, cost },
+        provider,
+        model,
+      };
+    }
 
     return {
       success: true,
@@ -352,29 +389,44 @@ export async function routeAIRequest({
 // PROVIDER-SPECIFIC IMPLEMENTATIONS
 // =============================================================================
 
-async function callOpenAI({ model, messages, temperature, maxTokens, stream, userApiKey }) {
-  const client = userApiKey ? new OpenAI({ apiKey: userApiKey }) : clients.openai;
+async function callOpenAI({ model, messages, temperature, maxTokens, stream, userApiKey, tools }) {
+  const client = userApiKey ? new OpenAI({ apiKey: userApiKey }) : getClient('openai');
 
-  const completion = await client.chat.completions.create({
+  const params = {
     model: model || 'gpt-3.5-turbo',
     messages,
     temperature,
     max_tokens: maxTokens,
     stream,
-  });
+  };
+
+  if (tools && tools.length > 0) {
+    params.tools = tools;
+    params.tool_choice = 'auto';
+  }
+
+  const completion = await client.chat.completions.create(params);
 
   if (stream) {
     return completion; // Return stream directly
   }
 
+  const responseMessage = completion.choices[0].message;
+  if (responseMessage.tool_calls && responseMessage.tool_calls.length > 0) {
+    return {
+      tool_calls: responseMessage.tool_calls,
+      usage: completion.usage,
+    };
+  }
+
   return {
-    content: completion.choices[0].message.content,
+    content: responseMessage.content,
     usage: completion.usage,
   };
 }
 
 async function callAnthropic({ model, messages, temperature, maxTokens, userApiKey }) {
-  const client = userApiKey ? new Anthropic({ apiKey: userApiKey }) : clients.anthropic;
+  const client = userApiKey ? new Anthropic({ apiKey: userApiKey }) : getClient('anthropic');
 
   // Convert messages format to Anthropic format
   const systemMessage = messages.find(m => m.role === 'system');
@@ -395,7 +447,7 @@ async function callAnthropic({ model, messages, temperature, maxTokens, userApiK
 }
 
 async function callGoogle({ model, messages, temperature, maxTokens, userApiKey }) {
-  const genAI = userApiKey ? new GoogleGenerativeAI(userApiKey) : clients.google;
+  const genAI = userApiKey ? new GoogleGenerativeAI(userApiKey) : getClient('google');
 
   // Extract system instruction for Gemini
   const systemMessage = messages.find(m => m.role === 'system');
@@ -432,18 +484,33 @@ async function callGoogle({ model, messages, temperature, maxTokens, userApiKey 
   };
 }
 
-async function callGroq({ model, messages, temperature, maxTokens, userApiKey }) {
-  const client = userApiKey ? new Groq({ apiKey: userApiKey }) : clients.groq;
+async function callGroq({ model, messages, temperature, maxTokens, userApiKey, tools }) {
+  const client = userApiKey ? new Groq({ apiKey: userApiKey }) : getClient('groq');
 
-  const completion = await client.chat.completions.create({
+  const params = {
     model: model || 'llama2-70b-4096',
     messages,
     temperature,
     max_tokens: maxTokens,
-  });
+  };
+
+  if (tools && tools.length > 0) {
+    params.tools = tools;
+    params.tool_choice = 'auto';
+  }
+
+  const completion = await client.chat.completions.create(params);
+
+  const responseMessage = completion.choices[0].message;
+  if (responseMessage.tool_calls && responseMessage.tool_calls.length > 0) {
+    return {
+      tool_calls: responseMessage.tool_calls,
+      usage: completion.usage,
+    };
+  }
 
   return {
-    content: completion.choices[0].message.content,
+    content: responseMessage.content,
     usage: completion.usage,
   };
 }
@@ -460,6 +527,7 @@ async function callOpenAICompatible({
   maxTokens,
   userApiKey,
   baseURL,
+  tools,
 }) {
   const envKeyMap = {
     xai: 'XAI_API_KEY',
@@ -471,17 +539,32 @@ async function callOpenAICompatible({
 
   const client = userApiKey
     ? new OpenAI({ apiKey: userApiKey, baseURL })
-    : clients[provider] || new OpenAI({ apiKey: process.env[envKeyMap[provider]], baseURL });
+    : getClient(provider) || new OpenAI({ apiKey: process.env[envKeyMap[provider]], baseURL });
 
-  const completion = await client.chat.completions.create({
+  const params = {
     model,
     messages,
     temperature,
     max_tokens: maxTokens,
-  });
+  };
+
+  if (tools && tools.length > 0) {
+    params.tools = tools;
+    params.tool_choice = 'auto';
+  }
+
+  const completion = await client.chat.completions.create(params);
+
+  const responseMessage = completion.choices[0].message;
+  if (responseMessage.tool_calls && responseMessage.tool_calls.length > 0) {
+    return {
+      tool_calls: responseMessage.tool_calls,
+      usage: completion.usage,
+    };
+  }
 
   return {
-    content: completion.choices[0].message.content,
+    content: responseMessage.content,
     usage: completion.usage,
   };
 }

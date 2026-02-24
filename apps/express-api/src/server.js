@@ -364,7 +364,7 @@ app.get('/api/ai/providers', (req, res) => {
 
 app.post('/api/ai/query', async (req, res) => {
   try {
-    const { userId, licenseId, provider, model, messages, temperature, maxTokens, stream } =
+    const { userId, licenseId, provider, model, messages, temperature, maxTokens, stream, tools } =
       req.body;
 
     // Validate required fields
@@ -423,6 +423,7 @@ app.post('/api/ai/query', async (req, res) => {
       temperature,
       maxTokens,
       stream,
+      tools: tools || null,
     });
 
     res.json(result);

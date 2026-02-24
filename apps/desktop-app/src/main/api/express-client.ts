@@ -14,9 +14,10 @@ interface AIQueryRequest {
   licenseId: string;
   provider: string;
   model: string;
-  messages: Array<{ role: string; content: string }>;
+  messages: Array<{ role: string; content: string; tool_calls?: any[]; tool_call_id?: string }>;
   temperature?: number;
   maxTokens?: number;
+  tools?: any[];
 }
 
 export class ExpressClient {

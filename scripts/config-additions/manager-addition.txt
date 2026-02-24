@@ -1,0 +1,550 @@
+    'accenture': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/accenture/dist/index.js',
+      available: true,
+    },
+    'ach-mainframe': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/ach-mainframe/dist/index.js',
+      available: true,
+    },
+    'active-directory': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/active-directory/dist/index.js',
+      available: true,
+    },
+    'amazon-aurora': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/amazon-aurora/dist/index.js',
+      available: true,
+    },
+    'apptivo': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/apptivo/dist/index.js',
+      available: true,
+    },
+    'asana': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/asana/dist/index.js',
+      available: true,
+    },
+    'aws-rds': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/aws-rds/dist/index.js',
+      available: true,
+    },
+    'azure-sql': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/azure-sql/dist/index.js',
+      available: true,
+    },
+    'azure-synapse': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/azure-synapse/dist/index.js',
+      available: true,
+    },
+    'bamboohr': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/bamboohr/dist/index.js',
+      available: true,
+    },
+    'basecamp': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/basecamp/dist/index.js',
+      available: true,
+    },
+    'bigcommerce': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/bigcommerce/dist/index.js',
+      available: true,
+    },
+    'bigquery': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/bigquery/dist/index.js',
+      available: true,
+    },
+    'bitbucket': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/bitbucket/dist/index.js',
+      available: true,
+    },
+    'bitrix24': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/bitrix24/dist/index.js',
+      available: true,
+    },
+    'blackrock-aladdin': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/blackrock-aladdin/dist/index.js',
+      available: true,
+    },
+    'bloomberg-terminal': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/bloomberg-terminal/dist/index.js',
+      available: true,
+    },
+    'brio': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/brio/dist/index.js',
+      available: true,
+    },
+    'broadcom': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/broadcom/dist/index.js',
+      available: true,
+    },
+    'calypso': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/calypso/dist/index.js',
+      available: true,
+    },
+    'capsule-crm': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/capsule-crm/dist/index.js',
+      available: true,
+    },
+    'charles-river': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/charles-river/dist/index.js',
+      available: true,
+    },
+    'chips-mainframe': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/chips-mainframe/dist/index.js',
+      available: true,
+    },
+    'clickup': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/clickup/dist/index.js',
+      available: true,
+    },
+    'close-crm': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/close-crm/dist/index.js',
+      available: true,
+    },
+    'cobol-banking': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/cobol-banking/dist/index.js',
+      available: true,
+    },
+    'cockroachdb': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/cockroachdb/dist/index.js',
+      available: true,
+    },
+    'cognos': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/cognos/dist/index.js',
+      available: true,
+    },
+    'confluence': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/confluence/dist/index.js',
+      available: true,
+    },
+    'copper-crm': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/copper-crm/dist/index.js',
+      available: true,
+    },
+    'creatio': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/creatio/dist/index.js',
+      available: true,
+    },
+    'crystal-reports': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/crystal-reports/dist/index.js',
+      available: true,
+    },
+    'databricks': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/databricks/dist/index.js',
+      available: true,
+    },
+    'deel': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/deel/dist/index.js',
+      available: true,
+    },
+    'dremio': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/dremio/dist/index.js',
+      available: true,
+    },
+    'dropbox-business': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/dropbox-business/dist/index.js',
+      available: true,
+    },
+    'dxc-technology': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/dxc-technology/dist/index.js',
+      available: true,
+    },
+    'firebolt': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/firebolt/dist/index.js',
+      available: true,
+    },
+    'firestore': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/firestore/dist/index.js',
+      available: true,
+    },
+    'fis-profile': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/fis-profile/dist/index.js',
+      available: true,
+    },
+    'fis-world': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/fis-world/dist/index.js',
+      available: true,
+    },
+    'freshbooks': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/freshbooks/dist/index.js',
+      available: true,
+    },
+    'freshsales': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/freshsales/dist/index.js',
+      available: true,
+    },
+    'frontarena': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/frontarena/dist/index.js',
+      available: true,
+    },
+    'github': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/github/dist/index.js',
+      available: true,
+    },
+    'gitlab': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/gitlab/dist/index.js',
+      available: true,
+    },
+    'google-cloud-sql': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/google-cloud-sql/dist/index.js',
+      available: true,
+    },
+    'google-meet': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/google-meet/dist/index.js',
+      available: true,
+    },
+    'google-workspace': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/google-workspace/dist/index.js',
+      available: true,
+    },
+    'gusto': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/gusto/dist/index.js',
+      available: true,
+    },
+    'hyperion': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/hyperion/dist/index.js',
+      available: true,
+    },
+    'ibm-cics': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/ibm-cics/dist/index.js',
+      available: true,
+    },
+    'ibm-ims': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/ibm-ims/dist/index.js',
+      available: true,
+    },
+    'influxdb': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/influxdb/dist/index.js',
+      available: true,
+    },
+    'infosys': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/infosys/dist/index.js',
+      available: true,
+    },
+    'insightly': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/insightly/dist/index.js',
+      available: true,
+    },
+    'jde-oneworld': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/jde-oneworld/dist/index.js',
+      available: true,
+    },
+    'jde-world': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/jde-world/dist/index.js',
+      available: true,
+    },
+    'jenkins': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/jenkins/dist/index.js',
+      available: true,
+    },
+    'jumpcloud': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/jumpcloud/dist/index.js',
+      available: true,
+    },
+    'keap': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/keap/dist/index.js',
+      available: true,
+    },
+    'linear': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/linear/dist/index.js',
+      available: true,
+    },
+    'looker': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/looker/dist/index.js',
+      available: true,
+    },
+    'micro-focus': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/micro-focus/dist/index.js',
+      available: true,
+    },
+    'monday-com': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/monday-com/dist/index.js',
+      available: true,
+    },
+    'ms-teams': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/ms-teams/dist/index.js',
+      available: true,
+    },
+    'murex': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/murex/dist/index.js',
+      available: true,
+    },
+    'neon': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/neon/dist/index.js',
+      available: true,
+    },
+    'nimble': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/nimble/dist/index.js',
+      available: true,
+    },
+    'notion': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/notion/dist/index.js',
+      available: true,
+    },
+    'okta': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/okta/dist/index.js',
+      available: true,
+    },
+    'opentext': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/opentext/dist/index.js',
+      available: true,
+    },
+    'oracle-ebs': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/oracle-ebs/dist/index.js',
+      available: true,
+    },
+    'peoplesoft-crm': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/peoplesoft-crm/dist/index.js',
+      available: true,
+    },
+    'peoplesoft-financials': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/peoplesoft-financials/dist/index.js',
+      available: true,
+    },
+    'pipedrive': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/pipedrive/dist/index.js',
+      available: true,
+    },
+    'planetscale': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/planetscale/dist/index.js',
+      available: true,
+    },
+    'power-bi': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/power-bi/dist/index.js',
+      available: true,
+    },
+    'prestashop': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/prestashop/dist/index.js',
+      available: true,
+    },
+    'progress-software': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/progress-software/dist/index.js',
+      available: true,
+    },
+    'qlik': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/qlik/dist/index.js',
+      available: true,
+    },
+    'redshift': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/redshift/dist/index.js',
+      available: true,
+    },
+    'reuters-3000': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/reuters-3000/dist/index.js',
+      available: true,
+    },
+    'rippling': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/rippling/dist/index.js',
+      available: true,
+    },
+    'sap-enterprise': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/sap-enterprise/dist/index.js',
+      available: true,
+    },
+    'sap-r2': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/sap-r2/dist/index.js',
+      available: true,
+    },
+    'sap-r3': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/sap-r3/dist/index.js',
+      available: true,
+    },
+    'sap-s4hana': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/sap-s4hana/dist/index.js',
+      available: true,
+    },
+    'simcorp': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/simcorp/dist/index.js',
+      available: true,
+    },
+    'slack': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/slack/dist/index.js',
+      available: true,
+    },
+    'smartsheet': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/smartsheet/dist/index.js',
+      available: true,
+    },
+    'snowflake': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/snowflake/dist/index.js',
+      available: true,
+    },
+    'squarespace': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/squarespace/dist/index.js',
+      available: true,
+    },
+    'starburst': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/starburst/dist/index.js',
+      available: true,
+    },
+    'stripe': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/stripe/dist/index.js',
+      available: true,
+    },
+    'sugarcrm': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/sugarcrm/dist/index.js',
+      available: true,
+    },
+    'supabase': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/supabase/dist/index.js',
+      available: true,
+    },
+    'swift-fin': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/swift-fin/dist/index.js',
+      available: true,
+    },
+    'tableau': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/tableau/dist/index.js',
+      available: true,
+    },
+    'tcs': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/tcs/dist/index.js',
+      available: true,
+    },
+    'temenos-t24': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/temenos-t24/dist/index.js',
+      available: true,
+    },
+    'teradata': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/teradata/dist/index.js',
+      available: true,
+    },
+    'unisys-clearpath': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/unisys-clearpath/dist/index.js',
+      available: true,
+    },
+    'wipro': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/wipro/dist/index.js',
+      available: true,
+    },
+    'woocommerce': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/woocommerce/dist/index.js',
+      available: true,
+    },
+    'wrike': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/wrike/dist/index.js',
+      available: true,
+    },
+    'xero': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/xero/dist/index.js',
+      available: true,
+    },
+    'zendesk-sell': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/zendesk-sell/dist/index.js',
+      available: true,
+    },
+    'zoho-crm': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/zoho-crm/dist/index.js',
+      available: true,
+    },
+    'zoom': {
+      type: 'npm',
+      localPath: '../../../../../packages/mcp-servers/zoom/dist/index.js',
+      available: true,
+    },

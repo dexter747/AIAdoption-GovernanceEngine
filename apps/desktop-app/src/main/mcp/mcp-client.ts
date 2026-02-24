@@ -91,7 +91,120 @@ interface MCPServerConfig {
     | 'sap-ariba'
     | 'coupa'
     // Legacy / Mainframe
-    | 'as400';
+    | 'as400'
+    // Project Management
+    | 'trello'
+    // ── New MCP Servers ──
+    | 'accenture'
+    | 'ach-mainframe'
+    | 'active-directory'
+    | 'amazon-aurora'
+    | 'apptivo'
+    | 'asana'
+    | 'aws-rds'
+    | 'azure-sql'
+    | 'azure-synapse'
+    | 'bamboohr'
+    | 'basecamp'
+    | 'bigcommerce'
+    | 'bigquery'
+    | 'bitbucket'
+    | 'bitrix24'
+    | 'blackrock-aladdin'
+    | 'bloomberg-terminal'
+    | 'brio'
+    | 'broadcom'
+    | 'calypso'
+    | 'capsule-crm'
+    | 'charles-river'
+    | 'chips-mainframe'
+    | 'clickup'
+    | 'close-crm'
+    | 'cobol-banking'
+    | 'cockroachdb'
+    | 'cognos'
+    | 'confluence'
+    | 'copper-crm'
+    | 'creatio'
+    | 'crystal-reports'
+    | 'databricks'
+    | 'deel'
+    | 'dremio'
+    | 'dropbox-business'
+    | 'dxc-technology'
+    | 'firebolt'
+    | 'firestore'
+    | 'fis-profile'
+    | 'fis-world'
+    | 'freshbooks'
+    | 'freshsales'
+    | 'frontarena'
+    | 'github'
+    | 'gitlab'
+    | 'google-cloud-sql'
+    | 'google-meet'
+    | 'google-workspace'
+    | 'gusto'
+    | 'hyperion'
+    | 'ibm-cics'
+    | 'ibm-ims'
+    | 'influxdb'
+    | 'infosys'
+    | 'insightly'
+    | 'jde-oneworld'
+    | 'jde-world'
+    | 'jenkins'
+    | 'jumpcloud'
+    | 'keap'
+    | 'linear'
+    | 'looker'
+    | 'micro-focus'
+    | 'monday-com'
+    | 'ms-teams'
+    | 'murex'
+    | 'neon'
+    | 'nimble'
+    | 'notion'
+    | 'okta'
+    | 'opentext'
+    | 'oracle-ebs'
+    | 'peoplesoft-crm'
+    | 'peoplesoft-financials'
+    | 'pipedrive'
+    | 'planetscale'
+    | 'power-bi'
+    | 'prestashop'
+    | 'progress-software'
+    | 'qlik'
+    | 'redshift'
+    | 'reuters-3000'
+    | 'rippling'
+    | 'sap-enterprise'
+    | 'sap-r2'
+    | 'sap-r3'
+    | 'sap-s4hana'
+    | 'simcorp'
+    | 'slack'
+    | 'smartsheet'
+    | 'snowflake'
+    | 'squarespace'
+    | 'starburst'
+    | 'stripe'
+    | 'sugarcrm'
+    | 'supabase'
+    | 'swift-fin'
+    | 'tableau'
+    | 'tcs'
+    | 'temenos-t24'
+    | 'teradata'
+    | 'unisys-clearpath'
+    | 'wipro'
+    | 'woocommerce'
+    | 'wrike'
+    | 'xero'
+    | 'zendesk-sell'
+    | 'zoho-crm'
+    | 'zoom';
   connectionString: string;
   connectionParams?: Record<string, string>;
   name: string;
@@ -275,6 +388,119 @@ export class MCPClientManager extends EventEmitter {
     coupa: { command: 'node', args: [], envKey: 'COUPA_BASE_URL' },
     // --- LEGACY / MAINFRAME ---
     as400: { command: 'node', args: [], envKey: 'AS400_BASE_URL' },
+    // --- PROJECT MANAGEMENT ---
+    trello: { command: 'node', args: [], envKey: 'TRELLO_API_KEY' },
+    // ── New MCP Servers ──
+    accenture: { command: 'node', args: [], envKey: 'ACCENTURE_BASE_URL' },
+    'ach-mainframe': { command: 'node', args: [], envKey: 'ACH_HOST' },
+    'active-directory': { command: 'node', args: [], envKey: 'AZURE_AD_TENANT_ID' },
+    'amazon-aurora': { command: 'node', args: [], envKey: 'AURORA_HOST' },
+    apptivo: { command: 'node', args: [], envKey: 'APPTIVO_API_KEY' },
+    asana: { command: 'node', args: [], envKey: 'ASANA_ACCESS_TOKEN' },
+    'aws-rds': { command: 'node', args: [], envKey: 'RDS_HOST' },
+    'azure-sql': { command: 'node', args: [], envKey: 'AZURE_SQL_HOST' },
+    'azure-synapse': { command: 'node', args: [], envKey: 'SYNAPSE_HOST' },
+    bamboohr: { command: 'node', args: [], envKey: 'BAMBOOHR_API_KEY' },
+    basecamp: { command: 'node', args: [], envKey: 'BASECAMP_ACCESS_TOKEN' },
+    bigcommerce: { command: 'node', args: [], envKey: 'BIGCOMMERCE_STORE_HASH' },
+    bigquery: { command: 'node', args: [], envKey: 'BIGQUERY_PROJECT_ID' },
+    bitbucket: { command: 'node', args: [], envKey: 'BITBUCKET_USERNAME' },
+    bitrix24: { command: 'node', args: [], envKey: 'BITRIX24_WEBHOOK_URL' },
+    'blackrock-aladdin': { command: 'node', args: [], envKey: 'ALADDIN_BASE_URL' },
+    'bloomberg-terminal': { command: 'node', args: [], envKey: 'BLOOMBERG_HOST' },
+    brio: { command: 'node', args: [], envKey: 'BRIO_BASE_URL' },
+    broadcom: { command: 'node', args: [], envKey: 'BROADCOM_BASE_URL' },
+    calypso: { command: 'node', args: [], envKey: 'CALYPSO_BASE_URL' },
+    'capsule-crm': { command: 'node', args: [], envKey: 'CAPSULE_ACCESS_TOKEN' },
+    'charles-river': { command: 'node', args: [], envKey: 'CHARLES_RIVER_BASE_URL' },
+    'chips-mainframe': { command: 'node', args: [], envKey: 'CHIPS_HOST' },
+    clickup: { command: 'node', args: [], envKey: 'CLICKUP_API_TOKEN' },
+    'close-crm': { command: 'node', args: [], envKey: 'CLOSE_API_KEY' },
+    'cobol-banking': { command: 'node', args: [], envKey: 'COBOL_HOST' },
+    cockroachdb: { command: 'node', args: [], envKey: 'COCKROACHDB_URL' },
+    cognos: { command: 'node', args: [], envKey: 'COGNOS_BASE_URL' },
+    confluence: { command: 'node', args: [], envKey: 'CONFLUENCE_BASE_URL' },
+    'copper-crm': { command: 'node', args: [], envKey: 'COPPER_API_KEY' },
+    creatio: { command: 'node', args: [], envKey: 'CREATIO_BASE_URL' },
+    'crystal-reports': { command: 'node', args: [], envKey: 'CRYSTAL_SERVER_URL' },
+    databricks: { command: 'node', args: [], envKey: 'DATABRICKS_HOST' },
+    deel: { command: 'node', args: [], envKey: 'DEEL_API_TOKEN' },
+    dremio: { command: 'node', args: [], envKey: 'DREMIO_HOST' },
+    'dropbox-business': { command: 'node', args: [], envKey: 'DROPBOX_ACCESS_TOKEN' },
+    'dxc-technology': { command: 'node', args: [], envKey: 'DXC_BASE_URL' },
+    firebolt: { command: 'node', args: [], envKey: 'FIREBOLT_CLIENT_ID' },
+    firestore: { command: 'node', args: [], envKey: 'FIRESTORE_PROJECT_ID' },
+    'fis-profile': { command: 'node', args: [], envKey: 'FIS_PROFILE_BASE_URL' },
+    'fis-world': { command: 'node', args: [], envKey: 'FIS_WORLD_BASE_URL' },
+    freshbooks: { command: 'node', args: [], envKey: 'FRESHBOOKS_ACCESS_TOKEN' },
+    freshsales: { command: 'node', args: [], envKey: 'FRESHSALES_API_KEY' },
+    frontarena: { command: 'node', args: [], envKey: 'FRONTARENA_BASE_URL' },
+    github: { command: 'node', args: [], envKey: 'GITHUB_TOKEN' },
+    gitlab: { command: 'node', args: [], envKey: 'GITLAB_TOKEN' },
+    'google-cloud-sql': { command: 'node', args: [], envKey: 'CLOUDSQL_HOST' },
+    'google-meet': { command: 'node', args: [], envKey: 'GOOGLE_ACCESS_TOKEN' },
+    'google-workspace': { command: 'node', args: [], envKey: 'GOOGLE_WORKSPACE_ACCESS_TOKEN' },
+    gusto: { command: 'node', args: [], envKey: 'GUSTO_ACCESS_TOKEN' },
+    hyperion: { command: 'node', args: [], envKey: 'HYPERION_BASE_URL' },
+    'ibm-cics': { command: 'node', args: [], envKey: 'CICS_BASE_URL' },
+    'ibm-ims': { command: 'node', args: [], envKey: 'IMS_BASE_URL' },
+    influxdb: { command: 'node', args: [], envKey: 'INFLUXDB_URL' },
+    infosys: { command: 'node', args: [], envKey: 'INFOSYS_BASE_URL' },
+    insightly: { command: 'node', args: [], envKey: 'INSIGHTLY_API_KEY' },
+    'jde-oneworld': { command: 'node', args: [], envKey: 'JDE_BASE_URL' },
+    'jde-world': { command: 'node', args: [], envKey: 'JDE_WORLD_HOST' },
+    jenkins: { command: 'node', args: [], envKey: 'JENKINS_URL' },
+    jumpcloud: { command: 'node', args: [], envKey: 'JUMPCLOUD_API_KEY' },
+    keap: { command: 'node', args: [], envKey: 'KEAP_ACCESS_TOKEN' },
+    linear: { command: 'node', args: [], envKey: 'LINEAR_API_KEY' },
+    looker: { command: 'node', args: [], envKey: 'LOOKER_BASE_URL' },
+    'micro-focus': { command: 'node', args: [], envKey: 'MICRO_FOCUS_BASE_URL' },
+    'monday-com': { command: 'node', args: [], envKey: 'MONDAY_API_TOKEN' },
+    'ms-teams': { command: 'node', args: [], envKey: 'MS_TEAMS_ACCESS_TOKEN' },
+    murex: { command: 'node', args: [], envKey: 'MUREX_BASE_URL' },
+    neon: { command: 'node', args: [], envKey: 'NEON_DATABASE_URL' },
+    nimble: { command: 'node', args: [], envKey: 'NIMBLE_API_KEY' },
+    notion: { command: 'node', args: [], envKey: 'NOTION_API_KEY' },
+    okta: { command: 'node', args: [], envKey: 'OKTA_DOMAIN' },
+    opentext: { command: 'node', args: [], envKey: 'OPENTEXT_BASE_URL' },
+    'oracle-ebs': { command: 'node', args: [], envKey: 'ORACLE_EBS_BASE_URL' },
+    'peoplesoft-crm': { command: 'node', args: [], envKey: 'PEOPLESOFT_CRM_BASE_URL' },
+    'peoplesoft-financials': { command: 'node', args: [], envKey: 'PEOPLESOFT_FIN_BASE_URL' },
+    pipedrive: { command: 'node', args: [], envKey: 'PIPEDRIVE_API_TOKEN' },
+    planetscale: { command: 'node', args: [], envKey: 'PLANETSCALE_HOST' },
+    'power-bi': { command: 'node', args: [], envKey: 'POWERBI_ACCESS_TOKEN' },
+    prestashop: { command: 'node', args: [], envKey: 'PRESTASHOP_URL' },
+    'progress-software': { command: 'node', args: [], envKey: 'PROGRESS_BASE_URL' },
+    qlik: { command: 'node', args: [], envKey: 'QLIK_TENANT_URL' },
+    redshift: { command: 'node', args: [], envKey: 'REDSHIFT_HOST' },
+    'reuters-3000': { command: 'node', args: [], envKey: 'REFINITIV_USERNAME' },
+    rippling: { command: 'node', args: [], envKey: 'RIPPLING_API_KEY' },
+    'sap-enterprise': { command: 'node', args: [], envKey: 'SAP_BASE_URL' },
+    'sap-r2': { command: 'node', args: [], envKey: 'SAP_R2_HOST' },
+    'sap-r3': { command: 'node', args: [], envKey: 'SAP_R3_HOST' },
+    'sap-s4hana': { command: 'node', args: [], envKey: 'SAP_S4_BASE_URL' },
+    simcorp: { command: 'node', args: [], envKey: 'SIMCORP_BASE_URL' },
+    slack: { command: 'node', args: [], envKey: 'SLACK_BOT_TOKEN' },
+    smartsheet: { command: 'node', args: [], envKey: 'SMARTSHEET_ACCESS_TOKEN' },
+    snowflake: { command: 'node', args: [], envKey: 'SNOWFLAKE_ACCOUNT' },
+    squarespace: { command: 'node', args: [], envKey: 'SQUARESPACE_API_KEY' },
+    starburst: { command: 'node', args: [], envKey: 'STARBURST_HOST' },
+    stripe: { command: 'node', args: [], envKey: 'STRIPE_SECRET_KEY' },
+    sugarcrm: { command: 'node', args: [], envKey: 'SUGARCRM_BASE_URL' },
+    supabase: { command: 'node', args: [], envKey: 'SUPABASE_URL' },
+    'swift-fin': { command: 'node', args: [], envKey: 'SWIFT_BASE_URL' },
+    tableau: { command: 'node', args: [], envKey: 'TABLEAU_SERVER_URL' },
+    tcs: { command: 'node', args: [], envKey: 'TCS_BASE_URL' },
+    'temenos-t24': { command: 'node', args: [], envKey: 'T24_BASE_URL' },
+    teradata: { command: 'node', args: [], envKey: 'TERADATA_HOST' },
+    'unisys-clearpath': { command: 'node', args: [], envKey: 'CLEARPATH_HOST' },
+    wipro: { command: 'node', args: [], envKey: 'WIPRO_BASE_URL' },
+    woocommerce: { command: 'node', args: [], envKey: 'WOOCOMMERCE_URL' },
+    wrike: { command: 'node', args: [], envKey: 'WRIKE_ACCESS_TOKEN' },
+    xero: { command: 'node', args: [], envKey: 'XERO_ACCESS_TOKEN' },
+    'zendesk-sell': { command: 'node', args: [], envKey: 'ZENDESK_SELL_ACCESS_TOKEN' },
+    'zoho-crm': { command: 'node', args: [], envKey: 'ZOHO_ACCESS_TOKEN' },
+    zoom: { command: 'node', args: [], envKey: 'ZOOM_ACCESS_TOKEN' },
   };
 
   // Map local MCP server types to their built package paths
@@ -357,6 +583,120 @@ export class MCPClientManager extends EventEmitter {
     coupa: '../../../../../packages/mcp-servers/coupa/dist/index.js',
     // Legacy / Mainframe
     as400: '../../../../../packages/mcp-servers/as400/dist/index.js',
+    // Project Management
+    trello: '../../../../../packages/mcp-servers/trello/dist/index.js',
+    // ── New MCP Servers ──
+    accenture: '../../../../../packages/mcp-servers/accenture/dist/index.js',
+    'ach-mainframe': '../../../../../packages/mcp-servers/ach-mainframe/dist/index.js',
+    'active-directory': '../../../../../packages/mcp-servers/active-directory/dist/index.js',
+    'amazon-aurora': '../../../../../packages/mcp-servers/amazon-aurora/dist/index.js',
+    apptivo: '../../../../../packages/mcp-servers/apptivo/dist/index.js',
+    asana: '../../../../../packages/mcp-servers/asana/dist/index.js',
+    'aws-rds': '../../../../../packages/mcp-servers/aws-rds/dist/index.js',
+    'azure-sql': '../../../../../packages/mcp-servers/azure-sql/dist/index.js',
+    'azure-synapse': '../../../../../packages/mcp-servers/azure-synapse/dist/index.js',
+    bamboohr: '../../../../../packages/mcp-servers/bamboohr/dist/index.js',
+    basecamp: '../../../../../packages/mcp-servers/basecamp/dist/index.js',
+    bigcommerce: '../../../../../packages/mcp-servers/bigcommerce/dist/index.js',
+    bigquery: '../../../../../packages/mcp-servers/bigquery/dist/index.js',
+    bitbucket: '../../../../../packages/mcp-servers/bitbucket/dist/index.js',
+    bitrix24: '../../../../../packages/mcp-servers/bitrix24/dist/index.js',
+    'blackrock-aladdin': '../../../../../packages/mcp-servers/blackrock-aladdin/dist/index.js',
+    'bloomberg-terminal': '../../../../../packages/mcp-servers/bloomberg-terminal/dist/index.js',
+    brio: '../../../../../packages/mcp-servers/brio/dist/index.js',
+    broadcom: '../../../../../packages/mcp-servers/broadcom/dist/index.js',
+    calypso: '../../../../../packages/mcp-servers/calypso/dist/index.js',
+    'capsule-crm': '../../../../../packages/mcp-servers/capsule-crm/dist/index.js',
+    'charles-river': '../../../../../packages/mcp-servers/charles-river/dist/index.js',
+    'chips-mainframe': '../../../../../packages/mcp-servers/chips-mainframe/dist/index.js',
+    clickup: '../../../../../packages/mcp-servers/clickup/dist/index.js',
+    'close-crm': '../../../../../packages/mcp-servers/close-crm/dist/index.js',
+    'cobol-banking': '../../../../../packages/mcp-servers/cobol-banking/dist/index.js',
+    cockroachdb: '../../../../../packages/mcp-servers/cockroachdb/dist/index.js',
+    cognos: '../../../../../packages/mcp-servers/cognos/dist/index.js',
+    confluence: '../../../../../packages/mcp-servers/confluence/dist/index.js',
+    'copper-crm': '../../../../../packages/mcp-servers/copper-crm/dist/index.js',
+    creatio: '../../../../../packages/mcp-servers/creatio/dist/index.js',
+    'crystal-reports': '../../../../../packages/mcp-servers/crystal-reports/dist/index.js',
+    databricks: '../../../../../packages/mcp-servers/databricks/dist/index.js',
+    deel: '../../../../../packages/mcp-servers/deel/dist/index.js',
+    dremio: '../../../../../packages/mcp-servers/dremio/dist/index.js',
+    'dropbox-business': '../../../../../packages/mcp-servers/dropbox-business/dist/index.js',
+    'dxc-technology': '../../../../../packages/mcp-servers/dxc-technology/dist/index.js',
+    firebolt: '../../../../../packages/mcp-servers/firebolt/dist/index.js',
+    firestore: '../../../../../packages/mcp-servers/firestore/dist/index.js',
+    'fis-profile': '../../../../../packages/mcp-servers/fis-profile/dist/index.js',
+    'fis-world': '../../../../../packages/mcp-servers/fis-world/dist/index.js',
+    freshbooks: '../../../../../packages/mcp-servers/freshbooks/dist/index.js',
+    freshsales: '../../../../../packages/mcp-servers/freshsales/dist/index.js',
+    frontarena: '../../../../../packages/mcp-servers/frontarena/dist/index.js',
+    github: '../../../../../packages/mcp-servers/github/dist/index.js',
+    gitlab: '../../../../../packages/mcp-servers/gitlab/dist/index.js',
+    'google-cloud-sql': '../../../../../packages/mcp-servers/google-cloud-sql/dist/index.js',
+    'google-meet': '../../../../../packages/mcp-servers/google-meet/dist/index.js',
+    'google-workspace': '../../../../../packages/mcp-servers/google-workspace/dist/index.js',
+    gusto: '../../../../../packages/mcp-servers/gusto/dist/index.js',
+    hyperion: '../../../../../packages/mcp-servers/hyperion/dist/index.js',
+    'ibm-cics': '../../../../../packages/mcp-servers/ibm-cics/dist/index.js',
+    'ibm-ims': '../../../../../packages/mcp-servers/ibm-ims/dist/index.js',
+    influxdb: '../../../../../packages/mcp-servers/influxdb/dist/index.js',
+    infosys: '../../../../../packages/mcp-servers/infosys/dist/index.js',
+    insightly: '../../../../../packages/mcp-servers/insightly/dist/index.js',
+    'jde-oneworld': '../../../../../packages/mcp-servers/jde-oneworld/dist/index.js',
+    'jde-world': '../../../../../packages/mcp-servers/jde-world/dist/index.js',
+    jenkins: '../../../../../packages/mcp-servers/jenkins/dist/index.js',
+    jumpcloud: '../../../../../packages/mcp-servers/jumpcloud/dist/index.js',
+    keap: '../../../../../packages/mcp-servers/keap/dist/index.js',
+    linear: '../../../../../packages/mcp-servers/linear/dist/index.js',
+    looker: '../../../../../packages/mcp-servers/looker/dist/index.js',
+    'micro-focus': '../../../../../packages/mcp-servers/micro-focus/dist/index.js',
+    'monday-com': '../../../../../packages/mcp-servers/monday-com/dist/index.js',
+    'ms-teams': '../../../../../packages/mcp-servers/ms-teams/dist/index.js',
+    murex: '../../../../../packages/mcp-servers/murex/dist/index.js',
+    neon: '../../../../../packages/mcp-servers/neon/dist/index.js',
+    nimble: '../../../../../packages/mcp-servers/nimble/dist/index.js',
+    notion: '../../../../../packages/mcp-servers/notion/dist/index.js',
+    okta: '../../../../../packages/mcp-servers/okta/dist/index.js',
+    opentext: '../../../../../packages/mcp-servers/opentext/dist/index.js',
+    'oracle-ebs': '../../../../../packages/mcp-servers/oracle-ebs/dist/index.js',
+    'peoplesoft-crm': '../../../../../packages/mcp-servers/peoplesoft-crm/dist/index.js',
+    'peoplesoft-financials':
+      '../../../../../packages/mcp-servers/peoplesoft-financials/dist/index.js',
+    pipedrive: '../../../../../packages/mcp-servers/pipedrive/dist/index.js',
+    planetscale: '../../../../../packages/mcp-servers/planetscale/dist/index.js',
+    'power-bi': '../../../../../packages/mcp-servers/power-bi/dist/index.js',
+    prestashop: '../../../../../packages/mcp-servers/prestashop/dist/index.js',
+    'progress-software': '../../../../../packages/mcp-servers/progress-software/dist/index.js',
+    qlik: '../../../../../packages/mcp-servers/qlik/dist/index.js',
+    redshift: '../../../../../packages/mcp-servers/redshift/dist/index.js',
+    'reuters-3000': '../../../../../packages/mcp-servers/reuters-3000/dist/index.js',
+    rippling: '../../../../../packages/mcp-servers/rippling/dist/index.js',
+    'sap-enterprise': '../../../../../packages/mcp-servers/sap-enterprise/dist/index.js',
+    'sap-r2': '../../../../../packages/mcp-servers/sap-r2/dist/index.js',
+    'sap-r3': '../../../../../packages/mcp-servers/sap-r3/dist/index.js',
+    'sap-s4hana': '../../../../../packages/mcp-servers/sap-s4hana/dist/index.js',
+    simcorp: '../../../../../packages/mcp-servers/simcorp/dist/index.js',
+    slack: '../../../../../packages/mcp-servers/slack/dist/index.js',
+    smartsheet: '../../../../../packages/mcp-servers/smartsheet/dist/index.js',
+    snowflake: '../../../../../packages/mcp-servers/snowflake/dist/index.js',
+    squarespace: '../../../../../packages/mcp-servers/squarespace/dist/index.js',
+    starburst: '../../../../../packages/mcp-servers/starburst/dist/index.js',
+    stripe: '../../../../../packages/mcp-servers/stripe/dist/index.js',
+    sugarcrm: '../../../../../packages/mcp-servers/sugarcrm/dist/index.js',
+    supabase: '../../../../../packages/mcp-servers/supabase/dist/index.js',
+    'swift-fin': '../../../../../packages/mcp-servers/swift-fin/dist/index.js',
+    tableau: '../../../../../packages/mcp-servers/tableau/dist/index.js',
+    tcs: '../../../../../packages/mcp-servers/tcs/dist/index.js',
+    'temenos-t24': '../../../../../packages/mcp-servers/temenos-t24/dist/index.js',
+    teradata: '../../../../../packages/mcp-servers/teradata/dist/index.js',
+    'unisys-clearpath': '../../../../../packages/mcp-servers/unisys-clearpath/dist/index.js',
+    wipro: '../../../../../packages/mcp-servers/wipro/dist/index.js',
+    woocommerce: '../../../../../packages/mcp-servers/woocommerce/dist/index.js',
+    wrike: '../../../../../packages/mcp-servers/wrike/dist/index.js',
+    xero: '../../../../../packages/mcp-servers/xero/dist/index.js',
+    'zendesk-sell': '../../../../../packages/mcp-servers/zendesk-sell/dist/index.js',
+    'zoho-crm': '../../../../../packages/mcp-servers/zoho-crm/dist/index.js',
+    zoom: '../../../../../packages/mcp-servers/zoom/dist/index.js',
   };
 
   constructor() {
@@ -421,7 +761,7 @@ export class MCPClientManager extends EventEmitter {
       }
 
       // Resolve command and args for local MCP servers
-      let command = serverConfig.command;
+      const command = serverConfig.command;
       let args = [...serverConfig.args];
 
       // For local MCP servers (command=node, empty args), resolve the local path
