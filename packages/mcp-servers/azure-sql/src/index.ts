@@ -13,11 +13,10 @@ function initConnection(): void {
   if (!process.env.AZURE_SQL_PASSWORD) console.error('Warning: AZURE_SQL_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.AZURE_SQL_HOST || 'https://api.example.com',
+    baseURL: 'http://localhost',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.AZURE_SQL_HOST || ''}`,
     },
     timeout: 30000,
   });

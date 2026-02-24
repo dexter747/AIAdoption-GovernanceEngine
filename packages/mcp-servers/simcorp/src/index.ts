@@ -12,11 +12,14 @@ function initConnection(): void {
   if (!process.env.SIMCORP_PASSWORD) console.error('Warning: SIMCORP_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.SIMCORP_BASE_URL || 'https://api.example.com',
+    baseURL: `${process.env.SIMCORP_BASE_URL}/api/v1`,
+    auth: {
+      username: process.env.SIMCORP_USERNAME || '',
+      password: process.env.SIMCORP_PASSWORD || '',
+    },
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.SIMCORP_BASE_URL || ''}`,
     },
     timeout: 30000,
   });

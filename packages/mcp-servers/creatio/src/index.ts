@@ -12,11 +12,14 @@ function initConnection(): void {
   if (!process.env.CREATIO_PASSWORD) console.error('Warning: CREATIO_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.CREATIO_BASE_URL || 'https://api.example.com',
+    baseURL: `${process.env.CREATIO_BASE_URL}/0/odata`,
+    auth: {
+      username: process.env.CREATIO_USERNAME || '',
+      password: process.env.CREATIO_PASSWORD || '',
+    },
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.CREATIO_BASE_URL || ''}`,
     },
     timeout: 30000,
   });

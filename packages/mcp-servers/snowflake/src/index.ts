@@ -14,11 +14,10 @@ function initConnection(): void {
   if (!process.env.SNOWFLAKE_WAREHOUSE) console.error('Warning: SNOWFLAKE_WAREHOUSE not set');
 
   api = axios.create({
-    baseURL: process.env.SNOWFLAKE_ACCOUNT || 'https://api.example.com',
+    baseURL: 'http://localhost',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.SNOWFLAKE_ACCOUNT || ''}`,
     },
     timeout: 30000,
   });

@@ -13,11 +13,11 @@ function initConnection(): void {
     console.error('Warning: DATABRICKS_WAREHOUSE_ID not set');
 
   api = axios.create({
-    baseURL: process.env.DATABRICKS_HOST || 'https://api.example.com',
+    baseURL: `https://${process.env.DATABRICKS_HOST}/api/2.0`,
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.DATABRICKS_HOST || ''}`,
+      Authorization: `Bearer ${process.env.DATABRICKS_TOKEN}`,
     },
     timeout: 30000,
   });

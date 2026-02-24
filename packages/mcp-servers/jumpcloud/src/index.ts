@@ -10,11 +10,11 @@ function initConnection(): void {
   if (!process.env.JUMPCLOUD_API_KEY) console.error('Warning: JUMPCLOUD_API_KEY not set');
 
   api = axios.create({
-    baseURL: process.env.JUMPCLOUD_API_KEY || 'https://api.example.com',
+    baseURL: 'https://console.jumpcloud.com/api',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.JUMPCLOUD_API_KEY || ''}`,
+      'x-api-key': `${process.env.JUMPCLOUD_API_KEY}`,
     },
     timeout: 30000,
   });

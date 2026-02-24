@@ -10,11 +10,10 @@ function initConnection(): void {
   if (!process.env.SQLITE_DATABASE_PATH) console.error('Warning: SQLITE_DATABASE_PATH not set');
 
   api = axios.create({
-    baseURL: process.env.SQLITE_DATABASE_PATH || 'https://api.example.com',
+    baseURL: 'http://localhost',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.SQLITE_DATABASE_PATH || ''}`,
     },
     timeout: 30000,
   });

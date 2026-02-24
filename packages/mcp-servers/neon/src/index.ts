@@ -10,11 +10,10 @@ function initConnection(): void {
   if (!process.env.NEON_DATABASE_URL) console.error('Warning: NEON_DATABASE_URL not set');
 
   api = axios.create({
-    baseURL: process.env.NEON_DATABASE_URL || 'https://api.example.com',
+    baseURL: 'http://localhost',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.NEON_DATABASE_URL || ''}`,
     },
     timeout: 30000,
   });

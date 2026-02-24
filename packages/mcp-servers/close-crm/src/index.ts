@@ -10,11 +10,14 @@ function initConnection(): void {
   if (!process.env.CLOSE_API_KEY) console.error('Warning: CLOSE_API_KEY not set');
 
   api = axios.create({
-    baseURL: process.env.CLOSE_API_KEY || 'https://api.example.com',
+    baseURL: 'https://api.close.com/api/v1',
+    auth: {
+      username: process.env.CLOSE_API_KEY || '',
+      password: 'x',
+    },
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.CLOSE_API_KEY || ''}`,
     },
     timeout: 30000,
   });

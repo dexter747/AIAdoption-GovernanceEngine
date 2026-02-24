@@ -10,11 +10,11 @@ function initConnection(): void {
   if (!process.env.GITHUB_TOKEN) console.error('Warning: GITHUB_TOKEN not set');
 
   api = axios.create({
-    baseURL: process.env.GITHUB_TOKEN || 'https://api.example.com',
+    baseURL: 'https://api.github.com',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.GITHUB_TOKEN || ''}`,
+      Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
     },
     timeout: 30000,
   });

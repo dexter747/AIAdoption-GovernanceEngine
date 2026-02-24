@@ -14,11 +14,10 @@ function initConnection(): void {
   if (!process.env.CLOUDSQL_PASSWORD) console.error('Warning: CLOUDSQL_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.CLOUDSQL_HOST || 'https://api.example.com',
+    baseURL: 'http://localhost',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.CLOUDSQL_HOST || ''}`,
     },
     timeout: 30000,
   });

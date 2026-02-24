@@ -12,11 +12,11 @@ function initConnection(): void {
     console.error('Warning: GOOGLE_APPLICATION_CREDENTIALS not set');
 
   api = axios.create({
-    baseURL: process.env.FIRESTORE_PROJECT_ID || 'https://api.example.com',
+    baseURL: `https://firestore.googleapis.com/v1/projects/${process.env.FIRESTORE_PROJECT_ID}/databases/(default)/documents`,
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.FIRESTORE_PROJECT_ID || ''}`,
+      Authorization: `Bearer ${process.env.FIRESTORE_PROJECT_ID}`,
     },
     timeout: 30000,
   });

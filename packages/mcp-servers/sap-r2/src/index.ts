@@ -14,11 +14,14 @@ function initConnection(): void {
   if (!process.env.SAP_R2_PASSWORD) console.error('Warning: SAP_R2_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.SAP_R2_HOST || 'https://api.example.com',
+    baseURL: `http://${process.env.SAP_R2_HOST}`,
+    auth: {
+      username: process.env.SAP_R2_USERNAME || '',
+      password: process.env.SAP_R2_PASSWORD || '',
+    },
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.SAP_R2_HOST || ''}`,
     },
     timeout: 30000,
   });

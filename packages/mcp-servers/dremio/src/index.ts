@@ -11,11 +11,11 @@ function initConnection(): void {
   if (!process.env.DREMIO_TOKEN) console.error('Warning: DREMIO_TOKEN not set');
 
   api = axios.create({
-    baseURL: process.env.DREMIO_HOST || 'https://api.example.com',
+    baseURL: `https://${process.env.DREMIO_HOST}/api/v3`,
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.DREMIO_HOST || ''}`,
+      Authorization: `Bearer ${process.env.DREMIO_TOKEN}`,
     },
     timeout: 30000,
   });

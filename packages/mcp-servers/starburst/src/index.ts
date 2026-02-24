@@ -12,11 +12,10 @@ function initConnection(): void {
   if (!process.env.STARBURST_PASSWORD) console.error('Warning: STARBURST_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.STARBURST_HOST || 'https://api.example.com',
+    baseURL: 'http://localhost',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.STARBURST_HOST || ''}`,
     },
     timeout: 30000,
   });

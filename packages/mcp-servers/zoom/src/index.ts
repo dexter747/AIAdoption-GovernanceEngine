@@ -10,11 +10,11 @@ function initConnection(): void {
   if (!process.env.ZOOM_ACCESS_TOKEN) console.error('Warning: ZOOM_ACCESS_TOKEN not set');
 
   api = axios.create({
-    baseURL: process.env.ZOOM_ACCESS_TOKEN || 'https://api.example.com',
+    baseURL: 'https://api.zoom.us/v2',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.ZOOM_ACCESS_TOKEN || ''}`,
+      Authorization: `Bearer ${process.env.ZOOM_ACCESS_TOKEN}`,
     },
     timeout: 30000,
   });

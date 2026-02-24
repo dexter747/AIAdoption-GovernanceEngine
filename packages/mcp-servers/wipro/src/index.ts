@@ -11,11 +11,11 @@ function initConnection(): void {
   if (!process.env.WIPRO_API_KEY) console.error('Warning: WIPRO_API_KEY not set');
 
   api = axios.create({
-    baseURL: process.env.WIPRO_BASE_URL || 'https://api.example.com',
+    baseURL: `${process.env.WIPRO_BASE_URL}/api/v1`,
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.WIPRO_BASE_URL || ''}`,
+      Authorization: `Bearer ${process.env.WIPRO_API_KEY}`,
     },
     timeout: 30000,
   });

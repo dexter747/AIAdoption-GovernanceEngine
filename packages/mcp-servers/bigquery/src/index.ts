@@ -12,11 +12,10 @@ function initConnection(): void {
     console.error('Warning: GOOGLE_APPLICATION_CREDENTIALS not set');
 
   api = axios.create({
-    baseURL: process.env.BIGQUERY_PROJECT_ID || 'https://api.example.com',
+    baseURL: 'http://localhost',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.BIGQUERY_PROJECT_ID || ''}`,
     },
     timeout: 30000,
   });

@@ -11,11 +11,11 @@ function initConnection(): void {
   if (!process.env.BASECAMP_ACCOUNT_ID) console.error('Warning: BASECAMP_ACCOUNT_ID not set');
 
   api = axios.create({
-    baseURL: process.env.BASECAMP_ACCESS_TOKEN || 'https://api.example.com',
+    baseURL: `https://3.basecampapi.com/${process.env.BASECAMP_ACCOUNT_ID}`,
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.BASECAMP_ACCESS_TOKEN || ''}`,
+      Authorization: `Bearer ${process.env.BASECAMP_ACCESS_TOKEN}`,
     },
     timeout: 30000,
   });

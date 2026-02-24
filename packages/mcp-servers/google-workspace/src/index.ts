@@ -11,11 +11,11 @@ function initConnection(): void {
     console.error('Warning: GOOGLE_WORKSPACE_ACCESS_TOKEN not set');
 
   api = axios.create({
-    baseURL: process.env.GOOGLE_WORKSPACE_ACCESS_TOKEN || 'https://api.example.com',
+    baseURL: 'https://www.googleapis.com',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.GOOGLE_WORKSPACE_ACCESS_TOKEN || ''}`,
+      Authorization: `Bearer ${process.env.GOOGLE_WORKSPACE_ACCESS_TOKEN}`,
     },
     timeout: 30000,
   });

@@ -11,11 +11,14 @@ function initConnection(): void {
   if (!process.env.BITBUCKET_APP_PASSWORD) console.error('Warning: BITBUCKET_APP_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.BITBUCKET_USERNAME || 'https://api.example.com',
+    baseURL: 'https://api.bitbucket.org/2.0',
+    auth: {
+      username: process.env.BITBUCKET_USERNAME || '',
+      password: process.env.BITBUCKET_APP_PASSWORD || '',
+    },
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.BITBUCKET_USERNAME || ''}`,
     },
     timeout: 30000,
   });

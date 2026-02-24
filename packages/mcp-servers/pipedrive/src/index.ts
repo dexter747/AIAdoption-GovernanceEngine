@@ -11,11 +11,11 @@ function initConnection(): void {
   if (!process.env.PIPEDRIVE_DOMAIN) console.error('Warning: PIPEDRIVE_DOMAIN not set');
 
   api = axios.create({
-    baseURL: process.env.PIPEDRIVE_DOMAIN || 'https://api.example.com',
+    baseURL: `https://${process.env.PIPEDRIVE_DOMAIN}.pipedrive.com/api/v1`,
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.PIPEDRIVE_API_TOKEN || ''}`,
+      Authorization: `Bearer ${process.env.PIPEDRIVE_API_TOKEN}`,
     },
     timeout: 30000,
   });

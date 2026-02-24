@@ -12,11 +12,11 @@ function initConnection(): void {
   if (!process.env.FRESHBOOKS_ACCOUNT_ID) console.error('Warning: FRESHBOOKS_ACCOUNT_ID not set');
 
   api = axios.create({
-    baseURL: process.env.FRESHBOOKS_ACCESS_TOKEN || 'https://api.example.com',
+    baseURL: `https://api.freshbooks.com/accounting/account/${process.env.FRESHBOOKS_ACCOUNT_ID}`,
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.FRESHBOOKS_ACCESS_TOKEN || ''}`,
+      Authorization: `Bearer ${process.env.FRESHBOOKS_ACCESS_TOKEN}`,
     },
     timeout: 30000,
   });

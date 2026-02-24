@@ -12,11 +12,14 @@ function initConnection(): void {
   if (!process.env.FIS_PROFILE_PASSWORD) console.error('Warning: FIS_PROFILE_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.FIS_PROFILE_BASE_URL || 'https://api.example.com',
+    baseURL: `${process.env.FIS_PROFILE_BASE_URL}/api/v1`,
+    auth: {
+      username: process.env.FIS_PROFILE_USERNAME || '',
+      password: process.env.FIS_PROFILE_PASSWORD || '',
+    },
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.FIS_PROFILE_BASE_URL || ''}`,
     },
     timeout: 30000,
   });

@@ -10,11 +10,11 @@ function initConnection(): void {
   if (!process.env.CLICKUP_API_TOKEN) console.error('Warning: CLICKUP_API_TOKEN not set');
 
   api = axios.create({
-    baseURL: process.env.CLICKUP_API_TOKEN || 'https://api.example.com',
+    baseURL: 'https://api.clickup.com/api/v2',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.CLICKUP_API_TOKEN || ''}`,
+      Authorization: `${process.env.CLICKUP_API_TOKEN}`,
     },
     timeout: 30000,
   });

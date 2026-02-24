@@ -12,11 +12,14 @@ function initConnection(): void {
   if (!process.env.OPENTEXT_PASSWORD) console.error('Warning: OPENTEXT_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.OPENTEXT_BASE_URL || 'https://api.example.com',
+    baseURL: `${process.env.OPENTEXT_BASE_URL}/api/v2`,
+    auth: {
+      username: process.env.OPENTEXT_USERNAME || '',
+      password: process.env.OPENTEXT_PASSWORD || '',
+    },
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.OPENTEXT_BASE_URL || ''}`,
     },
     timeout: 30000,
   });

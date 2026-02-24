@@ -12,11 +12,14 @@ function initConnection(): void {
   if (!process.env.T24_PASSWORD) console.error('Warning: T24_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.T24_BASE_URL || 'https://api.example.com',
+    baseURL: `${process.env.T24_BASE_URL}/api/v1.0.0`,
+    auth: {
+      username: process.env.T24_USERNAME || '',
+      password: process.env.T24_PASSWORD || '',
+    },
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.T24_BASE_URL || ''}`,
     },
     timeout: 30000,
   });

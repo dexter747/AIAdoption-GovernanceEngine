@@ -12,11 +12,14 @@ function initConnection(): void {
   if (!process.env.BRIO_PASSWORD) console.error('Warning: BRIO_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.BRIO_BASE_URL || 'https://api.example.com',
+    baseURL: `${process.env.BRIO_BASE_URL}/api`,
+    auth: {
+      username: process.env.BRIO_USERNAME || '',
+      password: process.env.BRIO_PASSWORD || '',
+    },
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.BRIO_BASE_URL || ''}`,
     },
     timeout: 30000,
   });

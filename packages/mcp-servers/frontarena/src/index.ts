@@ -12,11 +12,14 @@ function initConnection(): void {
   if (!process.env.FRONTARENA_PASSWORD) console.error('Warning: FRONTARENA_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.FRONTARENA_BASE_URL || 'https://api.example.com',
+    baseURL: `${process.env.FRONTARENA_BASE_URL}/api/v1`,
+    auth: {
+      username: process.env.FRONTARENA_USERNAME || '',
+      password: process.env.FRONTARENA_PASSWORD || '',
+    },
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.FRONTARENA_BASE_URL || ''}`,
     },
     timeout: 30000,
   });

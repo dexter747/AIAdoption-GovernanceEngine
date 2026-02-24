@@ -12,11 +12,14 @@ function initConnection(): void {
   if (!process.env.HYPERION_PASSWORD) console.error('Warning: HYPERION_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.HYPERION_BASE_URL || 'https://api.example.com',
+    baseURL: `${process.env.HYPERION_BASE_URL}/HyperionPlanning/rest/v3`,
+    auth: {
+      username: process.env.HYPERION_USERNAME || '',
+      password: process.env.HYPERION_PASSWORD || '',
+    },
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.HYPERION_BASE_URL || ''}`,
     },
     timeout: 30000,
   });

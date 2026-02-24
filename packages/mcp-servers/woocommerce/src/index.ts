@@ -14,11 +14,14 @@ function initConnection(): void {
     console.error('Warning: WOOCOMMERCE_CONSUMER_SECRET not set');
 
   api = axios.create({
-    baseURL: process.env.WOOCOMMERCE_URL || 'https://api.example.com',
+    baseURL: `${process.env.WOOCOMMERCE_URL}/wp-json/wc/v3`,
+    auth: {
+      username: process.env.WOOCOMMERCE_CONSUMER_KEY || '',
+      password: 'x',
+    },
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.WOOCOMMERCE_URL || ''}`,
     },
     timeout: 30000,
   });

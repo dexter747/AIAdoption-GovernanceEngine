@@ -11,11 +11,11 @@ function initConnection(): void {
     console.error('Warning: SMARTSHEET_ACCESS_TOKEN not set');
 
   api = axios.create({
-    baseURL: process.env.SMARTSHEET_ACCESS_TOKEN || 'https://api.example.com',
+    baseURL: 'https://api.smartsheet.com/2.0',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.SMARTSHEET_ACCESS_TOKEN || ''}`,
+      Authorization: `Bearer ${process.env.SMARTSHEET_ACCESS_TOKEN}`,
     },
     timeout: 30000,
   });

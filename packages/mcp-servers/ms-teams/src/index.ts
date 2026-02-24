@@ -10,11 +10,11 @@ function initConnection(): void {
   if (!process.env.MS_TEAMS_ACCESS_TOKEN) console.error('Warning: MS_TEAMS_ACCESS_TOKEN not set');
 
   api = axios.create({
-    baseURL: process.env.MS_TEAMS_ACCESS_TOKEN || 'https://api.example.com',
+    baseURL: 'https://graph.microsoft.com/v1.0',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.MS_TEAMS_ACCESS_TOKEN || ''}`,
+      Authorization: `Bearer ${process.env.MS_TEAMS_ACCESS_TOKEN}`,
     },
     timeout: 30000,
   });

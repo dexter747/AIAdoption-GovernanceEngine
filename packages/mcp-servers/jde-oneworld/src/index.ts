@@ -12,11 +12,14 @@ function initConnection(): void {
   if (!process.env.JDE_PASSWORD) console.error('Warning: JDE_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.JDE_BASE_URL || 'https://api.example.com',
+    baseURL: `${process.env.JDE_BASE_URL}/jderest/v3`,
+    auth: {
+      username: process.env.JDE_USERNAME || '',
+      password: process.env.JDE_PASSWORD || '',
+    },
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.JDE_BASE_URL || ''}`,
     },
     timeout: 30000,
   });

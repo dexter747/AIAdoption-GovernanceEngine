@@ -10,11 +10,11 @@ function initConnection(): void {
   if (!process.env.SLACK_BOT_TOKEN) console.error('Warning: SLACK_BOT_TOKEN not set');
 
   api = axios.create({
-    baseURL: process.env.SLACK_BOT_TOKEN || 'https://api.example.com',
+    baseURL: 'https://slack.com/api',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN || ''}`,
+      Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}`,
     },
     timeout: 30000,
   });

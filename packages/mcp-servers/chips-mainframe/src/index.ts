@@ -13,11 +13,14 @@ function initConnection(): void {
   if (!process.env.CHIPS_PASSWORD) console.error('Warning: CHIPS_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.CHIPS_HOST || 'https://api.example.com',
+    baseURL: `http://${process.env.CHIPS_HOST}:${process.env.CHIPS_PORT}`,
+    auth: {
+      username: process.env.CHIPS_USERNAME || '',
+      password: process.env.CHIPS_PASSWORD || '',
+    },
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.CHIPS_HOST || ''}`,
     },
     timeout: 30000,
   });

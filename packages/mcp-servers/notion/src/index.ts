@@ -10,11 +10,12 @@ function initConnection(): void {
   if (!process.env.NOTION_API_KEY) console.error('Warning: NOTION_API_KEY not set');
 
   api = axios.create({
-    baseURL: process.env.NOTION_API_KEY || 'https://api.example.com',
+    baseURL: 'https://api.notion.com/v1',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.NOTION_API_KEY || ''}`,
+      Authorization: `Bearer ${process.env.NOTION_API_KEY}`,
+      'Notion-Version': '2022-06-28',
     },
     timeout: 30000,
   });

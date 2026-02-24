@@ -10,11 +10,11 @@ function initConnection(): void {
   if (!process.env.MONDAY_API_TOKEN) console.error('Warning: MONDAY_API_TOKEN not set');
 
   api = axios.create({
-    baseURL: process.env.MONDAY_API_TOKEN || 'https://api.example.com',
+    baseURL: 'https://api.monday.com/v2',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.MONDAY_API_TOKEN || ''}`,
+      Authorization: `${process.env.MONDAY_API_TOKEN}`,
     },
     timeout: 30000,
   });

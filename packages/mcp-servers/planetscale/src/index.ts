@@ -13,11 +13,10 @@ function initConnection(): void {
   if (!process.env.PLANETSCALE_PASSWORD) console.error('Warning: PLANETSCALE_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.PLANETSCALE_HOST || 'https://api.example.com',
+    baseURL: 'http://localhost',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.PLANETSCALE_HOST || ''}`,
     },
     timeout: 30000,
   });

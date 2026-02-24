@@ -12,11 +12,14 @@ function initConnection(): void {
   if (!process.env.MUREX_PASSWORD) console.error('Warning: MUREX_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.MUREX_BASE_URL || 'https://api.example.com',
+    baseURL: `${process.env.MUREX_BASE_URL}/mx/api/v1`,
+    auth: {
+      username: process.env.MUREX_USERNAME || '',
+      password: process.env.MUREX_PASSWORD || '',
+    },
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.MUREX_BASE_URL || ''}`,
     },
     timeout: 30000,
   });

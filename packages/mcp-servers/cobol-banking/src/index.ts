@@ -13,11 +13,14 @@ function initConnection(): void {
   if (!process.env.COBOL_PASSWORD) console.error('Warning: COBOL_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.COBOL_HOST || 'https://api.example.com',
+    baseURL: `http://${process.env.COBOL_HOST}:${process.env.COBOL_PORT}`,
+    auth: {
+      username: process.env.COBOL_USERNAME || '',
+      password: process.env.COBOL_PASSWORD || '',
+    },
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.COBOL_HOST || ''}`,
     },
     timeout: 30000,
   });

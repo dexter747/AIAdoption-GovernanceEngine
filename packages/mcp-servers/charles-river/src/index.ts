@@ -11,11 +11,11 @@ function initConnection(): void {
   if (!process.env.CHARLES_RIVER_API_KEY) console.error('Warning: CHARLES_RIVER_API_KEY not set');
 
   api = axios.create({
-    baseURL: process.env.CHARLES_RIVER_BASE_URL || 'https://api.example.com',
+    baseURL: `${process.env.CHARLES_RIVER_BASE_URL}/api/v2`,
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.CHARLES_RIVER_BASE_URL || ''}`,
+      'X-API-Key': `${process.env.CHARLES_RIVER_API_KEY}`,
     },
     timeout: 30000,
   });

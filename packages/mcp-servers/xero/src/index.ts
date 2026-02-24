@@ -11,11 +11,12 @@ function initConnection(): void {
   if (!process.env.XERO_TENANT_ID) console.error('Warning: XERO_TENANT_ID not set');
 
   api = axios.create({
-    baseURL: process.env.XERO_ACCESS_TOKEN || 'https://api.example.com',
+    baseURL: 'https://api.xero.com/api.xro/2.0',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.XERO_ACCESS_TOKEN || ''}`,
+      Authorization: `Bearer ${process.env.XERO_ACCESS_TOKEN}`,
+      'Xero-tenant-id': `${process.env.XERO_TENANT_ID}`,
     },
     timeout: 30000,
   });

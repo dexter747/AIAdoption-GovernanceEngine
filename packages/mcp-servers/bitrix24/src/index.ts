@@ -10,11 +10,10 @@ function initConnection(): void {
   if (!process.env.BITRIX24_WEBHOOK_URL) console.error('Warning: BITRIX24_WEBHOOK_URL not set');
 
   api = axios.create({
-    baseURL: process.env.BITRIX24_WEBHOOK_URL || 'https://api.example.com',
+    baseURL: `${process.env.BITRIX24_WEBHOOK_URL}`,
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.BITRIX24_WEBHOOK_URL || ''}`,
     },
     timeout: 30000,
   });

@@ -11,11 +11,11 @@ function initConnection(): void {
     console.error('Warning: ZENDESK_SELL_ACCESS_TOKEN not set');
 
   api = axios.create({
-    baseURL: process.env.ZENDESK_SELL_ACCESS_TOKEN || 'https://api.example.com',
+    baseURL: 'https://api.getbase.com/v2',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.ZENDESK_SELL_ACCESS_TOKEN || ''}`,
+      Authorization: `Bearer ${process.env.ZENDESK_SELL_ACCESS_TOKEN}`,
     },
     timeout: 30000,
   });

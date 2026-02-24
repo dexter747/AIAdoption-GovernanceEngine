@@ -11,11 +11,11 @@ function initConnection(): void {
   if (!process.env.GITLAB_URL) console.error('Warning: GITLAB_URL not set');
 
   api = axios.create({
-    baseURL: process.env.GITLAB_URL || 'https://api.example.com',
+    baseURL: `${process.env.GITLAB_URL}/api/v4`,
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.GITLAB_TOKEN || ''}`,
+      'PRIVATE-TOKEN': `${process.env.GITLAB_TOKEN}`,
     },
     timeout: 30000,
   });

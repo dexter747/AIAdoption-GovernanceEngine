@@ -11,11 +11,11 @@ function initConnection(): void {
   if (!process.env.FRESHSALES_DOMAIN) console.error('Warning: FRESHSALES_DOMAIN not set');
 
   api = axios.create({
-    baseURL: process.env.FRESHSALES_DOMAIN || 'https://api.example.com',
+    baseURL: `https://${process.env.FRESHSALES_DOMAIN}.freshsales.io/api`,
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.FRESHSALES_API_KEY || ''}`,
+      Authorization: `Token token=${process.env.FRESHSALES_API_KEY}`,
     },
     timeout: 30000,
   });

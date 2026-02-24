@@ -13,11 +13,14 @@ function initConnection(): void {
   if (!process.env.COGNOS_PASSWORD) console.error('Warning: COGNOS_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.COGNOS_BASE_URL || 'https://api.example.com',
+    baseURL: `${process.env.COGNOS_BASE_URL}/api/v1`,
+    auth: {
+      username: process.env.COGNOS_USERNAME || '',
+      password: process.env.COGNOS_PASSWORD || '',
+    },
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.COGNOS_BASE_URL || ''}`,
     },
     timeout: 30000,
   });

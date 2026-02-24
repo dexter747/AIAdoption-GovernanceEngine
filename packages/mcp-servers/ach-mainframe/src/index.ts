@@ -13,11 +13,14 @@ function initConnection(): void {
   if (!process.env.ACH_PASSWORD) console.error('Warning: ACH_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.ACH_HOST || 'https://api.example.com',
+    baseURL: `http://${process.env.ACH_HOST}:${process.env.ACH_PORT}`,
+    auth: {
+      username: process.env.ACH_USERNAME || '',
+      password: process.env.ACH_PASSWORD || '',
+    },
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.ACH_HOST || ''}`,
     },
     timeout: 30000,
   });

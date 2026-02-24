@@ -12,11 +12,11 @@ function initConnection(): void {
   if (!process.env.LOOKER_CLIENT_SECRET) console.error('Warning: LOOKER_CLIENT_SECRET not set');
 
   api = axios.create({
-    baseURL: process.env.LOOKER_BASE_URL || 'https://api.example.com',
+    baseURL: `${process.env.LOOKER_BASE_URL}/api/4.0`,
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.LOOKER_BASE_URL || ''}`,
+      Authorization: `Bearer ${process.env.LOOKER_BASE_URL}`,
     },
     timeout: 30000,
   });

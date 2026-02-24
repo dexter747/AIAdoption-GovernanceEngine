@@ -12,11 +12,14 @@ function initConnection(): void {
   if (!process.env.JENKINS_TOKEN) console.error('Warning: JENKINS_TOKEN not set');
 
   api = axios.create({
-    baseURL: process.env.JENKINS_URL || 'https://api.example.com',
+    baseURL: `${process.env.JENKINS_URL}`,
+    auth: {
+      username: process.env.JENKINS_USER || '',
+      password: process.env.JENKINS_TOKEN || '',
+    },
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.JENKINS_URL || ''}`,
     },
     timeout: 30000,
   });

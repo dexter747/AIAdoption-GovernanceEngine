@@ -12,11 +12,11 @@ function initConnection(): void {
   if (!process.env.SWIFT_CERTIFICATE) console.error('Warning: SWIFT_CERTIFICATE not set');
 
   api = axios.create({
-    baseURL: process.env.SWIFT_BASE_URL || 'https://api.example.com',
+    baseURL: `${process.env.SWIFT_BASE_URL}/swift/v1`,
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.SWIFT_BASE_URL || ''}`,
+      Authorization: `Bearer ${process.env.SWIFT_API_KEY}`,
     },
     timeout: 30000,
   });

@@ -11,11 +11,10 @@ function initConnection(): void {
   if (!process.env.BLOOMBERG_PORT) console.error('Warning: BLOOMBERG_PORT not set');
 
   api = axios.create({
-    baseURL: process.env.BLOOMBERG_HOST || 'https://api.example.com',
+    baseURL: `http://${process.env.BLOOMBERG_HOST}:${process.env.BLOOMBERG_PORT}`,
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.BLOOMBERG_HOST || ''}`,
     },
     timeout: 30000,
   });

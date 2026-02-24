@@ -12,11 +12,14 @@ function initConnection(): void {
   if (!process.env.CRYSTAL_PASSWORD) console.error('Warning: CRYSTAL_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.CRYSTAL_SERVER_URL || 'https://api.example.com',
+    baseURL: `${process.env.CRYSTAL_SERVER_URL}/api/v1`,
+    auth: {
+      username: process.env.CRYSTAL_USERNAME || '',
+      password: process.env.CRYSTAL_PASSWORD || '',
+    },
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.CRYSTAL_SERVER_URL || ''}`,
     },
     timeout: 30000,
   });

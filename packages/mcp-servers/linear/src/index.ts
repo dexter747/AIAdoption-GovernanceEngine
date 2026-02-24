@@ -10,11 +10,11 @@ function initConnection(): void {
   if (!process.env.LINEAR_API_KEY) console.error('Warning: LINEAR_API_KEY not set');
 
   api = axios.create({
-    baseURL: process.env.LINEAR_API_KEY || 'https://api.example.com',
+    baseURL: 'https://api.linear.app',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.LINEAR_API_KEY || ''}`,
+      Authorization: `${process.env.LINEAR_API_KEY}`,
     },
     timeout: 30000,
   });

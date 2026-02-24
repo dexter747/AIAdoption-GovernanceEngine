@@ -12,11 +12,11 @@ function initConnection(): void {
   if (!process.env.AZURE_AD_CLIENT_SECRET) console.error('Warning: AZURE_AD_CLIENT_SECRET not set');
 
   api = axios.create({
-    baseURL: process.env.AZURE_AD_TENANT_ID || 'https://api.example.com',
+    baseURL: 'https://graph.microsoft.com/v1.0',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.AZURE_AD_TENANT_ID || ''}`,
+      Authorization: `Bearer ${process.env.AZURE_AD_TENANT_ID}`,
     },
     timeout: 30000,
   });

@@ -11,11 +11,12 @@ function initConnection(): void {
   if (!process.env.SUPABASE_SERVICE_KEY) console.error('Warning: SUPABASE_SERVICE_KEY not set');
 
   api = axios.create({
-    baseURL: process.env.SUPABASE_URL || 'https://api.example.com',
+    baseURL: `${process.env.SUPABASE_URL}`,
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.SUPABASE_URL || ''}`,
+      apikey: `${process.env.SUPABASE_SERVICE_KEY}`,
+      Authorization: `Bearer ${process.env.SUPABASE_SERVICE_KEY}`,
     },
     timeout: 30000,
   });

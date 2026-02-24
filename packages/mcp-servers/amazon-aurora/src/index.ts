@@ -14,11 +14,10 @@ function initConnection(): void {
   if (!process.env.AURORA_PASSWORD) console.error('Warning: AURORA_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.AURORA_HOST || 'https://api.example.com',
+    baseURL: 'http://localhost',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.AURORA_HOST || ''}`,
     },
     timeout: 30000,
   });

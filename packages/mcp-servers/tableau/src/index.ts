@@ -13,11 +13,11 @@ function initConnection(): void {
   if (!process.env.TABLEAU_SITE_ID) console.error('Warning: TABLEAU_SITE_ID not set');
 
   api = axios.create({
-    baseURL: process.env.TABLEAU_SERVER_URL || 'https://api.example.com',
+    baseURL: `${process.env.TABLEAU_SERVER_URL}/api/3.21`,
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.TABLEAU_SERVER_URL || ''}`,
+      'X-Tableau-Auth': `${process.env.TABLEAU_TOKEN_SECRET}`,
     },
     timeout: 30000,
   });

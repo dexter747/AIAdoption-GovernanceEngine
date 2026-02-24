@@ -14,11 +14,10 @@ function initConnection(): void {
   if (!process.env.REDSHIFT_PASSWORD) console.error('Warning: REDSHIFT_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.REDSHIFT_HOST || 'https://api.example.com',
+    baseURL: 'http://localhost',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.REDSHIFT_HOST || ''}`,
     },
     timeout: 30000,
   });

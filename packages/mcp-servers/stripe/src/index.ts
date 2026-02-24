@@ -10,11 +10,11 @@ function initConnection(): void {
   if (!process.env.STRIPE_SECRET_KEY) console.error('Warning: STRIPE_SECRET_KEY not set');
 
   api = axios.create({
-    baseURL: process.env.STRIPE_SECRET_KEY || 'https://api.example.com',
+    baseURL: 'https://api.stripe.com/v1',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY || ''}`,
+      Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}`,
     },
     timeout: 30000,
   });

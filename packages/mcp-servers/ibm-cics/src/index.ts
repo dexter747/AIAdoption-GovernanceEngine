@@ -12,11 +12,14 @@ function initConnection(): void {
   if (!process.env.CICS_PASSWORD) console.error('Warning: CICS_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.CICS_BASE_URL || 'https://api.example.com',
+    baseURL: `${process.env.CICS_BASE_URL}/CICSSystemManagement`,
+    auth: {
+      username: process.env.CICS_USERNAME || '',
+      password: process.env.CICS_PASSWORD || '',
+    },
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.CICS_BASE_URL || ''}`,
     },
     timeout: 30000,
   });

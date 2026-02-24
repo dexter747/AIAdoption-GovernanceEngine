@@ -10,11 +10,11 @@ function initConnection(): void {
   if (!process.env.WRIKE_ACCESS_TOKEN) console.error('Warning: WRIKE_ACCESS_TOKEN not set');
 
   api = axios.create({
-    baseURL: process.env.WRIKE_ACCESS_TOKEN || 'https://api.example.com',
+    baseURL: 'https://www.wrike.com/api/v4',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.WRIKE_ACCESS_TOKEN || ''}`,
+      Authorization: `Bearer ${process.env.WRIKE_ACCESS_TOKEN}`,
     },
     timeout: 30000,
   });

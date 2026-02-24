@@ -10,11 +10,11 @@ function initConnection(): void {
   if (!process.env.SQUARESPACE_API_KEY) console.error('Warning: SQUARESPACE_API_KEY not set');
 
   api = axios.create({
-    baseURL: process.env.SQUARESPACE_API_KEY || 'https://api.example.com',
+    baseURL: 'https://api.squarespace.com/1.0',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.SQUARESPACE_API_KEY || ''}`,
+      Authorization: `Bearer ${process.env.SQUARESPACE_API_KEY}`,
     },
     timeout: 30000,
   });

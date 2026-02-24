@@ -10,11 +10,11 @@ function initConnection(): void {
   if (!process.env.KEAP_ACCESS_TOKEN) console.error('Warning: KEAP_ACCESS_TOKEN not set');
 
   api = axios.create({
-    baseURL: process.env.KEAP_ACCESS_TOKEN || 'https://api.example.com',
+    baseURL: 'https://api.infusionsoft.com/crm/rest/v1',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.KEAP_ACCESS_TOKEN || ''}`,
+      Authorization: `Bearer ${process.env.KEAP_ACCESS_TOKEN}`,
     },
     timeout: 30000,
   });

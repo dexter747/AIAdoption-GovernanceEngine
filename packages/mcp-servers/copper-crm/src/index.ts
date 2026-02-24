@@ -11,11 +11,13 @@ function initConnection(): void {
   if (!process.env.COPPER_EMAIL) console.error('Warning: COPPER_EMAIL not set');
 
   api = axios.create({
-    baseURL: process.env.COPPER_API_KEY || 'https://api.example.com',
+    baseURL: 'https://api.copper.com/developer_api/v1',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.COPPER_API_KEY || ''}`,
+      'X-PW-AccessToken': `${process.env.COPPER_API_KEY}`,
+      'X-PW-Application': 'developer_api',
+      'X-PW-UserEmail': `${process.env.COPPER_EMAIL}`,
     },
     timeout: 30000,
   });

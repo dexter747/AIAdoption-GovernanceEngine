@@ -11,11 +11,11 @@ function initConnection(): void {
   if (!process.env.QLIK_API_KEY) console.error('Warning: QLIK_API_KEY not set');
 
   api = axios.create({
-    baseURL: process.env.QLIK_TENANT_URL || 'https://api.example.com',
+    baseURL: `${process.env.QLIK_TENANT_URL}/api/v1`,
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.QLIK_TENANT_URL || ''}`,
+      Authorization: `Bearer ${process.env.QLIK_API_KEY}`,
     },
     timeout: 30000,
   });

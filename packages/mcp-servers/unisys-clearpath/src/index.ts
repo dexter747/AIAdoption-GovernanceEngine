@@ -13,11 +13,14 @@ function initConnection(): void {
   if (!process.env.CLEARPATH_PASSWORD) console.error('Warning: CLEARPATH_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.CLEARPATH_HOST || 'https://api.example.com',
+    baseURL: `http://${process.env.CLEARPATH_HOST}:${process.env.CLEARPATH_PORT}`,
+    auth: {
+      username: process.env.CLEARPATH_USERNAME || '',
+      password: process.env.CLEARPATH_PASSWORD || '',
+    },
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.CLEARPATH_HOST || ''}`,
     },
     timeout: 30000,
   });

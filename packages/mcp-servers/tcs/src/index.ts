@@ -11,11 +11,11 @@ function initConnection(): void {
   if (!process.env.TCS_API_KEY) console.error('Warning: TCS_API_KEY not set');
 
   api = axios.create({
-    baseURL: process.env.TCS_BASE_URL || 'https://api.example.com',
+    baseURL: `${process.env.TCS_BASE_URL}/api/v1`,
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.TCS_BASE_URL || ''}`,
+      Authorization: `Bearer ${process.env.TCS_API_KEY}`,
     },
     timeout: 30000,
   });

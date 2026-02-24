@@ -12,11 +12,14 @@ function initConnection(): void {
   if (!process.env.CALYPSO_PASSWORD) console.error('Warning: CALYPSO_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.CALYPSO_BASE_URL || 'https://api.example.com',
+    baseURL: `${process.env.CALYPSO_BASE_URL}/calypso/api/v1`,
+    auth: {
+      username: process.env.CALYPSO_USERNAME || '',
+      password: process.env.CALYPSO_PASSWORD || '',
+    },
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.CALYPSO_BASE_URL || ''}`,
     },
     timeout: 30000,
   });

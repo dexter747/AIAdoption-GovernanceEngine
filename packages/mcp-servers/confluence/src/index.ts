@@ -12,11 +12,14 @@ function initConnection(): void {
   if (!process.env.CONFLUENCE_API_TOKEN) console.error('Warning: CONFLUENCE_API_TOKEN not set');
 
   api = axios.create({
-    baseURL: process.env.CONFLUENCE_BASE_URL || 'https://api.example.com',
+    baseURL: `${process.env.CONFLUENCE_BASE_URL}/wiki/rest/api`,
+    auth: {
+      username: process.env.CONFLUENCE_USERNAME || '',
+      password: process.env.CONFLUENCE_API_TOKEN || '',
+    },
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.CONFLUENCE_BASE_URL || ''}`,
     },
     timeout: 30000,
   });

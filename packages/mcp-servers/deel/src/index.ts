@@ -10,11 +10,11 @@ function initConnection(): void {
   if (!process.env.DEEL_API_TOKEN) console.error('Warning: DEEL_API_TOKEN not set');
 
   api = axios.create({
-    baseURL: process.env.DEEL_API_TOKEN || 'https://api.example.com',
+    baseURL: 'https://api.deel.com/rest/v2',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.DEEL_API_TOKEN || ''}`,
+      Authorization: `Bearer ${process.env.DEEL_API_TOKEN}`,
     },
     timeout: 30000,
   });

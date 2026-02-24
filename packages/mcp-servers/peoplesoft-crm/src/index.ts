@@ -15,11 +15,14 @@ function initConnection(): void {
     console.error('Warning: PEOPLESOFT_CRM_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.PEOPLESOFT_CRM_BASE_URL || 'https://api.example.com',
+    baseURL: `${process.env.PEOPLESOFT_CRM_BASE_URL}/PSIGW/RESTListeningConnector/PSFT_HR`,
+    auth: {
+      username: process.env.PEOPLESOFT_CRM_USERNAME || '',
+      password: process.env.PEOPLESOFT_CRM_PASSWORD || '',
+    },
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.PEOPLESOFT_CRM_BASE_URL || ''}`,
     },
     timeout: 30000,
   });

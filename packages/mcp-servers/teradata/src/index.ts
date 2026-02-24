@@ -12,11 +12,10 @@ function initConnection(): void {
   if (!process.env.TERADATA_PASSWORD) console.error('Warning: TERADATA_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.TERADATA_HOST || 'https://api.example.com',
+    baseURL: 'http://localhost',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.TERADATA_HOST || ''}`,
     },
     timeout: 30000,
   });

@@ -12,11 +12,11 @@ function initConnection(): void {
   if (!process.env.INFLUXDB_ORG) console.error('Warning: INFLUXDB_ORG not set');
 
   api = axios.create({
-    baseURL: process.env.INFLUXDB_URL || 'https://api.example.com',
+    baseURL: `${process.env.INFLUXDB_URL}`,
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.INFLUXDB_URL || ''}`,
+      Authorization: `Token ${process.env.INFLUXDB_TOKEN}`,
     },
     timeout: 30000,
   });
@@ -76,11 +76,15 @@ async function main(): Promise<void> {
     const a = (args || {}) as Record<string, any>;
     switch (name) {
       case 'query':
-        return safeCall(() => api.post(`/api/v2/query?org=${ORG}`, { query: a.query }));
+        return safeCall(() =>
+          api.post(`/api/v2/query?org=${process.env.INFLUXDB_ORG}`, { query: a.query })
+        );
       case 'list_buckets':
         return safeCall(() => api.get(`/api/v2/buckets`));
       case 'list_measurements':
-        return safeCall(() => api.post(`/api/v2/query?org=${ORG}`, { bucket: a.bucket }));
+        return safeCall(() =>
+          api.post(`/api/v2/query?org=${process.env.INFLUXDB_ORG}`, { bucket: a.bucket })
+        );
       default:
         return { content: [{ type: 'text' as const, text: `Unknown tool: ${name}` }] };
     }

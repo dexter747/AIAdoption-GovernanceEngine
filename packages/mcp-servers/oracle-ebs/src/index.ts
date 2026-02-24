@@ -12,11 +12,14 @@ function initConnection(): void {
   if (!process.env.ORACLE_EBS_PASSWORD) console.error('Warning: ORACLE_EBS_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.ORACLE_EBS_BASE_URL || 'https://api.example.com',
+    baseURL: `${process.env.ORACLE_EBS_BASE_URL}/webservices/rest`,
+    auth: {
+      username: process.env.ORACLE_EBS_USERNAME || '',
+      password: process.env.ORACLE_EBS_PASSWORD || '',
+    },
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.ORACLE_EBS_BASE_URL || ''}`,
     },
     timeout: 30000,
   });

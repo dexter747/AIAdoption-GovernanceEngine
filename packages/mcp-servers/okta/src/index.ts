@@ -11,11 +11,11 @@ function initConnection(): void {
   if (!process.env.OKTA_API_TOKEN) console.error('Warning: OKTA_API_TOKEN not set');
 
   api = axios.create({
-    baseURL: process.env.OKTA_DOMAIN || 'https://api.example.com',
+    baseURL: `https://${process.env.OKTA_DOMAIN}/api/v1`,
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.OKTA_DOMAIN || ''}`,
+      Authorization: `SSWS ${process.env.OKTA_API_TOKEN}`,
     },
     timeout: 30000,
   });

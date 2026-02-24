@@ -12,11 +12,11 @@ function initConnection(): void {
     console.error('Warning: BIGCOMMERCE_ACCESS_TOKEN not set');
 
   api = axios.create({
-    baseURL: process.env.BIGCOMMERCE_STORE_HASH || 'https://api.example.com',
+    baseURL: `https://api.bigcommerce.com/stores/${process.env.BIGCOMMERCE_STORE_HASH}/v3`,
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.BIGCOMMERCE_STORE_HASH || ''}`,
+      'X-Auth-Token': `${process.env.BIGCOMMERCE_ACCESS_TOKEN}`,
     },
     timeout: 30000,
   });

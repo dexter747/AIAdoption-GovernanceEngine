@@ -10,11 +10,10 @@ function initConnection(): void {
   if (!process.env.COCKROACHDB_URL) console.error('Warning: COCKROACHDB_URL not set');
 
   api = axios.create({
-    baseURL: process.env.COCKROACHDB_URL || 'https://api.example.com',
+    baseURL: 'http://localhost',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.COCKROACHDB_URL || ''}`,
     },
     timeout: 30000,
   });

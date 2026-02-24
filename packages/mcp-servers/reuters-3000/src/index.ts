@@ -12,11 +12,11 @@ function initConnection(): void {
   if (!process.env.REFINITIV_APP_KEY) console.error('Warning: REFINITIV_APP_KEY not set');
 
   api = axios.create({
-    baseURL: process.env.REFINITIV_USERNAME || 'https://api.example.com',
+    baseURL: 'https://api.refinitiv.com',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.REFINITIV_USERNAME || ''}`,
+      Authorization: `Bearer ${process.env.REFINITIV_APP_KEY}`,
     },
     timeout: 30000,
   });

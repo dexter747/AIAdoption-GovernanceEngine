@@ -13,11 +13,10 @@ function initConnection(): void {
   if (!process.env.FIREBOLT_ENGINE) console.error('Warning: FIREBOLT_ENGINE not set');
 
   api = axios.create({
-    baseURL: process.env.FIREBOLT_CLIENT_ID || 'https://api.example.com',
+    baseURL: 'http://localhost',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.FIREBOLT_CLIENT_ID || ''}`,
     },
     timeout: 30000,
   });

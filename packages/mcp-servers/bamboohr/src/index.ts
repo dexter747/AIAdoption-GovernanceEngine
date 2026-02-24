@@ -11,11 +11,14 @@ function initConnection(): void {
   if (!process.env.BAMBOOHR_SUBDOMAIN) console.error('Warning: BAMBOOHR_SUBDOMAIN not set');
 
   api = axios.create({
-    baseURL: process.env.BAMBOOHR_SUBDOMAIN || 'https://api.example.com',
+    baseURL: `https://api.bamboohr.com/api/gateway.php/${process.env.BAMBOOHR_SUBDOMAIN}/v1`,
+    auth: {
+      username: process.env.BAMBOOHR_API_KEY || '',
+      password: 'x',
+    },
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.BAMBOOHR_API_KEY || ''}`,
     },
     timeout: 30000,
   });

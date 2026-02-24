@@ -12,11 +12,14 @@ function initConnection(): void {
   if (!process.env.SUGARCRM_PASSWORD) console.error('Warning: SUGARCRM_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.SUGARCRM_BASE_URL || 'https://api.example.com',
+    baseURL: `${process.env.SUGARCRM_BASE_URL}/rest/v11_15`,
+    auth: {
+      username: process.env.SUGARCRM_USERNAME || '',
+      password: process.env.SUGARCRM_PASSWORD || '',
+    },
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.SUGARCRM_BASE_URL || ''}`,
     },
     timeout: 30000,
   });

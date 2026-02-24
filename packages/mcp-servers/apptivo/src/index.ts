@@ -11,11 +11,11 @@ function initConnection(): void {
   if (!process.env.APPTIVO_ACCESS_KEY) console.error('Warning: APPTIVO_ACCESS_KEY not set');
 
   api = axios.create({
-    baseURL: process.env.APPTIVO_API_KEY || 'https://api.example.com',
+    baseURL: 'https://api.apptivo.com/app',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.APPTIVO_API_KEY || ''}`,
+      'x-api-key': `${process.env.APPTIVO_API_KEY}`,
     },
     timeout: 30000,
   });

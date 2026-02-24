@@ -12,11 +12,14 @@ function initConnection(): void {
   if (!process.env.JDE_WORLD_PASSWORD) console.error('Warning: JDE_WORLD_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.JDE_WORLD_HOST || 'https://api.example.com',
+    baseURL: `http://${process.env.JDE_WORLD_HOST}`,
+    auth: {
+      username: process.env.JDE_WORLD_USERNAME || '',
+      password: process.env.JDE_WORLD_PASSWORD || '',
+    },
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.JDE_WORLD_HOST || ''}`,
     },
     timeout: 30000,
   });

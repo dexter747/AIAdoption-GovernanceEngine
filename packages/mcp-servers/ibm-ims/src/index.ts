@@ -12,11 +12,14 @@ function initConnection(): void {
   if (!process.env.IMS_PASSWORD) console.error('Warning: IMS_PASSWORD not set');
 
   api = axios.create({
-    baseURL: process.env.IMS_BASE_URL || 'https://api.example.com',
+    baseURL: `${process.env.IMS_BASE_URL}/ims/rest/v1`,
+    auth: {
+      username: process.env.IMS_USERNAME || '',
+      password: process.env.IMS_PASSWORD || '',
+    },
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.IMS_BASE_URL || ''}`,
     },
     timeout: 30000,
   });

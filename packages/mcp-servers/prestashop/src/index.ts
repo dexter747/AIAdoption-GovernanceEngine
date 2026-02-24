@@ -11,11 +11,14 @@ function initConnection(): void {
   if (!process.env.PRESTASHOP_API_KEY) console.error('Warning: PRESTASHOP_API_KEY not set');
 
   api = axios.create({
-    baseURL: process.env.PRESTASHOP_URL || 'https://api.example.com',
+    baseURL: `${process.env.PRESTASHOP_URL}/api`,
+    auth: {
+      username: process.env.PRESTASHOP_API_KEY || '',
+      password: 'x',
+    },
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.PRESTASHOP_URL || ''}`,
     },
     timeout: 30000,
   });

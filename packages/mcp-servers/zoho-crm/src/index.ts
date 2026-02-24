@@ -11,11 +11,11 @@ function initConnection(): void {
   if (!process.env.ZOHO_API_DOMAIN) console.error('Warning: ZOHO_API_DOMAIN not set');
 
   api = axios.create({
-    baseURL: process.env.ZOHO_API_DOMAIN || 'https://api.example.com',
+    baseURL: `${process.env.ZOHO_API_DOMAIN}/crm/v5`,
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${process.env.ZOHO_ACCESS_TOKEN || ''}`,
+      Authorization: `Zoho-oauthtoken ${process.env.ZOHO_ACCESS_TOKEN}`,
     },
     timeout: 30000,
   });
