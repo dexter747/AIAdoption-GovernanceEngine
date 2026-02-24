@@ -603,6 +603,45 @@ importers:
         specifier: ^5.3.3
         version: 5.9.3
 
+  packages/mcp-servers/accenture:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/ach-mainframe:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/active-directory:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
   packages/mcp-servers/adp:
     dependencies:
       '@modelcontextprotocol/sdk':
@@ -617,6 +656,19 @@ importers:
         version: 5.9.3
 
   packages/mcp-servers/allscripts:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/amazon-aurora:
     dependencies:
       '@modelcontextprotocol/sdk':
         specifier: ^1.0.0
@@ -655,6 +707,19 @@ importers:
         specifier: ^5.3.3
         version: 5.9.3
 
+  packages/mcp-servers/apptivo:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
   packages/mcp-servers/as400:
     dependencies:
       '@modelcontextprotocol/sdk':
@@ -668,7 +733,163 @@ importers:
         specifier: ^5.3.3
         version: 5.9.3
 
+  packages/mcp-servers/asana:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/aws-rds:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/azure-sql:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/azure-synapse:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/bamboohr:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/basecamp:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/bigcommerce:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/bigquery:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/bitbucket:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/bitrix24:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
   packages/mcp-servers/blackline:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/blackrock-aladdin:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/bloomberg-terminal:
     dependencies:
       '@modelcontextprotocol/sdk':
         specifier: ^1.0.0
@@ -695,6 +916,58 @@ importers:
         version: 5.9.3
 
   packages/mcp-servers/box:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/brio:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/broadcom:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/calypso:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/capsule-crm:
     dependencies:
       '@modelcontextprotocol/sdk':
         specifier: ^1.0.0
@@ -746,6 +1019,123 @@ importers:
         specifier: ^5.3.3
         version: 5.9.3
 
+  packages/mcp-servers/charles-river:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/chips-mainframe:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/clickup:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/close-crm:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/cobol-banking:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/cockroachdb:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/cognos:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/confluence:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/copper-crm:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
   packages/mcp-servers/couchdb:
     dependencies:
       '@modelcontextprotocol/sdk':
@@ -760,6 +1150,58 @@ importers:
         version: 5.9.3
 
   packages/mcp-servers/coupa:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/creatio:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/crystal-reports:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/databricks:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/deel:
     dependencies:
       '@modelcontextprotocol/sdk':
         specifier: ^1.0.0
@@ -798,7 +1240,46 @@ importers:
         specifier: ^5.3.3
         version: 5.9.3
 
+  packages/mcp-servers/dremio:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/dropbox-business:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
   packages/mcp-servers/duck-creek:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/dxc-technology:
     dependencies:
       '@modelcontextprotocol/sdk':
         specifier: ^1.0.0
@@ -921,7 +1402,98 @@ importers:
         specifier: ^5.3.3
         version: 5.9.3
 
+  packages/mcp-servers/firebolt:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/firestore:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
   packages/mcp-servers/fis:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/fis-profile:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/fis-world:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/freshbooks:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/freshsales:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/frontarena:
     dependencies:
       '@modelcontextprotocol/sdk':
         specifier: ^1.0.0
@@ -947,7 +1519,85 @@ importers:
         specifier: ^5.3.3
         version: 5.9.3
 
+  packages/mcp-servers/github:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/gitlab:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/google-cloud-sql:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/google-meet:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/google-workspace:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
   packages/mcp-servers/guidewire:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/gusto:
     dependencies:
       '@modelcontextprotocol/sdk':
         specifier: ^1.0.0
@@ -973,7 +1623,46 @@ importers:
         specifier: ^5.3.3
         version: 5.9.3
 
+  packages/mcp-servers/hyperion:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/ibm-cics:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
   packages/mcp-servers/ibm-filenet:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/ibm-ims:
     dependencies:
       '@modelcontextprotocol/sdk':
         specifier: ^1.0.0
@@ -1012,7 +1701,46 @@ importers:
         specifier: ^5.3.3
         version: 5.9.3
 
+  packages/mcp-servers/influxdb:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
   packages/mcp-servers/infor-cloudsuite:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/infosys:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/insightly:
     dependencies:
       '@modelcontextprotocol/sdk':
         specifier: ^1.0.0
@@ -1038,6 +1766,45 @@ importers:
         specifier: ^5.3.3
         version: 5.9.3
 
+  packages/mcp-servers/jde-oneworld:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/jde-world:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/jenkins:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
   packages/mcp-servers/jira:
     dependencies:
       '@modelcontextprotocol/sdk':
@@ -1047,6 +1814,58 @@ importers:
       '@types/node':
         specifier: ^20.10.6
         version: 20.19.30
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/jumpcloud:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/keap:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/linear:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/looker:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
       typescript:
         specifier: ^5.3.3
         version: 5.9.3
@@ -1106,6 +1925,32 @@ importers:
         specifier: ^5.3.3
         version: 5.9.3
 
+  packages/mcp-servers/micro-focus:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/monday-com:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
   packages/mcp-servers/mongodb:
     dependencies:
       '@modelcontextprotocol/sdk':
@@ -1118,6 +1963,32 @@ importers:
       '@types/node':
         specifier: ^20.10.6
         version: 20.19.30
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/ms-teams:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/murex:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
       typescript:
         specifier: ^5.3.3
         version: 5.9.3
@@ -1151,6 +2022,19 @@ importers:
         specifier: ^5.3.3
         version: 5.9.3
 
+  packages/mcp-servers/neon:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
   packages/mcp-servers/netsuite:
     dependencies:
       '@modelcontextprotocol/sdk':
@@ -1173,6 +2057,58 @@ importers:
         specifier: ^5.3.3
         version: 5.9.3
 
+  packages/mcp-servers/nimble:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/notion:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/okta:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/opentext:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
   packages/mcp-servers/oracle:
     dependencies:
       '@modelcontextprotocol/sdk':
@@ -1188,6 +2124,19 @@ importers:
       '@types/oracledb':
         specifier: ^6.3.0
         version: 6.10.1
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/oracle-ebs:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
       typescript:
         specifier: ^5.3.3
         version: 5.9.3
@@ -1231,6 +2180,58 @@ importers:
         specifier: ^5.3.3
         version: 5.9.3
 
+  packages/mcp-servers/peoplesoft-crm:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/peoplesoft-financials:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/pipedrive:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/planetscale:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
   packages/mcp-servers/postgresql:
     dependencies:
       '@modelcontextprotocol/sdk':
@@ -1243,6 +2244,58 @@ importers:
       '@types/pg':
         specifier: ^8.11.0
         version: 8.16.0
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/power-bi:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/prestashop:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/progress-software:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/qlik:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
       typescript:
         specifier: ^5.3.3
         version: 5.9.3
@@ -1272,6 +2325,45 @@ importers:
       '@types/node':
         specifier: ^20.10.6
         version: 20.19.30
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/redshift:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/reuters-3000:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/rippling:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
       typescript:
         specifier: ^5.3.3
         version: 5.9.3
@@ -1331,6 +2423,19 @@ importers:
         specifier: ^5.3.3
         version: 5.9.3
 
+  packages/mcp-servers/sap-enterprise:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
   packages/mcp-servers/sap-hana:
     dependencies:
       '@modelcontextprotocol/sdk':
@@ -1343,6 +2448,45 @@ importers:
       '@types/node':
         specifier: ^20.10.6
         version: 20.19.30
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/sap-r2:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/sap-r3:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/sap-s4hana:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
       typescript:
         specifier: ^5.3.3
         version: 5.9.3
@@ -1399,6 +2543,71 @@ importers:
         specifier: ^5.3.3
         version: 5.9.3
 
+  packages/mcp-servers/simcorp:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/slack:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/smartsheet:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/snowflake:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/sqlite:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
   packages/mcp-servers/sqlserver:
     dependencies:
       '@modelcontextprotocol/sdk':
@@ -1418,6 +2627,110 @@ importers:
         specifier: ^5.3.3
         version: 5.9.3
 
+  packages/mcp-servers/squarespace:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/starburst:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/stripe:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/sugarcrm:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/supabase:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/swift-fin:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/tableau:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/tcs:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
   packages/mcp-servers/temenos:
     dependencies:
       '@modelcontextprotocol/sdk':
@@ -1427,6 +2740,45 @@ importers:
         specifier: ^1.6.7
         version: 1.13.2
     devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/temenos-t24:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/teradata:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/trello:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+    devDependencies:
+      '@types/node':
+        specifier: ^20.10.6
+        version: 20.19.30
       typescript:
         specifier: ^5.3.3
         version: 5.9.3
@@ -1457,6 +2809,45 @@ importers:
         specifier: ^5.3.3
         version: 5.9.3
 
+  packages/mcp-servers/unisys-clearpath:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/wipro:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/woocommerce:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
   packages/mcp-servers/workday:
     dependencies:
       '@modelcontextprotocol/sdk':
@@ -1470,6 +2861,32 @@ importers:
         specifier: ^5.3.3
         version: 5.9.3
 
+  packages/mcp-servers/wrike:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/xero:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
   packages/mcp-servers/zendesk:
     dependencies:
       '@modelcontextprotocol/sdk':
@@ -1479,6 +2896,45 @@ importers:
       '@types/node':
         specifier: ^20.10.6
         version: 20.19.30
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/zendesk-sell:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/zoho-crm:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+
+  packages/mcp-servers/zoom:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.0.0
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
+      axios:
+        specifier: ^1.6.7
+        version: 1.13.2
+    devDependencies:
       typescript:
         specifier: ^5.3.3
         version: 5.9.3
@@ -1499,7 +2955,7 @@ importers:
         version: 0.15.0
       '@modelcontextprotocol/sdk':
         specifier: ^1.0.0
-        version: 1.25.2(hono@4.11.4)(zod@3.23.8)
+        version: 1.25.2(hono@4.11.4)(zod@3.25.76)
       '@supabase/supabase-js':
         specifier: ^2.47.10
         version: 2.91.0
@@ -1514,7 +2970,7 @@ importers:
         version: 0.5.0
       openai:
         specifier: ^4.52.7
-        version: 4.104.0(ws@8.19.0)(zod@3.23.8)
+        version: 4.104.0(ws@8.19.0)(zod@3.25.76)
       pino:
         specifier: ^9.0.0
         version: 9.14.0
@@ -1525,8 +2981,8 @@ importers:
         specifier: ^9.0.0
         version: 9.0.1
       zod:
-        specifier: ^3.23.8
-        version: 3.23.8
+        specifier: ^3.25.0
+        version: 3.25.76
     devDependencies:
       '@types/express':
         specifier: ^4.17.21
@@ -8158,7 +9614,7 @@ packages:
     resolution: {integrity: sha512-k158pK7wdC2qL3M5NcZROZ2tR/l7zOzjxXd5VGdcfIyoijjQqpHd3JKtYSBDpDZ38UI2WJWuFAtkMDxmx5kstA==}
 
   remark-gfm@4.0.1:
-    resolution: {integrity: sha512-1quofZ2RQ9EWdeN34S79+KExV17200+wCUGop5CPL1WGdD0ocPpu91lzPGbwWMECpEpd42kJGQwzRfyov9j4yNg==}
+    resolution: {integrity: sha512-1quofZ2RQ9EWdeN34S79+KExV1764+wCUGop5CPL1WGdD0ocPpu91lzPGbwWMECpEpd42kJGQwzRfyov9j4yNg==}
 
   remark-parse@11.0.0:
     resolution: {integrity: sha512-FCxlKLNGknS5ba/1lmpYijMUzX2esxW5xQqjWxw2eHFfS2MSdaHVINFmhjo+qN1WhZhNimq0dZATN9pH0IDrpA==}
@@ -8720,7 +10176,7 @@ packages:
     resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}
 
   thenify-all@1.6.0:
-    resolution: {integrity: sha512-RNxQH/qI8/t3thXJDwcstUO4zeqo200+Uy/+sNVRBx4Xn2OX+OZ9oP+iJnNFqplFra2ZUVeKCSa2oVWi3T4uVmA==}
+    resolution: {integrity: sha512-RNxQH/qI8/t3thXJDwcstUO4zeqo64+Uy/+sNVRBx4Xn2OX+OZ9oP+iJnNFqplFra2ZUVeKCSa2oVWi3T4uVmA==}
     engines: {node: '>=0.8'}
 
   thenify@3.3.1:
@@ -11398,29 +12854,7 @@ snapshots:
     dependencies:
       content-type: 1.0.5
       raw-body: 3.0.2
-      zod: 3.23.8
-
-  '@modelcontextprotocol/sdk@1.25.2(hono@4.11.4)(zod@3.23.8)':
-    dependencies:
-      '@hono/node-server': 1.19.9(hono@4.11.4)
-      ajv: 8.17.1
-      ajv-formats: 3.0.1(ajv@8.17.1)
-      content-type: 1.0.5
-      cors: 2.8.5
-      cross-spawn: 7.0.6
-      eventsource: 3.0.7
-      eventsource-parser: 3.0.6
-      express: 5.2.1
-      express-rate-limit: 7.5.1(express@5.2.1)
-      jose: 6.1.3
-      json-schema-typed: 8.0.2
-      pkce-challenge: 5.0.1
-      raw-body: 3.0.2
-      zod: 3.23.8
-      zod-to-json-schema: 3.25.1(zod@3.23.8)
-    transitivePeerDependencies:
-      - hono
-      - supports-color
+      zod: 3.25.76
 
   '@modelcontextprotocol/sdk@1.25.2(hono@4.11.4)(zod@3.25.76)':
     dependencies:
@@ -19264,10 +20698,6 @@ snapshots:
       archiver-utils: 3.0.4
       compress-commons: 4.1.2
       readable-stream: 3.6.2
-
-  zod-to-json-schema@3.25.1(zod@3.23.8):
-    dependencies:
-      zod: 3.23.8
 
   zod-to-json-schema@3.25.1(zod@3.25.76):
     dependencies:
