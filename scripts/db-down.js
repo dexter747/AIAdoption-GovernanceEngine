@@ -53,13 +53,14 @@ function getSupabaseConfig(env) {
 
 const DROP_SQL = `
 -- =============================================
--- Velanova Schema Tear-Down (DESTRUCTIVE)
+-- Velanova Full Schema Tear-Down (DESTRUCTIVE)
+-- 41 tables + views + functions
 -- =============================================
 
 -- Drop views first
 DROP VIEW IF EXISTS public.device_activations CASCADE;
 
--- Drop all functions
+-- Drop all helper functions
 DROP FUNCTION IF EXISTS public.get_daily_usage CASCADE;
 DROP FUNCTION IF EXISTS public.get_monthly_usage CASCADE;
 DROP FUNCTION IF EXISTS public.get_active_subscription CASCADE;
@@ -71,9 +72,55 @@ DROP FUNCTION IF EXISTS public.get_user_connections CASCADE;
 DROP FUNCTION IF EXISTS public.update_provider_key_usage CASCADE;
 DROP FUNCTION IF EXISTS public.get_payment_history CASCADE;
 DROP FUNCTION IF EXISTS public.generate_invoice_number CASCADE;
+DROP FUNCTION IF EXISTS public.set_invoice_number CASCADE;
+DROP FUNCTION IF EXISTS public.handle_new_user CASCADE;
 DROP FUNCTION IF EXISTS public.handle_updated_at CASCADE;
+DROP FUNCTION IF EXISTS public.update_updated_at_column CASCADE;
+DROP FUNCTION IF EXISTS public.update_updated_at CASCADE;
+DROP FUNCTION IF EXISTS public.set_updated_at CASCADE;
 
--- Drop tables (in dependency order)
+-- Fraud Detection tables (UC3)
+DROP TABLE IF EXISTS public.fraud_investigations CASCADE;
+DROP TABLE IF EXISTS public.fraud_patterns CASCADE;
+DROP TABLE IF EXISTS public.fraud_alerts CASCADE;
+DROP TABLE IF EXISTS public.transactions CASCADE;
+
+-- KYC & Onboarding tables (UC1)
+DROP TABLE IF EXISTS public.onboarding_workflows CASCADE;
+DROP TABLE IF EXISTS public.kyc_documents CASCADE;
+DROP TABLE IF EXISTS public.kyc_checks CASCADE;
+DROP TABLE IF EXISTS public.clients CASCADE;
+
+-- Procurement tables (UC4)
+DROP TABLE IF EXISTS public.procurement_reviews CASCADE;
+DROP TABLE IF EXISTS public.contract_clauses CASCADE;
+DROP TABLE IF EXISTS public.contracts CASCADE;
+
+-- Regulatory tables (UC2)
+DROP TABLE IF EXISTS public.compliance_assessments CASCADE;
+DROP TABLE IF EXISTS public.regulatory_changes CASCADE;
+DROP TABLE IF EXISTS public.regulatory_sources CASCADE;
+
+-- Resource tables (UC6) — before projects
+DROP TABLE IF EXISTS public.capacity_plans CASCADE;
+DROP TABLE IF EXISTS public.resource_allocations CASCADE;
+DROP TABLE IF EXISTS public.resources CASCADE;
+
+-- Project tables (UC5)
+DROP TABLE IF EXISTS public.project_insights CASCADE;
+DROP TABLE IF EXISTS public.project_risks CASCADE;
+DROP TABLE IF EXISTS public.project_tasks CASCADE;
+DROP TABLE IF EXISTS public.projects CASCADE;
+
+-- BI tables (UC7)
+DROP TABLE IF EXISTS public.query_visualizations CASCADE;
+DROP TABLE IF EXISTS public.query_history CASCADE;
+DROP TABLE IF EXISTS public.saved_queries CASCADE;
+
+-- Email Auth
+DROP TABLE IF EXISTS public.auth_tokens CASCADE;
+
+-- Core platform tables
 DROP TABLE IF EXISTS public.audit_log CASCADE;
 DROP TABLE IF EXISTS public.team_members CASCADE;
 DROP TABLE IF EXISTS public.chat_messages CASCADE;
@@ -92,7 +139,7 @@ DROP TABLE IF EXISTS public.subscriptions CASCADE;
 DROP TABLE IF EXISTS public.users CASCADE;
 
 -- Confirmation
-DO $$ BEGIN RAISE NOTICE '🗑️  All Velanova tables, views, and functions dropped.'; END $$;
+DO $$ BEGIN RAISE NOTICE '🗑️  All 41 Velanova tables, views, and functions dropped.'; END $$;
 `;
 
 // ---------- Prompt ----------
@@ -124,11 +171,18 @@ async function main() {
 
   console.log(`\n  Project: ${config.projectRef}`);
   console.log('');
-  console.log('  Tables to drop:');
-  console.log('    users, subscriptions, licenses, license_activations,');
-  console.log('    payment_sessions, payments, invoices, usage_records,');
-  console.log('    usage_logs, api_keys, user_provider_keys, user_connections,');
-  console.log('    chat_sessions, chat_messages, team_members, audit_log');
+  console.log('  Tables to drop (41 total):');
+  console.log('    Core: users, subscriptions, licenses, license_activations,');
+  console.log('          payment_sessions, payments, invoices, usage_records,');
+  console.log('          usage_logs, api_keys, user_provider_keys, user_connections,');
+  console.log('          chat_sessions, chat_messages, team_members, audit_log, auth_tokens');
+  console.log('    BI:   saved_queries, query_history, query_visualizations');
+  console.log('    Proj: projects, project_tasks, project_risks, project_insights');
+  console.log('    Res:  resources, resource_allocations, capacity_plans');
+  console.log('    Reg:  regulatory_sources, regulatory_changes, compliance_assessments');
+  console.log('    Proc: contracts, contract_clauses, procurement_reviews');
+  console.log('    KYC:  clients, kyc_checks, kyc_documents, onboarding_workflows');
+  console.log('    Fraud: transactions, fraud_alerts, fraud_patterns, fraud_investigations');
   console.log('');
 
   if (dryRun) {

@@ -63,3 +63,4 @@ temp/
 # Misc
 .turbo/
 .cache/
+supabase/.temp/

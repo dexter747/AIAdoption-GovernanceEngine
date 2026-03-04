@@ -24,7 +24,7 @@ import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const ROOT_DIR = join(dirname(fileURLToPath(import.meta.url)), '..');
-const SCHEMA_FILE = join(ROOT_DIR, 'database', 'schema-unified.sql');
+const SCHEMA_FILE = join(ROOT_DIR, 'database', 'schema-complete.sql');
 
 // ---------- Config ----------
 
