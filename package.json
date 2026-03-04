@@ -11,7 +11,7 @@
     "dev:admin": "pnpm --filter admin-dashboard dev",
     "dev:desktop": "pnpm --filter desktop-app dev",
     "dev:api": "pnpm --filter cloud-backend dev",
-    "dev:express": "node apps/express-api/server.js",
+    "dev:express": "cd apps/express-api && node src/index.js",
     "dev:all": "pnpm kill-ports && pnpm --parallel --stream run dev",
     "build": "pnpm --recursive run build",
     "build:landing": "pnpm --filter landing-site build",

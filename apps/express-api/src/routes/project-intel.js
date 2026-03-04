@@ -61,7 +61,7 @@ router.get('/dashboard', validateJwt, async (req, res, next) => {
 });
 
 /* ── Projects CRUD ────────────────────────────────────────────────── */
-router.get('/projects', validateJwt, async (req, res, next) => {
+router.get('/', validateJwt, async (req, res, next) => {
   try {
     const { status, priority, limit, offset } = req.query;
     const data = await ProjectIntelService.getProjects(req.user.id, {
@@ -71,14 +71,14 @@ router.get('/projects', validateJwt, async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-router.get('/projects/:id', validateJwt, async (req, res, next) => {
+router.get('/:id', validateJwt, async (req, res, next) => {
   try {
     const data = await ProjectIntelService.getProject(req.user.id, req.params.id);
     res.json({ success: true, data });
   } catch (err) { next(err); }
 });
 
-router.post('/projects', validateJwt, async (req, res, next) => {
+router.post('/', validateJwt, async (req, res, next) => {
   try {
     const body = createProjectSchema.parse(req.body);
     const data = await ProjectIntelService.createProject(req.user.id, body);
@@ -86,7 +86,7 @@ router.post('/projects', validateJwt, async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-router.patch('/projects/:id', validateJwt, async (req, res, next) => {
+router.patch('/:id', validateJwt, async (req, res, next) => {
   try {
     const body = updateProjectSchema.parse(req.body);
     const data = await ProjectIntelService.updateProject(req.user.id, req.params.id, body);
@@ -94,7 +94,7 @@ router.patch('/projects/:id', validateJwt, async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-router.delete('/projects/:id', validateJwt, async (req, res, next) => {
+router.delete('/:id', validateJwt, async (req, res, next) => {
   try {
     await ProjectIntelService.deleteProject(req.user.id, req.params.id);
     res.json({ success: true });
@@ -102,14 +102,14 @@ router.delete('/projects/:id', validateJwt, async (req, res, next) => {
 });
 
 /* ── Tasks ────────────────────────────────────────────────────────── */
-router.get('/projects/:id/tasks', validateJwt, async (req, res, next) => {
+router.get('/:id/tasks', validateJwt, async (req, res, next) => {
   try {
     const data = await ProjectIntelService.getTasks(req.user.id, req.params.id, { status: req.query.status });
     res.json({ success: true, data });
   } catch (err) { next(err); }
 });
 
-router.post('/projects/:id/tasks', validateJwt, async (req, res, next) => {
+router.post('/:id/tasks', validateJwt, async (req, res, next) => {
   try {
     const body = createTaskSchema.parse(req.body);
     const data = await ProjectIntelService.createTask(req.user.id, req.params.id, body);
@@ -133,14 +133,14 @@ router.delete('/tasks/:id', validateJwt, async (req, res, next) => {
 });
 
 /* ── Risks ────────────────────────────────────────────────────────── */
-router.get('/projects/:id/risks', validateJwt, async (req, res, next) => {
+router.get('/:id/risks', validateJwt, async (req, res, next) => {
   try {
     const data = await ProjectIntelService.getRisks(req.user.id, req.params.id);
     res.json({ success: true, data });
   } catch (err) { next(err); }
 });
 
-router.post('/projects/:id/risks', validateJwt, async (req, res, next) => {
+router.post('/:id/risks', validateJwt, async (req, res, next) => {
   try {
     const body = createRiskSchema.parse(req.body);
     const data = await ProjectIntelService.createRisk(req.user.id, req.params.id, body);
@@ -157,14 +157,14 @@ router.patch('/risks/:id', validateJwt, async (req, res, next) => {
 });
 
 /* ── AI Analysis ──────────────────────────────────────────────────── */
-router.post('/projects/:id/analyze-health', validateJwt, async (req, res, next) => {
+router.post('/:id/analyze-health', validateJwt, async (req, res, next) => {
   try {
     const data = await ProjectIntelService.analyzeHealth(req.user.id, req.params.id);
     res.json({ success: true, data });
   } catch (err) { next(err); }
 });
 
-router.post('/projects/:id/detect-risks', validateJwt, async (req, res, next) => {
+router.post('/:id/detect-risks', validateJwt, async (req, res, next) => {
   try {
     const data = await ProjectIntelService.detectRisks(req.user.id, req.params.id);
     res.json({ success: true, data });
@@ -172,7 +172,7 @@ router.post('/projects/:id/detect-risks', validateJwt, async (req, res, next) =>
 });
 
 /* ── Insights ─────────────────────────────────────────────────────── */
-router.get('/projects/:id/insights', validateJwt, async (req, res, next) => {
+router.get('/:id/insights', validateJwt, async (req, res, next) => {
   try {
     const { type, limit } = req.query;
     const data = await ProjectIntelService.getInsights(req.user.id, req.params.id, { type, limit: Number(limit) || 50 });

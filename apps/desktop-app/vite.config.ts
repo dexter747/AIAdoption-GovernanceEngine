@@ -57,6 +57,12 @@ export default defineConfig({
   server: {
     port: 5199,
     strictPort: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5500',
+        changeOrigin: true,
+      },
+    },
     // Pre-warm the most-visited routes so first navigation feels instant
     warmup: {
       clientFiles: [

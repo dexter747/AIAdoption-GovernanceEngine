@@ -3,6 +3,11 @@
  * Centralizes all environment configuration
  */
 
+// Load .env FIRST — must happen before any process.env reads
+// In ESM, imports are hoisted, so dotenv must be called inside the first module
+import dotenv from 'dotenv';
+dotenv.config();
+
 import { createClient } from '@supabase/supabase-js';
 
 // Validate required environment variables

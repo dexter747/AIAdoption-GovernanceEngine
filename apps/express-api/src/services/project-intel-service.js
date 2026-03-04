@@ -3,7 +3,7 @@
  * AI-powered project health analysis, risk detection, and forecasting
  */
 
-import { supabase } from '../config/supabase.js';
+import { supabase } from '../config/index.js';
 import { AIService } from './ai/index.js';
 import { createLogger } from '../utils/logger.js';
 

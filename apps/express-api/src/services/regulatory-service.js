@@ -3,7 +3,7 @@
  * AI-powered regulatory monitoring, impact analysis, and compliance tracking
  */
 
-import { supabase } from '../config/supabase.js';
+import { supabase } from '../config/index.js';
 import { AIService } from './ai/index.js';
 import { createLogger } from '../utils/logger.js';
 
