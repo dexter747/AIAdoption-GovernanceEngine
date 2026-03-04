@@ -197,12 +197,12 @@ Respond ONLY with valid JSON:
 }`;
 
     try {
-      const aiResult = await AIService.chat(
-        [{ role: 'system', content: 'You are a project management AI that analyzes projects and provides structured JSON analysis.' }, { role: 'user', content: prompt }],
-        { userId, temperature: 0.2 }
-      );
+      const aiResult = await AIService.chat({
+        messages: [{ role: 'system', content: 'You are a project management AI that analyzes projects and provides structured JSON analysis.' }, { role: 'user', content: prompt }],
+        userId, temperature: 0.2,
+      });
 
-      const text = aiResult.content || aiResult.message?.content || '';
+      const text = aiResult.message?.content || '';
       const jsonMatch = text.match(/\{[\s\S]*\}/);
       if (!jsonMatch) throw new Error('No JSON in AI response');
       const analysis = JSON.parse(jsonMatch[0]);
@@ -261,11 +261,11 @@ Return ONLY valid JSON array:
 [{ "title": "<risk>", "description": "<detail>", "category": "technical|resource|schedule|budget|scope|external", "likelihood": "low|medium|high|critical", "impact": "low|medium|high|critical", "mitigation": "<suggested action>" }]`;
 
     try {
-      const aiResult = await AIService.chat(
-        [{ role: 'system', content: 'You are a project risk analyst. Return JSON only.' }, { role: 'user', content: prompt }],
-        { userId, temperature: 0.3 }
-      );
-      const text = aiResult.content || aiResult.message?.content || '';
+      const aiResult = await AIService.chat({
+        messages: [{ role: 'system', content: 'You are a project risk analyst. Return JSON only.' }, { role: 'user', content: prompt }],
+        userId, temperature: 0.3,
+      });
+      const text = aiResult.message?.content || '';
       const jsonMatch = text.match(/\[[\s\S]*\]/);
       if (!jsonMatch) return [];
       const detected = JSON.parse(jsonMatch[0]);

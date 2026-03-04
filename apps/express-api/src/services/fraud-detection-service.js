@@ -1,5 +1,5 @@
 import { supabase } from '../config/index.js';
-import AIService from './ai-service.js';
+import { AIService } from './ai/index.js';
 
 class FraudDetectionService {
   /* ── Transactions ── */
@@ -121,12 +121,14 @@ Return JSON:
 }`;
 
     try {
-      const response = await AIService.chat([
-        { role: 'system', content: 'You are a fraud detection AI. Return valid JSON only.' },
-        { role: 'user', content: prompt },
-      ], { temperature: 0.1, userId });
+      const response = await AIService.chat({
+        messages: [
+          { role: 'system', content: 'You are a fraud detection AI. Return valid JSON only.' },
+          { role: 'user', content: prompt },
+        ], temperature: 0.1, userId,
+      });
 
-      const text = response.choices?.[0]?.message?.content || response.content || '';
+      const text = response.message?.content || '';
       const match = text.match(/\{[\s\S]*\}/);
       const result = match ? JSON.parse(match[0]) : { riskScore: 30, fraudProbability: 0.1, indicators: [], reasoning: 'AI analysis unavailable', recommendedAction: 'review', alerts: [] };
 
@@ -178,12 +180,14 @@ Return JSON:
 }`;
 
     try {
-      const response = await AIService.chat([
-        { role: 'system', content: 'You are a fraud pattern detection AI. Return valid JSON only.' },
-        { role: 'user', content: prompt },
-      ], { temperature: 0.2, userId });
+      const response = await AIService.chat({
+        messages: [
+          { role: 'system', content: 'You are a fraud pattern detection AI. Return valid JSON only.' },
+          { role: 'user', content: prompt },
+        ], temperature: 0.2, userId,
+      });
 
-      const text = response.choices?.[0]?.message?.content || response.content || '';
+      const text = response.message?.content || '';
       const match = text.match(/\{[\s\S]*\}/);
       const result = match ? JSON.parse(match[0]) : { patterns: [], summary: 'AI analysis unavailable', trendAnalysis: '' };
 

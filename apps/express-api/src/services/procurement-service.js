@@ -83,11 +83,11 @@ Return ONLY valid JSON:
 }`;
 
     try {
-      const ai = await AIService.chat(
-        [{ role: 'system', content: 'You are a procurement and contract risk analyst for Jersey-based organizations. Return JSON only.' }, { role: 'user', content: prompt }],
-        { userId, temperature: 0.2 }
-      );
-      const text = ai.content || ai.message?.content || '';
+      const ai = await AIService.chat({
+        messages: [{ role: 'system', content: 'You are a procurement and contract risk analyst for Jersey-based organizations. Return JSON only.' }, { role: 'user', content: prompt }],
+        userId, temperature: 0.2,
+      });
+      const text = ai.message?.content || '';
       const match = text.match(/\{[\s\S]*\}/);
       if (!match) throw new Error('No JSON');
       const analysis = JSON.parse(match[0]);

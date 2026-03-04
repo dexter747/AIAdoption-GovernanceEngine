@@ -87,12 +87,12 @@ Return ONLY valid JSON:
 }`;
 
     try {
-      const ai = await AIService.chat(
-        [{ role: 'system', content: 'You are a regulatory compliance AI specializing in Jersey financial regulation (JFSC). Return JSON only.' }, { role: 'user', content: prompt }],
-        { userId, temperature: 0.2 }
-      );
+      const ai = await AIService.chat({
+        messages: [{ role: 'system', content: 'You are a regulatory compliance AI specializing in Jersey financial regulation (JFSC). Return JSON only.' }, { role: 'user', content: prompt }],
+        userId, temperature: 0.2,
+      });
 
-      const text = ai.content || ai.message?.content || '';
+      const text = ai.message?.content || '';
       const match = text.match(/\{[\s\S]*\}/);
       if (!match) throw new Error('No JSON');
       const analysis = JSON.parse(match[0]);
@@ -141,11 +141,11 @@ Return ONLY a valid JSON array:
 }]`;
 
     try {
-      const ai = await AIService.chat(
-        [{ role: 'system', content: 'You are a regulatory intelligence scanner. Return JSON only.' }, { role: 'user', content: prompt }],
-        { userId, temperature: 0.2 }
-      );
-      const text2 = ai.content || ai.message?.content || '';
+      const ai = await AIService.chat({
+        messages: [{ role: 'system', content: 'You are a regulatory intelligence scanner. Return JSON only.' }, { role: 'user', content: prompt }],
+        userId, temperature: 0.2,
+      });
+      const text2 = ai.message?.content || '';
       const match = text2.match(/\[[\s\S]*\]/);
       if (!match) return [];
       const detected = JSON.parse(match[0]);

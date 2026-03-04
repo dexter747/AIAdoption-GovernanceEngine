@@ -1,5 +1,5 @@
 import { supabase } from '../config/index.js';
-import AIService from './ai-service.js';
+import { AIService } from './ai/index.js';
 
 class KYCService {
   /* ── Clients ── */
@@ -210,12 +210,14 @@ Return JSON:
 }`;
 
     try {
-      const response = await AIService.chat([
-        { role: 'system', content: 'You are a KYC/AML compliance risk assessor. Return valid JSON only.' },
-        { role: 'user', content: prompt },
-      ], { temperature: 0.2, userId });
+      const response = await AIService.chat({
+        messages: [
+          { role: 'system', content: 'You are a KYC/AML compliance risk assessor. Return valid JSON only.' },
+          { role: 'user', content: prompt },
+        ], temperature: 0.2, userId,
+      });
 
-      const text = response.choices?.[0]?.message?.content || response.content || '';
+      const text = response.message?.content || '';
       const match = text.match(/\{[\s\S]*\}/);
       const result = match ? JSON.parse(match[0]) : { riskScore: 50, riskRating: 'standard', factors: [], recommendations: ['AI analysis unavailable'], summary: 'Manual review required' };
 
@@ -270,12 +272,14 @@ Return JSON:
 }`;
 
     try {
-      const response = await AIService.chat([
-        { role: 'system', content: 'You are a KYC document verification AI. Return valid JSON only.' },
-        { role: 'user', content: prompt },
-      ], { temperature: 0.1, userId });
+      const response = await AIService.chat({
+        messages: [
+          { role: 'system', content: 'You are a KYC document verification AI. Return valid JSON only.' },
+          { role: 'user', content: prompt },
+        ], temperature: 0.1, userId,
+      });
 
-      const text = response.choices?.[0]?.message?.content || response.content || '';
+      const text = response.message?.content || '';
       const match = text.match(/\{[\s\S]*\}/);
       const result = match ? JSON.parse(match[0]) : { extractedData: {}, verificationResult: { authentic: false, confidence: 0 }, recommendation: 'needs_review', notes: 'AI parsing failed' };
 

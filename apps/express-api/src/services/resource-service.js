@@ -129,11 +129,11 @@ Return ONLY valid JSON:
 }`;
 
     try {
-      const aiResult = await AIService.chat(
-        [{ role: 'system', content: 'You are a resource planning AI. Return JSON only.' }, { role: 'user', content: prompt }],
-        { userId, temperature: 0.3 }
-      );
-      const text = aiResult.content || aiResult.message?.content || '';
+      const aiResult = await AIService.chat({
+        messages: [{ role: 'system', content: 'You are a resource planning AI. Return JSON only.' }, { role: 'user', content: prompt }],
+        userId, temperature: 0.3,
+      });
+      const text = aiResult.message?.content || '';
       const jsonMatch = text.match(/\{[\s\S]*\}/);
       if (!jsonMatch) throw new Error('No JSON');
       return JSON.parse(jsonMatch[0]);
