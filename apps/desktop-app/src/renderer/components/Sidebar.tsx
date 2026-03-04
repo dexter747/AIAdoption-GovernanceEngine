@@ -13,6 +13,13 @@ import {
   PanelLeftClose,
   PanelLeft,
   Brain,
+  BarChart3,
+  Kanban,
+  Users2,
+  Scale,
+  ShoppingCart,
+  ScanSearch,
+  ShieldAlert,
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
@@ -20,6 +27,16 @@ const workspaceNav = [
   { name: 'Library', href: '/library', icon: Library },
   { name: 'My Connections', href: '/my-connections', icon: FolderOpen },
   { name: 'Contexts', href: '/contexts', icon: Brain },
+];
+
+const solutionsNav = [
+  { name: 'Business Intel', href: '/business-intel', icon: BarChart3 },
+  { name: 'Project Intel', href: '/project-intel', icon: Kanban },
+  { name: 'Resources', href: '/resource-planning', icon: Users2 },
+  { name: 'Regulatory', href: '/regulatory-intel', icon: Scale },
+  { name: 'Procurement', href: '/procurement', icon: ShoppingCart },
+  { name: 'KYC', href: '/kyc', icon: ScanSearch },
+  { name: 'Fraud Detection', href: '/fraud-detection', icon: ShieldAlert },
 ];
 
 const settingsNav = [
@@ -138,6 +155,22 @@ export default function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
         )}
         <div className="space-y-0.5">
           {workspaceNav.map(item => (
+            <div key={item.href}>{navLink(item.href, item.icon, item.name)}</div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Solutions section ── */}
+      <div className={cn('px-2 pt-5 flex-shrink-0', collapsed && 'px-1.5')}>
+        {!collapsed ? (
+          <p className="px-2.5 mb-1.5 text-[10px] font-medium text-zinc-600 uppercase tracking-widest">
+            Solutions
+          </p>
+        ) : (
+          <div className="h-px bg-white/[0.055] mx-auto mb-2" />
+        )}
+        <div className="space-y-0.5">
+          {solutionsNav.map(item => (
             <div key={item.href}>{navLink(item.href, item.icon, item.name)}</div>
           ))}
         </div>

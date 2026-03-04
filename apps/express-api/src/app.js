@@ -20,6 +20,13 @@ import licenseRoutes from './routes/licenses.js';
 import usageRoutes from './routes/usage.js';
 import userApiKeysRoutes from './routes/user-api-keys.js';
 import userConnectionsRoutes from './routes/user-connections.js';
+import biQueriesRoutes from './routes/bi-queries.js';
+import projectIntelRoutes from './routes/project-intel.js';
+import resourceRoutes from './routes/resources.js';
+import regulatoryRoutes from './routes/regulatory.js';
+import procurementRoutes from './routes/procurement.js';
+import kycRoutes from './routes/kyc.js';
+import fraudRoutes from './routes/fraud-detection.js';
 
 export function createApp() {
   const app = express();
@@ -106,6 +113,13 @@ export function createApp() {
   app.use('/api/usage', usageRoutes);
   app.use('/api/user/api-keys', userApiKeysRoutes);
   app.use('/api/user/connections', userConnectionsRoutes);
+  app.use('/api/bi', biQueriesRoutes);
+  app.use('/api/projects', projectIntelRoutes);
+  app.use('/api/resources', resourceRoutes);
+  app.use('/api/regulatory', regulatoryRoutes);
+  app.use('/api/procurement', procurementRoutes);
+  app.use('/api/kyc', kycRoutes);
+  app.use('/api/fraud', fraudRoutes);
 
   // Legacy compatibility routes
   app.get('/api/status', (req, res) => {

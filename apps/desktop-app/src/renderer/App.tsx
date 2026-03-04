@@ -29,6 +29,15 @@ const LibraryPage = lazy(() => import('./pages/LibraryPage'));
 const MyConnectionsPage = lazy(() => import('./pages/MyConnectionsPage'));
 const ContextManager = lazy(() => import('./components/ContextManager'));
 
+// ── Solutions pages ────────────────────────────────────────────────────────────
+const BusinessIntelPage = lazy(() => import('./pages/BusinessIntelPage'));
+const ProjectIntelPage = lazy(() => import('./pages/ProjectIntelPage'));
+const ResourcePlanningPage = lazy(() => import('./pages/ResourcePlanningPage'));
+const RegulatoryIntelPage = lazy(() => import('./pages/RegulatoryIntelPage'));
+const ProcurementPage = lazy(() => import('./pages/ProcurementPage'));
+const KYCDashboardPage = lazy(() => import('./pages/KYCDashboardPage'));
+const FraudDetectionPage = lazy(() => import('./pages/FraudDetectionPage'));
+
 // ── Tiny spinner shown while a lazy chunk is downloading ───────────────────
 const PageFallback = memo(() => (
   <div className="flex-1 flex items-center justify-center">
@@ -277,6 +286,14 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
+        {/* Solutions routes */}
+        <Route path="/business-intel" element={<ProtectedRoute><AppLayout><BusinessIntelPage /></AppLayout></ProtectedRoute>} />
+        <Route path="/project-intel" element={<ProtectedRoute><AppLayout><ProjectIntelPage /></AppLayout></ProtectedRoute>} />
+        <Route path="/resource-planning" element={<ProtectedRoute><AppLayout><ResourcePlanningPage /></AppLayout></ProtectedRoute>} />
+        <Route path="/regulatory-intel" element={<ProtectedRoute><AppLayout><RegulatoryIntelPage /></AppLayout></ProtectedRoute>} />
+        <Route path="/procurement" element={<ProtectedRoute><AppLayout><ProcurementPage /></AppLayout></ProtectedRoute>} />
+        <Route path="/kyc" element={<ProtectedRoute><AppLayout><KYCDashboardPage /></AppLayout></ProtectedRoute>} />
+        <Route path="/fraud-detection" element={<ProtectedRoute><AppLayout><FraudDetectionPage /></AppLayout></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>
