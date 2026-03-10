@@ -78,6 +78,46 @@ export function errorHandler(err, req, res, next) {
     message = 'Invalid JSON in request body';
   }
 
+  // Handle PostgreSQL / Supabase errors
+  if (err.code && typeof err.code === 'string' && /^[0-9A-Z]{5}$/.test(err.code)) {
+    switch (err.code) {
+      case '22P02': // invalid input syntax (e.g. non-UUID where UUID expected)
+        statusCode = 400;
+        code = 'INVALID_INPUT';
+        message = err.message || 'Invalid input value';
+        break;
+      case '23505': // unique_violation
+        statusCode = 409;
+        code = 'DUPLICATE';
+        message = 'Resource already exists';
+        break;
+      case '23503': // foreign_key_violation
+        statusCode = 400;
+        code = 'REFERENCE_ERROR';
+        message = 'Referenced resource not found';
+        break;
+      case '42P01': // undefined_table
+        statusCode = 500;
+        code = 'TABLE_NOT_FOUND';
+        message = 'Database table not configured';
+        break;
+      case '42501': // insufficient_privilege
+        statusCode = 403;
+        code = 'DB_FORBIDDEN';
+        message = 'Insufficient database permissions';
+        break;
+      case 'PGRST116': // PostgREST: no rows returned for .single()
+        statusCode = 404;
+        code = 'NOT_FOUND';
+        message = 'Resource not found';
+        break;
+      default:
+        // Keep 500 for unknown DB errors but tag them
+        code = `DB_ERROR_${err.code}`;
+        break;
+    }
+  }
+
   // Log error
   if (statusCode >= 500) {
     logger.error({

@@ -32,6 +32,7 @@ import remarkGfm from 'remark-gfm';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../lib/utils';
 import { useAuth } from '../hooks/useAuth';
+import { useCachedAvatar } from '../hooks/useCachedAvatar';
 import { useLocation } from 'react-router-dom';
 
 interface Message {
@@ -393,6 +394,7 @@ function getContextWindowConfig(modelId: string): {
 
 export default function ModernChatPage() {
   const { user } = useAuth();
+  const avatarUrl = useCachedAvatar(user?.image);
   const location = useLocation();
   const [sessions, setSessions] = useState<ChatSession[]>([]);
   const [currentSession, setCurrentSession] = useState<ChatSession | null>(null);
@@ -1477,8 +1479,8 @@ export default function ModernChatPage() {
                     {/* User Avatar */}
                     {message.role === 'user' && (
                       <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center flex-shrink-0 order-2">
-                        {user?.image ? (
-                          <img src={user.image} alt="" className="w-8 h-8 rounded-full" />
+                        {avatarUrl ? (
+                          <img src={avatarUrl} alt="" className="w-8 h-8 rounded-full" />
                         ) : (
                           <User className="w-4 h-4 text-white" />
                         )}

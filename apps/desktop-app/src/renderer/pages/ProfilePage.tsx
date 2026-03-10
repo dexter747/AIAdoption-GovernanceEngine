@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
+import { useCachedAvatar } from '../hooks/useCachedAvatar';
 import { useNavigate } from 'react-router-dom';
 import { Mail, User, CreditCard, Calendar, Shield, ExternalLink, Loader2 } from 'lucide-react';
 
@@ -18,6 +19,7 @@ const PLAN_LABELS: Record<string, { name: string; price: string }> = {
 
 export default function ProfilePage() {
   const { user, logout } = useAuth();
+  const avatarUrl = useCachedAvatar(user?.image);
   const navigate = useNavigate();
   const [subscription, setSubscription] = useState<SubscriptionData | null>(null);
   const [profile, setProfile] = useState<any>(null);
@@ -69,8 +71,8 @@ export default function ProfilePage() {
       {/* Profile Card */}
       <div className="rounded-xl p-6 mb-6 bg-black border-zinc-800">
         <div className="flex items-center gap-6">
-          {user?.image ? (
-            <img src={user.image} alt={user.name} className="w-20 h-20 rounded-full" />
+          {avatarUrl ? (
+            <img src={avatarUrl} alt={user?.name} className="w-20 h-20 rounded-full" />
           ) : (
             <div className="w-20 h-20 bg-zinc-800 rounded-full flex items-center justify-center">
               <span className="text-white text-2xl font-medium">

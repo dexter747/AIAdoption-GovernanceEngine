@@ -166,13 +166,29 @@ function startCallbackServer() {
           };
           let expiresAt = Date.now() + 60 * 60 * 1000; // Default 1 hour
 
+          // Helper: derive a deterministic UUID from non-UUID strings
+          const uuidRe = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+          function toUuid(value: string): string {
+            if (uuidRe.test(value)) return value;
+            const { createHash } = require('crypto');
+            const hash = createHash('sha256').update(value).digest('hex');
+            return [
+              hash.slice(0, 8),
+              hash.slice(8, 12),
+              '4' + hash.slice(13, 16),
+              ((parseInt(hash[16], 16) & 0x3) | 0x8).toString(16) + hash.slice(17, 20),
+              hash.slice(20, 32),
+            ].join('-');
+          }
+
           // Decode JWT payload
           const parts = token.split('.');
           if (parts.length === 3) {
             const payloadBase64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
             const payload = JSON.parse(Buffer.from(payloadBase64, 'base64').toString('utf8'));
+            const rawId = payload.sub || payload.id || payload.email || '';
             user = {
-              id: payload.sub || payload.email,
+              id: toUuid(rawId),
               email: payload.email,
               name: payload.name || payload.email?.split('@')[0],
               image: payload.image,

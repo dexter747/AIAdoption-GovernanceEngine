@@ -37,6 +37,9 @@ const RegulatoryIntelPage = lazy(() => import('./pages/RegulatoryIntelPage'));
 const ProcurementPage = lazy(() => import('./pages/ProcurementPage'));
 const KYCDashboardPage = lazy(() => import('./pages/KYCDashboardPage'));
 const FraudDetectionPage = lazy(() => import('./pages/FraudDetectionPage'));
+const AMLDashboardPage = lazy(() => import('./pages/AMLDashboardPage'));
+const ESGReportingPage = lazy(() => import('./pages/ESGReportingPage'));
+const ClientReportingPage = lazy(() => import('./pages/ClientReportingPage'));
 
 // ── Tiny spinner shown while a lazy chunk is downloading ───────────────────
 const PageFallback = memo(() => (
@@ -294,6 +297,9 @@ function AppRoutes() {
         <Route path="/procurement" element={<ProtectedRoute><AppLayout><ProcurementPage /></AppLayout></ProtectedRoute>} />
         <Route path="/kyc" element={<ProtectedRoute><AppLayout><KYCDashboardPage /></AppLayout></ProtectedRoute>} />
         <Route path="/fraud-detection" element={<ProtectedRoute><AppLayout><FraudDetectionPage /></AppLayout></ProtectedRoute>} />
+        <Route path="/aml" element={<ProtectedRoute><AppLayout><AMLDashboardPage /></AppLayout></ProtectedRoute>} />
+        <Route path="/esg" element={<ProtectedRoute><AppLayout><ESGReportingPage /></AppLayout></ProtectedRoute>} />
+        <Route path="/client-reporting" element={<ProtectedRoute><AppLayout><ClientReportingPage /></AppLayout></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>

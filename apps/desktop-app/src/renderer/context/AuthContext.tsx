@@ -77,8 +77,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           // Decode JWT payload to extract user info (no verification needed here)
           try {
             const payload = JSON.parse(atob(storedToken.split('.')[1]));
+            // Prefer id/sub from the token; the Express API auth middleware
+            // will normalise non-UUID values into deterministic UUIDs.
+            const rawId = payload.id || payload.sub || payload.userId || 'dev-user';
             setUser({
-              id: payload.sub || payload.userId || 'dev-user',
+              id: rawId,
               email: payload.email || 'dev@velanova.ai',
               name: payload.name || 'Dev User',
             });

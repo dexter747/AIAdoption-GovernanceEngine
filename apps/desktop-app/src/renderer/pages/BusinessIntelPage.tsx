@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Send, Database, Sparkles, Copy, Check, Clock, Loader2, AlertCircle,
   Star, StarOff, History, Save, BarChart3, Table2, LineChart, PieChart,
-  Download, Trash2, Search, ChevronDown, TrendingUp, Zap, ArrowRight,
+  Download, Trash2, Search, TrendingUp, Zap, ArrowRight,
 } from 'lucide-react';
 import {
   BarChart, Bar, LineChart as ReLine, Line, PieChart as RePie, Pie, Cell,
@@ -246,7 +246,7 @@ export default function BusinessIntelPage() {
               <CartesianGrid strokeDasharray="3 3" stroke="#1a1a1a" />
               <XAxis dataKey={xKey} tick={{ fill: '#71717a', fontSize: 11 }} />
               <YAxis tick={{ fill: '#71717a', fontSize: 11 }} />
-              <Tooltip contentStyle={{ background: '#0a0a0a', border: '1px solid #27272a', borderRadius: 8 }} />
+              <Tooltip contentStyle={{ background: '#0a0a0a', border: '1px solid #27272a', borderRadius: 8, fontSize: 11 }} />
               <Legend />
               {yKeys.map((key, i) => <Bar key={key} dataKey={key} fill={CHART_COLORS[i % CHART_COLORS.length]} radius={[4, 4, 0, 0]} />)}
             </BarChart>
@@ -259,7 +259,7 @@ export default function BusinessIntelPage() {
               <CartesianGrid strokeDasharray="3 3" stroke="#1a1a1a" />
               <XAxis dataKey={xKey} tick={{ fill: '#71717a', fontSize: 11 }} />
               <YAxis tick={{ fill: '#71717a', fontSize: 11 }} />
-              <Tooltip contentStyle={{ background: '#0a0a0a', border: '1px solid #27272a', borderRadius: 8 }} />
+              <Tooltip contentStyle={{ background: '#0a0a0a', border: '1px solid #27272a', borderRadius: 8, fontSize: 11 }} />
               <Legend />
               {yKeys.map((key, i) => <Line key={key} type="monotone" dataKey={key} stroke={CHART_COLORS[i % CHART_COLORS.length]} strokeWidth={2} dot={false} />)}
             </ReLine>
@@ -272,7 +272,7 @@ export default function BusinessIntelPage() {
               <Pie data={resultData} dataKey={yKeys[0] || resultColumns[1]} nameKey={xKey} cx="50%" cy="50%" outerRadius={120} label>
                 {resultData.map((_, i) => <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />)}
               </Pie>
-              <Tooltip contentStyle={{ background: '#0a0a0a', border: '1px solid #27272a', borderRadius: 8 }} />
+              <Tooltip contentStyle={{ background: '#0a0a0a', border: '1px solid #27272a', borderRadius: 8, fontSize: 11 }} />
               <Legend />
             </RePie>
           </ResponsiveContainer>
@@ -284,7 +284,7 @@ export default function BusinessIntelPage() {
               <CartesianGrid strokeDasharray="3 3" stroke="#1a1a1a" />
               <XAxis dataKey={xKey} tick={{ fill: '#71717a', fontSize: 11 }} />
               <YAxis tick={{ fill: '#71717a', fontSize: 11 }} />
-              <Tooltip contentStyle={{ background: '#0a0a0a', border: '1px solid #27272a', borderRadius: 8 }} />
+              <Tooltip contentStyle={{ background: '#0a0a0a', border: '1px solid #27272a', borderRadius: 8, fontSize: 11 }} />
               {yKeys.map((key, i) => <Area key={key} type="monotone" dataKey={key} stroke={CHART_COLORS[i % CHART_COLORS.length]} fill={CHART_COLORS[i % CHART_COLORS.length]} fillOpacity={0.15} />)}
             </AreaChart>
           </ResponsiveContainer>
@@ -319,7 +319,7 @@ export default function BusinessIntelPage() {
           </div>
         )}
         <div className="flex-1" />
-        <div className="flex items-center gap-0.5 app-region-no-drag">
+        <div className="flex items-center gap-1.5 app-region-no-drag">
           {(['query', 'saved', 'history'] as Tab[]).map(t => (
             <button key={t} onClick={() => setTab(t)} className={cn(
               'h-6 px-2.5 rounded-[5px] text-[11px] font-medium transition-all capitalize',

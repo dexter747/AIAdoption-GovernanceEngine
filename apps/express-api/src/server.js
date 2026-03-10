@@ -5,6 +5,7 @@ dotenv.config();
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import crypto from 'crypto';
 import rateLimit from 'express-rate-limit';
 import { createClient } from '@supabase/supabase-js';
 import jwt from 'jsonwebtoken';
@@ -13,6 +14,19 @@ import adminRoutes from './routes/admin.js';
 import licensesRoutes from './routes/licenses-new.js';
 import subscriptionsRoutes from './routes/subscriptions.js';
 import { errorHandler } from './middleware/errorHandler.js';
+
+// Solution-use-case routes
+import biQueriesRoutes from './routes/bi-queries.js';
+import projectIntelRoutes from './routes/project-intel.js';
+import resourceRoutes from './routes/resources.js';
+import regulatoryRoutes from './routes/regulatory.js';
+import procurementRoutes from './routes/procurement.js';
+import kycRoutes from './routes/kyc.js';
+import fraudRoutes from './routes/fraud-detection.js';
+import amlRoutes from './routes/aml.js';
+import esgRoutes from './routes/esg.js';
+import reportingRoutes from './routes/reporting.js';
+import seedDemoRoutes from './routes/seed-demo.js';
 
 const app = express();
 const PORT = process.env.PORT || 5500;
@@ -69,6 +83,7 @@ app.use(
     origin: process.env.CORS_ORIGINS?.split(',') || [
       'http://localhost:3000',
       'http://localhost:3001',
+      'http://localhost:5199',
     ],
     credentials: true,
   })
@@ -256,6 +271,21 @@ app.use('/api/licenses', licensesRoutes);
 app.use('/api/subscriptions', subscriptionsRoutes);
 
 // =============================================================================
+// SOLUTION USE-CASE ROUTES
+// =============================================================================
+app.use('/api/bi', biQueriesRoutes);
+app.use('/api/projects', projectIntelRoutes);
+app.use('/api/resources', resourceRoutes);
+app.use('/api/regulatory', regulatoryRoutes);
+app.use('/api/procurement', procurementRoutes);
+app.use('/api/kyc', kycRoutes);
+app.use('/api/fraud', fraudRoutes);
+app.use('/api/aml', amlRoutes);
+app.use('/api/esg', esgRoutes);
+app.use('/api/reporting', reportingRoutes);
+app.use('/api/seed-demo', seedDemoRoutes);
+
+// =============================================================================
 // USAGE TRACKING
 // =============================================================================
 
@@ -440,6 +470,21 @@ app.post('/api/ai/query', async (req, res) => {
 // USER CONNECTIONS (Database Connections for MCP)
 // =============================================================================
 
+// UUID v4 pattern
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+function toUuid(value) {
+  if (UUID_RE.test(value)) return value;
+  const hash = crypto.createHash('sha256').update(value).digest('hex');
+  return [
+    hash.slice(0, 8),
+    hash.slice(8, 12),
+    '4' + hash.slice(13, 16),
+    ((parseInt(hash[16], 16) & 0x3) | 0x8).toString(16) + hash.slice(17, 20),
+    hash.slice(20, 32),
+  ].join('-');
+}
+
 // JWT validation middleware
 const validateJwtMiddleware = (req, res, next) => {
   try {
@@ -452,6 +497,12 @@ const validateJwtMiddleware = (req, res, next) => {
     const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-in-production';
 
     const decoded = jwt.verify(token, JWT_SECRET);
+    // Normalise user ID: prefer id, fall back to sub
+    decoded.id = decoded.id || decoded.sub;
+    // Ensure user id is always a valid UUID
+    if (decoded.id) {
+      decoded.id = toUuid(decoded.id);
+    }
     req.user = decoded; // Add user info to request
     next();
   } catch (error) {

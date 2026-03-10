@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { useCachedAvatar } from '../hooks/useCachedAvatar';
 import {
   MessageSquare,
   Settings,
@@ -20,6 +21,9 @@ import {
   ShoppingCart,
   ScanSearch,
   ShieldAlert,
+  Banknote,
+  Leaf,
+  FileText,
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
@@ -37,6 +41,9 @@ const solutionsNav = [
   { name: 'Procurement', href: '/procurement', icon: ShoppingCart },
   { name: 'KYC', href: '/kyc', icon: ScanSearch },
   { name: 'Fraud Detection', href: '/fraud-detection', icon: ShieldAlert },
+  { name: 'AML / SAR', href: '/aml', icon: Banknote },
+  { name: 'ESG', href: '/esg', icon: Leaf },
+  { name: 'Reporting', href: '/client-reporting', icon: FileText },
 ];
 
 const settingsNav = [
@@ -54,6 +61,7 @@ interface SidebarProps {
 export default function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
   const location = useLocation();
   const { user, logout } = useAuth();
+  const avatarUrl = useCachedAvatar(user?.image);
 
   /** Renders a single nav link — reused across sections */
   const navLink = (href: string, Icon: React.ElementType, label: string, exact = true) => {
@@ -245,10 +253,10 @@ export default function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
             className="w-full p-2 rounded-lg transition-all flex items-center justify-center hover:bg-white/[0.05]"
             title={user?.name || 'Profile'}
           >
-            {user?.image ? (
+            {avatarUrl ? (
               <img
-                src={user.image}
-                alt={user.name}
+                src={avatarUrl}
+                alt={user?.name}
                 className="w-7 h-7 rounded-full ring-1 ring-white/10"
               />
             ) : (
@@ -261,10 +269,10 @@ export default function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
           </Link>
         ) : (
           <div className="flex items-center gap-2 px-1">
-            {user?.image ? (
+            {avatarUrl ? (
               <img
-                src={user.image}
-                alt={user.name}
+                src={avatarUrl}
+                alt={user?.name}
                 className="w-7 h-7 rounded-full ring-1 ring-white/10 flex-shrink-0"
               />
             ) : (

@@ -4,6 +4,7 @@
  */
 
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 import { config, supabase } from '../config/index.js';
 import { ApiError } from './errorHandler.js';
 import { createLogger } from '../utils/logger.js';
@@ -58,6 +59,27 @@ export async function validateApiKey(req, res, next) {
 /**
  * Validate JWT token from Authorization header
  */
+// UUID v4 pattern
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/**
+ * Derive a deterministic v5-style UUID from an arbitrary string so that
+ * non-UUID identifiers (e.g. Google numeric IDs, emails) can be used safely
+ * as a Supabase `user_id` column filter without triggering PostgreSQL 22P02.
+ */
+function toUuid(value) {
+  if (UUID_RE.test(value)) return value;
+  const hash = crypto.createHash('sha256').update(value).digest('hex');
+  // Format as UUID v4-like: 8-4-4-4-12
+  return [
+    hash.slice(0, 8),
+    hash.slice(8, 12),
+    '4' + hash.slice(13, 16),          // version nibble = 4
+    ((parseInt(hash[16], 16) & 0x3) | 0x8).toString(16) + hash.slice(17, 20), // variant
+    hash.slice(20, 32),
+  ].join('-');
+}
+
 export function validateJwt(req, res, next) {
   const authHeader = req.headers.authorization;
 
@@ -69,6 +91,18 @@ export function validateJwt(req, res, next) {
 
   try {
     const decoded = jwt.verify(token, config.jwt.secret);
+    // Normalise: Supabase JWTs use `sub` for the user UUID, but our
+    // route handlers expect `req.user.id`.
+    decoded.id = decoded.id || decoded.sub;
+
+    // Ensure user id is always a valid UUID – some OAuth flows may pass
+    // a Google numeric ID or email instead of a UUID.
+    if (decoded.id) {
+      decoded.id = toUuid(decoded.id);
+    } else {
+      return next(ApiError.unauthorized('Token missing user identity'));
+    }
+
     req.user = decoded;
     next();
   } catch (err) {

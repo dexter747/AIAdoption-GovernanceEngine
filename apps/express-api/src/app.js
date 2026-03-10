@@ -27,6 +27,9 @@ import regulatoryRoutes from './routes/regulatory.js';
 import procurementRoutes from './routes/procurement.js';
 import kycRoutes from './routes/kyc.js';
 import fraudRoutes from './routes/fraud-detection.js';
+import amlRoutes from './routes/aml.js';
+import esgRoutes from './routes/esg.js';
+import reportingRoutes from './routes/reporting.js';
 
 export function createApp() {
   const app = express();
@@ -120,6 +123,9 @@ export function createApp() {
   app.use('/api/procurement', procurementRoutes);
   app.use('/api/kyc', kycRoutes);
   app.use('/api/fraud', fraudRoutes);
+  app.use('/api/aml', amlRoutes);
+  app.use('/api/esg', esgRoutes);
+  app.use('/api/reporting', reportingRoutes);
 
   // Legacy compatibility routes
   app.get('/api/status', (req, res) => {

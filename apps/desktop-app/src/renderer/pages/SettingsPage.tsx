@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Key, Bell, Database, Shield, Loader2, CheckCircle, Download } from 'lucide-react';
+import { Key, Bell, Database, Shield, Loader2, CheckCircle, Download, Sparkles, Trash2 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 function Toggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
@@ -31,6 +31,9 @@ export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('general');
   const [loading, setLoading] = useState(true);
   const [saved, setSaved] = useState(false);
+  const [seeding, setSeeding] = useState(false);
+  const [clearing, setClearing] = useState(false);
+  const [seedResult, setSeedResult] = useState<{ success: boolean; message: string } | null>(null);
   const [connections, setConnections] = useState<ConnectionOption[]>([]);
   const [settings, setSettings] = useState({
     defaultDatabase: '',
@@ -47,6 +50,7 @@ export default function SettingsPage() {
     { id: 'ai', name: 'AI Provider', icon: Key },
     { id: 'notifications', name: 'Notifications', icon: Bell },
     { id: 'security', name: 'Security', icon: Shield },
+    { id: 'demo', name: 'Demo Data', icon: Sparkles },
   ];
 
   // Load settings + connections on mount
@@ -173,6 +177,65 @@ export default function SettingsPage() {
     } catch (err) {
       console.error('Failed to export data:', err);
       alert('Failed to export data. Check the console for details.');
+    }
+  };
+
+  // Seed demo data via API
+  const handleSeedDemoData = async () => {
+    setSeeding(true);
+    setSeedResult(null);
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setSeedResult({ success: false, message: 'Not authenticated. Please log in first.' });
+        return;
+      }
+      const res = await fetch('/api/seed-demo', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const json = await res.json();
+      if (json.success) {
+        const counts = json.data;
+        const total = Object.values(counts).reduce((s: number, v: any) => s + (v as number), 0);
+        setSeedResult({ success: true, message: `${total} records seeded across ${Object.keys(counts).length} tables.` });
+      } else {
+        setSeedResult({ success: false, message: json.error?.message || json.message || 'Seed failed.' });
+      }
+    } catch (err: any) {
+      setSeedResult({ success: false, message: err.message || 'Network error.' });
+    } finally {
+      setSeeding(false);
+    }
+  };
+
+  // Clear demo data via API
+  const handleClearDemoData = async () => {
+    if (!confirm('This will remove all demo data from all module pages. Continue?')) return;
+    setClearing(true);
+    setSeedResult(null);
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setSeedResult({ success: false, message: 'Not authenticated. Please log in first.' });
+        return;
+      }
+      const res = await fetch('/api/seed-demo', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const json = await res.json();
+      setSeedResult({ success: json.success, message: json.success ? 'Demo data cleared successfully.' : (json.error || 'Failed to clear.') });
+    } catch (err: any) {
+      setSeedResult({ success: false, message: err.message || 'Network error.' });
+    } finally {
+      setClearing(false);
     }
   };
 
@@ -384,6 +447,70 @@ export default function SettingsPage() {
                 </div>
                 <Download className="w-4 h-4 text-white/25 flex-shrink-0" />
               </button>
+            </div>
+          )}
+
+          {activeTab === 'demo' && (
+            <div className="space-y-4">
+              <div className="px-4 py-3 rounded-lg border border-white/[0.06] bg-white/[0.02]">
+                <p className="text-[12px] font-medium text-white/70 mb-1">Demo Data Manager</p>
+                <p className="text-[10.5px] text-white/30">
+                  Populate all module pages with realistic demo data for showcasing the platform.
+                  Covers Project Intelligence, Resources, Regulatory, Procurement, KYC, and Fraud Detection.
+                </p>
+              </div>
+
+              <button
+                onClick={handleSeedDemoData}
+                disabled={seeding}
+                className="w-full text-left px-4 py-3 rounded-lg border border-emerald-500/20 bg-emerald-500/[0.06] hover:bg-emerald-500/[0.12] transition-colors flex items-center gap-3 disabled:opacity-50"
+              >
+                {seeding ? (
+                  <Loader2 className="w-4 h-4 text-emerald-400 flex-shrink-0 animate-spin" />
+                ) : (
+                  <Sparkles className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                )}
+                <div className="flex-1">
+                  <p className="text-[12px] font-medium text-emerald-300">
+                    {seeding ? 'Seeding demo data...' : 'Seed Demo Data'}
+                  </p>
+                  <p className="text-[10.5px] text-white/30">
+                    Insert projects, resources, contracts, clients, transactions, and more
+                  </p>
+                </div>
+              </button>
+
+              <button
+                onClick={handleClearDemoData}
+                disabled={clearing}
+                className="w-full text-left px-4 py-3 rounded-lg border border-red-500/20 bg-red-500/[0.04] hover:bg-red-500/[0.08] transition-colors flex items-center gap-3 disabled:opacity-50"
+              >
+                {clearing ? (
+                  <Loader2 className="w-4 h-4 text-red-400 flex-shrink-0 animate-spin" />
+                ) : (
+                  <Trash2 className="w-4 h-4 text-red-400 flex-shrink-0" />
+                )}
+                <div className="flex-1">
+                  <p className="text-[12px] font-medium text-red-300">
+                    {clearing ? 'Clearing data...' : 'Clear Demo Data'}
+                  </p>
+                  <p className="text-[10.5px] text-white/30">
+                    Remove all demo data from all module tables
+                  </p>
+                </div>
+              </button>
+
+              {seedResult && (
+                <div className={cn(
+                  'px-4 py-3 rounded-lg border text-[12px]',
+                  seedResult.success
+                    ? 'border-emerald-500/20 bg-emerald-500/[0.06] text-emerald-300'
+                    : 'border-red-500/20 bg-red-500/[0.06] text-red-300'
+                )}>
+                  {seedResult.success && <CheckCircle className="w-3.5 h-3.5 inline mr-1.5" />}
+                  {seedResult.message}
+                </div>
+              )}
             </div>
           )}
         </div>

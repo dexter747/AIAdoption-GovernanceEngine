@@ -5,7 +5,7 @@
   "packageManager": "pnpm@9.15.0",
   "description": "AI Adoption & Governance Engine - Desktop App + Cloud Backend",
   "scripts": {
-    "kill-ports": "bash kill-ports.sh",
+    "kill-ports": "bash scripts/kill-ports.sh",
     "dev": "pnpm --parallel --stream --filter '!cloud-backend' run dev",
     "dev:landing": "pnpm --filter landing-site dev",
     "dev:admin": "pnpm --filter admin-dashboard dev",

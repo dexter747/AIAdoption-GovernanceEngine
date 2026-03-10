@@ -8,6 +8,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { generateTokenPair } from '@/lib/jwt-auth';
 import supabase from '@/lib/supabase';
+import { createHash } from 'crypto';
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
@@ -102,8 +103,25 @@ export async function GET(request: NextRequest) {
 
     const googleUser: GoogleUserInfo = await userInfoResponse.json();
 
+    /**
+     * Derive a deterministic UUID from an arbitrary string (e.g. Google numeric ID)
+     * so that the resulting JWT always contains a valid UUID for downstream services.
+     */
+    function toUuid(value: string): string {
+      const uuidRe = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      if (uuidRe.test(value)) return value;
+      const hash = createHash('sha256').update(value).digest('hex');
+      return [
+        hash.slice(0, 8),
+        hash.slice(8, 12),
+        '4' + hash.slice(13, 16),
+        ((parseInt(hash[16], 16) & 0x3) | 0x8).toString(16) + hash.slice(17, 20),
+        hash.slice(20, 32),
+      ].join('-');
+    }
+
     // Store user in Supabase (synced with admin dashboard)
-    let dbUserId = googleUser.id;
+    let dbUserId = toUuid(googleUser.id);
     try {
       // Check if user exists
       const { data: existingUser } = await supabase
