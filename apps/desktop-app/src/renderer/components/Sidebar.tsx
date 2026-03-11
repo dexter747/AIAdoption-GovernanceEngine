@@ -50,6 +50,7 @@ const solutionsNav = [
   { name: 'Audit Trail', href: '/audit-trail', icon: ClipboardList },
   { name: 'Risk Heatmap', href: '/risk-heatmap', icon: Globe },
   { name: 'Exec Summary', href: '/executive-summary', icon: Sparkles },
+  { name: 'Compliance', href: '/compliance-matrix', icon: Shield },
 ];
 
 const settingsNav = [
