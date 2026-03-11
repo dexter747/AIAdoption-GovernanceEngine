@@ -42,6 +42,7 @@ const ESGReportingPage = lazy(() => import('./pages/ESGReportingPage'));
 const ClientReportingPage = lazy(() => import('./pages/ClientReportingPage'));
 const AuditTrailPage = lazy(() => import('./pages/AuditTrailPage'));
 const RiskHeatmapPage = lazy(() => import('./pages/RiskHeatmapPage'));
+const ExecutiveSummaryPage = lazy(() => import('./pages/ExecutiveSummaryPage'));
 
 // ── Tiny spinner shown while a lazy chunk is downloading ───────────────────
 const PageFallback = memo(() => (
@@ -304,6 +305,7 @@ function AppRoutes() {
         <Route path="/client-reporting" element={<ProtectedRoute><AppLayout><ClientReportingPage /></AppLayout></ProtectedRoute>} />
         <Route path="/audit-trail" element={<ProtectedRoute><AppLayout><AuditTrailPage /></AppLayout></ProtectedRoute>} />
         <Route path="/risk-heatmap" element={<ProtectedRoute><AppLayout><RiskHeatmapPage /></AppLayout></ProtectedRoute>} />
+        <Route path="/executive-summary" element={<ProtectedRoute><AppLayout><ExecutiveSummaryPage /></AppLayout></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>

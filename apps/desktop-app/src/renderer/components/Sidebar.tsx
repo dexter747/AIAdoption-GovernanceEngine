@@ -26,6 +26,7 @@ import {
   FileText,
   ClipboardList,
   Globe,
+  Sparkles,
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
@@ -48,6 +49,7 @@ const solutionsNav = [
   { name: 'Reporting', href: '/client-reporting', icon: FileText },
   { name: 'Audit Trail', href: '/audit-trail', icon: ClipboardList },
   { name: 'Risk Heatmap', href: '/risk-heatmap', icon: Globe },
+  { name: 'Exec Summary', href: '/executive-summary', icon: Sparkles },
 ];
 
 const settingsNav = [
