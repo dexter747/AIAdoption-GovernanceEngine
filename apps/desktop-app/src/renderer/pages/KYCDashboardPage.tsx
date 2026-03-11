@@ -9,6 +9,8 @@ import {
   Tooltip, ResponsiveContainer,
 } from 'recharts';
 import { cn } from '../lib/utils';
+import ExportButton from '../components/ui/ExportButton';
+import type { PDFReportOptions } from '../lib/pdfExport';
 
 /* ═══════════════════════════════════════════════════════════════════════════
    COMPREHENSIVE MOCK DATA — KYC & Client Onboarding
@@ -140,6 +142,38 @@ export default function KYCDashboardPage() {
     if (selected?.id === id) { setSelected(null); setView('dashboard'); }
   };
 
+  const buildPDFConfig = (): PDFReportOptions => ({
+    title: 'KYC & Client Onboarding Report',
+    subtitle: `Dashboard export — ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}`,
+    module: 'KYC & Onboarding',
+    jurisdiction: 'Jersey, Channel Islands',
+    classification: 'OFFICIAL — SENSITIVE',
+    sections: [
+      { type: 'stats', stats: [
+        { label: 'Total Clients', value: String(dash.totalClients) },
+        { label: 'Active', value: String(dash.byStatus.active || 0) },
+        { label: 'Checks Pending', value: String(dash.checksPending), change: dash.checksFailed + ' failed' },
+        { label: 'Avg Completion', value: dash.avgCompletion + '%' },
+      ] },
+      { type: 'heading', title: 'Client Portfolio' },
+      { type: 'table', columns: ['Name', 'Type', 'Jurisdiction', 'Risk', 'Status', 'PEP'],
+        rows: clients.map(c => [c.name, c.entity_type, c.jurisdiction, c.risk_rating, c.status, c.pep_status ? 'Yes' : 'No']),
+      },
+      { type: 'heading', title: 'Recent KYC Checks' },
+      { type: 'table', columns: ['Type', 'Status', 'AI Confidence', 'Risk Flags'],
+        rows: checks.map(ch => [ch.check_type.replace(/_/g, ' '), ch.status, ch.ai_confidence ? ch.ai_confidence + '%' : '-', ch.ai_risk_flags.join(', ') || 'None']),
+      },
+      { type: 'heading', title: 'Document Verification' },
+      { type: 'table', columns: ['Type', 'File', 'Status'],
+        rows: docs.map(d => [d.document_type.replace(/_/g, ' '), d.file_name, d.status]),
+      },
+      { type: 'heading', title: 'Onboarding Workflows' },
+      { type: 'table', columns: ['Template', 'Status', 'Progress', 'Steps'],
+        rows: workflows.map(w => [w.template, w.status, w.completion_pct + '%', w.current_step + '/' + w.total_steps]),
+      },
+    ],
+  });
+
   return (
     <div className="h-full flex flex-col overflow-hidden">
       {/* Toolbar */}
@@ -153,8 +187,7 @@ export default function KYCDashboardPage() {
         </div>
         <div className="flex-1" />
         <div className="flex items-center gap-1.5 app-region-no-drag">
-          {view === 'detail' && <button onClick={() => setView('dashboard')} className="h-6 px-2.5 rounded-[5px] text-[11px] text-white/35 hover:text-white/60 hover:bg-white/[0.04]">\u2190 Back</button>}
-          <button onClick={() => setShowAdd(true)} className="h-6 px-2.5 rounded-[5px] text-[11px] font-medium bg-indigo-600 text-white hover:bg-indigo-500 flex items-center gap-1"><Plus className="w-3 h-3" /> Add Client</button>
+          {view === 'detail' && <button onClick={() => setView('dashboard')} className="h-6 px-2.5 rounded-[5px] text-[11px] text-white/35 hover:text-white/60 hover:bg-white/[0.04]">\u2190 Back</button>}          <ExportButton getReportConfig={buildPDFConfig} label="Export PDF" compact />          <button onClick={() => setShowAdd(true)} className="h-6 px-2.5 rounded-[5px] text-[11px] font-medium bg-indigo-600 text-white hover:bg-indigo-500 flex items-center gap-1"><Plus className="w-3 h-3" /> Add Client</button>
         </div>
       </div>
 

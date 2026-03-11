@@ -10,6 +10,8 @@ import {
   ResponsiveContainer, AreaChart, Area, Legend,
 } from 'recharts';
 import { cn } from '../lib/utils';
+import ExportButton from '../components/ui/ExportButton';
+import type { PDFReportOptions } from '../lib/pdfExport';
 
 /* ═══════════════════════════════════════════════════════════════════════════
    COMPREHENSIVE MOCK DATA — Automated Client & Board Reporting
@@ -187,6 +189,38 @@ export default function ClientReportingPage() {
 
   const dash = DASHBOARD;
 
+  const buildPDFConfig = (): PDFReportOptions => ({
+    title: 'Client & Board Reporting Summary',
+    subtitle: `Dashboard export — ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}`,
+    module: 'Client & Board Reporting',
+    jurisdiction: 'Jersey, Channel Islands',
+    classification: 'OFFICIAL',
+    sections: [
+      { type: 'stats', stats: [
+        { label: 'Total Reports', value: String(dash.totalReports) },
+        { label: 'Published', value: String(dash.publishedReports) },
+        { label: 'AI Sections', value: String(dash.aiSectionsGenerated) },
+        { label: 'Time Saved', value: String(dash.avgTimeSaved) },
+      ] },
+      { type: 'heading', title: 'Recent Reports' },
+      { type: 'table', columns: ['Title', 'Client', 'Type', 'Period', 'Pages', 'Status'],
+        rows: MOCK_REPORTS.map(r => [r.title, r.client, r.report_type.replace(/_/g, ' '), r.reporting_period, String(r.pages), r.status.replace(/_/g, ' ')]),
+      },
+      { type: 'heading', title: 'Report Schedules' },
+      { type: 'table', columns: ['Report', 'Frequency', 'Next Due', 'Clients', 'Status'],
+        rows: MOCK_SCHEDULES.map(s => [s.report_name, s.frequency, s.next_due, String(s.clients), s.status]),
+      },
+      { type: 'heading', title: 'Report Templates' },
+      { type: 'table', columns: ['Template', 'Type', 'Format', 'Frequency', 'Sections', 'Status'],
+        rows: MOCK_TEMPLATES.map(t => [t.name, t.type.replace(/_/g, ' '), t.format, t.frequency, String(t.sections), t.status]),
+      },
+      { type: 'heading', title: 'Connected Data Sources' },
+      { type: 'table', columns: ['Source', 'Type', 'Metrics', 'Last Sync', 'Status'],
+        rows: MOCK_DATA_SOURCES.map(d => [d.name, d.type, String(d.metrics), d.last_sync.split('T')[0], d.status]),
+      },
+    ],
+  });
+
   return (
     <div className="h-full flex flex-col overflow-hidden">
       {/* Toolbar */}
@@ -200,7 +234,7 @@ export default function ClientReportingPage() {
         </div>
         <div className="flex-1" />
         <div className="flex items-center gap-1.5 app-region-no-drag">
-          <button className="h-6 px-2.5 rounded-[5px] text-[11px] text-white/40 hover:text-white/60 hover:bg-white/[0.04] flex items-center gap-1"><Download className="w-3 h-3" /> Export All</button>
+          <ExportButton getReportConfig={buildPDFConfig} label="Export PDF" compact />
           <button className="h-6 px-2.5 rounded-[5px] text-[11px] font-medium bg-blue-600 text-white hover:bg-blue-500 flex items-center gap-1"><Plus className="w-3 h-3" /> New Report</button>
         </div>
       </div>

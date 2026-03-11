@@ -9,6 +9,8 @@ import {
   Tooltip, ResponsiveContainer,
 } from 'recharts';
 import { cn } from '../lib/utils';
+import ExportButton from '../components/ui/ExportButton';
+import type { PDFReportOptions } from '../lib/pdfExport';
 
 /* ═══════════════════════════════════════════════════════════════════════════
    MOCK DATA — Regulatory Intelligence (Jersey)
@@ -180,6 +182,31 @@ export default function RegulatoryIntelPage() {
     if (selected?.id === id) setSelected(prev => prev ? { ...prev, status } : prev);
   };
 
+  const buildPDFConfig = (): PDFReportOptions => ({
+    title: 'Regulatory Intelligence Report',
+    subtitle: `Dashboard export — ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}`,
+    module: 'Regulatory Intelligence',
+    jurisdiction: 'Jersey, Channel Islands',
+    classification: 'OFFICIAL',
+    sections: [
+      { type: 'stats', stats: [
+        { label: 'Total Changes', value: String(dash.totalChanges) },
+        { label: 'New', value: String(dash.newChanges) },
+        { label: 'Critical', value: String(dash.criticalChanges), change: dash.highChanges + ' high' },
+        { label: 'Avg Risk Score', value: String(dash.avgRiskScore) },
+      ] },
+      { type: 'heading', title: 'Regulatory Changes' },
+      { type: 'table', columns: ['Title', 'Type', 'Jurisdiction', 'Severity', 'Status', 'Risk Score', 'Effective'],
+        rows: filteredChanges.map(c => [c.title, c.change_type.replace(/_/g, ' '), c.jurisdiction, c.severity, c.status.replace(/_/g, ' '), String(c.ai_risk_score || '-'), c.effective_date || '-']),
+      },
+      ...filteredChanges.filter(c => c.ai_impact_summary).slice(0, 3).flatMap(c => [
+        { type: 'heading' as const, title: `Impact: ${c.title}` },
+        { type: 'text' as const, content: c.ai_impact_summary! },
+        ...(c.ai_action_items?.length ? [{ type: 'text' as const, content: 'Action Items:\n' + c.ai_action_items.map((a: string, i: number) => `${i + 1}. ${a}`).join('\n') }] : []),
+      ]),
+    ],
+  });
+
   return (
     <div className="h-full flex flex-col overflow-hidden">
       {/* Toolbar */}
@@ -203,6 +230,7 @@ export default function RegulatoryIntelPage() {
               <AlertTriangle className="w-3 h-3 inline mr-1" />{dash.criticalChanges} critical
             </span>
           )}
+          <ExportButton getReportConfig={buildPDFConfig} label="Export PDF" compact />
           <button
             onClick={() => setShowScan(true)}
             className="h-6 px-2.5 rounded-[5px] text-[11px] font-medium bg-zinc-800 text-zinc-300 hover:bg-zinc-700 flex items-center gap-1"

@@ -9,6 +9,8 @@ import {
   Tooltip, ResponsiveContainer,
 } from 'recharts';
 import { cn } from '../lib/utils';
+import ExportButton from '../components/ui/ExportButton';
+import type { PDFReportOptions } from '../lib/pdfExport';
 
 /* ═══════════════════════════════════════════════════════════════════════════
    MOCK DATA — Fraud Detection & Transaction Monitoring (Jersey)
@@ -117,6 +119,41 @@ export default function FraudDetectionPage() {
   const handleCloseInv = (id: string) => setInvestigations(prev => prev.map(i => i.id === id ? { ...i, status: 'closed' } : i));
   const handleDeleteInv = (id: string) => setInvestigations(prev => prev.filter(i => i.id !== id));
 
+  const buildPDFConfig = (): PDFReportOptions => ({
+    title: 'Fraud Detection & Transaction Monitoring Report',
+    subtitle: `Dashboard export — ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}`,
+    module: 'Fraud Detection',
+    jurisdiction: 'Jersey, Channel Islands',
+    classification: 'OFFICIAL — SENSITIVE',
+    sections: [
+      { type: 'stats', stats: [
+        { label: 'Total Transactions', value: dash.totalTransactions.toLocaleString() },
+        { label: 'Flagged', value: String(dash.flaggedTransactions) },
+        { label: 'Open Alerts', value: String(dash.alertsOpen), change: dash.alertsCritical + ' critical' },
+        { label: 'Investigations', value: String(dash.investigationsOpen), change: '£' + (dash.totalExposure / 1000).toFixed(0) + 'k exposure' },
+      ] },
+      { type: 'heading', title: 'Flagged Transactions' },
+      { type: 'table', columns: ['Ref', 'Type', 'Amount', 'Counterparty', 'Country', 'Risk', 'Status'],
+        rows: transactions.filter(t => t.flagged).map(t => [t.transaction_ref, t.type, `${t.currency} ${t.amount.toLocaleString()}`, t.counterparty, t.country_code, String(t.risk_score ?? '-'), t.status]),
+      },
+      { type: 'heading', title: 'Open Alerts' },
+      { type: 'table', columns: ['Type', 'Severity', 'Title', 'AI Confidence', 'Status'],
+        rows: alerts.filter(a => a.status !== 'resolved').map(a => [a.alert_type.replace(/_/g, ' '), a.severity, a.title, a.ai_confidence ? a.ai_confidence + '%' : '-', a.status]),
+      },
+      { type: 'heading', title: 'Active Investigations' },
+      { type: 'table', columns: ['Case #', 'Priority', 'Title', 'Exposure', 'Status'],
+        rows: investigations.filter(i => i.status === 'active').map(i => [i.case_number, i.priority, i.title, '£' + i.total_exposure.toLocaleString(), i.status]),
+      },
+      ...(patternResult ? [
+        { type: 'heading' as const, title: 'AI Pattern Detection' },
+        { type: 'text' as const, content: patternResult.summary + '\n\n' + patternResult.trendAnalysis },
+        { type: 'table' as const, columns: ['Pattern', 'Type', 'Severity', 'Description'],
+          rows: patternResult.patterns.map(p => [p.name, p.patternType, p.severity, p.description]),
+        },
+      ] : []),
+    ],
+  });
+
   const detectPatterns = () => {
     setPatternResult({
       summary: 'AI pattern detection identified 3 significant patterns across 1,842 Jersey-processed transactions in the current period.',
@@ -142,6 +179,7 @@ export default function FraudDetectionPage() {
         <div className="flex-1" />
         <div className="flex items-center gap-1.5 app-region-no-drag">
           <button onClick={detectPatterns} className="h-6 px-2.5 rounded-[5px] text-[11px] text-white/40 hover:text-white/60 hover:bg-white/[0.04] flex items-center gap-1"><Zap className="w-3 h-3" /> Detect Patterns</button>
+          <ExportButton getReportConfig={buildPDFConfig} label="Export PDF" compact />
           <button onClick={() => setShowAddTxn(true)} className="h-6 px-2.5 rounded-[5px] text-[11px] font-medium bg-indigo-600 text-white hover:bg-indigo-500 flex items-center gap-1"><Plus className="w-3 h-3" /> Add Txn</button>
         </div>
       </div>

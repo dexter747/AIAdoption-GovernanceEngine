@@ -8,6 +8,8 @@ import {
   Tooltip, ResponsiveContainer,
 } from 'recharts';
 import { cn } from '../lib/utils';
+import ExportButton from '../components/ui/ExportButton';
+import type { PDFReportOptions } from '../lib/pdfExport';
 
 /* ═══════════════════════════════════════════════════════════════════════════
    COMPREHENSIVE MOCK DATA — Resource Planning & Team Utilisation
@@ -155,6 +157,38 @@ export default function ResourcePlanningPage() {
     setResources(prev => prev.filter(r => r.id !== id));
   };
 
+  const buildPDFConfig = (): PDFReportOptions => ({
+    title: 'Resource Planning & Team Utilisation Report',
+    subtitle: `Dashboard export — ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}`,
+    module: 'Resource Planning',
+    jurisdiction: 'Jersey, Channel Islands',
+    classification: 'INTERNAL',
+    sections: [
+      { type: 'stats', stats: [
+        { label: 'Total Resources', value: `${dash.activeResources}/${dash.totalResources} active` },
+        { label: 'Avg Utilisation', value: dash.avgUtilization + '%' },
+        { label: 'Over-Allocated', value: String(dash.overAllocated) },
+        { label: 'Under-Utilised', value: String(dash.idle) },
+      ] },
+      { type: 'heading', title: 'Team Utilisation' },
+      { type: 'table', columns: ['Name', 'Role', 'Department', 'Utilisation', 'Allocated Hrs', 'Available Hrs', 'Status'],
+        rows: utilRows.map(r => [r.resource.name, r.resource.role, r.resource.department, r.utilization + '%', String(r.allocatedHours), String(r.availableHours), r.status.replace(/_/g, ' ')]),
+      },
+      { type: 'heading', title: 'Department Utilisation' },
+      { type: 'table', columns: ['Department', 'Utilisation %'],
+        rows: dash.departmentUtilization.map(d => [d.department, d.utilization + '%']),
+      },
+      { type: 'heading', title: 'Active Allocations' },
+      { type: 'table', columns: ['Resource', 'Project', 'Hours', 'Start', 'End', 'Status'],
+        rows: allocations.map(a => { const r = resources.find(rr => rr.id === a.resource_id); return [r?.name || a.resource_id, a.project_name, String(a.allocated_hours), a.start_date, a.end_date, a.status]; }),
+      },
+      ...(optimizations ? [
+        { type: 'heading' as const, title: 'AI Optimisation Recommendations' },
+        { type: 'text' as const, content: (optimizations as any).summary + '\n\n' + ((optimizations as any).recommendations || []).map((r: any, i: number) => `${i + 1}. ${r.title}\n   ${r.description}`).join('\n\n') },
+      ] : []),
+    ],
+  });
+
   return (
     <div className="h-full flex flex-col overflow-hidden">
       <div className="toolbar app-region-drag">
@@ -167,6 +201,7 @@ export default function ResourcePlanningPage() {
         </div>
         <div className="flex-1" />
         <div className="flex items-center gap-1.5 app-region-no-drag">
+          <ExportButton getReportConfig={buildPDFConfig} label="Export PDF" compact />
           <button onClick={optimize} className="h-6 px-2.5 rounded-[5px] text-[11px] text-white/40 hover:text-white/60 hover:bg-white/[0.04] flex items-center gap-1"><Sparkles className="w-3 h-3" /> Optimise</button>
           <button onClick={() => setShowAdd(true)} className="h-6 px-2.5 rounded-[5px] text-[11px] font-medium bg-indigo-600 text-white hover:bg-indigo-500 flex items-center gap-1"><Plus className="w-3 h-3" /> Add Member</button>
         </div>

@@ -9,6 +9,8 @@ import {
   Tooltip, ResponsiveContainer,
 } from 'recharts';
 import { cn } from '../lib/utils';
+import ExportButton from '../components/ui/ExportButton';
+import type { PDFReportOptions } from '../lib/pdfExport';
 
 /* ═══════════════════════════════════════════════════════════════════════════
    MOCK DATA — Project Intelligence & Portfolio Management (Jersey)
@@ -157,6 +159,38 @@ export default function ProjectIntelPage() {
     }));
   };
 
+  const buildPDFConfig = (): PDFReportOptions => ({
+    title: 'Project Intelligence & Portfolio Report',
+    subtitle: `Dashboard export — ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}`,
+    module: 'Project Intelligence',
+    jurisdiction: 'Jersey, Channel Islands',
+    classification: 'OFFICIAL',
+    sections: [
+      { type: 'stats', stats: [
+        { label: 'Active Projects', value: `${stats.activeProjects}/${stats.totalProjects}` },
+        { label: 'Avg Health', value: stats.avgHealth + '/100' },
+        { label: 'Tasks', value: `${stats.completedTasks}/${stats.totalTasks} done`, change: stats.blockedTasks + ' blocked' },
+        { label: 'Open Risks', value: String(stats.openRisks), change: stats.criticalRisks + ' critical' },
+      ] },
+      { type: 'heading', title: 'Project Portfolio' },
+      { type: 'table', columns: ['Project', 'Status', 'Priority', 'Budget', 'Spent', 'Health', 'End Date'],
+        rows: projects.map(p => [p.name, p.status.replace(/_/g, ' '), p.priority, '£' + p.budget.toLocaleString(), '£' + p.spent.toLocaleString(), String(p.health_score), p.target_end_date]),
+      },
+      { type: 'heading', title: 'Task Tracker' },
+      { type: 'table', columns: ['Task', 'Status', 'Priority', 'Assignee', 'Due Date', 'Est Hrs'],
+        rows: tasks.map(t => [t.title, t.status.replace(/_/g, ' '), t.priority, t.assignee || '-', t.due_date || '-', t.estimated_hours ? String(t.estimated_hours) : '-']),
+      },
+      { type: 'heading', title: 'Risks Register' },
+      { type: 'table', columns: ['Risk', 'Category', 'Likelihood', 'Impact', 'Status', 'AI Detected'],
+        rows: risks.map(r => [r.title, r.category, r.likelihood, r.impact, r.status, r.ai_detected ? 'Yes' : 'No']),
+      },
+      { type: 'heading', title: 'AI Insights' },
+      { type: 'table', columns: ['Insight', 'Type', 'Severity', 'Date'],
+        rows: insights.map(i => [i.title, i.type, i.severity, new Date(i.created_at).toLocaleDateString('en-GB')]),
+      },
+    ],
+  });
+
   return (
     <div className="h-full flex flex-col overflow-hidden">
       {/* Toolbar */}
@@ -185,6 +219,7 @@ export default function ProjectIntelPage() {
               <Bug className="w-3 h-3 inline mr-1" />{stats.openRisks} risks
             </span>
           )}
+          <ExportButton getReportConfig={buildPDFConfig} label="Export PDF" compact />
           <button onClick={() => setShowAdd(true)} className="h-6 px-2.5 rounded-[5px] text-[11px] font-medium bg-indigo-600 text-white hover:bg-indigo-500 flex items-center gap-1">
             <Plus className="w-3 h-3" /> New Project
           </button>

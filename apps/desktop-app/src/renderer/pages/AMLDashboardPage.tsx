@@ -10,6 +10,8 @@ import {
   Tooltip, ResponsiveContainer, AreaChart, Area,
 } from 'recharts';
 import { cn } from '../lib/utils';
+import ExportButton from '../components/ui/ExportButton';
+import type { PDFReportOptions } from '../lib/pdfExport';
 
 /* ═══════════════════════════════════════════════════════════════════════════
    COMPREHENSIVE MOCK DATA — AML & SAR
@@ -115,6 +117,38 @@ export default function AMLDashboardPage() {
     return `${sym[c] || ''}${v.toLocaleString()}`;
   };
 
+  const buildPDFConfig = (): PDFReportOptions => ({
+    title: 'AML & Suspicious Activity Report',
+    subtitle: `Dashboard export — ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}`,
+    module: 'AML & SAR Automation',
+    jurisdiction: 'Jersey, Channel Islands',
+    classification: 'OFFICIAL — SENSITIVE',
+    sections: [
+      { type: 'stats', stats: [
+        { label: 'Accounts Monitored', value: String(dash.totalAccounts), change: dash.highRiskAccounts + ' high-risk' },
+        { label: 'Flagged Transactions', value: String(dash.flaggedTransactions) },
+        { label: 'Open Alerts', value: String(dash.openAlerts), change: dash.criticalAlerts + ' critical' },
+        { label: 'Pending SARs', value: String(dash.pendingSARs) },
+      ] },
+      { type: 'heading', title: 'Flagged Transactions' },
+      { type: 'table', columns: ['Ref', 'Account', 'Type', 'Amount', 'Counterparty', 'Risk', 'Status'],
+        rows: MOCK_TRANSACTIONS.filter(t => t.flagged).map(t => [t.transaction_ref, t.account_id, t.transaction_type, fmtCurrency(t.amount, t.currency), t.counterparty_name, String(t.risk_score), t.screening_status]),
+      },
+      { type: 'heading', title: 'Open Alerts' },
+      { type: 'table', columns: ['Type', 'Severity', 'Title', 'AI Confidence', 'Status'],
+        rows: MOCK_ALERTS.filter(a => a.status !== 'resolved').map(a => [a.alert_type.replace(/_/g, ' '), a.severity, a.title, a.ai_confidence ? a.ai_confidence + '%' : '-', a.status]),
+      },
+      { type: 'heading', title: 'Suspicious Activity Reports' },
+      { type: 'table', columns: ['Ref', 'Type', 'Priority', 'Subject', 'Amount', 'Status'],
+        rows: MOCK_SARS.map(s => [s.report_ref, s.report_type, s.priority, s.subject_name, fmtCurrency(s.total_suspicious_amount, s.currency), s.status]),
+      },
+      { type: 'heading', title: 'Active Monitoring Rules' },
+      { type: 'table', columns: ['Rule', 'Type', 'Severity', 'Active', 'Matches'],
+        rows: MOCK_RULES.map(r => [r.rule_name, r.rule_type, r.severity, r.is_active ? 'Yes' : 'No', String(r.matches_count)]),
+      },
+    ],
+  });
+
   return (
     <div className="h-full flex flex-col overflow-hidden">
       {/* Toolbar */}
@@ -128,6 +162,7 @@ export default function AMLDashboardPage() {
         </div>
         <div className="flex-1" />
         <div className="flex items-center gap-1.5 app-region-no-drag">
+          <ExportButton getReportConfig={buildPDFConfig} label="Export PDF" compact />
           <button className="h-6 px-2.5 rounded-[5px] text-[11px] text-white/40 hover:text-white/60 hover:bg-white/[0.04] flex items-center gap-1"><Zap className="w-3 h-3" /> Run Screening</button>
           <button className="h-6 px-2.5 rounded-[5px] text-[11px] font-medium bg-indigo-600 text-white hover:bg-indigo-500 flex items-center gap-1"><Plus className="w-3 h-3" /> New SAR</button>
         </div>

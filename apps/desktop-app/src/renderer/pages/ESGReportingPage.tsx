@@ -10,6 +10,8 @@ import {
   PolarRadiusAxis, Radar, AreaChart, Area, Legend,
 } from 'recharts';
 import { cn } from '../lib/utils';
+import ExportButton from '../components/ui/ExportButton';
+import type { PDFReportOptions } from '../lib/pdfExport';
 
 /* ═══════════════════════════════════════════════════════════════════════════
    COMPREHENSIVE MOCK DATA — ESG & Sustainability
@@ -121,6 +123,38 @@ export default function ESGReportingPage() {
 
   const scoreColor = (s: number) => s >= 70 ? 'text-emerald-400' : s >= 50 ? 'text-amber-400' : 'text-red-400';
 
+  const buildPDFConfig = (): PDFReportOptions => ({
+    title: 'ESG & Sustainability Report',
+    subtitle: `Dashboard export — ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}`,
+    module: 'ESG & Sustainability',
+    jurisdiction: 'Jersey, Channel Islands',
+    classification: 'OFFICIAL',
+    sections: [
+      { type: 'stats', stats: [
+        { label: 'Total Metrics', value: String(dash.totalMetrics) },
+        { label: 'Frameworks', value: String(dash.totalFrameworks) },
+        { label: 'Targets On Track', value: `${dash.targetsOnTrack}/${dash.totalTargets}` },
+        { label: 'At Risk', value: String(dash.targetsAtRisk) },
+      ] },
+      { type: 'heading', title: 'ESG Metrics Summary' },
+      { type: 'table', columns: ['Metric', 'Category', 'Value', 'Target', 'Previous', 'Status'],
+        rows: MOCK_METRICS.map(m => [m.metric_name, m.category, `${m.value} ${m.unit}`, m.target_value ? `${m.target_value} ${m.unit}` : '-', m.previous_value ? `${m.previous_value} ${m.unit}` : '-', m.status]),
+      },
+      { type: 'heading', title: 'Sustainability Targets' },
+      { type: 'table', columns: ['Target', 'Category', 'Baseline', 'Current', 'Goal', 'Progress', 'Status'],
+        rows: MOCK_TARGETS.map(t => [t.target_name, t.category, String(t.baseline_value), String(t.current_value), String(t.target_value), t.progress_pct + '%', t.status.replace(/_/g, ' ')]),
+      },
+      { type: 'heading', title: 'Reports' },
+      { type: 'table', columns: ['Title', 'Type', 'Framework', 'Year', 'Score', 'Status'],
+        rows: MOCK_REPORTS.map(r => [r.title, r.report_type.replace(/_/g, ' '), r.framework, String(r.reporting_year), r.overall_score ? String(r.overall_score) : '-', r.status.replace(/_/g, ' ')]),
+      },
+      { type: 'heading', title: 'Active Frameworks' },
+      { type: 'table', columns: ['Framework', 'Code', 'Type', 'Jurisdiction', 'Status'],
+        rows: MOCK_FRAMEWORKS.map(f => [f.name, f.code, f.framework_type, f.jurisdiction, f.status]),
+      },
+    ],
+  });
+
   return (
     <div className="h-full flex flex-col overflow-hidden">
       {/* Toolbar */}
@@ -134,7 +168,7 @@ export default function ESGReportingPage() {
         </div>
         <div className="flex-1" />
         <div className="flex items-center gap-1.5 app-region-no-drag">
-          <button className="h-6 px-2.5 rounded-[5px] text-[11px] text-white/40 hover:text-white/60 hover:bg-white/[0.04] flex items-center gap-1"><Download className="w-3 h-3" /> Export</button>
+          <ExportButton getReportConfig={buildPDFConfig} label="Export PDF" compact />
           <button className="h-6 px-2.5 rounded-[5px] text-[11px] font-medium bg-emerald-600 text-white hover:bg-emerald-500 flex items-center gap-1"><Plus className="w-3 h-3" /> New Report</button>
         </div>
       </div>

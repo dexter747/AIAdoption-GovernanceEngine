@@ -9,6 +9,8 @@ import {
   Tooltip, ResponsiveContainer,
 } from 'recharts';
 import { cn } from '../lib/utils';
+import ExportButton from '../components/ui/ExportButton';
+import type { PDFReportOptions } from '../lib/pdfExport';
 
 /* ═══════════════════════════════════════════════════════════════════════════
    MOCK DATA — Procurement & Contract Intelligence (Jersey)
@@ -114,6 +116,32 @@ export default function ProcurementPage() {
     if (selected?.id === id) { setSelected(null); setView('dashboard'); setAnalysis(null); }
   };
 
+  const buildPDFConfig = (): PDFReportOptions => ({
+    title: 'Procurement & Contract Intelligence Report',
+    subtitle: `Dashboard export — ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}`,
+    module: 'Procurement Intelligence',
+    jurisdiction: 'Jersey, Channel Islands',
+    classification: 'OFFICIAL',
+    sections: [
+      { type: 'stats', stats: [
+        { label: 'Total Contracts', value: String(dash.totalContracts) },
+        { label: 'Active', value: String(dash.activeContracts) },
+        { label: 'Total Value', value: '£' + (dash.totalValue / 1000).toFixed(0) + 'k' },
+        { label: 'Avg Risk Score', value: String(dash.avgRiskScore), change: dash.highRiskContracts + ' high-risk' },
+      ] },
+      { type: 'heading', title: 'Contract Portfolio' },
+      { type: 'table', columns: ['Title', 'Vendor', 'Type', 'Value', 'Status', 'Risk', 'End Date'],
+        rows: contracts.map(c => [c.title, c.vendor, c.contract_type.replace(/_/g, ' '), c.value ? '£' + c.value.toLocaleString() : '-', c.status, String(c.risk_score || '-'), c.end_date || '-']),
+      },
+      ...(analysis ? [
+        { type: 'heading' as const, title: 'AI Contract Analysis' },
+        { type: 'text' as const, content: analysis.riskAssessment + '\n\n' + analysis.vendorAnalysis + '\n\n' + analysis.costAnalysis },
+        { type: 'heading' as const, title: 'Recommendations' },
+        { type: 'text' as const, content: analysis.recommendations.map((r: string, i: number) => `${i + 1}. ${r}`).join('\n') },
+      ] : []),
+    ],
+  });
+
   return (
     <div className="h-full flex flex-col overflow-hidden">
       {/* Toolbar */}
@@ -137,6 +165,7 @@ export default function ProcurementPage() {
               <Clock className="w-3 h-3 inline mr-1" />{dash.expiringContracts} expiring
             </span>
           )}
+          <ExportButton getReportConfig={buildPDFConfig} label="Export PDF" compact />
           <button onClick={() => setShowAdd(true)} className="h-6 px-2.5 rounded-[5px] text-[11px] font-medium bg-indigo-600 text-white hover:bg-indigo-500 flex items-center gap-1">
             <Plus className="w-3 h-3" /> New Contract
           </button>
