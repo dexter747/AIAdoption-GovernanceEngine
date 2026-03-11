@@ -24,6 +24,7 @@ import {
   Banknote,
   Leaf,
   FileText,
+  ClipboardList,
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
@@ -44,6 +45,7 @@ const solutionsNav = [
   { name: 'AML / SAR', href: '/aml', icon: Banknote },
   { name: 'ESG', href: '/esg', icon: Leaf },
   { name: 'Reporting', href: '/client-reporting', icon: FileText },
+  { name: 'Audit Trail', href: '/audit-trail', icon: ClipboardList },
 ];
 
 const settingsNav = [
