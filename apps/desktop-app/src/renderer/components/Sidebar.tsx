@@ -57,6 +57,7 @@ const solutionsNav = [
   { name: 'Jurisdictions', href: '/multi-jurisdiction', icon: Globe },
   { name: 'Workflows', href: '/workflows', icon: Workflow },
   { name: 'AI Governance', href: '/ai-governance', icon: Brain },
+  { name: 'Bias Monitor', href: '/bias-monitoring', icon: Scale },
 ];
 
 const settingsNav = [
