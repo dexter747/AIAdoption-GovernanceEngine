@@ -4,6 +4,7 @@ import { useAuth } from './hooks/useAuth';
 import { LicenseProvider } from './context/LicenseContext';
 import { ToastProvider } from './components/ui/toast';
 import { ErrorBoundary } from './components/ui/error-boundary';
+import { NotificationProvider } from './components/ui/NotificationSystem';
 import Sidebar from './components/Sidebar';
 import { useState, useEffect, lazy, Suspense, memo } from 'react';
 
@@ -320,7 +321,9 @@ function App() {
       <AuthProvider>
         <LicenseProvider>
           <ToastProvider>
-            <AppRoutes />
+            <NotificationProvider>
+              <AppRoutes />
+            </NotificationProvider>
           </ToastProvider>
         </LicenseProvider>
       </AuthProvider>

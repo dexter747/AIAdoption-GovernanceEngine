@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useCachedAvatar } from '../hooks/useCachedAvatar';
+import { NotificationBell } from './ui/NotificationSystem';
 import {
   MessageSquare,
   Settings,
@@ -130,15 +131,18 @@ export default function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
             <span className="text-[14px] font-medium tracking-tight text-white/90">Velanova</span>
           )}
         </div>
-        {onToggle && !collapsed && (
-          <button
-            onClick={onToggle}
-            className="p-1.5 rounded-md text-zinc-600 hover:text-zinc-400 hover:bg-white/[0.05] transition-all app-region-no-drag"
-            title="Collapse sidebar"
-          >
-            <PanelLeftClose className="w-3.5 h-3.5" />
-          </button>
-        )}
+        <div className="flex items-center gap-1 app-region-no-drag">
+          {!collapsed && <NotificationBell />}
+          {onToggle && !collapsed && (
+            <button
+              onClick={onToggle}
+              className="p-1.5 rounded-md text-zinc-600 hover:text-zinc-400 hover:bg-white/[0.05] transition-all"
+              title="Collapse sidebar"
+            >
+              <PanelLeftClose className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* ── Expand button (collapsed state only) ── */}
