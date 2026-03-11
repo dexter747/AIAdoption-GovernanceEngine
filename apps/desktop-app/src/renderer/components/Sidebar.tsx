@@ -56,6 +56,7 @@ const solutionsNav = [
   { name: 'Data Sovereignty', href: '/data-sovereignty', icon: Database },
   { name: 'Jurisdictions', href: '/multi-jurisdiction', icon: Globe },
   { name: 'Workflows', href: '/workflows', icon: Workflow },
+  { name: 'AI Governance', href: '/ai-governance', icon: Brain },
 ];
 
 const settingsNav = [
