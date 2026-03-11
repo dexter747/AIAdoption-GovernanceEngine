@@ -28,6 +28,7 @@ import {
   ClipboardList,
   Globe,
   Sparkles,
+  Database,
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
@@ -52,6 +53,7 @@ const solutionsNav = [
   { name: 'Risk Heatmap', href: '/risk-heatmap', icon: Globe },
   { name: 'Exec Summary', href: '/executive-summary', icon: Sparkles },
   { name: 'Compliance', href: '/compliance-matrix', icon: Shield },
+  { name: 'Data Sovereignty', href: '/data-sovereignty', icon: Database },
 ];
 
 const settingsNav = [
