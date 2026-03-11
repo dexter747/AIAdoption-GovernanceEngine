@@ -25,6 +25,7 @@ import {
   Leaf,
   FileText,
   ClipboardList,
+  Globe,
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
@@ -46,6 +47,7 @@ const solutionsNav = [
   { name: 'ESG', href: '/esg', icon: Leaf },
   { name: 'Reporting', href: '/client-reporting', icon: FileText },
   { name: 'Audit Trail', href: '/audit-trail', icon: ClipboardList },
+  { name: 'Risk Heatmap', href: '/risk-heatmap', icon: Globe },
 ];
 
 const settingsNav = [
