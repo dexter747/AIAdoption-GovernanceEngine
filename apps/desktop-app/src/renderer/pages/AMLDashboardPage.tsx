@@ -70,13 +70,7 @@ const MOCK_RULES = [
   { id: 'r7', rule_name: 'Round-Tripping Detection', rule_type: 'pattern', description: 'Detect funds returning to originator through intermediary accounts within 30 days', severity: 'high', is_active: false, matches_count: 0, conditions: { window_days: 30, min_amount: 50000 } },
 ];
 
-const MOCK_DASHBOARD = {
-  totalAccounts: 8, highRiskAccounts: 3, totalTransactions: 1247, flaggedTransactions: 42,
-  totalVolume: 18450000, avgRiskScore: 34, openAlerts: 4, criticalAlerts: 2,
-  activeRules: 6, totalRules: 7, pendingSARs: 2, filedSARs: 1, totalSARs: 3,
-  alertsBySeverity: { low: 1, medium: 1, high: 2, critical: 2 },
-  alertsByType: { structuring: 1, sanctions_match: 1, pep_transaction: 1, geographic_risk: 1, velocity_anomaly: 1, behavioral_anomaly: 1 },
-};
+/* MOCK_DASHBOARD removed — all dashboard fields now computed from live state */
 
 // Monthly trend data
 const MONTHLY_TRENDS = [
@@ -107,11 +101,66 @@ const COLORS = ['#6366f1', '#ef4444', '#f59e0b', '#10b981', '#8b5cf6', '#ec4899'
 
 export default function AMLDashboardPage() {
   const [tab, setTab] = useState<Tab>('overview');
+  const [alerts, setAlerts] = useState(MOCK_ALERTS);
+  const [sars, setSars] = useState(MOCK_SARS);
+  const [accounts] = useState(MOCK_ACCOUNTS);
+  const [transactions] = useState(MOCK_TRANSACTIONS);
+  const [rules] = useState(MOCK_RULES);
   const [selectedAlert, setSelectedAlert] = useState<typeof MOCK_ALERTS[0] | null>(null);
   const [selectedSAR, setSelectedSAR] = useState<typeof MOCK_SARS[0] | null>(null);
   const [screeningId, setScreeningId] = useState<string | null>(null);
 
-  const dash = MOCK_DASHBOARD;
+  /* Derive dashboard from live state */
+  const dash = (() => {
+    const highRiskAccounts = accounts.filter(a => ['high', 'enhanced'].includes(a.risk_tier)).length;
+    const flaggedTransactions = transactions.filter(t => t.flagged).length;
+    const openAlerts = alerts.filter(a => !['resolved', 'false_positive'].includes(a.status)).length;
+    const criticalAlerts = alerts.filter(a => a.severity === 'critical' && a.status !== 'resolved').length;
+    const activeRules = rules.filter(r => r.is_active).length;
+    const pendingSARs = sars.filter(s => ['draft', 'in_review'].includes(s.status)).length;
+    const filedSARs = sars.filter(s => ['submitted', 'acknowledged'].includes(s.status)).length;
+    const alertsBySeverity: Record<string, number> = {};
+    alerts.forEach(a => { alertsBySeverity[a.severity] = (alertsBySeverity[a.severity] || 0) + 1; });
+    const alertsByType: Record<string, number> = {};
+    alerts.forEach(a => { alertsByType[a.alert_type] = (alertsByType[a.alert_type] || 0) + 1; });
+    return {
+      totalAccounts: accounts.length, highRiskAccounts,
+      totalTransactions: transactions.length, flaggedTransactions,
+      totalVolume: transactions.reduce((s, t) => s + t.amount, 0),
+      avgRiskScore: Math.round(transactions.reduce((s, t) => s + t.risk_score, 0) / (transactions.length || 1)),
+      openAlerts, criticalAlerts,
+      activeRules, totalRules: rules.length,
+      pendingSARs, filedSARs, totalSARs: sars.length,
+      alertsBySeverity, alertsByType,
+    };
+  })();
+
+  /* CRUD handlers for alerts */
+  const handleEscalateAlert = (id: string) => setAlerts(prev => prev.map(a => a.id === id ? { ...a, status: 'escalated' } : a));
+  const handleResolveAlert = (id: string) => setAlerts(prev => prev.map(a => a.id === id ? { ...a, status: 'resolved' } : a));
+  const handleFileSAR = (alert: typeof MOCK_ALERTS[0]) => {
+    const newSAR = {
+      id: `s${Date.now()}`, report_ref: `SAR-2026-${String(sars.length + 40).padStart(4, '0')}`,
+      report_type: 'SAR' as const, status: 'draft', priority: alert.severity === 'critical' ? 'critical' : 'standard',
+      subject_name: alert.title.split('—')[1]?.trim() || alert.title,
+      subject_account: '', subject_type: 'unknown',
+      total_suspicious_amount: 0, currency: 'GBP',
+      narrative: alert.description || '', created_at: new Date().toISOString(),
+    };
+    setSars(prev => [newSAR, ...prev]);
+    setAlerts(prev => prev.map(a => a.id === alert.id ? { ...a, status: 'sar_filed' } : a));
+  };
+
+  /* New SAR (blank draft) */
+  const handleNewSAR = () => {
+    const newSAR = {
+      id: `s${Date.now()}`, report_ref: `SAR-2026-${String(sars.length + 40).padStart(4, '0')}`,
+      report_type: 'SAR' as const, status: 'draft', priority: 'standard',
+      subject_name: 'New Report', subject_account: '', subject_type: 'unknown',
+      total_suspicious_amount: 0, currency: 'GBP', narrative: '', created_at: new Date().toISOString(),
+    };
+    setSars(prev => [newSAR, ...prev]);
+  };
 
   const fmtCurrency = (v: number, c = 'GBP') => {
     const sym: Record<string, string> = { GBP: '£', USD: '$', EUR: '€', CHF: 'CHF ', AED: 'AED ' };
@@ -133,19 +182,19 @@ export default function AMLDashboardPage() {
       ] },
       { type: 'heading', title: 'Flagged Transactions' },
       { type: 'table', columns: ['Ref', 'Account', 'Type', 'Amount', 'Counterparty', 'Risk', 'Status'],
-        rows: MOCK_TRANSACTIONS.filter(t => t.flagged).map(t => [t.transaction_ref, t.account_id, t.transaction_type, fmtCurrency(t.amount, t.currency), t.counterparty_name, String(t.risk_score), t.screening_status]),
+        rows: transactions.filter(t => t.flagged).map(t => [t.transaction_ref, t.account_id, t.transaction_type, fmtCurrency(t.amount, t.currency), t.counterparty_name, String(t.risk_score), t.screening_status]),
       },
       { type: 'heading', title: 'Open Alerts' },
       { type: 'table', columns: ['Type', 'Severity', 'Title', 'AI Confidence', 'Status'],
-        rows: MOCK_ALERTS.filter(a => a.status !== 'resolved').map(a => [a.alert_type.replace(/_/g, ' '), a.severity, a.title, a.ai_confidence ? a.ai_confidence + '%' : '-', a.status]),
+        rows: alerts.filter(a => a.status !== 'resolved').map(a => [a.alert_type.replace(/_/g, ' '), a.severity, a.title, a.ai_confidence ? a.ai_confidence + '%' : '-', a.status]),
       },
       { type: 'heading', title: 'Suspicious Activity Reports' },
       { type: 'table', columns: ['Ref', 'Type', 'Priority', 'Subject', 'Amount', 'Status'],
-        rows: MOCK_SARS.map(s => [s.report_ref, s.report_type, s.priority, s.subject_name, fmtCurrency(s.total_suspicious_amount, s.currency), s.status]),
+        rows: sars.map(s => [s.report_ref, s.report_type, s.priority, s.subject_name, fmtCurrency(s.total_suspicious_amount, s.currency), s.status]),
       },
       { type: 'heading', title: 'Active Monitoring Rules' },
       { type: 'table', columns: ['Rule', 'Type', 'Severity', 'Active', 'Matches'],
-        rows: MOCK_RULES.map(r => [r.rule_name, r.rule_type, r.severity, r.is_active ? 'Yes' : 'No', String(r.matches_count)]),
+        rows: rules.map(r => [r.rule_name, r.rule_type, r.severity, r.is_active ? 'Yes' : 'No', String(r.matches_count)]),
       },
     ],
   });
@@ -164,15 +213,15 @@ export default function AMLDashboardPage() {
         <div className="flex-1" />
         <div className="flex items-center gap-1.5 app-region-no-drag">
           <ExportButton getReportConfig={buildPDFConfig} label="Export PDF" compact />
-          <button className="h-6 px-2.5 rounded-[5px] text-[11px] text-white/40 hover:text-white/60 hover:bg-white/[0.04] flex items-center gap-1"><Zap className="w-3 h-3" /> Run Screening</button>
-          <button className="h-6 px-2.5 rounded-[5px] text-[11px] font-medium bg-indigo-600 text-white hover:bg-indigo-500 flex items-center gap-1"><Plus className="w-3 h-3" /> New SAR</button>
+          <button onClick={() => setTab('transactions')} className="h-6 px-2.5 rounded-[5px] text-[11px] text-white/40 hover:text-white/60 hover:bg-white/[0.04] flex items-center gap-1"><Zap className="w-3 h-3" /> Run Screening</button>
+          <button onClick={handleNewSAR} className="h-6 px-2.5 rounded-[5px] text-[11px] font-medium bg-indigo-600 text-white hover:bg-indigo-500 flex items-center gap-1"><Plus className="w-3 h-3" /> New SAR</button>
         </div>
       </div>
 
       {/* Tab bar */}
       <div className="flex items-center gap-1 px-5 pt-3 pb-0">
         {(['overview', 'transactions', 'alerts', 'sars', 'rules', 'accounts'] as Tab[]).map(t => (
-          <button key={t} onClick={() => { setTab(t); setSelectedAlert(null); setSelectedSAR(null); }} className={cn('px-3 py-1.5 text-[11px] font-medium rounded-t capitalize', tab === t ? 'text-white bg-white/[0.06]' : 'text-zinc-500 hover:text-zinc-300')}>
+          <button key={t} onClick={() => { setTab(t); setSelectedAlert(null); setSelectedSAR(null); setScreeningId(null); }} className={cn('px-3 py-1.5 text-[11px] font-medium rounded-t capitalize', tab === t ? 'text-white bg-white/[0.06]' : 'text-zinc-500 hover:text-zinc-300')}>
             {t === 'sars' ? 'SARs' : t}
           </button>
         ))}
@@ -262,7 +311,7 @@ export default function AMLDashboardPage() {
             <div className="rounded-xl border border-white/[0.06] bg-[#0a0a0a] p-4">
               <h3 className="text-[12px] font-medium text-white/70 mb-3">Recent Critical Alerts</h3>
               <div className="space-y-2">
-                {MOCK_ALERTS.filter(a => a.severity === 'critical' || a.severity === 'high').map(a => (
+                {alerts.filter(a => a.severity === 'critical' || a.severity === 'high').map(a => (
                   <div key={a.id} onClick={() => { setTab('alerts'); setSelectedAlert(a); }} className="flex items-center gap-3 p-3 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] cursor-pointer transition-colors">
                     <AlertTriangle className={cn('w-4 h-4 flex-shrink-0', a.severity === 'critical' ? 'text-red-400' : 'text-amber-400')} />
                     <div className="flex-1 min-w-0">
@@ -285,12 +334,12 @@ export default function AMLDashboardPage() {
               <div className="p-4 border-b border-white/[0.06] flex items-center justify-between">
                 <h3 className="text-[12px] font-medium text-white/70">AML Transaction Monitor</h3>
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] text-zinc-600">{MOCK_TRANSACTIONS.length} transactions · {MOCK_TRANSACTIONS.filter(t => t.flagged).length} flagged</span>
+                  <span className="text-[10px] text-zinc-600">{transactions.length} transactions · {transactions.filter(t => t.flagged).length} flagged</span>
                 </div>
               </div>
               <div className="divide-y divide-white/[0.04]">
-                {MOCK_TRANSACTIONS.map(t => {
-                  const acct = MOCK_ACCOUNTS.find(a => a.id === t.account_id);
+                {transactions.map(t => {
+                  const acct = accounts.find(a => a.id === t.account_id);
                   return (
                     <div key={t.id}>
                       <div className={cn('flex items-center gap-4 px-4 py-3 hover:bg-white/[0.02] transition-colors', t.flagged && 'bg-red-950/5')}>
@@ -370,7 +419,7 @@ export default function AMLDashboardPage() {
                 <h3 className="text-[12px] font-medium text-white/70">AML Alerts</h3>
               </div>
               <div className="divide-y divide-white/[0.04]">
-                {MOCK_ALERTS.map(a => (
+                {alerts.map(a => (
                   <div key={a.id} onClick={() => setSelectedAlert(a)} className="flex items-center gap-4 px-4 py-3 hover:bg-white/[0.02] cursor-pointer transition-colors">
                     <AlertTriangle className={cn('w-4 h-4 flex-shrink-0', a.severity === 'critical' ? 'text-red-400' : a.severity === 'high' ? 'text-amber-400' : a.severity === 'medium' ? 'text-blue-400' : 'text-zinc-500')} />
                     <div className="flex-1 min-w-0">
@@ -408,9 +457,9 @@ export default function AMLDashboardPage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <button className="h-7 px-3 rounded-lg text-[11px] text-amber-400 border border-amber-400/20 hover:bg-amber-400/5">Escalate</button>
-                  <button className="h-7 px-3 rounded-lg text-[11px] text-emerald-400 border border-emerald-400/20 hover:bg-emerald-400/5">Resolve</button>
-                  <button className="h-7 px-3 rounded-lg text-[11px] bg-indigo-600 text-white hover:bg-indigo-500">File SAR</button>
+                  <button onClick={() => { handleEscalateAlert(selectedAlert.id); setSelectedAlert({ ...selectedAlert, status: 'escalated' }); }} className="h-7 px-3 rounded-lg text-[11px] text-amber-400 border border-amber-400/20 hover:bg-amber-400/5">Escalate</button>
+                  <button onClick={() => { handleResolveAlert(selectedAlert.id); setSelectedAlert(null); }} className="h-7 px-3 rounded-lg text-[11px] text-emerald-400 border border-emerald-400/20 hover:bg-emerald-400/5">Resolve</button>
+                  <button onClick={() => { handleFileSAR(selectedAlert); setSelectedAlert(null); setTab('sars'); }} className="h-7 px-3 rounded-lg text-[11px] bg-indigo-600 text-white hover:bg-indigo-500">File SAR</button>
                 </div>
               </div>
 
@@ -461,7 +510,7 @@ export default function AMLDashboardPage() {
                 <button className="h-6 px-2.5 rounded-[5px] text-[11px] font-medium bg-indigo-600/80 text-white hover:bg-indigo-500 flex items-center gap-1"><Plus className="w-3 h-3" /> New SAR</button>
               </div>
               <div className="divide-y divide-white/[0.04]">
-                {MOCK_SARS.map(s => (
+                {sars.map(s => (
                   <div key={s.id} onClick={() => setSelectedSAR(s)} className="flex items-center gap-4 px-4 py-3 hover:bg-white/[0.02] cursor-pointer transition-colors">
                     <FileText className={cn('w-4 h-4 flex-shrink-0', s.priority === 'critical' ? 'text-red-400' : s.priority === 'urgent' ? 'text-amber-400' : 'text-zinc-500')} />
                     <div className="w-32 flex-shrink-0">
@@ -564,7 +613,7 @@ export default function AMLDashboardPage() {
                 <button className="h-6 px-2.5 rounded-[5px] text-[11px] font-medium bg-indigo-600/80 text-white hover:bg-indigo-500 flex items-center gap-1"><Plus className="w-3 h-3" /> Add Rule</button>
               </div>
               <div className="divide-y divide-white/[0.04]">
-                {MOCK_RULES.map(r => (
+                {rules.map(r => (
                   <div key={r.id} className="flex items-center gap-4 px-4 py-3">
                     <div className={cn('w-2 h-2 rounded-full flex-shrink-0', r.is_active ? 'bg-emerald-500' : 'bg-zinc-700')} />
                     <div className="flex-1 min-w-0">
@@ -593,7 +642,7 @@ export default function AMLDashboardPage() {
                 <button className="h-6 px-2.5 rounded-[5px] text-[11px] font-medium bg-indigo-600/80 text-white hover:bg-indigo-500 flex items-center gap-1"><Plus className="w-3 h-3" /> Add Account</button>
               </div>
               <div className="divide-y divide-white/[0.04]">
-                {MOCK_ACCOUNTS.map(a => (
+                {accounts.map(a => (
                   <div key={a.id} className="flex items-center gap-4 px-4 py-3 hover:bg-white/[0.02] transition-colors">
                     <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center flex-shrink-0">
                       {a.account_type === 'corporate' ? <Building2 className="w-4 h-4 text-zinc-500" /> : a.account_type === 'trust' ? <Lock className="w-4 h-4 text-zinc-500" /> : <Users className="w-4 h-4 text-zinc-500" />}

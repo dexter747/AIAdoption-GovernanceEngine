@@ -29,6 +29,7 @@ import {
   Globe,
   Sparkles,
   Database,
+  Workflow,
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
@@ -58,6 +59,7 @@ const solutionsNav = [
   { name: 'Workflows', href: '/workflows', icon: Workflow },
   { name: 'AI Governance', href: '/ai-governance', icon: Brain },
   { name: 'Bias Monitor', href: '/bias-monitoring', icon: Scale },
+  { name: 'Sanctions', href: '/sanctions-screening', icon: ShieldAlert },
 ];
 
 const settingsNav = [

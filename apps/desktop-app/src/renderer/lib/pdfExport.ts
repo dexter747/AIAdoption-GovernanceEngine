@@ -139,7 +139,7 @@ export async function generatePDFReport(options: PDFReportOptions): Promise<void
         doc.setTextColor(...BRAND.white);
         doc.setFillColor(...BRAND.surface);
         doc.roundedRect(margin - 2, y - 4, w - (margin * 2) + 4, 10, 1, 1, 'F');
-        doc.text(section.title || '', margin, y + 3);
+        doc.text(section.title || section.content || '', margin, y + 3);
         y += 15;
         break;
       }

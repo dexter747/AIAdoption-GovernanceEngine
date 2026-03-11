@@ -9,6 +9,12 @@ export function formatDate(date: Date | string): string {
   const d = new Date(date);
   const now = new Date();
   const diff = now.getTime() - d.getTime();
+
+  // Future dates — show the actual date instead of negative relative time
+  if (diff < 0) {
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+
   const seconds = Math.floor(diff / 1000);
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);

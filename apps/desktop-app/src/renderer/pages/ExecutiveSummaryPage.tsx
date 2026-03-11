@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   FileText, Sparkles, RefreshCw, Clock,
-  Shield, AlertTriangle, TrendingUp, CheckCircle2,
+  Shield, AlertTriangle, TrendingUp, TrendingDown, CheckCircle2,
   Scale, Banknote, ScanSearch, ShieldAlert,
   Leaf, Users2,
 } from 'lucide-react';
@@ -150,11 +150,17 @@ export default function ExecutiveSummaryPage() {
   const [state, setState] = useState<GenerationState>('idle');
   const [sections, setSections] = useState<SummarySection[]>([]);
   const [generatedAt, setGeneratedAt] = useState<string>('');
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+  }, []);
 
   const generate = () => {
     setState('generating');
+    if (timerRef.current) clearTimeout(timerRef.current);
     // Simulate AI generation delay (in production, this would call BYOK model)
-    setTimeout(() => {
+    timerRef.current = setTimeout(() => {
       setSections(GENERATED_SUMMARY);
       setGeneratedAt(new Date().toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' }));
       setState('complete');
@@ -297,7 +303,7 @@ export default function ExecutiveSummaryPage() {
                           <div className="flex items-center gap-1.5">
                             <span className="text-[16px] font-semibold text-white/80">{m.value}</span>
                             {m.trend === 'up' && <TrendingUp className="w-3 h-3 text-red-400" />}
-                            {m.trend === 'down' && <TrendingUp className="w-3 h-3 text-emerald-400 rotate-180" />}
+                            {m.trend === 'down' && <TrendingDown className="w-3 h-3 text-emerald-400" />}
                           </div>
                         </div>
                       ))}

@@ -292,7 +292,7 @@ export default function BiasMonitoringPage() {
                     {report.biasLevel}
                   </span>
                   <div className="flex items-center gap-1">
-                    {report.trend === 'improving' ? <TrendingDown className="w-3 h-3 text-emerald-400" /> : report.trend === 'worsening' ? <TrendingUp className="w-3 h-3 text-red-400" /> : <span className="w-3 h-3 text-zinc-600">—</span>}
+                    {report.trend === 'improving' ? <TrendingUp className="w-3 h-3 text-emerald-400" /> : report.trend === 'worsening' ? <TrendingDown className="w-3 h-3 text-red-400" /> : <span className="w-3 h-3 text-zinc-600">—</span>}
                   </div>
                   {selectedReport === report.id ? <ChevronDown className="w-3.5 h-3.5 text-zinc-600" /> : <ChevronRight className="w-3.5 h-3.5 text-zinc-600" />}
                 </div>

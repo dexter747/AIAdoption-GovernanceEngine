@@ -2,7 +2,7 @@
    ExportButton — Reusable PDF export trigger for any page
    ═══════════════════════════════════════════════════════════════════════════ */
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { FileDown, Loader2, Check } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { generatePDFReport, PDFReportOptions } from '../../lib/pdfExport';
@@ -25,6 +25,11 @@ export default function ExportButton({
   className,
 }: ExportButtonProps) {
   const [status, setStatus] = useState<'idle' | 'generating' | 'done'>('idle');
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+  }, []);
 
   const handleExport = async () => {
     if (status === 'generating') return;
@@ -33,7 +38,8 @@ export default function ExportButton({
       const config = getReportConfig();
       await generatePDFReport(config);
       setStatus('done');
-      setTimeout(() => setStatus('idle'), 2000);
+      if (timerRef.current) clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => setStatus('idle'), 2000);
     } catch (err) {
       console.error('PDF export failed:', err);
       setStatus('idle');

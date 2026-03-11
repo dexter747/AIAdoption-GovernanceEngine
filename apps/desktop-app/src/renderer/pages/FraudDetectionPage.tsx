@@ -55,19 +55,7 @@ const MOCK_INVESTIGATIONS: Investigation[] = [
   { id: 'fi4', case_number: 'INV-2026-0012', status: 'closed', priority: 'medium', title: 'Trade-Based ML Screening — Baltic Maritime', summary: 'Review of large-value wire transfers to Latvia-based shipping company. Trade documentation verified. Case closed — legitimate commodity trading.', total_exposure: 485000, created_at: '2026-02-20T10:00:00Z' },
 ];
 
-const MOCK_DASHBOARD: DashData = {
-  totalTransactions: 1842,
-  flaggedTransactions: 67,
-  totalVolume: 24650000,
-  avgRiskScore: 31,
-  alertsOpen: 4,
-  alertsCritical: 2,
-  alertsBySeverity: { low: 1, medium: 1, high: 2, critical: 2 },
-  alertsByType: { structuring: 1, sanctions_evasion: 1, unusual_transfer: 1, account_takeover: 1, velocity_anomaly: 1, behavioral_anomaly: 1 },
-  investigationsOpen: 3,
-  totalExposure: 1389700,
-  byTxnType: { wire: 520, transfer: 680, deposit: 312, cash: 180, card: 150 },
-};
+/* MOCK_DASHBOARD removed — all DashData fields now computed from live state */
 
 type Tab = 'overview' | 'transactions' | 'alerts' | 'investigations';
 
@@ -89,21 +77,33 @@ export default function FraudDetectionPage() {
   const [addCountry, setAddCountry] = useState('JE');
   const [addChannel, setAddChannel] = useState('swift');
 
-  const dash: DashData = {
-    ...MOCK_DASHBOARD,
-    totalTransactions: transactions.length,
-    flaggedTransactions: transactions.filter(t => t.flagged).length,
-    alertsOpen: alerts.filter(a => !['resolved', 'false_positive'].includes(a.status)).length,
-    alertsCritical: alerts.filter(a => a.severity === 'critical' && a.status !== 'resolved').length,
-    investigationsOpen: investigations.filter(i => i.status === 'active').length,
-  };
+  const dash: DashData = (() => {
+    const totalTransactions = transactions.length;
+    const flaggedTransactions = transactions.filter(t => t.flagged).length;
+    const totalVolume = transactions.reduce((s, t) => s + t.amount, 0);
+    const scores = transactions.map(t => t.risk_score ?? 0);
+    const avgRiskScore = scores.length ? Math.round(scores.reduce((s, v) => s + v, 0) / scores.length) : 0;
+    const openAlerts = alerts.filter(a => !['resolved', 'false_positive'].includes(a.status));
+    const alertsOpen = openAlerts.length;
+    const alertsCritical = alerts.filter(a => a.severity === 'critical' && a.status !== 'resolved').length;
+    const alertsBySeverity: Record<string, number> = {};
+    alerts.forEach(a => { alertsBySeverity[a.severity] = (alertsBySeverity[a.severity] || 0) + 1; });
+    const alertsByType: Record<string, number> = {};
+    alerts.forEach(a => { alertsByType[a.alert_type] = (alertsByType[a.alert_type] || 0) + 1; });
+    const activeInvs = investigations.filter(i => i.status === 'active');
+    const investigationsOpen = activeInvs.length;
+    const totalExposure = activeInvs.reduce((s, i) => s + i.total_exposure, 0);
+    const byTxnType: Record<string, number> = {};
+    transactions.forEach(t => { byTxnType[t.type] = (byTxnType[t.type] || 0) + 1; });
+    return { totalTransactions, flaggedTransactions, totalVolume, avgRiskScore, alertsOpen, alertsCritical, alertsBySeverity, alertsByType, investigationsOpen, totalExposure, byTxnType };
+  })();
 
   const handleAddTxn = () => {
     const id = `ft${Date.now()}`;
     const ref = `TXN-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-JE${String(transactions.length + 1).padStart(3, '0')}`;
     setTransactions(prev => [{
       id, transaction_ref: ref, type: addType,
-      amount: parseFloat(addAmount) || 0, currency: addCurrency,
+      amount: Math.max(parseFloat(addAmount) || 0, 0.01), currency: addCurrency,
       counterparty: addCounterparty || 'New Counterparty',
       country_code: addCountry, channel: addChannel,
       status: 'pending', risk_score: 0, flagged: false,

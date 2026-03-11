@@ -165,6 +165,8 @@ export default function AuditTrailPage() {
     const d = new Date(iso);
     const now = new Date();
     const diff = now.getTime() - d.getTime();
+    // Future dates — show actual date instead of negative relative time
+    if (diff < 0) return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
     if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
     if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
     return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
