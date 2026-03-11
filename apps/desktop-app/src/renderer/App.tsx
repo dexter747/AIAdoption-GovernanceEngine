@@ -47,6 +47,7 @@ const ExecutiveSummaryPage = lazy(() => import('./pages/ExecutiveSummaryPage'));
 const ComplianceMatrixPage = lazy(() => import('./pages/ComplianceMatrixPage'));
 const DataSovereigntyPage = lazy(() => import('./pages/DataSovereigntyPage'));
 const MultiJurisdictionPage = lazy(() => import('./pages/MultiJurisdictionPage'));
+const WorkflowAutomationPage = lazy(() => import('./pages/WorkflowAutomationPage'));
 
 // ── Tiny spinner shown while a lazy chunk is downloading ───────────────────
 const PageFallback = memo(() => (
@@ -313,6 +314,7 @@ function AppRoutes() {
         <Route path="/compliance-matrix" element={<ProtectedRoute><AppLayout><ComplianceMatrixPage /></AppLayout></ProtectedRoute>} />
         <Route path="/data-sovereignty" element={<ProtectedRoute><AppLayout><DataSovereigntyPage /></AppLayout></ProtectedRoute>} />
         <Route path="/multi-jurisdiction" element={<ProtectedRoute><AppLayout><MultiJurisdictionPage /></AppLayout></ProtectedRoute>} />
+        <Route path="/workflows" element={<ProtectedRoute><AppLayout><WorkflowAutomationPage /></AppLayout></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>
