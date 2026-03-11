@@ -11,6 +11,7 @@ import {
 import { cn } from '../lib/utils';
 import ExportButton from '../components/ui/ExportButton';
 import type { PDFReportOptions } from '../lib/pdfExport';
+import AIExplainabilityPanel from '../components/ui/AIExplainabilityPanel';
 
 /* ═══════════════════════════════════════════════════════════════════════════
    COMPREHENSIVE MOCK DATA — KYC & Client Onboarding
@@ -293,28 +294,20 @@ export default function KYCDashboardPage() {
 
             {/* Risk Result */}
             {riskResult && (
-              <div className="rounded-xl border border-white/[0.06] bg-[#0a0a0a] p-4 space-y-3">
-                <div className="flex items-center gap-2"><Sparkles className="w-4 h-4 text-indigo-400" /><span className="text-[12px] font-medium text-white/70">AI Risk Assessment</span></div>
-                <p className="text-[12px] text-zinc-400">{riskResult.summary}</p>
-                {riskResult.factors?.length > 0 && (
-                  <div>{riskResult.factors.map((f: any, i: number) => (
-                    <div key={i} className="flex items-start gap-2 text-[11px] text-zinc-400 py-1">
-                      <span className={cn('w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0', f.impact === 'high' ? 'bg-red-500' : f.impact === 'medium' ? 'bg-amber-500' : 'bg-emerald-500')} />
-                      <div><span className="text-white/60">{f.factor}</span> \u2014 {f.detail}</div>
-                    </div>
-                  ))}</div>
-                )}
-                {riskResult.missingChecks?.length > 0 && (
-                  <div><h4 className="text-[11px] text-zinc-500 font-medium mb-1">Missing Checks</h4>
-                    {riskResult.missingChecks.map((m: string, i: number) => <span key={i} className="text-[10px] text-amber-400/80 mr-2"><AlertTriangle className="w-3 h-3 inline mr-0.5" />{m.replace('_', ' ')}</span>)}
-                  </div>
-                )}
-                {riskResult.recommendations?.length > 0 && (
-                  <div><h4 className="text-[11px] text-zinc-500 font-medium mb-1">Recommendations</h4>
-                    {riskResult.recommendations.map((r: string, i: number) => <div key={i} className="text-[11px] text-zinc-400 py-0.5"><span className="text-indigo-400 mr-1">\u2022</span>{r}</div>)}
-                  </div>
-                )}
-              </div>
+              <AIExplainabilityPanel
+                confidence={riskResult.riskScore}
+                reasoning={riskResult.summary}
+                recommendedAction={riskResult.recommendations?.join(' • ')}
+                defaultOpen
+                factors={riskResult.factors?.map((f: any) => ({
+                  factor: f.factor,
+                  weight: f.impact as 'high' | 'medium' | 'low',
+                  detail: f.detail,
+                }))}
+                riskFlags={riskResult.missingChecks}
+                dataSources={['JFSC Company Registry', 'World-Check PEP Database', 'Sanctions Lists (OFSI/EU/UN)', 'Jersey Comptroller Records', 'Adverse Media Screening']}
+                modelInfo={{ name: 'Velanova KYC Risk Engine', version: '2.8.0', type: 'Bayesian Risk Network + Rule-based Scoring' }}
+              />
             )}
 
             {/* Tabs */}
@@ -343,8 +336,14 @@ export default function KYCDashboardPage() {
                       </div>
                       <span className={cn('text-[10px] px-1.5 py-0.5 rounded capitalize', CHECK_IC[ch.status])}>{ch.status.replace('_', ' ')}</span>
                     </div>
-                    {ch.ai_assessment && <p className="text-[11px] text-zinc-500 mt-1">{ch.ai_assessment}</p>}
-                    {ch.ai_risk_flags?.length > 0 && <div className="flex gap-1 mt-1">{ch.ai_risk_flags.map((f, i) => <span key={i} className="text-[9px] px-1 rounded bg-red-900/20 text-red-400">{f}</span>)}</div>}
+                    {ch.ai_assessment && (
+                      <AIExplainabilityPanel
+                        compact
+                        confidence={ch.status === 'passed' ? 92 : ch.status === 'failed' ? 78 : 55}
+                        reasoning={ch.ai_assessment}
+                        riskFlags={ch.ai_risk_flags}
+                      />
+                    )}
                   </div>
                 ))}
               </div>

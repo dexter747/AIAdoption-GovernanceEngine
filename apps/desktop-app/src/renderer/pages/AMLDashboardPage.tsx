@@ -12,6 +12,7 @@ import {
 import { cn } from '../lib/utils';
 import ExportButton from '../components/ui/ExportButton';
 import type { PDFReportOptions } from '../lib/pdfExport';
+import AIExplainabilityPanel from '../components/ui/AIExplainabilityPanel';
 
 /* ═══════════════════════════════════════════════════════════════════════════
    COMPREHENSIVE MOCK DATA — AML & SAR
@@ -417,20 +418,36 @@ export default function AMLDashboardPage() {
                 <p className="text-[12px] text-white/70 leading-relaxed">{selectedAlert.description}</p>
               </div>
 
-              <div className="grid grid-cols-3 gap-3">
-                <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-                  <div className="text-[10px] text-zinc-600 uppercase mb-1">AI Confidence</div>
-                  <div className={cn('text-[18px] font-semibold', selectedAlert.ai_confidence! > 80 ? 'text-red-400' : selectedAlert.ai_confidence! > 60 ? 'text-amber-400' : 'text-blue-400')}>{selectedAlert.ai_confidence}%</div>
-                </div>
-                <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-                  <div className="text-[10px] text-zinc-600 uppercase mb-1">AI Reasoning</div>
-                  <p className="text-[11px] text-white/60 leading-relaxed">{selectedAlert.ai_reasoning}</p>
-                </div>
-                <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-                  <div className="text-[10px] text-zinc-600 uppercase mb-1">Recommended Action</div>
-                  <p className="text-[11px] text-white/60 leading-relaxed">{selectedAlert.ai_recommended_action}</p>
-                </div>
-              </div>
+              <AIExplainabilityPanel
+                confidence={selectedAlert.ai_confidence ?? 0}
+                reasoning={selectedAlert.ai_reasoning ?? 'No AI reasoning available'}
+                recommendedAction={selectedAlert.ai_recommended_action}
+                defaultOpen
+                factors={[
+                  ...(selectedAlert.alert_type === 'structuring' ? [
+                    { factor: 'Sub-threshold Pattern', weight: 'high' as const, detail: 'Multiple transactions deliberately kept below CHF 10,000 reporting threshold' },
+                    { factor: 'Temporal Clustering', weight: 'high' as const, detail: 'Three deposits within 72-hour rolling window' },
+                    { factor: 'Branch Distribution', weight: 'medium' as const, detail: 'Cash deposits across multiple branch locations' },
+                  ] : selectedAlert.alert_type === 'sanctions_match' ? [
+                    { factor: 'Active Sanctions Flag', weight: 'high' as const, detail: 'Account holder has existing sanctions designation' },
+                    { factor: 'High-Risk Jurisdiction', weight: 'high' as const, detail: 'Cyprus destination — commonly used for sanctions circumvention' },
+                    { factor: 'Unverified Beneficiary', weight: 'medium' as const, detail: 'Receiving entity has no verifiable corporate registration' },
+                  ] : selectedAlert.alert_type === 'pep_transaction' ? [
+                    { factor: 'PEP Designation', weight: 'high' as const, detail: 'Account holder is a Politically Exposed Person' },
+                    { factor: 'Elevated Activity', weight: 'medium' as const, detail: 'Transaction volumes exceed normal PEP account patterns' },
+                    { factor: 'Fund Consolidation', weight: 'medium' as const, detail: 'Pattern suggests aggregation of funds into external accounts' },
+                  ] : selectedAlert.alert_type === 'geographic_risk' ? [
+                    { factor: 'Jurisdiction Risk', weight: 'high' as const, detail: 'Latvia — FATF monitored jurisdiction for trade-based ML' },
+                    { factor: 'Adverse Media', weight: 'medium' as const, detail: 'Account holder has prior adverse media flags' },
+                    { factor: 'Transaction Value', weight: 'medium' as const, detail: 'Large-value wire exceeds enhanced due diligence threshold' },
+                  ] : [
+                    { factor: 'Pattern Deviation', weight: 'medium' as const, detail: 'Transaction behaviour deviates from established baseline' },
+                    { factor: 'Counterparty Profile', weight: 'low' as const, detail: 'Counterparty risk assessment within normal parameters' },
+                  ]),
+                ]}
+                dataSources={['Transaction Monitoring System', 'Sanctions Lists (OFSI/EU/UN/OFAC)', 'PEP Database', 'JFSC Registry', 'Adverse Media Feed']}
+                modelInfo={{ name: 'Velanova AML Detection Engine', version: '4.1.0', type: 'Ensemble (Gradient Boosting + Neural Network + Rule Engine)' }}
+              />
             </div>
           </div>
         )}

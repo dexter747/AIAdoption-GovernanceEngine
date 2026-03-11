@@ -11,6 +11,7 @@ import {
 import { cn } from '../lib/utils';
 import ExportButton from '../components/ui/ExportButton';
 import type { PDFReportOptions } from '../lib/pdfExport';
+import AIExplainabilityPanel from '../components/ui/AIExplainabilityPanel';
 
 /* ═══════════════════════════════════════════════════════════════════════════
    MOCK DATA — Fraud Detection & Transaction Monitoring (Jersey)
@@ -300,9 +301,33 @@ export default function FraudDetectionPage() {
                   </div>
                 </div>
                 {a.description && <p className="text-[11px] text-zinc-500">{a.description}</p>}
-                {a.ai_reasoning && <p className="text-[11px] text-zinc-400"><Sparkles className="w-3 h-3 inline mr-1 text-indigo-400" />{a.ai_reasoning}</p>}
-                {a.ai_recommended_action && <span className="text-[10px] text-indigo-400">Recommended: {a.ai_recommended_action}</span>}
-                {a.ai_confidence != null && <span className="text-[10px] text-zinc-600 ml-3">Confidence: {a.ai_confidence}%</span>}
+                {a.ai_confidence != null && (
+                  <AIExplainabilityPanel
+                    confidence={a.ai_confidence}
+                    reasoning={a.ai_reasoning || 'No reasoning available'}
+                    recommendedAction={a.ai_recommended_action}
+                    factors={[
+                      ...(a.alert_type === 'structuring' ? [
+                        { factor: 'Sub-threshold Deposits', weight: 'high' as const, detail: 'Multiple deposits within 2% of £10k reporting threshold' },
+                        { factor: 'Temporal Clustering', weight: 'high' as const, detail: 'All deposits made within 72-hour rolling window' },
+                        { factor: 'Branch Distribution', weight: 'medium' as const, detail: 'Deposits spread across multiple Jersey branches' },
+                      ] : a.alert_type === 'sanctions_evasion' ? [
+                        { factor: 'Sanctions Nexus', weight: 'high' as const, detail: 'Beneficial ownership linked to sanctioned jurisdiction' },
+                        { factor: 'Unregistered Entity', weight: 'high' as const, detail: 'Destination entity has no verifiable registration' },
+                        { factor: 'Transfer Value', weight: 'medium' as const, detail: 'High-value transfer — above enhanced due diligence threshold' },
+                      ] : a.alert_type === 'account_takeover' ? [
+                        { factor: 'Anomalous Login', weight: 'high' as const, detail: 'Tor exit node + brute-force login pattern detected' },
+                        { factor: 'Immediate Transfer', weight: 'high' as const, detail: 'High-value transfer initiated within minutes of access' },
+                        { factor: 'Offshore Destination', weight: 'medium' as const, detail: 'Funds directed to BVI — common shell company jurisdiction' },
+                      ] : [
+                        { factor: 'Pattern Match', weight: 'medium' as const, detail: 'Transaction pattern deviates from established baseline' },
+                        { factor: 'Risk Jurisdiction', weight: a.severity === 'high' || a.severity === 'critical' ? 'high' as const : 'low' as const, detail: 'Counterparty jurisdiction risk assessment' },
+                      ]),
+                    ]}
+                    dataSources={['Transaction Monitoring System', 'Sanctions Lists (OFSI/EU/UN)', 'Jersey Company Registry', 'Adverse Media Database']}
+                    modelInfo={{ name: 'Velanova Fraud Detection Engine', version: '3.2.1', type: 'Ensemble (XGBoost + Rule-based)' }}
+                  />
+                )}
               </div>
             ))}
           </div>
