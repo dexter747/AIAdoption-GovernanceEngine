@@ -4,7 +4,7 @@
    and that Sidebar navigation links resolve to the correct routes.
    ═══════════════════════════════════════════════════════════════════════ */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
@@ -66,11 +66,23 @@ describe('IT-1: Route-based page mounting', () => {
     { route: '/compliance-matrix', module: 'ComplianceMatrixPage', title: 'Compliance Matrix' },
     { route: '/executive-summary', module: 'ExecutiveSummaryPage', title: 'Executive Summary' },
     { route: '/data-sovereignty', module: 'DataSovereigntyPage', title: 'Data Sovereignty' },
-    { route: '/multi-jurisdiction', module: 'MultiJurisdictionPage', title: 'Multi-Jurisdiction Comparison' },
+    {
+      route: '/multi-jurisdiction',
+      module: 'MultiJurisdictionPage',
+      title: 'Multi-Jurisdiction Comparison',
+    },
     { route: '/workflows', module: 'WorkflowAutomationPage', title: 'Workflow Automation' },
     { route: '/ai-governance', module: 'BYOKConfigPage', title: 'AI Model Governance' },
-    { route: '/bias-monitoring', module: 'BiasMonitoringPage', title: 'Bias & Fairness Monitoring' },
-    { route: '/sanctions-screening', module: 'SanctionsScreeningPage', title: 'Sanctions & PEP Screening' },
+    {
+      route: '/bias-monitoring',
+      module: 'BiasMonitoringPage',
+      title: 'Bias & Fairness Monitoring',
+    },
+    {
+      route: '/sanctions-screening',
+      module: 'SanctionsScreeningPage',
+      title: 'Sanctions & PEP Screening',
+    },
   ];
 
   routePageMap.forEach(({ route, module, title }) => {
@@ -165,10 +177,11 @@ describe('IT-3: PDF Export integration across pages', () => {
 
       // Find the export button (compact or full)
       const exportButtons = screen.getAllByRole('button');
-      const exportBtn = exportButtons.find(b =>
-        b.textContent?.includes('Export PDF') ||
-        b.getAttribute('title')?.includes('Export') ||
-        b.getAttribute('title')?.includes('Downloaded')
+      const exportBtn = exportButtons.find(
+        b =>
+          b.textContent?.includes('Export PDF') ||
+          b.getAttribute('title')?.includes('Export') ||
+          b.getAttribute('title')?.includes('Downloaded')
       );
 
       // compact buttons don't have text, find by svg icon in a button with title
@@ -189,14 +202,27 @@ describe('IT-3: PDF Export integration across pages', () => {
    ═══════════════════════════════════════════════════════════════════════ */
 describe('IT-4: Notification integration', () => {
   it('NotificationBell works when wrapped in provider with page content', async () => {
-    const { NotificationBell, useNotifications } = await import('../../components/ui/NotificationSystem');
+    const { NotificationBell, useNotifications } =
+      await import('../../components/ui/NotificationSystem');
 
     function PageWithBell() {
       const { addNotification, unreadCount } = useNotifications();
       return (
         <div>
           <span data-testid="unread">{unreadCount}</span>
-          <button data-testid="fire" onClick={() => addNotification({ severity: 'critical', title: 'Critical Alert', message: 'Test', module: 'AML' })}>Fire</button>
+          <button
+            data-testid="fire"
+            onClick={() =>
+              addNotification({
+                severity: 'critical',
+                title: 'Critical Alert',
+                message: 'Test',
+                module: 'AML',
+              })
+            }
+          >
+            Fire
+          </button>
           <NotificationBell />
         </div>
       );

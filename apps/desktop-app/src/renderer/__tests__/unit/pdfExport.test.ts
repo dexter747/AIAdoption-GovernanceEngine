@@ -7,10 +7,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // Use vi.hoisted so mock variables are available when vi.mock factories run (hoisted to top)
-const {
-  addPageMock, textMock, setFontSizeMock, setTextColorMock,
-  setFillColorMock, rectMock, saveMock, getWidthMock, getHeightMock, jsPDFMock,
-} = vi.hoisted(() => {
+const { textMock, saveMock, jsPDFMock } = vi.hoisted(() => {
   const addPageMock = vi.fn();
   const textMock = vi.fn();
   const setFontSizeMock = vi.fn();
@@ -43,7 +40,18 @@ const {
     },
   }));
 
-  return { addPageMock, textMock, setFontSizeMock, setTextColorMock, setFillColorMock, rectMock, saveMock, getWidthMock, getHeightMock, jsPDFMock };
+  return {
+    addPageMock,
+    textMock,
+    setFontSizeMock,
+    setTextColorMock,
+    setFillColorMock,
+    rectMock,
+    saveMock,
+    getWidthMock,
+    getHeightMock,
+    jsPDFMock,
+  };
 });
 
 vi.mock('jspdf', () => ({ default: jsPDFMock }));
@@ -159,7 +167,8 @@ describe('generatePDFReport', () => {
     await generatePDFReport(config);
 
     const headingCalls = textMock.mock.calls.filter(
-      (c: unknown[]) => typeof c[0] === 'string' && (c[0] as string).includes('Content-Only Heading')
+      (c: unknown[]) =>
+        typeof c[0] === 'string' && (c[0] as string).includes('Content-Only Heading')
     );
     expect(headingCalls.length).toBeGreaterThan(0);
   });

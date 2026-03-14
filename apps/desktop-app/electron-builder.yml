@@ -1,14 +1,18 @@
-appId: ai.nexus.desktop
+appId: com.velanova.desktop
 productName: Velanova
 copyright: Copyright © 2026 Velanova
 
+artifactName: "${productName}-${version}-${os}-${arch}.${ext}"
+
 directories:
-  output: dist
+  output: release
   buildResources: build
 
 files:
-  - "**/*"
-  - "!**/.git"
+  - electron.js
+  - "dist/**/*"
+  - "node_modules/**/*"
+  - "package.json"
   - "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}"
   - "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}"
   - "!**/node_modules/*.d.ts"
@@ -21,8 +25,20 @@ files:
   - "!**/{appveyor.yml,.travis.yml,circle.yml}"
   - "!**/{npm-debug.log,yarn.lock,.yarn-integrity,.yarn-metadata.json}"
 
+extraResources:
+  - from: "../../packages/mcp-servers"
+    to: "mcp-servers"
+    filter:
+      - "*/dist/**/*"
+      - "*/package.json"
+
+protocols:
+  - name: Velanova Protocol
+    schemes:
+      - velanova
+
 mac:
-  category: public.app-category.productivity
+  category: public.app-category.developer-tools
   target:
     - target: dmg
       arch: [x64, arm64]
@@ -33,13 +49,6 @@ mac:
   gatekeeperAssess: false
   entitlements: build/entitlements.mac.plist
   entitlementsInherit: build/entitlements.mac.plist
-  extraResources:
-    - from: "node_modules/@modelcontextprotocol"
-      to: "mcp-servers"
-      filter: ["**/*"]
-    - from: "../../packages/mcp-servers"
-      to: "mcp-servers-custom"
-      filter: ["*/dist/**", "*/package.json"]
 
 dmg:
   contents:
@@ -56,51 +65,44 @@ dmg:
 win:
   target:
     - target: nsis
-      arch: [x64, ia32]
+      arch: [x64]
     - target: portable
-      arch: [x64, ia32]
+      arch: [x64]
   icon: build/icon.ico
-  extraResources:
-    - from: "node_modules/@modelcontextprotocol"
-      to: "mcp-servers"
-      filter: ["**/*"]
-    - from: "../../packages/mcp-servers"
-      to: "mcp-servers-custom"
-      filter: ["*/dist/**", "*/package.json"]
+  publisherName: "Velanova Inc."
+  verifyUpdateCodeSignature: false
+  requestedExecutionLevel: asInvoker
 
 nsis:
   oneClick: false
-  perMachine: false
+  perMachine: true
   allowToChangeInstallationDirectory: true
+  allowElevation: true
   deleteAppDataOnUninstall: true
   createDesktopShortcut: always
   createStartMenuShortcut: true
   shortcutName: Velanova
-  installerIcon: build/icon.ico
-  uninstallerIcon: build/icon.ico
-  installerHeaderIcon: build/icon.ico
   include: build/installer.nsh
+  license: "../../LICENSE"
 
 linux:
   target:
     - target: AppImage
-      arch: [x64, arm64]
+      arch: [x64]
     - target: deb
-      arch: [x64, arm64]
+      arch: [x64]
     - target: rpm
-      arch: [x64, arm64]
-  category: Office
-  icon: build/icons
-  extraResources:
-    - from: "node_modules/@modelcontextprotocol"
-      to: "mcp-servers"
-      filter: ["**/*"]
-    - from: "../../packages/mcp-servers"
-      to: "mcp-servers-custom"
-      filter: ["*/dist/**", "*/package.json"]
+      arch: [x64]
+  category: Development
+  icon: build/icon.png
+  mimeTypes:
+    - "x-scheme-handler/velanova"
+  desktop:
+    StartupNotify: "true"
+    Terminal: "false"
 
 appImage:
-  license: LICENSE
+  artifactName: "${productName}-${version}-${arch}.${ext}"
 
 deb:
   depends:

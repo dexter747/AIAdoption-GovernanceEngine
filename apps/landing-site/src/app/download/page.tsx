@@ -68,7 +68,7 @@ export default function DownloadPage() {
     setDetected(true);
   }, []);
 
-  const currentVersion = '1.0.1';
+  const currentVersion = '1.1.0';
   const releaseDate = 'Latest';
   const ghRelease = `https://github.com/Nexolve-Technologies-India/AIAdoption-GovernanceEngine/releases/download/v${currentVersion}`;
 

@@ -16,14 +16,14 @@ const blobCache = new Map<string, string>();
 const inflightRequests = new Map<string, Promise<string>>();
 
 /** Generate a tiny SVG data-URL avatar with the user's initial(s). */
-function fallbackAvatar(url: string): string {
+function fallbackAvatar(_url: string): string {
   // Try to extract initials from Google URL (won't always work — just a nice-to-have)
   const letter = 'U';
   return `data:image/svg+xml,${encodeURIComponent(
     `<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96">` +
-    `<rect width="96" height="96" rx="48" fill="%236366f1"/>` +
-    `<text x="48" y="54" text-anchor="middle" dominant-baseline="middle" font-family="system-ui,sans-serif" font-size="40" fill="white">${letter}</text>` +
-    `</svg>`
+      `<rect width="96" height="96" rx="48" fill="%236366f1"/>` +
+      `<text x="48" y="54" text-anchor="middle" dominant-baseline="middle" font-family="system-ui,sans-serif" font-size="40" fill="white">${letter}</text>` +
+      `</svg>`
   )}`;
 }
 
@@ -50,7 +50,9 @@ function fetchAndCache(remoteUrl: string): Promise<string> {
           }
         };
         reader.readAsDataURL(blob);
-      } catch { /* sessionStorage may fail — not critical */ }
+      } catch {
+        /* sessionStorage may fail — not critical */
+      }
 
       return objectUrl;
     } catch {
@@ -95,7 +97,9 @@ export function useCachedAvatar(remoteUrl: string | undefined): string | undefin
       if (!cancelled) setLocalUrl(url);
     });
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [remoteUrl]);
 
   return localUrl;

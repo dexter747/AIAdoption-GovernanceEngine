@@ -1,10 +1,14 @@
 {
   "name": "desktop-app",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "private": true,
   "main": "./electron.js",
   "description": "Velanova Desktop Application - Electron + React + TypeScript",
-  "author": "Velanova Team",
+  "author": {
+    "name": "Velanova Team",
+    "email": "engineering@velanova.ai"
+  },
+  "homepage": "https://github.com/Nexolve-Technologies-India/AIAdoption-GovernanceEngine",
   "scripts": {
     "dev": "pnpm run build:preload && concurrently \"pnpm run dev:renderer\" \"pnpm run dev:electron\"",
     "dev:renderer": "vite --port 5199 --strictPort",
@@ -195,12 +199,11 @@
         {
           "target": "nsis",
           "arch": [
-            "x64",
-            "ia32"
+            "x64"
           ]
         },
         {
-          "target": "msi",
+          "target": "portable",
           "arch": [
             "x64"
           ]
@@ -208,7 +211,8 @@
       ],
       "icon": "build/icon.ico",
       "publisherName": "Velanova Inc.",
-      "verifyUpdateCodeSignature": false
+      "verifyUpdateCodeSignature": false,
+      "requestedExecutionLevel": "asInvoker"
     },
     "linux": {
       "target": [
