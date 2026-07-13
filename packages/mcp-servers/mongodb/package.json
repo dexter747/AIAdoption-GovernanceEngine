@@ -1,0 +1,23 @@
+{
+  "name": "@velanova/mcp-server-mongodb",
+  "version": "1.0.0",
+  "description": "Model Context Protocol server for MongoDB",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "mcp-mongodb": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "mongodb": "^6.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.6",
+    "typescript": "^5.3.3"
+  }
+}

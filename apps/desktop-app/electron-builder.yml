@@ -1,0 +1,127 @@
+appId: com.velanova.desktop
+productName: Velanova
+copyright: Copyright © 2026 Velanova
+
+artifactName: "${productName}-${version}-${os}-${arch}.${ext}"
+
+directories:
+  output: release
+  buildResources: build
+
+files:
+  - electron.js
+  - "dist/**/*"
+  - "node_modules/**/*"
+  - "package.json"
+  - "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}"
+  - "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}"
+  - "!**/node_modules/*.d.ts"
+  - "!**/node_modules/.bin"
+  - "!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,xproj}"
+  - "!.editorconfig"
+  - "!**/._*"
+  - "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,.gitignore,.gitattributes}"
+  - "!**/{__pycache__,thumbs.db,.flowconfig,.idea,.vs,.nyc_output}"
+  - "!**/{appveyor.yml,.travis.yml,circle.yml}"
+  - "!**/{npm-debug.log,yarn.lock,.yarn-integrity,.yarn-metadata.json}"
+
+extraResources:
+  - from: "../../packages/mcp-servers"
+    to: "mcp-servers"
+    filter:
+      - "*/dist/**/*"
+      - "*/package.json"
+
+protocols:
+  - name: Velanova Protocol
+    schemes:
+      - velanova
+
+mac:
+  category: public.app-category.developer-tools
+  target:
+    - target: dmg
+      arch: [x64, arm64]
+    - target: zip
+      arch: [x64, arm64]
+  icon: build/icon.icns
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  entitlements: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.plist
+
+dmg:
+  contents:
+    - x: 130
+      y: 220
+    - x: 410
+      y: 220
+      type: link
+      path: /Applications
+  window:
+    width: 540
+    height: 380
+
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+    - target: portable
+      arch: [x64]
+  icon: build/icon.ico
+  publisherName: "Velanova Inc."
+  verifyUpdateCodeSignature: false
+  requestedExecutionLevel: asInvoker
+
+nsis:
+  oneClick: false
+  perMachine: true
+  allowToChangeInstallationDirectory: true
+  allowElevation: true
+  deleteAppDataOnUninstall: true
+  createDesktopShortcut: always
+  createStartMenuShortcut: true
+  shortcutName: Velanova
+  include: build/installer.nsh
+  license: "../../LICENSE"
+
+linux:
+  target:
+    - target: AppImage
+      arch: [x64]
+    - target: deb
+      arch: [x64]
+    - target: rpm
+      arch: [x64]
+  category: Development
+  icon: build/icon.png
+  mimeTypes:
+    - "x-scheme-handler/velanova"
+  desktop:
+    StartupNotify: "true"
+    Terminal: "false"
+
+appImage:
+  artifactName: "${productName}-${version}-${arch}.${ext}"
+
+deb:
+  depends:
+    - gconf2
+    - gconf-service
+    - libnotify4
+    - libappindicator1
+    - libxtst6
+    - libnss3
+
+rpm:
+  depends:
+    - libXScrnSaver
+
+publish:
+  provider: github
+  owner: Nexolve-Technologies-India
+  repo: AIAdoption-GovernanceEngine
+  releaseType: release
+
+# Auto-updater configuration
+electronUpdaterCompatibility: ">=2.16"

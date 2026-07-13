@@ -1,0 +1,23 @@
+{
+  "name": "@velanova/mcp-server-mysql",
+  "version": "1.0.0",
+  "description": "Model Context Protocol server for MySQL",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "mcp-mysql": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "mysql2": "^3.7.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.6",
+    "typescript": "^5.3.3"
+  }
+}

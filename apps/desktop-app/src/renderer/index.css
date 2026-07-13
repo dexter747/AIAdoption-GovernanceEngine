@@ -1,0 +1,859 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* ════════════════════════════════════════════════════════════
+     DARK THEME  (default — also applied when data-theme="dark")
+  ════════════════════════════════════════════════════════════ */
+  :root,
+  html[data-theme='dark'] {
+    /* ── Semantic color tokens ──────────────────────────────── */
+    --background: 0 0% 4%;
+    --foreground: 0 0% 96%;
+    --card: 0 0% 5.5%;
+    --card-foreground: 0 0% 96%;
+    --popover: 0 0% 6%;
+    --popover-foreground: 0 0% 96%;
+    --primary: 0 0% 97%;
+    --primary-foreground: 0 0% 6%;
+    --secondary: 0 0% 10%;
+    --secondary-foreground: 0 0% 96%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 44%;
+    --accent: 0 0% 12%;
+    --accent-foreground: 0 0% 96%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 96%;
+    --border: 0 0% 11%;
+    --input: 0 0% 10%;
+    --ring: 0 0% 70%;
+    --radius: 0.375rem;
+
+    /* Chart colors */
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+
+    /* ── Desktop panel tokens ───────────────────────────────── */
+    --sidebar-bg: #080808;
+    --panel-bg: #0b0b0b;
+    --surface-bg: #111111;
+    --surface-raised: #161616;
+    --surface-hover: rgba(255, 255, 255, 0.035);
+    --border-subtle: rgba(255, 255, 255, 0.055);
+    --border-faint: rgba(255, 255, 255, 0.032);
+    --text-primary: rgba(255, 255, 255, 0.92);
+    --text-secondary: rgba(255, 255, 255, 0.45);
+    --text-tertiary: rgba(255, 255, 255, 0.26);
+    --accent-blue: #3b82f6;
+    --toolbar-h: 38px;
+
+    /* ── Navigation tokens ──────────────────────────────────── */
+    --nav-active-bg: rgba(255, 255, 255, 0.08);
+    --nav-active-text: rgba(255, 255, 255, 1);
+    --nav-hover-text: rgba(255, 255, 255, 0.88);
+    --nav-default-text: rgba(255, 255, 255, 0.35);
+    --nav-section-label: rgba(255, 255, 255, 0.28);
+    --nav-line-color: rgba(255, 255, 255, 0.7);
+    --nav-line-shadow: rgba(255, 255, 255, 0.4);
+
+    /* ── Surface & card tokens ──────────────────────────────── */
+    --card-surface: rgba(255, 255, 255, 0.018);
+    --card-divider: rgba(255, 255, 255, 0.05);
+    --input-focus-border: rgba(255, 255, 255, 0.14);
+    --surface-card-hover: rgba(255, 255, 255, 0.09);
+
+    /* ── Scrollbar tokens ───────────────────────────────────── */
+    --scrollbar-thumb: rgba(255, 255, 255, 0.08);
+    --scrollbar-thumb-hover: rgba(255, 255, 255, 0.14);
+
+    /* ── Avatar / icon tokens ───────────────────────────────── */
+    --avatar-bg: rgba(255, 255, 255, 0.08);
+    --avatar-ring: rgba(255, 255, 255, 0.1);
+
+    /* ── Glow / shadow tokens ───────────────────────────────── */
+    --glow-pulse-low: rgba(255, 255, 255, 0.06);
+    --glow-pulse-high: rgba(255, 255, 255, 0.12);
+    --glass-hover-shadow: rgba(255, 255, 255, 0.07);
+
+    /* ── Login page ─────────────────────────────────────────── */
+    --login-bg: #030303;
+    --login-spinner-track: rgba(255, 255, 255, 0.2);
+    --login-spinner-head: rgba(255, 255, 255, 0.7);
+
+    /* ── Root background (matches Electron window color) ─────  */
+    --root-bg: #080808;
+  }
+
+  /* ════════════════════════════════════════════════════════════
+     LIGHT THEME
+  ════════════════════════════════════════════════════════════ */
+  html[data-theme='light'] {
+    /* ── Semantic color tokens ──────────────────────────────── */
+    --background: 0 0% 97%;
+    --foreground: 0 0% 8%;
+    --card: 0 0% 96%;
+    --card-foreground: 0 0% 8%;
+    --popover: 0 0% 96%;
+    --popover-foreground: 0 0% 8%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 97%;
+    --secondary: 0 0% 91%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 91%;
+    --muted-foreground: 0 0% 40%;
+    --accent: 0 0% 90%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 72% 46%;
+    --destructive-foreground: 0 0% 97%;
+    --border: 0 0% 83%;
+    --input: 0 0% 88%;
+    --ring: 0 0% 30%;
+    --radius: 0.375rem;
+
+    /* Chart colors — slightly more vibrant on light bg */
+    --chart-1: 220 75% 45%;
+    --chart-2: 160 65% 38%;
+    --chart-3: 30 85% 48%;
+    --chart-4: 280 70% 52%;
+    --chart-5: 340 80% 50%;
+
+    /* ── Desktop panel tokens ───────────────────────────────── */
+    --sidebar-bg: #f2f2f2;
+    --panel-bg: #f7f7f7;
+    --surface-bg: #ececec;
+    --surface-raised: #e5e5e5;
+    --surface-hover: rgba(0, 0, 0, 0.03);
+    --border-subtle: rgba(0, 0, 0, 0.08);
+    --border-faint: rgba(0, 0, 0, 0.048);
+    --text-primary: rgba(0, 0, 0, 0.88);
+    --text-secondary: rgba(0, 0, 0, 0.48);
+    --text-tertiary: rgba(0, 0, 0, 0.28);
+    --accent-blue: #2563eb;
+    --toolbar-h: 38px;
+
+    /* ── Navigation tokens ──────────────────────────────────── */
+    --nav-active-bg: rgba(0, 0, 0, 0.07);
+    --nav-active-text: rgba(0, 0, 0, 0.9);
+    --nav-hover-text: rgba(0, 0, 0, 0.8);
+    --nav-default-text: rgba(0, 0, 0, 0.4);
+    --nav-section-label: rgba(0, 0, 0, 0.3);
+    --nav-line-color: rgba(0, 0, 0, 0.65);
+    --nav-line-shadow: rgba(0, 0, 0, 0.15);
+
+    /* ── Surface & card tokens ──────────────────────────────── */
+    --card-surface: rgba(0, 0, 0, 0.025);
+    --card-divider: rgba(0, 0, 0, 0.06);
+    --input-focus-border: rgba(0, 0, 0, 0.18);
+    --surface-card-hover: rgba(0, 0, 0, 0.07);
+
+    /* ── Scrollbar tokens ───────────────────────────────────── */
+    --scrollbar-thumb: rgba(0, 0, 0, 0.14);
+    --scrollbar-thumb-hover: rgba(0, 0, 0, 0.22);
+
+    /* ── Avatar / icon tokens ───────────────────────────────── */
+    --avatar-bg: rgba(0, 0, 0, 0.07);
+    --avatar-ring: rgba(0, 0, 0, 0.1);
+
+    /* ── Glow / shadow tokens ───────────────────────────────── */
+    --glow-pulse-low: rgba(0, 0, 0, 0.04);
+    --glow-pulse-high: rgba(0, 0, 0, 0.1);
+    --glass-hover-shadow: rgba(0, 0, 0, 0.07);
+
+    /* ── Login page ─────────────────────────────────────────── */
+    --login-bg: #f5f5f5;
+    --login-spinner-track: rgba(0, 0, 0, 0.15);
+    --login-spinner-head: rgba(0, 0, 0, 0.65);
+
+    /* ── Root background ────────────────────────────────────── */
+    --root-bg: #f2f2f2;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+    overflow: hidden; /* desktop app — no browser scroll */
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    /* System UI font — looks native on every OS */
+    font-family:
+      -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI Variable', 'Segoe UI', sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    letter-spacing: -0.006em;
+    /* Suppress text cursor on non-editable elements */
+    user-select: none;
+  }
+
+  /* Re-enable selection where it makes sense */
+  input,
+  textarea,
+  [contenteditable],
+  code,
+  pre,
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    user-select: text;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DESKTOP-APP CHROME
+═══════════════════════════════════════════════════════════ */
+
+/* macOS window drag regions */
+.app-region-drag {
+  -webkit-app-region: drag;
+}
+.app-region-no-drag {
+  -webkit-app-region: no-drag;
+}
+
+/* ── Panel / toolbar primitives ──────────────────────────── */
+
+/* Page toolbar — fixed-height top bar, never scrolls */
+.toolbar {
+  height: var(--toolbar-h);
+  min-height: var(--toolbar-h);
+  max-height: var(--toolbar-h);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--panel-bg);
+  flex-shrink: 0;
+  -webkit-app-region: drag;
+}
+.toolbar > * {
+  -webkit-app-region: no-drag;
+}
+
+/* The fill area below a toolbar */
+.panel-body {
+  flex: 1;
+  overflow: auto;
+  background: var(--panel-bg);
+}
+
+/* ── Input — compact desktop style ─────────────────────────  */
+.input-desktop {
+  height: 28px;
+  padding: 0 10px;
+  font-size: 12px;
+  background: var(--surface-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.15s;
+}
+.input-desktop::placeholder {
+  color: var(--text-tertiary);
+}
+.input-desktop:focus {
+  border-color: var(--input-focus-border);
+}
+
+/* ── Segmented control / tab strip ─────────────────────────  */
+.tab-strip {
+  display: flex;
+  gap: 2px;
+  background: var(--surface-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 7px;
+  padding: 3px;
+}
+.tab-strip-item {
+  height: 22px;
+  padding: 0 10px;
+  font-size: 11.5px;
+  font-weight: 500;
+  border-radius: 5px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition:
+    background 0.12s,
+    color 0.12s;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.tab-strip-item:hover {
+  background: var(--surface-hover);
+  color: var(--text-primary);
+}
+.tab-strip-item.is-active {
+  background: var(--surface-raised);
+  color: var(--text-primary);
+}
+
+/* ── Data row ───────────────────────────────────────────────  */
+.data-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border-faint);
+  cursor: default;
+  transition: background 0.1s;
+}
+.data-row:hover {
+  background: var(--surface-hover);
+}
+
+/* ── Surface card — tight desktop style ────────────────────  */
+.surface-card {
+  background: var(--surface-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 12px;
+  transition: border-color 0.15s;
+}
+.surface-card:hover {
+  border-color: var(--surface-card-hover);
+}
+
+/* ── Scrollbar — 3px hairline ───────────────────────────────  */
+::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ANIMATIONS
+═══════════════════════════════════════════════════════════ */
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in-up {
+  animation: fade-in-up 0.2s ease-out both;
+}
+
+@keyframes float-particle {
+  0%,
+  100% {
+    transform: translateY(0) translateX(0);
+    opacity: 0.15;
+  }
+  25% {
+    transform: translateY(-18px) translateX(8px);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(-8px) translateX(-6px);
+    opacity: 0.25;
+  }
+  75% {
+    transform: translateY(-22px) translateX(4px);
+    opacity: 0.35;
+  }
+}
+.login-particle {
+  animation: float-particle var(--duration, 8s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+@keyframes shimmer-sweep {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 8px 2px var(--glow-pulse-low);
+  }
+  50% {
+    box-shadow: 0 0 16px 6px var(--glow-pulse-high);
+  }
+}
+.glow-pulse {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   UTILITY CLASSES
+═══════════════════════════════════════════════════════════ */
+
+/* Noise texture overlay */
+.login-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+}
+
+/* Text shimmer */
+.text-shimmer {
+  background: linear-gradient(90deg, #a1a1aa 0%, #ffffff 40%, #a1a1aa 80%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer-sweep 3s linear infinite;
+}
+
+html[data-theme='light'] .text-shimmer {
+  background: linear-gradient(90deg, #71717a 0%, #27272a 40%, #71717a 80%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Sidebar active nav line */
+.nav-active-line {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 60%;
+  background: var(--nav-line-color);
+  border-radius: 1px;
+  box-shadow: 0 0 8px var(--nav-line-shadow);
+}
+
+/* Glass card hover */
+.glass-card {
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.glass-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px -6px var(--glass-hover-shadow);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PERFORMANCE & POWER SAVING
+═══════════════════════════════════════════════════════════ */
+
+/* ── CSS containment ──────────────────────────────────────── */
+.toolbar {
+  contain: strict;
+}
+.panel-body {
+  contain: layout style;
+}
+.surface-card {
+  contain: layout style;
+}
+.data-row {
+  contain: layout;
+}
+
+/* ── Reduced motion ───────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .login-particle,
+  .animate-fade-in-up,
+  .text-shimmer,
+  .glow-pulse {
+    animation: none !important;
+  }
+
+  .text-shimmer {
+    background: none;
+    -webkit-text-fill-color: var(--text-secondary);
+    color: var(--text-secondary);
+  }
+
+  .glass-card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+/* ── Scrollable regions: compositor thread optimisation ───── */
+.overflow-auto,
+.overflow-y-auto,
+.overflow-x-auto,
+.flex-1.overflow-auto {
+  will-change: transform;
+}
+
+/* ── Root background — matches Electron backgroundColor ───── */
+#root {
+  background-color: var(--root-bg);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LIGHT MODE — COMPONENT HARD-CODED COLOR OVERRIDES
+   Flips every hard-coded dark Tailwind arbitrary-value class
+   that pages embed directly.  Scoped to data-theme="light" so
+   dark mode is completely unchanged.
+═══════════════════════════════════════════════════════════ */
+
+/* ── Dark hex backgrounds → light panel backgrounds ──────── */
+html[data-theme='light'] .bg-black,
+html[data-theme='light'] .bg-\[\#030303\],
+html[data-theme='light'] .bg-\[\#080808\],
+html[data-theme='light'] .bg-\[\#0A0A0A\],
+html[data-theme='light'] .bg-\[\#0a0a0a\],
+html[data-theme='light'] .bg-\[\#0b0b0b\],
+html[data-theme='light'] .bg-\[\#0c0c0c\],
+html[data-theme='light'] .bg-\[\#0d0d0d\],
+html[data-theme='light'] .bg-\[\#0e0e0e\],
+html[data-theme='light'] .bg-\[\#101010\],
+html[data-theme='light'] .bg-\[\#111\],
+html[data-theme='light'] .bg-\[\#111111\],
+html[data-theme='light'] .bg-\[\#151515\],
+html[data-theme='light'] .bg-\[\#161616\],
+html[data-theme='light'] .bg-\[\#1a1a1a\],
+html[data-theme='light'] .bg-\[\#1A1A1A\],
+html[data-theme='light'] .bg-zinc-900,
+html[data-theme='light'] .bg-zinc-950 {
+  background-color: var(--surface-bg) !important;
+}
+
+/* Hover / selected states for dark hex backgrounds */
+html[data-theme='light'] .hover\:bg-\[\#151515\]:hover,
+html[data-theme='light'] .hover\:bg-\[\#101010\]:hover,
+html[data-theme='light'] .hover\:bg-\[\#0e0e0e\]:hover,
+html[data-theme='light'] .hover\:bg-zinc-900:hover,
+html[data-theme='light'] .hover\:bg-zinc-800:hover {
+  background-color: var(--surface-raised) !important;
+}
+
+/* Active / selected zinc-900 (e.g. model dropdown selected row) */
+html[data-theme='light'] .bg-zinc-900\/30 {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+}
+html[data-theme='light'] .bg-zinc-900\/40 {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+
+/* ── zinc medium-dark backgrounds ───────────────────────── */
+html[data-theme='light'] .bg-zinc-800 {
+  background-color: #e3e3e3 !important;
+}
+html[data-theme='light'] .bg-zinc-700 {
+  background-color: #dcdcdc !important;
+}
+
+/* ── Severity-tinted backgrounds (toasts / alerts) ────────  */
+html[data-theme='light'] .bg-red-900\/10 {
+  background-color: rgba(254, 242, 242, 0.85) !important;
+}
+html[data-theme='light'] .bg-amber-900\/10 {
+  background-color: rgba(255, 251, 235, 0.85) !important;
+}
+html[data-theme='light'] .bg-blue-900\/10 {
+  background-color: rgba(239, 246, 255, 0.85) !important;
+}
+html[data-theme='light'] .bg-emerald-900\/10 {
+  background-color: rgba(240, 253, 244, 0.85) !important;
+}
+
+/* ── White-opacity surface/card backgrounds → black-opacity ─ */
+html[data-theme='light'] .bg-white\/\[0\.01\] {
+  background-color: rgba(0, 0, 0, 0.01) !important;
+}
+html[data-theme='light'] .bg-white\/\[0\.02\] {
+  background-color: rgba(0, 0, 0, 0.02) !important;
+}
+html[data-theme='light'] .bg-white\/\[0\.03\] {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+}
+html[data-theme='light'] .bg-white\/\[0\.04\] {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+html[data-theme='light'] .bg-white\/\[0\.05\] {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+html[data-theme='light'] .bg-white\/\[0\.06\] {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
+html[data-theme='light'] .bg-white\/\[0\.07\] {
+  background-color: rgba(0, 0, 0, 0.07) !important;
+}
+html[data-theme='light'] .bg-white\/\[0\.08\] {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+html[data-theme='light'] .bg-white\/\[0\.1\] {
+  background-color: rgba(0, 0, 0, 0.09) !important;
+}
+html[data-theme='light'] .bg-white\/\[0\.12\] {
+  background-color: rgba(0, 0, 0, 0.1) !important;
+}
+html[data-theme='light'] .bg-white\/\[0\.16\] {
+  background-color: rgba(0, 0, 0, 0.12) !important;
+}
+html[data-theme='light'] .bg-white\/10 {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+html[data-theme='light'] .bg-white\/25 {
+  background-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Hover states for white-opacity */
+html[data-theme='light'] .hover\:bg-white\/\[0\.04\]:hover {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+html[data-theme='light'] .hover\:bg-white\/\[0\.05\]:hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+html[data-theme='light'] .hover\:bg-white\/\[0\.06\]:hover {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
+html[data-theme='light'] .hover\:bg-white\/\[0\.07\]:hover {
+  background-color: rgba(0, 0, 0, 0.07) !important;
+}
+html[data-theme='light'] .hover\:bg-white\/\[0\.08\]:hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+html[data-theme='light'] .hover\:bg-white\/\[0\.10\]:hover,
+html[data-theme='light'] .hover\:bg-white\/10:hover {
+  background-color: rgba(0, 0, 0, 0.09) !important;
+}
+html[data-theme='light'] .hover\:bg-white\/\[0\.11\]:hover {
+  background-color: rgba(0, 0, 0, 0.1) !important;
+}
+html[data-theme='light'] .hover\:bg-white\/\[0\.12\]:hover {
+  background-color: rgba(0, 0, 0, 0.11) !important;
+}
+html[data-theme='light'] .hover\:bg-white\/\[0\.13\]:hover {
+  background-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Focus / focus-within states */
+html[data-theme='light'] .focus\:bg-white\/\[0\.08\]:focus {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+html[data-theme='light'] .focus-within\:border-white\/\[0\.16\]:focus-within {
+  border-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+/* ── Border colors ───────────────────────────────────────── */
+html[data-theme='light'] .border-white\/\[0\.03\],
+html[data-theme='light'] .border-white\/\[0\.04\],
+html[data-theme='light'] .border-white\/5,
+html[data-theme='light'] .border-white\/\[0\.05\],
+html[data-theme='light'] .border-white\/\[0\.055\],
+html[data-theme='light'] .border-white\/\[0\.06\],
+html[data-theme='light'] .border-white\/\[0\.07\] {
+  border-color: var(--border-subtle) !important;
+}
+
+html[data-theme='light'] .border-white\/\[0\.08\],
+html[data-theme='light'] .border-white\/\[0\.09\],
+html[data-theme='light'] .border-white\/\[0\.1\],
+html[data-theme='light'] .border-white\/10 {
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+html[data-theme='light'] .border-white\/\[0\.12\],
+html[data-theme='light'] .border-white\/\[0\.14\],
+html[data-theme='light'] .border-white\/20 {
+  border-color: rgba(0, 0, 0, 0.16) !important;
+}
+
+html[data-theme='light'] .border-zinc-800 {
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+html[data-theme='light'] .border-zinc-700 {
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+html[data-theme='light'] .border-zinc-700\/40 {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+html[data-theme='light'] .focus\:border-white\/\[0\.12\]:focus {
+  border-color: rgba(0, 0, 0, 0.16) !important;
+}
+html[data-theme='light'] .focus\:border-white\/20:focus {
+  border-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+/* ── Text — white & near-white variants → dark equivalents ── */
+html[data-theme='light'] .text-white {
+  color: var(--text-primary) !important;
+}
+html[data-theme='light'] .text-white\/90 {
+  color: var(--text-primary) !important;
+}
+html[data-theme='light'] .text-white\/80 {
+  color: var(--text-primary) !important;
+}
+html[data-theme='light'] .text-white\/70 {
+  color: var(--text-primary) !important;
+}
+html[data-theme='light'] .text-white\/60 {
+  color: var(--text-secondary) !important;
+}
+html[data-theme='light'] .text-white\/50 {
+  color: var(--text-secondary) !important;
+}
+html[data-theme='light'] .text-white\/40,
+html[data-theme='light'] .text-white\/\[0\.40\] {
+  color: var(--text-tertiary) !important;
+}
+html[data-theme='light'] .text-white\/35 {
+  color: var(--text-tertiary) !important;
+}
+html[data-theme='light'] .text-white\/30 {
+  color: var(--text-tertiary) !important;
+}
+html[data-theme='light'] .text-white\/25 {
+  color: rgba(0, 0, 0, 0.25) !important;
+}
+html[data-theme='light'] .text-white\/20 {
+  color: rgba(0, 0, 0, 0.2) !important;
+}
+html[data-theme='light'] .text-white\/15 {
+  color: rgba(0, 0, 0, 0.15) !important;
+}
+
+/* ── Light zinc text variants (near-invisible on white) ──── */
+html[data-theme='light'] .text-zinc-100 {
+  color: rgba(0, 0, 0, 0.82) !important;
+}
+html[data-theme='light'] .text-zinc-200 {
+  color: rgba(0, 0, 0, 0.7) !important;
+}
+html[data-theme='light'] .text-zinc-300 {
+  color: rgba(0, 0, 0, 0.58) !important;
+}
+html[data-theme='light'] .text-zinc-400 {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Hover text overrides */
+html[data-theme='light'] .hover\:text-white:hover {
+  color: var(--text-primary) !important;
+}
+html[data-theme='light'] .hover\:text-zinc-300:hover {
+  color: var(--text-primary) !important;
+}
+html[data-theme='light'] .hover\:text-zinc-400:hover {
+  color: var(--text-secondary) !important;
+}
+html[data-theme='light'] .group-hover\:text-zinc-400 {
+  color: var(--text-secondary) !important;
+}
+html[data-theme='light'] .hover\:text-zinc-500:hover {
+  color: var(--text-secondary) !important;
+}
+
+/* ── Ring / focus outlines ───────────────────────────────── */
+html[data-theme='light'] .ring-white\/10 {
+  --tw-ring-color: rgba(0, 0, 0, 0.1) !important;
+}
+html[data-theme='light'] .ring-white\/\[0\.07\] {
+  --tw-ring-color: rgba(0, 0, 0, 0.07) !important;
+}
+html[data-theme='light'] .focus\:ring-zinc-600\/40:focus {
+  --tw-ring-color: rgba(0, 0, 0, 0.1) !important;
+}
+html[data-theme='light'] .focus\:ring-zinc-600:focus {
+  --tw-ring-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+/* ── Placeholder text ────────────────────────────────────── */
+html[data-theme='light'] .placeholder-zinc-500::placeholder {
+  color: rgba(0, 0, 0, 0.35) !important;
+}
+html[data-theme='light'] .placeholder\:text-zinc-600::placeholder {
+  color: rgba(0, 0, 0, 0.38) !important;
+}
+
+/* ── Shadow tokens (used in toast/dropdown shadows) ─────── */
+html[data-theme='light'] .shadow-white\/5 {
+  --tw-shadow-color: rgba(0, 0, 0, 0.05) !important;
+}
+html[data-theme='light'] .shadow-white\/10 {
+  --tw-shadow-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+/* ── Prose invert — flip assistant message typography ────── */
+html[data-theme='light'] .prose-invert {
+  --tw-prose-body: var(--text-primary) !important;
+  --tw-prose-headings: var(--nav-active-text) !important;
+  --tw-prose-lead: var(--text-secondary) !important;
+  --tw-prose-links: var(--accent-blue) !important;
+  --tw-prose-bold: var(--nav-active-text) !important;
+  --tw-prose-counters: var(--text-secondary) !important;
+  --tw-prose-bullets: var(--text-secondary) !important;
+  --tw-prose-hr: var(--border-subtle) !important;
+  --tw-prose-quotes: var(--nav-active-text) !important;
+  --tw-prose-quote-borders: var(--border-subtle) !important;
+  --tw-prose-captions: var(--text-secondary) !important;
+  --tw-prose-code: var(--nav-active-text) !important;
+  --tw-prose-pre-bg: var(--surface-bg) !important;
+  --tw-prose-th-borders: var(--border-subtle) !important;
+  --tw-prose-td-borders: var(--border-faint) !important;
+}
+
+/* ── Gradient shimmer overlay (used in buttons) ──────────── */
+html[data-theme='light'] .from-white\/20 {
+  --tw-gradient-from: rgba(0, 0, 0, 0.05) !important;
+}
+html[data-theme='light'] .via-white\/20 {
+  --tw-gradient-via: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* ── Invert utility for logos on dark bg (Meta, etc.) ────── */
+/* needsInvert icons are inverted in dark mode to appear white.
+   In light mode they need to be normal (dark). */
+html[data-theme='light'] img.invert {
+  filter: none !important;
+}

@@ -1,0 +1,296 @@
+version: '3.8'
+
+# Velanova MCP Server Farm
+# This docker-compose runs ALL MCP servers as a unified backend
+# The Velanova MCP Server aggregates them into a single interface
+
+services:
+  # ============================================================================
+  # VELANOVA MCP SERVER (Aggregator) - The main entry point
+  # ============================================================================
+  velanova-mcp:
+    build:
+      context: ../../packages/velanova-mcp-server
+      dockerfile: Dockerfile
+    ports:
+      - "3100:3100"    # SSE endpoint
+      - "3101:3101"    # HTTP API (optional)
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      # Supabase
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_KEY}
+      # AI Provider Keys
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - GOOGLE_AI_API_KEY=${GOOGLE_AI_API_KEY}
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - COHERE_API_KEY=${COHERE_API_KEY}
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY}
+      # Internal MCP endpoints
+      - POSTGRES_MCP_URL=http://postgres-mcp:3000
+      - MYSQL_MCP_URL=http://mysql-mcp:3000
+      - MONGODB_MCP_URL=http://mongodb-mcp:27017
+      - REDIS_MCP_URL=http://redis-mcp:3000
+      - GITHUB_MCP_URL=http://github-mcp:3000
+      - SALESFORCE_MCP_URL=http://salesforce-mcp:3000
+    depends_on:
+      - postgres-mcp
+      - mysql-mcp
+      - mongodb-mcp
+      - redis-mcp
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3100/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+  # ============================================================================
+  # DATABASE MCP SERVERS
+  # ============================================================================
+  
+  postgres-mcp:
+    image: crystaldba/postgres-mcp:latest
+    environment:
+      - POSTGRES_CONNECTION_STRING=${POSTGRES_URL}
+      - MCP_SERVER_NAME=postgres-mcp
+    restart: unless-stopped
+    networks:
+      - mcp-network
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  mysql-mcp:
+    build:
+      context: ./mcp-servers/mysql
+      dockerfile: Dockerfile
+    environment:
+      - MYSQL_HOST=${MYSQL_HOST:-localhost}
+      - MYSQL_PORT=${MYSQL_PORT:-3306}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+  mongodb-mcp:
+    image: mongodb/mongodb-mcp-server:latest
+    environment:
+      - MONGODB_URI=${MONGODB_URI}
+      - MCP_SERVER_NAME=mongodb-mcp
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+  redis-mcp:
+    build:
+      context: ./mcp-servers/redis
+      dockerfile: Dockerfile
+    environment:
+      - REDIS_URL=${REDIS_URL:-redis://localhost:6379}
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+  # SQLite MCP - for local/file-based databases
+  sqlite-mcp:
+    build:
+      context: ./mcp-servers/sqlite
+      dockerfile: Dockerfile
+    volumes:
+      - sqlite-data:/data
+    environment:
+      - SQLITE_DB_PATH=/data/database.db
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+  # ============================================================================
+  # ENTERPRISE SYSTEM MCP SERVERS
+  # ============================================================================
+  
+  github-mcp:
+    image: ghcr.io/modelcontextprotocol/server-github:latest
+    environment:
+      - GITHUB_PERSONAL_ACCESS_TOKEN=${GITHUB_TOKEN}
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+  gitlab-mcp:
+    build:
+      context: ./mcp-servers/gitlab
+      dockerfile: Dockerfile
+    environment:
+      - GITLAB_URL=${GITLAB_URL:-https://gitlab.com}
+      - GITLAB_TOKEN=${GITLAB_TOKEN}
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+  slack-mcp:
+    build:
+      context: ./mcp-servers/slack
+      dockerfile: Dockerfile
+    environment:
+      - SLACK_BOT_TOKEN=${SLACK_BOT_TOKEN}
+      - SLACK_TEAM_ID=${SLACK_TEAM_ID}
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+  # ============================================================================
+  # CRM/ERP MCP SERVERS (Community)
+  # ============================================================================
+
+  salesforce-mcp:
+    build:
+      context: ./mcp-servers/salesforce
+      dockerfile: Dockerfile
+    environment:
+      - SF_LOGIN_URL=${SF_LOGIN_URL:-https://login.salesforce.com}
+      - SF_CLIENT_ID=${SF_CLIENT_ID}
+      - SF_CLIENT_SECRET=${SF_CLIENT_SECRET}
+      - SF_USERNAME=${SF_USERNAME}
+      - SF_PASSWORD=${SF_PASSWORD}
+      - SF_SECURITY_TOKEN=${SF_SECURITY_TOKEN}
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+  servicenow-mcp:
+    build:
+      context: ./mcp-servers/servicenow
+      dockerfile: Dockerfile
+    environment:
+      - SERVICENOW_INSTANCE=${SERVICENOW_INSTANCE}
+      - SERVICENOW_USER=${SERVICENOW_USER}
+      - SERVICENOW_PASSWORD=${SERVICENOW_PASSWORD}
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+  jira-mcp:
+    build:
+      context: ./mcp-servers/jira
+      dockerfile: Dockerfile
+    environment:
+      - JIRA_URL=${JIRA_URL}
+      - JIRA_EMAIL=${JIRA_EMAIL}
+      - JIRA_API_TOKEN=${JIRA_API_TOKEN}
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+  # ============================================================================
+  # INFRASTRUCTURE MCP SERVERS
+  # ============================================================================
+
+  kubernetes-mcp:
+    image: strowk/mcp-k8s-go:latest
+    volumes:
+      - ${HOME}/.kube:/root/.kube:ro
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+  docker-mcp:
+    image: ckreiling/mcp-server-docker:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+  # ============================================================================
+  # CUSTOM MCP SERVERS (We Build These)
+  # ============================================================================
+
+  # SAP S/4HANA - Custom implementation
+  sap-s4hana-mcp:
+    build:
+      context: ./custom-mcp-servers/sap-s4hana
+      dockerfile: Dockerfile
+    environment:
+      - SAP_HOST=${SAP_HOST}
+      - SAP_SYSNR=${SAP_SYSNR:-00}
+      - SAP_CLIENT=${SAP_CLIENT}
+      - SAP_USER=${SAP_USER}
+      - SAP_PASSWORD=${SAP_PASSWORD}
+      - SAP_LANG=${SAP_LANG:-EN}
+    restart: unless-stopped
+    networks:
+      - mcp-network
+    profiles:
+      - enterprise  # Only start when --profile enterprise is used
+
+  # Epic FHIR - Custom implementation
+  epic-fhir-mcp:
+    build:
+      context: ./custom-mcp-servers/epic-fhir
+      dockerfile: Dockerfile
+    environment:
+      - EPIC_BASE_URL=${EPIC_BASE_URL}
+      - EPIC_CLIENT_ID=${EPIC_CLIENT_ID}
+      - EPIC_CLIENT_SECRET=${EPIC_CLIENT_SECRET}
+      - EPIC_REDIRECT_URI=${EPIC_REDIRECT_URI}
+      - ENABLE_PHI_REDACTION=${ENABLE_PHI_REDACTION:-true}
+    restart: unless-stopped
+    networks:
+      - mcp-network
+    profiles:
+      - healthcare  # Only start when --profile healthcare is used
+
+  # AS/400 (IBM i) - Custom implementation
+  as400-mcp:
+    build:
+      context: ./custom-mcp-servers/as400
+      dockerfile: Dockerfile
+    environment:
+      - AS400_HOST=${AS400_HOST}
+      - AS400_USER=${AS400_USER}
+      - AS400_PASSWORD=${AS400_PASSWORD}
+      - AS400_LIBRARY=${AS400_LIBRARY:-QGPL}
+    restart: unless-stopped
+    networks:
+      - mcp-network
+    profiles:
+      - legacy  # Only start when --profile legacy is used
+
+  # Workday - Custom implementation
+  workday-mcp:
+    build:
+      context: ./custom-mcp-servers/workday
+      dockerfile: Dockerfile
+    environment:
+      - WORKDAY_TENANT=${WORKDAY_TENANT}
+      - WORKDAY_CLIENT_ID=${WORKDAY_CLIENT_ID}
+      - WORKDAY_CLIENT_SECRET=${WORKDAY_CLIENT_SECRET}
+    restart: unless-stopped
+    networks:
+      - mcp-network
+    profiles:
+      - enterprise
+
+# ============================================================================
+# NETWORKS & VOLUMES
+# ============================================================================
+
+networks:
+  mcp-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+
+volumes:
+  sqlite-data:
+    driver: local

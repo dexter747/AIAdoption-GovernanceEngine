@@ -1,0 +1,48 @@
+{
+  "preset": "ts-jest",
+  "testEnvironment": "node",
+  "extensionsToTreatAsEsm": [".ts", ".tsx"],
+  "moduleNameMapper": {
+    "^(\\.{1,2}/.*)\\.js$": "$1"
+  },
+  "transform": {
+    "^.+\\.tsx?$": [
+      "ts-jest",
+      {
+        "tsconfig": {
+          "jsx": "react-jsx",
+          "esModuleInterop": true,
+          "allowSyntheticDefaultImports": true
+        },
+        "diagnostics": {
+          "ignoreCodes": [151002],
+          "warnOnly": true
+        }
+      }
+    ]
+  },
+  "testMatch": ["**/*.test.ts", "**/*.test.tsx"],
+  "testPathIgnorePatterns": ["/node_modules/", "/dist/"],
+  "collectCoverageFrom": [
+    "../apps/**/*.{ts,tsx,js,jsx}",
+    "../packages/**/*.{ts,tsx,js,jsx}",
+    "!**/*.d.ts",
+    "!**/node_modules/**",
+    "!**/dist/**"
+  ],
+  "coverageDirectory": "./coverage",
+  "coverageReporters": ["text", "lcov", "html"],
+  "coverageThreshold": {
+    "global": {
+      "branches": 50,
+      "functions": 50,
+      "lines": 50,
+      "statements": 50
+    }
+  },
+  "testTimeout": 30000,
+  "roots": ["."],
+  "moduleDirectories": ["node_modules", "../node_modules"],
+  "setupFilesAfterEnv": ["./setup.ts"],
+  "verbose": true
+}
